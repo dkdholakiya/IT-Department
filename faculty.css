@@ -3,8 +3,14 @@
    ══════════════════════════════════════════════════════════ */
 
 /* ── HTML & Body Scroll Enable ── */
-html, body {
+html {
     overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    width: 100% !important;
+}
+body {
+    overflow-y: visible !important;
     overflow-x: hidden !important;
     height: auto !important;
     width: 100% !important;
@@ -190,6 +196,11 @@ html {
     padding: 0 20px 60px;
     width: 100%;
     overflow-x: hidden;
+}
+
+/* Fix background orbs to prevent stretching page height */
+.orb {
+    position: fixed !important;
 }
 
 /* ── Faculty Grid Layout ── */
