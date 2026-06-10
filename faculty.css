@@ -1,0 +1,701 @@
+/* ══════════════════════════════════════════════════════════
+   faculty.css  ·  GMIU IT Faculty Directory  ·  v1 Custom
+   ══════════════════════════════════════════════════════════ */
+
+/* ── HTML & Body Scroll Enable ── */
+html, body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    width: 100% !important;
+}
+
+/* ── Custom Styled Scrollbar ── */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #060d1f;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(192, 57, 43, 0.35);
+    border-radius: 50px;
+    border: 2px solid #060d1f;
+    transition: background 0.3s;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(192, 57, 43, 0.7);
+}
+
+/* Firefox scrollbar support */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(192, 57, 43, 0.35) #060d1f;
+}
+
+/* ── Header Styling ── */
+.rp-header {
+    width: 100%;
+    max-width: 1320px;
+    padding: 36px 0 28px;
+    animation: rp-header-fade 0.6s ease both;
+    position: relative;
+    z-index: 10;
+}
+
+@keyframes rp-header-fade {
+    from { opacity: 0; transform: translateY(-15px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.rp-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+}
+
+.rp-header-center {
+    text-align: center;
+    flex: 1;
+}
+
+.rp-dept-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(192, 57, 43, 0.1);
+    border: 1px solid rgba(192, 57, 43, 0.3);
+    color: #fca5a5;
+    font-family: 'Share Tech', monospace;
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 50px;
+    margin-bottom: 10px;
+}
+
+.rp-badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: rp-dot-blink 2s ease-in-out infinite;
+}
+
+@keyframes rp-dot-blink {
+    0%,100% { box-shadow: 0 0 6px var(--green); }
+    50%      { box-shadow: 0 0 14px var(--green); }
+}
+
+.rp-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 3.5vw, 34px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 60%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    margin-bottom: 6px;
+}
+
+.rp-subtitle {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-family: 'Share Tech', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* Back button */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 9px 16px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.back-btn:hover {
+    color: #fca5a5;
+    border-color: rgba(192, 57, 43, 0.4);
+    background: rgba(192, 57, 43, 0.1);
+    transform: translateX(-4px);
+}
+
+/* Portal Badge */
+.portal-badge {
+    display: inline-block;
+    font-family: 'Share Tech', monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 7px 13px;
+    border-radius: 50px;
+    white-space: nowrap;
+}
+
+/* Responsive Header */
+@media (max-width: 960px) {
+    .rp-header { padding: 24px 0 16px; }
+    .rp-header-inner { 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 14px; 
+    }
+    .rp-header-center { order: -1; text-align: center; width: 100%; }
+    .rp-dept-badge {
+        white-space: normal;
+        text-align: center;
+        max-width: 100%;
+        justify-content: center;
+    }
+    .rp-subtitle {
+        white-space: normal;
+        text-align: center;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 599px) {
+    .back-btn { font-size: 12px; padding: 8px 13px; }
+    .portal-badge { font-size: 10px; }
+    .rp-dept-badge { font-size: 9px; letter-spacing: 1.2px; }
+}
+
+/* Page wrapper adjustments */
+.fac-page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px 60px;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* ── Faculty Grid Layout ── */
+.faculty-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    max-width: 1320px;
+    width: 100%;
+    margin: 40px auto 60px;
+    animation: fac-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fac-fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Faculty Card Styling ── */
+.faculty-card {
+    background: rgba(11, 21, 48, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 36px 24px;
+    text-align: center;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.faculty-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--red) 0%, var(--blue) 100%);
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+/* Hover States for Cards */
+.faculty-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(192, 57, 43, 0.35);
+    box-shadow: 
+        0 20px 45px rgba(192, 57, 43, 0.15), 
+        0 8px 25px rgba(0, 0, 0, 0.45);
+}
+
+.faculty-card:hover::before {
+    opacity: 1;
+}
+
+/* ── Avatar Circle with Initial-based Gradients ── */
+.avatar-wrapper {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    margin-bottom: 22px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.avatar-glow {
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--red) 0%, var(--blue) 50%, var(--violet) 100%);
+    z-index: -1;
+    opacity: 0.4;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.faculty-card:hover .avatar-glow {
+    opacity: 0.9;
+    animation: rotate-avatar-glow 4s linear infinite;
+}
+
+@keyframes rotate-avatar-glow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.avatar-image-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #070e22 0%, #15244d 100%);
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--white);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    user-select: none;
+}
+
+/* Specific gradients for each placeholder class to look varied and premium */
+.av-sb { background: linear-gradient(145deg, #3b1b22, #7f1d1d); border-color: rgba(239, 68, 68, 0.4); }
+.av-jm { background: linear-gradient(145deg, #381b22, #7f1d2d); border-color: rgba(239, 68, 68, 0.4); }
+.av-sw { background: linear-gradient(145deg, #3b1422, #7f0d1d); border-color: rgba(239, 68, 68, 0.4); }
+.av-pp { background: linear-gradient(145deg, #15244d, #1e3a8a); border-color: rgba(37, 99, 235, 0.4); }
+.av-db { background: linear-gradient(145deg, #18285c, #2563eb); border-color: rgba(37, 99, 235, 0.4); }
+.av-sp { background: linear-gradient(145deg, #0d1e3d, #1d4ed8); border-color: rgba(37, 99, 235, 0.4); }
+.av-aa { background: linear-gradient(145deg, #2b1b3d, #581c87); border-color: rgba(124, 58, 237, 0.4); }
+.av-ks { background: linear-gradient(145deg, #351c4a, #6b21a8); border-color: rgba(124, 58, 237, 0.4); }
+.av-pr { background: linear-gradient(145deg, #241433, #4c1d95); border-color: rgba(124, 58, 237, 0.4); }
+.av-tv { background: linear-gradient(145deg, #0f2c3d, #0e7490); border-color: rgba(6, 182, 212, 0.4); }
+.av-bs { background: linear-gradient(145deg, #12374d, #0891b2); border-color: rgba(6, 182, 212, 0.4); }
+.av-sv { background: linear-gradient(145deg, #082f49, #0369a1); border-color: rgba(6, 182, 212, 0.4); }
+.av-hb { background: linear-gradient(145deg, #0e2a22, #047857); border-color: rgba(16, 185, 129, 0.4); }
+.av-dc { background: linear-gradient(145deg, #0c3829, #059669); border-color: rgba(16, 185, 129, 0.4); }
+.av-sg { background: linear-gradient(145deg, #064e3b, #047857); border-color: rgba(16, 185, 129, 0.4); }
+.av-sc { background: linear-gradient(145deg, #382512, #a16207); border-color: rgba(245, 158, 11, 0.4); }
+.av-vs { background: linear-gradient(145deg, #452a0f, #b45309); border-color: rgba(245, 158, 11, 0.4); }
+.av-eu { background: linear-gradient(145deg, #78350f, #92400e); border-color: rgba(245, 158, 11, 0.4); }
+
+/* ── Faculty Text ── */
+.faculty-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 5px;
+}
+
+.faculty-desg {
+    font-size: 11.5px;
+    color: var(--red-bright);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    font-family: 'Share Tech', monospace;
+}
+
+.faculty-focus {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 24px;
+    flex-grow: 1;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* ── View Details Button ── */
+.details-btn {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 11px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    width: 100%;
+    outline: none;
+    font-family: 'Merriweather Sans', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.details-btn:hover {
+    background: linear-gradient(135deg, var(--red-bright) 0%, var(--red) 100%);
+    border-color: transparent;
+    color: var(--white);
+    box-shadow: 0 6px 20px var(--red-glow);
+    transform: translateY(-2px);
+}
+
+.details-btn svg {
+    transition: transform 0.3s;
+}
+
+.details-btn:hover svg {
+    transform: translateX(3px);
+}
+
+/* ══════════════════════════════════════════════════════════
+   BOOTSTRAP MODAL THEME OVERRIDES (.gmiu-modal)
+   ══════════════════════════════════════════════════════════ */
+
+/* Custom modal container style */
+.gmiu-modal .modal-content {
+    background: rgba(10, 18, 38, 0.94) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(28px) !important;
+    -webkit-backdrop-filter: blur(28px) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    color: var(--text-primary) !important;
+    overflow: hidden;
+}
+
+/* Glow lines top of modals */
+.gmiu-modal .modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--red-bright) 0%, var(--blue) 50%, var(--cyan) 100%);
+    z-index: 10;
+}
+
+.gmiu-modal .modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 22px 28px !important;
+    background: rgba(255, 255, 255, 0.01) !important;
+}
+
+.gmiu-modal .modal-title {
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 800 !important;
+    font-size: clamp(20px, 2.5vw, 24px) !important;
+    background: linear-gradient(130deg, #ffffff 0%, #cbd5e1 60%, #94a3b8 100%);
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    letter-spacing: 0.5px;
+}
+
+.gmiu-modal .btn-close {
+    filter: invert(1) grayscale(1) brightness(1.6) !important;
+    opacity: 0.75 !important;
+    transition: opacity 0.25s, transform 0.25s !important;
+    outline: none !important;
+}
+
+.gmiu-modal .btn-close:hover {
+    opacity: 1 !important;
+    transform: rotate(90deg);
+}
+
+.gmiu-modal .modal-body {
+    padding: 28px !important;
+}
+
+.gmiu-modal .modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 16px 28px !important;
+    background: rgba(255, 255, 255, 0.01) !important;
+}
+
+/* Close action button inside modal footer */
+.modal-action-close {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 9px 20px;
+    font-size: 13.5px;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.modal-action-close:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--white);
+}
+
+/* Blur Backdrop customization */
+.modal-backdrop {
+    background-color: #030712 !important;
+}
+
+.modal-backdrop.show {
+    opacity: 0.82 !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* ── Modal Left Column Components ── */
+.modal-avatar-wrapper {
+    position: relative;
+    width: 108px;
+    height: 108px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, var(--red) 0%, var(--blue) 100%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.modal-avatar-gradient {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--white);
+    border: 2px solid #0a1226;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.modal-fac-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--white);
+    margin-top: 14px;
+    margin-bottom: 4px;
+}
+
+.modal-fac-desg {
+    font-size: 11.5px;
+    color: var(--red-bright);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    font-family: 'Share Tech', monospace;
+}
+
+.modal-fac-cabin {
+    font-size: 13px;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 6px 14px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 500;
+}
+
+.modal-fac-contact {
+    display: block;
+}
+
+.modal-contact-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    width: 100%;
+    transition: var(--transition);
+}
+
+.modal-contact-link:hover {
+    color: #fca5a5;
+    border-color: rgba(192, 57, 43, 0.4);
+    background: rgba(192, 57, 43, 0.1);
+    transform: translateY(-2px);
+}
+
+/* ── Modal Right Column Components ── */
+.detail-section {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+}
+
+.detail-sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--white);
+    border-left: 3px solid var(--red);
+    padding-left: 10px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-sec-text {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
+/* Bio font layout */
+.fac-bio {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* Subjects Pills styling */
+.subjects-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.subject-pill {
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.22);
+    color: #93c5fd;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 50px;
+    transition: all 0.25s ease;
+    cursor: default;
+}
+
+.subject-pill:hover {
+    background: rgba(37, 99, 235, 0.15);
+    border-color: rgba(37, 99, 235, 0.4);
+    color: var(--white);
+    transform: scale(1.05);
+}
+
+/* Color variations on pills for a richer aesthetic */
+.subject-pill:nth-child(even) {
+    background: rgba(192, 57, 43, 0.08);
+    border-color: rgba(192, 57, 43, 0.22);
+    color: #fca5a5;
+}
+.subject-pill:nth-child(even):hover {
+    background: rgba(192, 57, 43, 0.15);
+    border-color: rgba(192, 57, 43, 0.4);
+    color: var(--white);
+}
+
+.subject-pill:nth-child(3n) {
+    background: rgba(124, 58, 237, 0.08);
+    border-color: rgba(124, 58, 237, 0.22);
+    color: #ddd6fe;
+}
+.subject-pill:nth-child(3n):hover {
+    background: rgba(124, 58, 237, 0.15);
+    border-color: rgba(124, 58, 237, 0.4);
+    color: var(--white);
+}
+
+/* Custom border alignment */
+.border-border-custom {
+    border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE LAYOUTS
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1200px) {
+    .faculty-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+}
+
+@media (max-width: 991px) {
+    .faculty-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .gmiu-modal .modal-body {
+        padding: 20px !important;
+    }
+    
+    .border-md-end {
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding-bottom: 24px;
+        margin-bottom: 12px;
+    }
+
+    .modal-fac-cabin {
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 640px) {
+    .faculty-grid {
+        grid-template-columns: 1fr;
+        max-width: 380px;
+        width: 100%;
+        margin: 30px auto 50px;
+    }
+    
+    .fac-page {
+        padding: 0 16px 50px;
+    }
+}
