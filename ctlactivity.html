@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="GMIU IT Department — CTL Activity Dashboard for academic tracking and expert session analytics.">
+    <title>CTL Activity Dashboard — GMIU IT Department</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- Theme Stylesheets -->
+    <link rel="stylesheet" href="assets/css/portal.css">
+    <link rel="stylesheet" href="assets/css/ctlactivity.css">
+</head>
+
+<body>
+
+    <div class="ctl-page">
+
+        <!-- Background particles -->
+        <div class="particles" aria-hidden="true">
+            <div class="particle"
+                style="width:4px; height:4px; left:8%;  background:rgba(192,57,43,0.5);  animation: rise 20s linear infinite;">
+            </div>
+            <div class="particle"
+                style="width:3px; height:3px; left:22%; background:rgba(255,255,255,0.2); animation: rise 25s linear -6s infinite;">
+            </div>
+            <div class="particle"
+                style="width:5px; height:5px; left:38%; background:rgba(37,99,235,0.5);  animation: rise 18s linear -3s infinite;">
+            </div>
+            <div class="particle"
+                style="width:3px; height:3px; left:55%; background:rgba(255,255,255,0.15);animation: rise 22s linear -10s infinite;">
+            </div>
+            <div class="particle"
+                style="width:4px; height:4px; left:68%; background:rgba(124,58,237,0.45);animation: rise 28s linear -1s infinite;">
+            </div>
+            <div class="particle"
+                style="width:3px; height:3px; left:80%; background:rgba(255,255,255,0.18);animation: rise 24s linear -8s infinite;">
+            </div>
+            <div class="particle"
+                style="width:5px; height:5px; left:90%; background:rgba(192,57,43,0.4);  animation: rise 19s linear -4s infinite;">
+            </div>
+        </div>
+
+        <!-- Glowing Orbs -->
+        <div class="orb orb-1" aria-hidden="true"></div>
+        <div class="orb orb-2" aria-hidden="true"></div>
+        <div class="orb orb-3" aria-hidden="true"></div>
+
+        <!-- ── Page Header ── -->
+        <header class="rp-header container">
+            <div class="rp-header-inner">
+                <a href="index.html" class="back-btn">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                        viewBox="0 0 24 24">
+                        <path d="M19 12H5M12 5l-7 7 7 7" />
+                    </svg>
+                    Back to Portal
+                </a>
+
+                <div class="rp-header-center">
+                    <div class="rp-dept-badge">
+                        <span class="rp-badge-dot"></span>
+                        Department of Information Technology
+                    </div>
+                    <h1 class="rp-title">CTL Activity Dashboard</h1>
+                    <p class="rp-subtitle">Gyanmanjari Innovative University &nbsp;·&nbsp; Academic Tracking</p>
+                </div>
+
+                <span class="portal-badge">CTL Activity</span>
+            </div>
+        </header>
+
+        <main class="container">
+
+            <!-- Top Layout: Upload on left, Faculty Profile on right -->
+            <div class="top-layout">
+                <!-- Left: Upload Master Sheet Dropzone -->
+                <div class="top-panel left-panel">
+                    <label
+                        style="display:block; margin-bottom:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px; font-size:12px;">Upload
+                        Master Sheet (.xlsx)</label>
+                    <div class="upload-area" id="uploadArea">
+                        <svg class="upload-icon" width="36" height="36" fill="none" stroke="currentColor"
+                            stroke-width="1.8" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2 2v-4M17 8l-5-5-5 5M12 3v12" />
+                        </svg>
+                        <div class="upload-text" id="uploadText">Click or Drag &amp; Drop to Upload File</div>
+                        <div class="upload-subtext">Excel Master Sheet (.xlsx, .xls)</div>
+                    </div>
+                    <input type="file" id="excelFile" accept=".xlsx,.xls">
+                </div>
+
+                <!-- Right: Faculty Info Profile Form -->
+                <div class="top-panel right-panel" style="padding: 0; overflow: visible;">
+                    <!-- Form Stepper Header -->
+                    <div class="form-stepper" style="padding: 18px 24px;">
+                        <div class="step-indicator active">
+                            <span class="step-num">1</span>
+                            <span class="step-label">Faculty Info</span>
+                        </div>
+                    </div>
+
+                    <div style="padding: 24px;">
+                        <div class="form-group">
+                            <label for="facultySearch">Prepared By (Faculty Name) <span class="req">*</span></label>
+                            <div class="search-select-wrap">
+                                <input type="text" id="facultySearch"
+                                    placeholder="Type to search faculty name (e.g. Prof. Dhaval Chandarana)..."
+                                    autocomplete="off" required>
+                                <input type="hidden" id="preparedBy" name="preparedBy" required>
+                                <div class="search-dropdown-list" id="facultyDropdownList"></div>
+                                <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor"
+                                    stroke-width="2" viewBox="0 0 24 24">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                            </div>
+                            <div id="facultyError" class="validation-error hidden">Please select a faculty member from
+                                the dropdown.</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="facultyEmail">Email Address</label>
+                                <input type="text" id="facultyEmail" placeholder="Auto-filled..." readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="facultyPhone">Mobile Number</label>
+                                <input type="text" id="facultyPhone" placeholder="Auto-filled..." readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="position: relative; margin-top: 16px;">
+                            <label for="ccSearch">CC Emails (Multi-select)</label>
+                            <div class="cc-select-wrap">
+                                <div class="cc-tags-container" id="ccTagsContainer"></div>
+                                <input type="text" id="ccSearch" placeholder="Type or click to select CC emails..."
+                                    autocomplete="off">
+                                <div class="search-dropdown-list" id="ccDropdownList"></div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="submit-btn" id="sendBtn"
+                            style="width: 100%; margin-top: 24px; gap: 8px;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <path d="M22 2L11 13" />
+                                <path d="M22 2L15 22l-4-9-9-4 20-7z" />
+                            </svg>
+                            <span>Send</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Cards Grid -->
+            <div class="cards">
+                <div class="card">
+                    <h2 id="total">0</h2>
+                    <p>Total Activities</p>
+                </div>
+                <div class="card approved-card">
+                    <h2 id="approved">0</h2>
+                    <p>Approved</p>
+                </div>
+                <div class="card pending-card">
+                    <h2 id="pending">0</h2>
+                    <p>Pending</p>
+                </div>
+                <div class="card missing-card">
+                    <h2 id="rejected">0</h2>
+                    <p>Rejected</p>
+                </div>
+            </div>
+
+            <!-- Advanced Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Approval Status</label>
+                    <select id="statusFilter">
+                        <option value="">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Submission Condition</label>
+                    <select id="submissionFilter">
+                        <option value="">All Conditions</option>
+                        <option value="Submitted">Submitted (Any)</option>
+                        <option value="Not Submitted">Not Submitted</option>
+                        <option value="Delayed">Delayed</option>
+                        <option value="On Time">On Time</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Search Activity</label>
+                    <input type="text" id="search" placeholder="Type activity name...">
+                </div>
+            </div>
+
+            <!-- Table List -->
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-sr">#</th>
+                            <th class="col-name">Name</th>
+                            <th class="col-plan">Plan Date</th>
+                            <th class="col-actual">Actual Date</th>
+                            <th class="col-modified">Modified Date</th>
+                            <th class="col-marks">Marks</th>
+                            <th class="col-flags">Flags</th>
+                            <th class="col-sub">Submission Flags</th>
+                            <th class="col-status">Approval Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        <tr>
+                            <td colspan="9"
+                                style="text-align: center; color: var(--text-dim); padding: 50px; font-weight: 500; font-family: 'Share Tech', monospace; font-size: 16px; letter-spacing: 0.5px;">
+                                AWAITING EXCEL MASTER SHEET UPLOAD...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="rp-footer text-center" style="margin-top: 10px;">
+            <p>&copy; 2026 Department of Information Technology, GMIU &nbsp;·&nbsp; Designed with <span
+                    style="color:#f87171;">♥</span> by Dev Dholakiya</p>
+        </footer>
+
+    </div><!-- /ctl-page -->
+
+    <!-- ░░ FLOATING NAV BUTTON (Bottom Right) ░░ -->
+    <div class="fab-nav" id="fabNav">
+        <div class="fab-menu" id="fabMenu">
+            <a href="index.html" class="fab-link" id="nav-home">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                Home
+            </a>
+            <a href="faculty.html" class="fab-link" id="nav-faculty">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                Faculty Team
+            </a>
+            <a href="report.html" class="fab-link" id="nav-report">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+                Report Request
+            </a>
+            <a href="ctlactivity.html" class="fab-link active" id="nav-ctl">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <line x1="9" y1="3" x2="9" y2="21" />
+                    <line x1="15" y1="3" x2="15" y2="21" />
+                    <line x1="3" y1="9" x2="21" y2="9" />
+                    <line x1="3" y1="15" x2="21" y2="15" />
+                </svg>
+                CTL Activity
+            </a>
+        </div>
+
+        <button class="fab-btn" id="fabBtn" aria-label="Open Navigation">
+            <svg class="fab-icon-menu" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"
+                viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <svg class="fab-icon-close" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"
+                viewBox="0 0 24 24" style="display:none;">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Script Logic -->
+    <script src="assets/js/facultyData.js"></script>
+    <script>
+        let allData = [];
+        let activeData = [];
+
+        // ── Faculty Search Dropdown Logic ──
+        let selectedFaculty = null;
+
+        function initFacultySearch() {
+            const facultySearch = document.getElementById("facultySearch");
+            const preparedBy = document.getElementById("preparedBy");
+            const facultyDropdownList = document.getElementById("facultyDropdownList");
+            const facultyError = document.getElementById("facultyError");
+
+            const facultyEmail = document.getElementById("facultyEmail");
+            const facultyPhone = document.getElementById("facultyPhone");
+
+            // Initialize dropdown list
+            renderDropdown(facultyData);
+
+            facultySearch.addEventListener("focus", function () {
+                facultyDropdownList.classList.add("show");
+                filterFaculty();
+            });
+
+            facultySearch.addEventListener("input", function () {
+                facultyDropdownList.classList.add("show");
+                filterFaculty();
+
+                if (this.value.trim() === "") {
+                    clearSelection();
+                }
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!e.target.closest(".search-select-wrap")) {
+                    facultyDropdownList.classList.remove("show");
+                    validateSearchInput();
+                }
+            });
+
+            function filterFaculty() {
+                const query = facultySearch.value.toLowerCase().replace("prof.", "").trim();
+                const filtered = facultyData.filter(member =>
+                    member.name.toLowerCase().includes(query) ||
+                    member.designation.toLowerCase().includes(query) ||
+                    member.empId.toLowerCase().includes(query)
+                );
+                renderDropdown(filtered);
+            }
+
+            function renderDropdown(list) {
+                facultyDropdownList.innerHTML = "";
+                if (list.length === 0) {
+                    facultyDropdownList.innerHTML = `<div class="no-results-item">No faculty members found</div>`;
+                    return;
+                }
+
+                list.forEach(member => {
+                    const item = document.createElement("div");
+                    item.className = "dropdown-item";
+                    item.innerHTML = `
+                        <div class="item-avatar ${member.avatarClass}">${member.initials}</div>
+                        <div class="item-info">
+                            <div class="item-name">${member.name}</div>
+                            <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.empId}</div>
+                        </div>
+                    `;
+                    item.addEventListener("click", function () {
+                        selectFaculty(member);
+                    });
+                    facultyDropdownList.appendChild(item);
+                });
+            }
+
+            function selectFaculty(member) {
+                facultySearch.value = member.name;
+                preparedBy.value = member.name;
+                selectedFaculty = member;
+
+                facultyEmail.value = member.email;
+                facultyPhone.value = "+91 " + member.phone;
+
+                facultySearch.classList.remove("input-error");
+                facultyError.classList.add("hidden");
+
+                facultyDropdownList.classList.remove("show");
+            }
+
+            function clearSelection() {
+                preparedBy.value = "";
+                selectedFaculty = null;
+                facultyEmail.value = "";
+                facultyPhone.value = "";
+            }
+
+            function validateSearchInput() {
+                const val = facultySearch.value.trim();
+                if (val === "") {
+                    clearSelection();
+                    return;
+                }
+
+                const match = facultyData.find(m => m.name.toLowerCase() === val.toLowerCase());
+                if (match) {
+                    selectFaculty(match);
+                } else {
+                    const partialMatches = facultyData.filter(m => m.name.toLowerCase().includes(val.toLowerCase()));
+                    if (partialMatches.length === 1) {
+                        selectFaculty(partialMatches[0]);
+                    } else {
+                        clearSelection();
+                        facultySearch.value = "";
+                    }
+                }
+            }
+        }
+
+        // Initialize Faculty Search Search logic
+        initFacultySearch();
+
+        // ── CC Emails Multi-Select Dropdown Logic ──
+        let selectedCCEmails = [];
+
+        function initCCEmailsSearch() {
+            const ccSearch = document.getElementById("ccSearch");
+            const ccDropdownList = document.getElementById("ccDropdownList");
+            const ccTagsContainer = document.getElementById("ccTagsContainer");
+            const ccSelectWrap = ccSearch.closest(".cc-select-wrap");
+
+            // Focus search input when clicking the wrapper container
+            ccSelectWrap.addEventListener("click", function (e) {
+                if (e.target === ccSelectWrap || e.target === ccTagsContainer) {
+                    ccSearch.focus();
+                }
+            });
+
+            // Populate all emails initially
+            renderCCDropdown(facultyData);
+
+            ccSearch.addEventListener("focus", function () {
+                ccDropdownList.classList.add("show");
+                filterCCEmails();
+            });
+
+            ccSearch.addEventListener("input", function () {
+                ccDropdownList.classList.add("show");
+                filterCCEmails();
+            });
+
+            // Backspace to remove last tag if input is empty
+            ccSearch.addEventListener("keydown", function (e) {
+                if (e.key === "Backspace" && ccSearch.value === "" && selectedCCEmails.length > 0) {
+                    removeCCTag(selectedCCEmails[selectedCCEmails.length - 1]);
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener("click", function (e) {
+                if (!e.target.closest(".cc-select-wrap")) {
+                    ccDropdownList.classList.remove("show");
+                    ccSearch.value = "";
+                }
+            });
+
+            function filterCCEmails() {
+                const query = ccSearch.value.toLowerCase().trim();
+                // Filter out already selected emails
+                const available = facultyData.filter(member => !selectedCCEmails.includes(member.email));
+
+                // Match by email or name
+                const filtered = available.filter(member =>
+                    member.email.toLowerCase().includes(query) ||
+                    member.name.toLowerCase().includes(query)
+                );
+
+                renderCCDropdown(filtered);
+            }
+
+            function renderCCDropdown(list) {
+                ccDropdownList.innerHTML = "";
+                if (list.length === 0) {
+                    ccDropdownList.innerHTML = `<div class="no-results-item">No matching emails found</div>`;
+                    return;
+                }
+
+                list.forEach(member => {
+                    const item = document.createElement("div");
+                    item.className = "dropdown-item";
+                    item.innerHTML = `
+                        <div class="item-avatar ${member.avatarClass}">${member.initials}</div>
+                        <div class="item-info">
+                            <div class="item-name">${member.email}</div>
+                            <div class="item-desg">${member.name}</div>
+                        </div>
+                    `;
+                    item.addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        addCCTag(member.email);
+                    });
+                    ccDropdownList.appendChild(item);
+                });
+            }
+
+            function addCCTag(email) {
+                if (!selectedCCEmails.includes(email)) {
+                    selectedCCEmails.push(email);
+                    updateCCTagsUI();
+                }
+                ccSearch.value = "";
+                ccSearch.focus();
+                filterCCEmails();
+            }
+
+            function removeCCTag(email) {
+                selectedCCEmails = selectedCCEmails.filter(e => e !== email);
+                updateCCTagsUI();
+                ccSearch.focus();
+                filterCCEmails();
+            }
+
+            function updateCCTagsUI() {
+                ccTagsContainer.innerHTML = "";
+                selectedCCEmails.forEach(email => {
+                    const tag = document.createElement("div");
+                    tag.className = "cc-tag";
+                    tag.innerHTML = `
+                        <span>${email}</span>
+                        <button type="button" class="cc-tag-remove">&times;</button>
+                    `;
+                    tag.querySelector(".cc-tag-remove").addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        removeCCTag(email);
+                    });
+                    ccTagsContainer.appendChild(tag);
+                });
+            }
+        }
+
+        // Initialize CC Emails Search logic
+        initCCEmailsSearch();
+
+        // ── Send Button Submit Action ──
+        const sendBtn = document.getElementById("sendBtn");
+        if (sendBtn) {
+            sendBtn.addEventListener("click", function () {
+                const preparedBy = document.getElementById("preparedBy").value;
+                if (!preparedBy) {
+                    const facultySearch = document.getElementById("facultySearch");
+                    const facultyError = document.getElementById("facultyError");
+                    facultySearch.classList.add("input-error");
+                    facultyError.classList.remove("hidden");
+                    facultySearch.focus();
+                    return;
+                }
+
+                sendBtn.style.pointerEvents = "none";
+                sendBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    <span>Sending...</span>
+                `;
+
+                // Helpers to generate inline-styled pills for emails
+                function getApprovalPillHtmlForEmail(text) {
+                    const lower = text.toLowerCase();
+                    let bg = '#f1f5f9';
+                    let fg = '#475569';
+                    let label = text || '-';
+                    if (lower.includes('approved')) {
+                        bg = '#d1fae5'; fg = '#065f46'; label = 'Approved';
+                    } else if (lower.includes('pending')) {
+                        bg = '#fef3c7'; fg = '#92400e'; label = 'Pending';
+                    } else if (lower.includes('rejected') || lower.includes('reject')) {
+                        bg = '#fee2e2'; fg = '#991b1b'; label = 'Rejected';
+                    }
+                    return `<span style="display: inline-block; padding: 4px 10px; font-size: 10px; font-weight: 700; border-radius: 9999px; background-color: ${bg}; color: ${fg}; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">${label}</span>`;
+                }
+
+                function getSubmissionPillsHtmlForEmail(text) {
+                    if (!text) return `<span style="display: inline-block; padding: 4px 10px; font-size: 10px; font-weight: 700; border-radius: 9999px; background-color: #f1f5f9; color: #475569; font-family: 'Playfair Display', Georgia, serif;">-</span>`;
+
+                    const parts = text.split(/[•,\n]+/)
+                        .map(p => p.trim())
+                        .filter(p => p.length > 0);
+
+                    if (parts.length === 0) {
+                        return `<span style="display: inline-block; padding: 4px 10px; font-size: 10px; font-weight: 700; border-radius: 9999px; background-color: #f1f5f9; color: #475569; font-family: 'Playfair Display', Georgia, serif;">-</span>`;
+                    }
+
+                    return `<div style="text-align: center; font-family: 'Playfair Display', Georgia, serif;">` + parts.map(part => {
+                        const lower = part.toLowerCase();
+                        let bg = '#f1f5f9';
+                        let fg = '#475569';
+
+                        if (lower.includes('not submitted') || lower.includes('not submited')) {
+                            bg = '#fee2e2'; fg = '#991b1b';
+                        } else if (lower.includes('on time') || lower.includes('submitted') || lower.includes('submited')) {
+                            bg = '#dbeafe'; fg = '#1e40af';
+                        } else if (lower.includes('over grace period')) {
+                            bg = '#fca5a5'; fg = '#7f1d1d';
+                        } else if (lower.includes('delayed')) {
+                            bg = '#ffedd5'; fg = '#9a3412';
+                        }
+
+                        return `<div style="margin: 4px 0;"><span style="display: inline-block; padding: 4px 8px; font-size: 9px; font-weight: 700; border-radius: 9999px; background-color: ${bg}; color: ${fg}; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; font-family: 'Playfair Display', Georgia, serif;">${part}</span></div>`;
+                    }).join('') + `</div>`;
+                }
+
+                // Compute overall metrics dynamically from allData (overall stats, unaffected by filters)
+                const activeTotal = allData.length;
+                const activeApproved = allData.filter(x => x.approvalStatus.toLowerCase().includes('approved')).length;
+                const activePending = allData.filter(x => x.approvalStatus.toLowerCase().includes('pending')).length;
+                const activeRejected = allData.filter(x => x.approvalStatus.toLowerCase().includes('rejected') || x.approvalStatus.toLowerCase().includes('reject')).length;
+
+                // Build HTML table for the email report (using activeData)
+                let tableRowsHtml = "";
+                if (activeData.length > 0) {
+                    activeData.forEach((item, index) => {
+                        const bg = index % 2 === 0 ? '#ffffff' : '#f8fafc';
+                        tableRowsHtml += `
+                            <tr style="background-color: ${bg};">
+                                <td style="padding: 14px 16px; text-align: center; font-weight: 500; color: #64748b; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${index + 1}</td>
+                                <td style="padding: 14px 16px; font-weight: 600; color: #0f172a; word-break: break-word; word-wrap: break-word; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${item.name}</td>
+                                <td style="padding: 14px 16px; text-align: center; color: #334155; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${item.planDate || '-'}</td>
+                                <td style="padding: 14px 16px; text-align: center; color: #334155; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${item.actualDate || '-'}</td>
+                                <td style="padding: 14px 16px; text-align: center; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${getSubmissionPillsHtmlForEmail(item.submissionFlags)}</td>
+                                <td style="padding: 14px 16px; text-align: center; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${getApprovalPillHtmlForEmail(item.approvalStatus)}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tableRowsHtml = '<tr><td colspan="6" style="text-align: center; padding: 32px; color: #64748b; font-weight: 500; border: 1px solid #cbd5e1; vertical-align: middle; font-family: \'Playfair Display\', Georgia, serif;">No matching activities found.</td></tr>';
+                }
+
+                const emailHtml = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <link rel="preconnect" href="https://fonts.googleapis.com">
+                        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                        <!--[if !mso]><!-->
+                        <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap" rel="stylesheet">
+                        <!--<![endif]-->
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap');
+                            
+                            body, table, td, th, div, span, p, a, h1, h2 {
+                                font-family: 'Playfair Display', Georgia, serif !important;
+                            }
+                            
+                            /* Responsive Styles */
+                            @media only screen and (max-width: 600px) {
+                                .email-container {
+                                    padding: 12px 6px !important;
+                                }
+                                .card-wrapper {
+                                    border-radius: 12px !important;
+                                }
+                                .header-banner {
+                                    padding: 24px 16px !important;
+                                }
+                                .header-banner h1 {
+                                    font-size: 20px !important;
+                                }
+                                .faculty-card {
+                                    margin: 16px 12px 0 12px !important;
+                                    padding: 12px !important;
+                                }
+                                .faculty-table, .faculty-table tr {
+                                    display: block !important;
+                                    width: 100% !important;
+                                }
+                                .faculty-table td.faculty-avatar-cell {
+                                    display: inline-block !important;
+                                    width: auto !important;
+                                    vertical-align: middle !important;
+                                }
+                                .faculty-table td.faculty-info-cell {
+                                    display: inline-block !important;
+                                    width: auto !important;
+                                    padding-left: 10px !important;
+                                    vertical-align: middle !important;
+                                }
+                                .faculty-table td.faculty-date-cell {
+                                    display: block !important;
+                                    width: 100% !important;
+                                    margin-top: 12px !important;
+                                    text-align: left !important;
+                                    padding-left: 0 !important;
+                                    border-top: 1px dashed #cbd5e1 !important;
+                                    padding-top: 12px !important;
+                                }
+                                .section-container {
+                                    margin: 20px 12px 0 12px !important;
+                                }
+                                .section-container-details {
+                                    margin: 20px 12px 20px 12px !important;
+                                }
+                                .metrics-table {
+                                    border-spacing: 0 !important;
+                                    margin: 0 !important;
+                                }
+                                .metrics-table tr, .metrics-table td {
+                                    display: block !important;
+                                    width: 100% !important;
+                                }
+                                .metrics-card {
+                                    width: auto !important;
+                                    margin-bottom: 12px !important;
+                                    box-sizing: border-box !important;
+                                }
+                                .table-responsive {
+                                    display: block !important;
+                                    width: 100% !important;
+                                    overflow-x: auto !important;
+                                    -webkit-overflow-scrolling: touch !important;
+                                }
+                                .footer-container {
+                                    padding: 16px 12px !important;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: 'Playfair Display', Georgia, serif; color: #334155; -webkit-font-smoothing: antialiased;">
+                        <div class="email-container" style="background-color: #f8fafc; padding: 40px 20px;">
+                            <div class="card-wrapper" style="max-width: 1050px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);">
+                                
+                                <!-- Header Banner -->
+                                <div class="header-banner" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 32px 24px; position: relative; text-align: center;">
+                                    <h1 style="margin: 0; font-family: 'Playfair Display', Georgia, serif; font-size: 26px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; text-align: center;">CTL Activity Report Dashboard</h1>
+                                </div>
+
+                                <!-- Faculty Card -->
+                                <div class="faculty-card" style="margin: 32px 24px 0 24px; padding: 20px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+                                    <table class="faculty-table" style="width: 100%; border-collapse: collapse; font-family: 'Playfair Display', Georgia, serif;">
+                                        <tr>
+                                            <td class="faculty-avatar-cell" style="vertical-align: middle; width: 48px;">
+                                                <div style="width: 40px; height: 40px; border-radius: 20px; background-color: #0f172a; color: #e5c185; text-align: center; line-height: 40px; font-weight: bold; font-size: 16px; font-family: 'Playfair Display', Georgia, serif;">
+                                                    ${(selectedFaculty ? selectedFaculty.initials : preparedBy.charAt(0)).toUpperCase()}
+                                                </div>
+                                            </td>
+                                            <td class="faculty-info-cell" style="vertical-align: middle; padding-left: 12px; font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Prepared By </div>
+                                                <div style="font-size: 15px; font-weight: 600; color: #0f172a; margin-top: 2px; font-family: 'Playfair Display', Georgia, serif;">${selectedFaculty ? selectedFaculty.name : preparedBy}</div>
+                                            </td>
+                                            <td class="faculty-date-cell" style="vertical-align: middle; text-align: right; font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Date</div>
+                                                <div style="font-size: 14px; font-weight: 600; color: #0f172a; margin-top: 2px; font-family: 'Playfair Display', Georgia, serif;">${new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- Section: Summary Metrics -->
+                                <div class="section-container" style="margin: 32px 24px 0 24px;">
+                                    <h2 style="margin: 0 0 16px 0; font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 700; color: #0f172a; border-left: 4px solid #c29a5b; padding-left: 10px; line-height: 1.2;">Summary Metrics</h2>
+                                    
+                                    <table class="metrics-table" style="width: 100%; border-collapse: separate; border-spacing: 12px 0; margin: 0 -12px; font-family: 'Playfair Display', Georgia, serif;">
+                                        <tr>
+                                            <!-- Card 1: Total -->
+                                            <td class="metrics-card" style="width: 25%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #3b82f6; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Total</div>
+                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: #1e293b; margin-top: 6px;">${activeTotal}</div>
+                                            </td>
+                                            <!-- Card 2: Approved -->
+                                            <td class="metrics-card" style="width: 25%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #10b981; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 10px; color: #10b981; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Approved</div>
+                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: #065f46; margin-top: 6px;">${activeApproved}</div>
+                                            </td>
+                                            <!-- Card 3: Pending -->
+                                            <td class="metrics-card" style="width: 25%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #f59e0b; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 10px; color: #f59e0b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Pending</div>
+                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: #92400e; margin-top: 6px;">${activePending}</div>
+                                            </td>
+                                            <!-- Card 4: Rejected -->
+                                            <td class="metrics-card" style="width: 25%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #ef4444; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 10px; color: #ef4444; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Rejected</div>
+                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: #991b1b; margin-top: 6px;">${activeRejected}</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- Section: Activity Details -->
+                                <div class="section-container-details" style="margin: 36px 24px 40px 24px;">
+                                    <h2 style="margin: 0 0 16px 0; font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 700; color: #0f172a; border-left: 4px solid #c29a5b; padding-left: 10px; line-height: 1.2;">Activity Details</h2>
+                                    
+                                    <div class="table-responsive" style="border: 1px solid #cbd5e1; border-radius: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; box-shadow: 0 1px 3px rgba(0,0,0,0.01);">
+                                        <table style="width: 100%; min-width: 950px; border-collapse: collapse; text-align: left; font-size: 13px; font-family: 'Playfair Display', Georgia, serif; border: 1px solid #cbd5e1;">
+                                            <thead>
+                                                <tr style="background-color: #f8fafc;">
+                                                    <th style="padding: 14px 16px; font-weight: 700; color: #334155; width: 5%; text-align: center; font-family: 'Playfair Display', Georgia, serif; border: 1px solid #cbd5e1; background-color: #f1f5f9;">#</th>
+                                                    <th style="padding: 14px 16px; font-weight: 700; color: #334155; width: 35%; text-align: left; font-family: 'Playfair Display', Georgia, serif; border: 1px solid #cbd5e1; background-color: #f1f5f9;">Activity Name</th>
+                                                    <th style="padding: 14px 16px; font-weight: 700; color: #334155; width: 12%; text-align: center; font-family: 'Playfair Display', Georgia, serif; border: 1px solid #cbd5e1; background-color: #f1f5f9;">Plan Date</th>
+                                                    <th style="padding: 14px 16px; font-weight: 700; color: #334155; width: 12%; text-align: center; font-family: 'Playfair Display', Georgia, serif; border: 1px solid #cbd5e1; background-color: #f1f5f9;">Actual Date</th>
+                                                    <th style="padding: 14px 16px; font-weight: 700; color: #334155; width: 22%; text-align: center; font-family: 'Playfair Display', Georgia, serif; border: 1px solid #cbd5e1; background-color: #f1f5f9;">Submission Flags</th>
+                                                    <th style="padding: 14px 16px; font-weight: 700; color: #334155; width: 14%; text-align: center; font-family: 'Playfair Display', Georgia, serif; border: 1px solid #cbd5e1; background-color: #f1f5f9;">Approval Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="color: #334155; font-family: 'Playfair Display', Georgia, serif;">
+                                                ${tableRowsHtml}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="footer-container" style="background-color: #f8fafc; padding: 24px 24px; border-top: 1px solid #cbd5e1; text-align: center; font-family: 'Playfair Display', Georgia, serif;">
+                                    <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.5; font-family: 'Playfair Display', Georgia, serif;">This email was automatically generated by the <br><a href="${window.location.href}" style="color: #c0392b; text-decoration: none; font-weight: 600;">IT Department Admin</a>.</p>
+                                    <p style="margin: 4px 0 0 0; font-size: 11px; color: #94a3b8; font-family: 'Playfair Display', Georgia, serif;">&copy; 2026 <a href="${window.location.href}" style="color: #64748b; text-decoration: none; font-weight: 600;"></a>All rights reserved.</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                `;
+
+                const recipientEmail = document.getElementById("facultyEmail").value || "adminit@gmiu.edu.in";
+
+                // Generate subject line dynamically based on active filters, excluding faculty name
+                const statusVal = document.getElementById("statusFilter").value;
+                const submissionVal = document.getElementById("submissionFilter").value;
+                const searchVal = document.getElementById("search").value.trim();
+
+                let subjectFilters = [];
+                if (statusVal) subjectFilters.push(statusVal);
+                if (submissionVal) subjectFilters.push(submissionVal);
+                if (searchVal) subjectFilters.push(`"${searchVal}"`);
+
+                let emailSubject = " ERP CTL Activity";
+                if (subjectFilters.length > 0) {
+                    emailSubject += ` (${subjectFilters.join(" - ")})`;
+                }
+
+                // Trigger POST request to the local PHP email service
+                fetch('send-email.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        to: recipientEmail,
+                        cc: selectedCCEmails,
+                        subject: emailSubject,
+                        html: emailHtml
+                    })
+                })
+                    .then(response => {
+                        return response.json().then(data => {
+                            if (!response.ok) {
+                                throw new Error(data.error || `HTTP error ${response.status}`);
+                            }
+                            return data;
+                        });
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            sendBtn.innerHTML = `
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Sent Successfully!</span>
+                        `;
+                            sendBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
+                            sendBtn.style.boxShadow = "0 6px 28px rgba(16, 185, 129, 0.4)";
+                        } else {
+                            throw new Error(data.error || 'Server reported error');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Email send failed:', err);
+                        alert("Email service is offline or returned an error! \n\nDetails: " + err.message);
+
+                        sendBtn.innerHTML = `
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        <span>Send Failed</span>
+                    `;
+                        sendBtn.style.background = "linear-gradient(135deg, #ef4444 0%, #991b1b 100%)";
+                        sendBtn.style.boxShadow = "0 6px 28px rgba(239, 68, 68, 0.4)";
+                    })
+                    .finally(() => {
+                        setTimeout(() => {
+                            sendBtn.style.pointerEvents = "auto";
+                            sendBtn.style.background = "";
+                            sendBtn.style.boxShadow = "";
+                            sendBtn.innerHTML = `
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>
+                            </svg>
+                            <span>Send</span>
+                        `;
+                        }, 4000);
+                    });
+            });
+        }
+
+        // Upload dropzone triggers original input field
+        const uploadArea = document.getElementById('uploadArea');
+        const excelFile = document.getElementById('excelFile');
+        const uploadText = document.getElementById('uploadText');
+
+        uploadArea.addEventListener('click', () => {
+            excelFile.click();
+        });
+
+        // Drag and drop event listeners
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = "var(--red-bright)";
+            uploadArea.style.background = "rgba(192, 57, 43, 0.08)";
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = "rgba(255, 255, 255, 0.15)";
+            uploadArea.style.background = "rgba(6, 10, 28, 0.4)";
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = "rgba(255, 255, 255, 0.15)";
+            uploadArea.style.background = "rgba(6, 10, 28, 0.4)";
+
+            if (e.dataTransfer.files.length > 0) {
+                excelFile.files = e.dataTransfer.files;
+                handleFileLoad(excelFile.files[0]);
+            }
+        });
+
+        excelFile.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileLoad(e.target.files[0]);
+            }
+        });
+
+        document.getElementById('statusFilter').addEventListener('change', filterData);
+        document.getElementById('submissionFilter').addEventListener('change', filterData);
+        document.getElementById('search').addEventListener('keyup', filterData);
+
+        // Cleaner function to clean newlines and trim text
+        function cleanText(str) {
+            if (str === undefined || str === null || str === "") return "";
+            return String(str).replace(/\n/g, ', ').trim();
+        }
+
+        // Helper function to format Excel date values properly (handles JS Dates, Excel Serial Numbers, and clean strings)
+        function formatExcelDate(cell) {
+            if (cell === undefined || cell === null || cell === "") return "";
+
+            if (cell instanceof Date) {
+                const d = String(cell.getDate()).padStart(2, '0');
+                const m = String(cell.getMonth() + 1).padStart(2, '0');
+                const y = cell.getFullYear();
+                return `${d}-${m}-${y}`;
+            }
+
+            if (typeof cell === 'number' && cell > 30000 && cell < 60000) {
+                // Convert Excel serial number to date
+                const date = new Date(Math.round((cell - 25569) * 86400) * 1000);
+                const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+                const adjustedDate = new Date(date.getTime() + userTimezoneOffset);
+                const d = String(adjustedDate.getDate()).padStart(2, '0');
+                const m = String(adjustedDate.getMonth() + 1).padStart(2, '0');
+                const y = adjustedDate.getFullYear();
+                return `${d}-${m}-${y}`;
+            }
+
+            return cleanText(cell);
+        }
+
+        function handleFileLoad(file) {
+            if (!file) return;
+
+            // Show filename visual update
+            uploadText.innerText = "Loaded: " + file.name;
+            uploadText.style.color = "var(--green)";
+
+            const reader = new FileReader();
+
+            reader.onload = function (evt) {
+                const data = new Uint8Array(evt.target.result);
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                const rows = XLSX.utils.sheet_to_json(sheet, {
+                    header: 1,
+                    defval: ""
+                });
+
+                allData = [];
+
+                let headerRowIndex = 1; // Default fallback index
+                let colIndices = {
+                    srNo: 0,
+                    name: 1,
+                    planDate: 2,
+                    actualDate: 3,
+                    modifiedDate: 4,
+                    marks: 5,
+                    flags: 6,
+                    submissionFlags: 7,
+                    approvalStatus: 8
+                };
+
+                // Scan rows to find the header row
+                for (let i = 0; i < Math.min(10, rows.length); i++) {
+                    const row = rows[i];
+                    if (!row || row.length === 0) continue;
+
+                    let hasName = false;
+                    let hasSub = false;
+                    row.forEach(cell => {
+                        const str = String(cell).trim().toLowerCase();
+                        if (str === 'name') hasName = true;
+                        if (str.includes('submission flag') || str.includes('submission flags')) hasSub = true;
+                    });
+
+                    if (hasName && hasSub) {
+                        headerRowIndex = i;
+                        // Reset indices to -1 so we map strictly what is found in the matched header row
+                        colIndices = {
+                            srNo: -1,
+                            name: -1,
+                            planDate: -1,
+                            actualDate: -1,
+                            modifiedDate: -1,
+                            marks: -1,
+                            flags: -1,
+                            submissionFlags: -1,
+                            approvalStatus: -1
+                        };
+                        // Map indices dynamically
+                        row.forEach((cell, idx) => {
+                            const str = String(cell).trim().toLowerCase();
+                            if (str === '#') colIndices.srNo = idx;
+                            else if (str === 'name') colIndices.name = idx;
+                            else if (str === 'plan date') colIndices.planDate = idx;
+                            else if (str === 'actual date') colIndices.actualDate = idx;
+                            else if (str === 'modified date') colIndices.modifiedDate = idx;
+                            else if (str === 'marks') colIndices.marks = idx;
+                            else if (str === 'flags') colIndices.flags = idx;
+                            else if (str.includes('submission flag') || str.includes('submission flags')) colIndices.submissionFlags = idx;
+                            else if (str.includes('approval status') || str === 'approval') colIndices.approvalStatus = idx;
+                        });
+                        break;
+                    }
+                }
+
+                // Parse data rows starting after headerRowIndex
+                for (let i = headerRowIndex + 1; i < rows.length; i++) {
+                    const row = rows[i];
+
+                    // Skip empty rows or rows missing Name
+                    if (!row || colIndices.name === -1 || !row[colIndices.name]) continue;
+
+                    allData.push({
+                        srNo: colIndices.srNo !== -1 && row[colIndices.srNo] !== undefined ? cleanText(row[colIndices.srNo]) : "",
+                        name: cleanText(row[colIndices.name]),
+                        planDate: colIndices.planDate !== -1 && row[colIndices.planDate] !== undefined ? formatExcelDate(row[colIndices.planDate]) : "",
+                        actualDate: colIndices.actualDate !== -1 && row[colIndices.actualDate] !== undefined ? formatExcelDate(row[colIndices.actualDate]) : "",
+                        modifiedDate: colIndices.modifiedDate !== -1 && row[colIndices.modifiedDate] !== undefined ? formatExcelDate(row[colIndices.modifiedDate]) : "",
+                        marks: colIndices.marks !== -1 && row[colIndices.marks] !== undefined ? cleanText(row[colIndices.marks]) : "",
+                        flags: colIndices.flags !== -1 && row[colIndices.flags] !== undefined ? cleanText(row[colIndices.flags]) : "",
+                        submissionFlags: colIndices.submissionFlags !== -1 && row[colIndices.submissionFlags] !== undefined ? cleanText(row[colIndices.submissionFlags]) : "",
+                        approvalStatus: colIndices.approvalStatus !== -1 && row[colIndices.approvalStatus] !== undefined ? cleanText(row[colIndices.approvalStatus]) : ""
+                    });
+                }
+
+                updateCards(allData);
+                renderTable(allData);
+                activeData = [...allData];
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function updateCards(data) {
+            document.getElementById('total').innerText = data.length;
+
+            document.getElementById('approved').innerText = data.filter(x =>
+                x.approvalStatus.toLowerCase().includes('approved')
+            ).length;
+
+            document.getElementById('pending').innerText = data.filter(x =>
+                x.approvalStatus.toLowerCase().includes('pending')
+            ).length;
+
+            document.getElementById('rejected').innerText = data.filter(x =>
+                x.approvalStatus.toLowerCase().includes('rejected') || x.approvalStatus.toLowerCase().includes('reject')
+            ).length;
+        }
+
+        // Helper to apply beautiful CSS pills based on keywords
+        function getSubmissionPills(text) {
+            if (!text) return `<span class="status-pill pill-default">-</span>`;
+
+            // Split by bullet point (•), comma, or newline, and filter out empty items
+            const parts = text.split(/[•,\n]+/)
+                .map(p => p.trim())
+                .filter(p => p.length > 0);
+
+            if (parts.length === 0) {
+                return `<span class="status-pill pill-default">-</span>`;
+            }
+
+            return `<div class="sub-flags-container">` + parts.map(part => {
+                const lower = part.toLowerCase();
+                let className = 'pill-default';
+
+                if (lower.includes('not submitted')) {
+                    className = 'pill-missing';
+                } else if (lower.includes('on time')) {
+                    className = 'pill-submitted';
+                } else if (lower.includes('over grace period')) {
+                    className = 'pill-rejected';
+                } else if (lower.includes('delayed')) {
+                    className = 'pill-delayed';
+                } else if (lower.includes('submitted')) {
+                    className = 'pill-submitted';
+                }
+
+                return `<span class="status-pill ${className}">${part}</span>`;
+            }).join('') + `</div>`;
+        }
+
+        function getApprovalPill(text) {
+            const lower = text.toLowerCase();
+            if (lower.includes('approved')) return `<span class="status-pill pill-approved">Approved</span>`;
+            if (lower.includes('pending')) return `<span class="status-pill pill-pending">Pending</span>`;
+            if (lower.includes('rejected') || lower.includes('reject')) return `<span class="status-pill pill-rejected">Rejected</span>`;
+            return `<span class="status-pill pill-default">${text || '-'}</span>`;
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tbody');
+            tbody.innerHTML = "";
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 40px; font-weight: 500;">No matching activities found.</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td class="col-sr" style="text-align: center;">${item.srNo}</td>
+                    <td class="col-name" style="font-weight: 500;">${item.name}</td>
+                    <td class="col-plan">${item.planDate}</td>
+                    <td class="col-actual">${item.actualDate}</td>
+                    <td class="col-modified">${item.modifiedDate || 'N/A'}</td>
+                    <td class="col-marks" style="text-align: center;">${item.marks}</td>
+                    <td class="col-flags">${item.flags}</td>
+                    <td class="col-sub">${getSubmissionPills(item.submissionFlags)}</td>
+                    <td class="col-status">${getApprovalPill(item.approvalStatus)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterData() {
+            const status = document.getElementById('statusFilter').value.toLowerCase();
+            const submission = document.getElementById('submissionFilter').value.toLowerCase();
+            const search = document.getElementById('search').value.toLowerCase();
+
+            const filtered = allData.filter(item => {
+                const itemApproval = item.approvalStatus.toLowerCase();
+                const itemSub = item.submissionFlags.toLowerCase();
+                const itemAct = item.name.toLowerCase();
+
+                // Status Match Logic
+                let statusMatch = !status ||
+                    (status.includes('reject') ? (itemApproval.includes('reject') || itemApproval.includes('rejected')) : itemApproval.includes(status));
+
+                // Submission Match Logic
+                let submissionMatch = true;
+                if (submission) {
+                    if (submission === 'not submitted') {
+                        submissionMatch = itemSub.includes('not submitted');
+                    } else if (submission === 'submitted') {
+                        // If looking for 'submitted', ensure it's NOT 'not submitted'
+                        submissionMatch = itemSub.includes('submitted') && !itemSub.includes('not submitted');
+                    } else {
+                        submissionMatch = itemSub.includes(submission);
+                    }
+                }
+
+                const searchMatch = !search || itemAct.includes(search);
+
+                return statusMatch && submissionMatch && searchMatch;
+            });
+
+            renderTable(filtered);
+            activeData = filtered;
+        }
+
+        // ── FAB Nav Toggle ──
+        const fabBtn = document.getElementById('fabBtn');
+        const fabMenu = document.getElementById('fabMenu');
+        const iconMenu = fabBtn.querySelector('.fab-icon-menu');
+        const iconClose = fabBtn.querySelector('.fab-icon-close');
+
+        fabBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = fabMenu.classList.toggle('open');
+            fabBtn.classList.toggle('active', isOpen);
+            iconMenu.style.display = isOpen ? 'none' : 'block';
+            iconClose.style.display = isOpen ? 'block' : 'none';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!document.getElementById('fabNav').contains(e.target)) {
+                fabMenu.classList.remove('open');
+                fabBtn.classList.remove('active');
+                iconMenu.style.display = 'block';
+                iconClose.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

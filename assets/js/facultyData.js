@@ -179,5 +179,26 @@ const facultyData = [
         phone: "81286 00880",
         avatarClass: "av-sg",
         initials: "SG"
+    },
+    {
+        id: "dk",
+        name: "Mr. Dev K Dholakiya",
+        designation: "Developer",
+        empId: "#10216",
+        email: "dkdholakiya@gmiu.edu.in",
+        phone: "9328946676",
+        avatarClass: "av-dk",
+        initials: "DK"
+    },
+    {
+        id: "Ai",
+        name: "Admin It",
+        designation: "Admin It",
+        empId: "#11111",
+        email: "adminit@gmiu.edu.in",
+        phone: "0000000000",
+        avatarClass: "av-AI",
+        initials: "AI"
     }
+
 ];
