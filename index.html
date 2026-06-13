@@ -78,28 +78,6 @@
                     </p>
                 </div>
 
-                <!-- Stats -->
-                <div class="stats-row">
-                    <div class="stat-item">
-                        <span class="stat-num" data-target="18">0</span>
-                        <span class="stat-label">Faculty</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-num" data-target="480">0</span>
-                        <span class="stat-label">Students</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-num" data-target="8">0</span>
-                        <span class="stat-label">Programs</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-num" data-target="2026">0</span>
-                        <span class="stat-label">Batch Year</span>
-                    </div>
-                </div>
 
                 <!-- CTA -->
                 <a href="https://gmiu.edu.in/gmiu/website/" target="_blank" class="cta-btn" id="ctaBtn">
@@ -245,45 +223,37 @@
                             <span class="tdot yellow"></span>
                             <span class="tdot green"></span>
                         </div>
-                        <span class="terminal-title">it_portal.js — GMIU</span>
+                        <span class="terminal-title">it_department.js — GMIU</span>
                     </div>
                     <div class="terminal-body">
-                        <div class="code-line"><span class="cmt">// Department of Information Technology</span></div>
-                        <div class="code-line"><span class="kw">const</span> <span class="var">dept</span> = <span
-                                class="str">'IT @ GMIU'</span>;</div>
+                        <div class="code-line"><span class="cmt">// GMIU Department of Information Technology</span></div>
+                        <div class="code-line"><span class="kw">const</span> <span class="var">itDept</span> = {</div>
+                        <div class="code-line">&nbsp;&nbsp;<span class="key">established</span>: <span class="num">2021</span>,</div>
+                        <div class="code-line">&nbsp;&nbsp;<span class="key">vision</span>: <span class="str">'Nurturing excellence & innovation'</span>,</div>
+                        <div class="code-line">&nbsp;&nbsp;<span class="key">degrees</span>: [<span class="str">'B.Tech IT'</span>, <span class="str">'Diploma IT'</span>],</div>
+                        <div class="code-line">&nbsp;&nbsp;<span class="key">headOfDept</span>: <span class="str">'Prof. Dhaval Chandarana'</span>,</div>
+                        <div class="code-line">&nbsp;&nbsp;<span class="key">labs</span>: [<span class="str">'Apple iOS Dev Lab'</span>, <span class="str">'IoT Hub'</span>],</div>
+                        <div class="code-line">&nbsp;&nbsp;<span class="key">coreSubjects</span>: [</div>
+                        <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">'Web Tech'</span>, <span class="str">'Data Science'</span>, <span class="str">'AI & ML'</span></div>
+                        <div class="code-line">&nbsp;&nbsp;]</div>
+                        <div class="code-line">};</div>
                         <div class="code-line"></div>
-                        <div class="code-line"><span class="cmt">// Our promise to every student</span></div>
-                        <div class="code-line"><span class="kw">function</span> <span
-                                class="fn">buildFuture</span>(<span class="var">you</span>) {</div>
-                        <div class="code-line">&nbsp;&nbsp;<span class="kw">return</span> {</div>
-                        <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">passion</span>: <span
-                                class="bool">true</span>,</div>
-                        <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">skills</span>: <span
-                                class="str">'world-class'</span>,</div>
-                        <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">potential</span>: <span
-                                class="str">'limitless'</span>,</div>
-                        <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">mentor</span>: <span
-                                class="str">'always here'</span></div>
-                        <div class="code-line">&nbsp;&nbsp;};</div>
-                        <div class="code-line">}</div>
-                        <div class="code-line"></div>
-                        <div class="code-line"><span class="var">made</span>.<span class="fn">by</span> = <span
-                                class="str">'<span class="blink-cursor">Dev Dholakiya ▌</span>'</span>;</div>
+                        <div class="code-line"><span class="var">itDept</span>.<span class="fn">madeBy</span> = <span class="str">'<span class="blink-cursor">Dev K Dholakiya ▌</span>'</span>;</div>
                     </div>
                 </div>
 
                 <!-- Floating Info Pills -->
                 <div class="floating-pill pill-1">
                     <span class="pill-icon">🎓</span>
-                    <span>Faculty Portal Active</span>
+                    <span>B.Tech & Diploma IT</span>
                 </div>
                 <div class="floating-pill pill-2">
-                    <span class="pill-icon">⚡</span>
-                    <span>Reports Open</span>
+                    <span class="pill-icon">💻</span>
+                    <span>Advanced Programming Labs</span>
                 </div>
                 <div class="floating-pill pill-3">
-                    <span class="pill-icon">🔬</span>
-                    <span>Batch 2025–26</span>
+                    <span class="pill-icon">🚀</span>
+                    <span>Innovation & Research</span>
                 </div>
 
             </div>
@@ -359,6 +329,7 @@
         </button>
     </div>
 
+
     <script>
         // ── FAB Nav Toggle ──
         const fabBtn = document.getElementById('fabBtn');
@@ -383,20 +354,6 @@
             }
         });
 
-        // ── Animated Counters ──
-        function animateCounters() {
-            document.querySelectorAll('.stat-num').forEach(el => {
-                const target = +el.dataset.target;
-                const duration = target > 1000 ? 2000 : 1200;
-                const step = target / (duration / 16);
-                let current = 0;
-                const timer = setInterval(() => {
-                    current = Math.min(current + step, target);
-                    el.textContent = Math.floor(current).toLocaleString();
-                    if (current >= target) clearInterval(timer);
-                }, 16);
-            });
-        }
 
         // ── 3D Mouse-Tilt on Terminal Card ──
         const card = document.getElementById('terminalCard');
@@ -413,8 +370,7 @@
             });
         }
 
-        // Run on load
-        window.addEventListener('load', () => setTimeout(animateCounters, 400));
+
     </script>
 
 </body>
