@@ -4,6 +4,10 @@
  * Native PHP replacement for Node.js server.js
  */
 
+// Enable background execution
+ignore_user_abort(true);
+set_time_limit(0);
+
 // Enable CORS and configure JSON response
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -30,19 +34,6 @@ if (!$input) {
     exit;
 }
 
-$to = $input['to'] ?? '';
-$cc = $input['cc'] ?? [];
-$subject = $input['subject'] ?? '';
-$html = $input['html'] ?? '';
-$attachment = $input['attachment'] ?? '';
-$filename = $input['filename'] ?? '';
-
-if (empty($to)) {
-    http_response_code(400);
-    echo json_encode(["success" => false, "error" => 'Recipient email ("to") is required.']);
-    exit;
-}
-
 // Dynamically parse Gmail SMTP credentials from emailConfig.js
 $configFile = __DIR__ . '/assets/js/emailConfig.js';
 if (!file_exists($configFile)) {
@@ -64,12 +55,74 @@ if (empty($email) || empty($appPassword)) {
     exit;
 }
 
-try {
-    send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $attachment, $filename);
-    echo json_encode(["success" => true, "message" => "Email sent successfully!"]);
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(["success" => false, "error" => $e->getMessage()]);
+function send_instant_success_response() {
+    // Disable compression so we can flush buffers correctly
+    if (function_exists('apache_setenv')) {
+        apache_setenv('no-gzip', '1');
+    }
+    ini_set('zlib.output_compression', '0');
+
+    // Turn off output buffering
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+
+    ob_start();
+    echo json_encode(["success" => true, "message" => "Email transmission started in background."]);
+    $size = ob_get_length();
+    header("Content-Length: $size");
+    header("Connection: close");
+    ob_end_flush();
+    flush();
+
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    }
+}
+
+$emails = $input['emails'] ?? [];
+$attachment = $input['attachment'] ?? '';
+$filename = $input['filename'] ?? '';
+
+if (!empty($emails) && is_array($emails)) {
+    // Multi-email request
+    send_instant_success_response();
+    
+    try {
+        foreach ($emails as $item) {
+            $to = $item['to'] ?? '';
+            $cc = $item['cc'] ?? [];
+            $subject = $item['subject'] ?? '';
+            $html = $item['html'] ?? '';
+            if (!empty($to)) {
+                send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $attachment, $filename);
+            }
+        }
+    } catch (Exception $e) {
+        error_log("Multi-SMTP Error: " . $e->getMessage());
+    }
+    exit;
+} else {
+    // Single email request (backward compatible)
+    $to = $input['to'] ?? '';
+    $cc = $input['cc'] ?? [];
+    $subject = $input['subject'] ?? '';
+    $html = $input['html'] ?? '';
+    
+    if (empty($to)) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "error" => 'Recipient email ("to") is required.']);
+        exit;
+    }
+    
+    send_instant_success_response();
+    
+    try {
+        send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $attachment, $filename);
+    } catch (Exception $e) {
+        error_log("Single SMTP Error: " . $e->getMessage());
+    }
+    exit;
 }
 
 /**
