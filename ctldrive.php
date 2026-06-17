@@ -297,8 +297,7 @@
         </button>
     </div>
 
-    <!-- SheetJS library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="assets/vendor/xlsx/xlsx.full.min.js"></script>
 
     <!-- Faculty Data -->
     <script src="assets/js/facultyData.js"></script>
