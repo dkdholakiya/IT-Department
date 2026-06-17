@@ -274,14 +274,14 @@
     <!-- ░░ FLOATING NAV BUTTON (Bottom Right) ░░ -->
     <div class="fab-nav" id="fabNav">
         <div class="fab-menu" id="fabMenu">
-            <a href="index.html" class="fab-link active" id="nav-home">
+            <a href="index.php" class="fab-link active" id="nav-home">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
                 Home
             </a>
-            <a href="faculty.html" class="fab-link" id="nav-faculty">
+            <a href="faculty.php" class="fab-link" id="nav-faculty">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
@@ -290,7 +290,7 @@
                 </svg>
                 Faculty Team
             </a>
-            <a href="report.html" class="fab-link" id="nav-report">
+            <a href="report.php" class="fab-link" id="nav-report">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                     <polyline points="14 2 14 8 20 8" />
@@ -299,7 +299,7 @@
                 </svg>
                 Report Request
             </a>
-            <a href="ctlactivity.html" class="fab-link" id="nav-ctl">
+            <a href="ctlactivity.php" class="fab-link" id="nav-ctl">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                     <line x1="9" y1="3" x2="9" y2="21" />
@@ -309,7 +309,7 @@
                 </svg>
                 CTL Activity
             </a>
-            <a href="ctldrive.html" class="fab-link" id="nav-drive">
+            <a href="ctldrive.php" class="fab-link" id="nav-drive">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                 </svg>

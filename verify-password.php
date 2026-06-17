@@ -14,12 +14,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+// Start PHP Session
+session_start();
+
 // Password Switch: 1 = ON (Ask for password), 0 = OFF (Password not asked)
-$password_required = 0;
+$password_required = 1;
 
 // Configure the correct password here
 // Default password: gmiu@it
 $correct_password = "gmiu@it";
+
+// Clear session action
+if (isset($_GET['action']) && $_GET['action'] === 'clear') {
+    $_SESSION['authenticated'] = false;
+    session_destroy();
+    echo json_encode(["success" => true, "message" => "Session cleared."]);
+    exit;
+}
 
 // If method is GET, return the password status
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -35,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 // If password is turned off (0), immediately allow entry without checking
 if ($password_required == 0) {
+    $_SESSION['authenticated'] = true;
     echo json_encode(["success" => true, "message" => "Authentication successful (Password disabled)."]);
     exit;
 }
@@ -62,6 +74,7 @@ if ($password === $correct_password) {
 }
 
 if ($is_valid) {
+    $_SESSION['authenticated'] = true;
     echo json_encode(["success" => true, "message" => "Authentication successful."]);
 } else {
     echo json_encode(["success" => false, "error" => "Invalid password."]);

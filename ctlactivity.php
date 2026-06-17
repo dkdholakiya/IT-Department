@@ -1,3 +1,4 @@
+<?php include 'auth-check.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,9 +8,6 @@
     <meta name="description"
         content="GMIU IT Department — CTL Activity Dashboard for academic tracking and expert session analytics.">
     <title>CTL Activity Dashboard — GMIU IT Department</title>
-
-    <!-- Security Authentication (Protects Page Content) -->
-    <script src="assets/js/auth.js"></script>
 
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
@@ -65,7 +63,7 @@
         <!-- ── Page Header ── -->
         <header class="rp-header container">
             <div class="rp-header-inner">
-                <a href="index.html" class="back-btn">
+                <a href="index.php" class="back-btn">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 24 24">
                         <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -258,14 +256,14 @@
     <!-- ░░ FLOATING NAV BUTTON (Bottom Right) ░░ -->
     <div class="fab-nav" id="fabNav">
         <div class="fab-menu" id="fabMenu">
-            <a href="index.html" class="fab-link" id="nav-home">
+            <a href="index.php" class="fab-link" id="nav-home">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
                 Home
             </a>
-            <a href="faculty.html" class="fab-link" id="nav-faculty">
+            <a href="faculty.php" class="fab-link" id="nav-faculty">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
@@ -274,7 +272,7 @@
                 </svg>
                 Faculty Team
             </a>
-            <a href="report.html" class="fab-link" id="nav-report">
+            <a href="report.php" class="fab-link" id="nav-report">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                     <polyline points="14 2 14 8 20 8" />
@@ -283,7 +281,7 @@
                 </svg>
                 Report Request
             </a>
-            <a href="ctlactivity.html" class="fab-link active" id="nav-ctl">
+            <a href="ctlactivity.php" class="fab-link active" id="nav-ctl">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                     <line x1="9" y1="3" x2="9" y2="21" />
@@ -293,7 +291,7 @@
                 </svg>
                 CTL Activity
             </a>
-            <a href="ctldrive.html" class="fab-link" id="nav-drive">
+            <a href="ctldrive.php" class="fab-link" id="nav-drive">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                 </svg>
@@ -318,6 +316,11 @@
     <!-- Script Logic -->
     <script src="assets/js/facultyData.js"></script>
     <script>
+        // Clear the session on load so that refresh triggers password re-prompt
+        window.addEventListener('load', () => {
+            fetch('verify-password.php?action=clear');
+        });
+
         let allData = [];
         let activeData = [];
 
@@ -790,8 +793,8 @@
                                                 <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: #065f46; margin-top: 6px;">${activeApproved}</div>
                                             </td>
                                             <!-- Card 3: Pending -->
-                                            <td class="metrics-card" style="width: 25%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #f59e0b; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
-                                                <div style="font-size: 10px; color: #f59e0b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Pending</div>
+                                            <td class="metrics-card" style="width: 25%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #fbbf24; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 10px; color: #fbbf24; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Pending</div>
                                                 <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: #92400e; margin-top: 6px;">${activePending}</div>
                                             </td>
                                             <!-- Card 4: Rejected -->
@@ -820,7 +823,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody style="color: #334155; font-family: 'Playfair Display', Georgia, serif;">
-                                                ${tableRowsHtml}
+                                                \${tableRowsHtml}
                                             </tbody>
                                         </table>
                                     </div>
@@ -828,14 +831,14 @@
 
                                 <!-- Footer -->
                                 <div class="footer-container" style="background-color: #f8fafc; padding: 24px 24px; border-top: 1px solid #cbd5e1; text-align: center; font-family: 'Playfair Display', Georgia, serif;">
-                                    <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.5; font-family: 'Playfair Display', Georgia, serif;">This email was automatically generated by the <br><a href="${window.location.href}" style="color: #c0392b; text-decoration: none; font-weight: 600;">IT Department</a>.</p>
-                                    <p style="margin: 4px 0 0 0; font-size: 11px; color: #94a3b8; font-family: 'Playfair Display', Georgia, serif;">&copy; 2026 <a href="${window.location.href}" style="color: #64748b; text-decoration: none; font-weight: 600;"></a>All rights reserved.</p>
+                                    <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.5; font-family: 'Playfair Display', Georgia, serif;">This email was automatically generated by the <br><a href="\${window.location.href}" style="color: #c0392b; text-decoration: none; font-weight: 600;">IT Department</a>.</p>
+                                    <p style="margin: 4px 0 0 0; font-size: 11px; color: #94a3b8; font-family: 'Playfair Display', Georgia, serif;">&copy; 2026 <a href="\${window.location.href}" style="color: #64748b; text-decoration: none; font-weight: 600;"></a>All rights reserved.</p>
                                 </div>
 
                             </div>
                         </div>
-                    \u003c/body\u003e
-                    \u003c/html\u003e
+                    </body>
+                    </html>
                 `;
 
                 const recipientEmail = document.getElementById("facultyEmail").value || "adminit@gmiu.edu.in";
@@ -1148,7 +1151,7 @@
         function getApprovalPill(text) {
             const lower = text.toLowerCase();
             if (lower.includes('approved')) return `<span class="status-pill pill-approved">Approved</span>`;
-            if (lower.includes('pending')) return `<span class="status-pill pill-pending">Pending</span>`;
+            if (lower.includes('pending')) return `<span class="status-pill pill-approved" style="background:rgba(251,191,36,0.1) !important; color:#fbbf24 !important; border-color:rgba(251,191,36,0.2) !important;">Pending</span>`;
             if (lower.includes('rejected') || lower.includes('reject')) return `<span class="status-pill pill-rejected">Rejected</span>`;
             return `<span class="status-pill pill-default">${text || '-'}</span>`;
         }
@@ -1166,15 +1169,15 @@
                 const tr = document.createElement('tr');
 
                 tr.innerHTML = `
-                    <td class="col-sr" style="text-align: center;">${item.srNo}</td>
-                    <td class="col-name" style="font-weight: 500;">${item.name}</td>
-                    <td class="col-plan">${item.planDate}</td>
-                    <td class="col-actual">${item.actualDate}</td>
-                    <td class="col-modified">${item.modifiedDate || 'N/A'}</td>
-                    <td class="col-marks" style="text-align: center;">${item.marks}</td>
-                    <td class="col-flags">${item.flags}</td>
-                    <td class="col-sub">${getSubmissionPills(item.submissionFlags)}</td>
-                    <td class="col-status">${getApprovalPill(item.approvalStatus)}</td>
+                    <td class="col-sr" style="text-align: center;">\${item.srNo}</td>
+                    <td class="col-name" style="font-weight: 500;">\${item.name}</td>
+                    <td class="col-plan">\${item.planDate}</td>
+                    <td class="col-actual">\${item.actualDate}</td>
+                    <td class="col-modified">\${item.modifiedDate || 'N/A'}</td>
+                    <td class="col-marks" style="text-align: center;">\${item.marks}</td>
+                    <td class="col-flags">\${item.flags}</td>
+                    <td class="col-sub">\${getSubmissionPills(item.submissionFlags)}</td>
+                    <td class="col-status">\${getApprovalPill(item.approvalStatus)}</td>
                 `;
                 tbody.appendChild(tr);
             });
