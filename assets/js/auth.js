@@ -19,7 +19,36 @@
     document.documentElement.appendChild(style);
 })();
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+
+    // Check if password verification is enabled on the server
+    let passwordRequired = true;
+    try {
+        const response = await fetch("verify-password.php?t=" + new Date().getTime(), { cache: "no-store" });
+        if (response.ok) {
+            const contentType = response.headers.get("content-type") || "";
+            if (contentType.includes("application/json")) {
+                const data = await response.json();
+                passwordRequired = data.password_required !== false;
+            } else {
+                // If it returned raw PHP code (unexecuted on static live server)
+                const text = await response.text();
+                const match = text.match(/\$password_required\s*=\s*(0|false)/i);
+                if (match) {
+                    passwordRequired = false;
+                }
+            }
+        }
+    } catch (e) {
+        console.warn("verify-password.php status check failed, defaulting to password required:", e);
+    }
+
+    if (!passwordRequired) {
+        // Remove the custom hiding styles to restore body content visibility
+        const hideStyleEl = document.getElementById("auth-hide-body-style");
+        if (hideStyleEl) hideStyleEl.remove();
+        return; // Exit without showing overlay
+    }
 
     // Determine current page name dynamically for display
     let rawTitle = document.title || "";
@@ -29,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (rawTitle.toLowerCase().includes("drive") || rawTitle.toLowerCase().includes("scanner")) {
         pageLabel = "Drive Folder Scanner";
     }
+
 
     // Inject CSS for the authentication UI
     const authStyles = document.createElement('style');
