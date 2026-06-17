@@ -105,7 +105,7 @@ function doPost(e) {
       data.coordinators     || "-",                // P: Faculty Coordinator(s)
       data.objective        || "-",                // Q: Brief Objective
       data.driveLink        || "-",                // R: Google Drive Link
-      "Submitted"                                  // S: Status
+      "Pending"                                    // S: Status
     ];
 
     sheet.appendRow(newRow);
@@ -125,6 +125,14 @@ function doPost(e) {
 
     // Highlight the Sr. No. column
     sheet.getRange(lastRow, 1).setFontWeight("bold").setHorizontalAlignment("center");
+
+    // Add dropdown validation for Status column (column S)
+    const statusCell = sheet.getRange(lastRow, HEADERS.length);
+    const rule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(["Pending", "In Process", "Complete"], true)
+      .setAllowInvalid(false)
+      .build();
+    statusCell.setDataValidation(rule);
 
     // Auto-resize columns after data entry (optional, can be slow on large sheets)
     // sheet.autoResizeColumns(1, HEADERS.length);

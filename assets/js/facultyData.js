@@ -13,7 +13,7 @@ const facultyData = [
     {
         id: "sw",
         name: "Prof. Shwetaba Chauhan",
-        designation: "Assistant Professor",
+        designation: "Incharge HOD IT",
         empId: "#5039",
         email: "sbchauhan@gmiu.edu.in",
         phone: "74358 12357",
@@ -23,7 +23,7 @@ const facultyData = [
     {
         id: "eu",
         name: "Prof. Ekta Unagar",
-        designation: "Lecturer",
+        designation: "Incharge HOD CE",
         empId: "#5041",
         email: "ehunagar@gmiu.edu.in",
         phone: "96019 10753",
@@ -71,16 +71,6 @@ const facultyData = [
         initials: "DB"
     },
     {
-        id: "aa",
-        name: "Prof. Anjani Astik",
-        designation: "Lecturer",
-        empId: "#10370",
-        email: "auanjani@gmiu.edu.in",
-        phone: "93164 20820",
-        avatarClass: "av-aa",
-        initials: "AA"
-    },
-    {
         id: "ks",
         name: "Prof. Krupali Solanki",
         designation: "Lecturer",
@@ -93,7 +83,7 @@ const facultyData = [
     {
         id: "tv",
         name: "Prof. Tarjanee Vyas",
-        designation: "Lecturer",
+        designation: "Sub Incharge HOD IT",
         empId: "#10395",
         email: "tmvyas@gmiu.edu.in",
         phone: "81409 67331",
