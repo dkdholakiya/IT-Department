@@ -4,21 +4,9 @@
  *  Paste this ENTIRE file's content into:
  *  Google Sheet → Extensions → Apps Script → Code.gs
  * ══════════════════════════════════════════════════════════════
- *
- *  DEPLOYMENT STEPS:
- *  1. Paste code into Apps Script editor
- *  2. Save (Ctrl+S)
- *  3. Click "Deploy" → "New deployment"
- *  4. Select type: Web App
- *  5. Execute as: Me
- *  6. Who has access: Anyone
- *  7. Click Deploy → Authorize → Deploy
- *  8. Copy the Web App URL
- *  9. Paste it into assets/js/sheetsConfig.js as WEBAPP_URL
- * ══════════════════════════════════════════════════════════════
  */
 
-// ── Column header row (written automatically on first run) ──
+// ── Column header row ──
 const HEADERS = [
   "Sr. No.",
   "Submitted On",
@@ -36,7 +24,6 @@ const HEADERS = [
   "Division / Class",
   "No. of Participants",
   "Faculty Coordinator(s)",
-  "Brief Objective",
   "Google Drive Link",
   "Status"
 ];
@@ -51,28 +38,113 @@ function doGet(e) {
 }
 
 /**
+ * Initialize sheet layout according to user design
+ */
+function initializeSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("2026-27 ODD") || ss.getSheetByName("Sheet1") || ss.getSheets()[0];
+  sheet.setName("2026-27 ODD");
+  
+  sheet.clear();
+  
+  // Set custom row heights
+  sheet.setRowHeight(1, 35); // Title row height
+  sheet.setRowHeight(2, 28); // Subtitle row height
+  sheet.setRowHeight(3, 20); // Blank row
+  sheet.setRowHeight(4, 25); // Header row height
+  sheet.setRowHeight(5, 20); // Blank row
+  
+  // 1. Title Row (Row 1)
+  sheet.getRange("A1").setValue("Gyanmanjari Innovative University");
+  sheet.getRange("A1:R1").merge();
+  const titleRange = sheet.getRange("A1:R1");
+  titleRange.setFontWeight("bold");
+  titleRange.setFontSize(14);
+  titleRange.setHorizontalAlignment("center");
+  titleRange.setVerticalAlignment("middle");
+  titleRange.setBorder(true, true, true, true, false, false, "#000000", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+
+  // 2. Subtitle Row (Row 2)
+  sheet.getRange("A2").setValue("Department Of Information Technology");
+  sheet.getRange("A2:R2").merge();
+  const subtitleRange = sheet.getRange("A2:R2");
+  subtitleRange.setFontWeight("bold");
+  subtitleRange.setFontSize(12);
+  subtitleRange.setHorizontalAlignment("center");
+  subtitleRange.setVerticalAlignment("middle");
+  subtitleRange.setBorder(true, true, true, true, false, false, "#000000", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+
+  // 3. Row 3 is a blank row
+
+  // 4. Header Row (Row 4)
+  const headerRange = sheet.getRange(4, 1, 1, HEADERS.length);
+  headerRange.setValues([HEADERS]);
+  headerRange.setBackground("#1a237e");
+  headerRange.setFontColor("#ffffff");
+  headerRange.setFontWeight("bold");
+  headerRange.setFontSize(10);
+  headerRange.setHorizontalAlignment("center");
+  headerRange.setVerticalAlignment("middle");
+  headerRange.setBorder(true, true, true, true, true, true, "#000000", SpreadsheetApp.BorderStyle.SOLID);
+  sheet.setFrozenRows(4);
+
+  // 5. Row 5 is a blank row
+
+  // ── 6. Status Column Dropdown & Colors (Column R, Row 6 onwards) ──
+  const statusRange = sheet.getRange("R6:R");
+  
+  // Set data validation dropdown
+  const rule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(["Pending", "In Process", "Complete"], true)
+    .setAllowInvalid(false)
+    .build();
+  statusRange.setDataValidation(rule);
+
+  // Set conditional formatting colors
+  const condRules = [];
+  
+  // Pending: background red, text white
+  condRules.push(SpreadsheetApp.newConditionalFormatRule()
+    .whenTextEqualTo("Pending")
+    .setBackground("#ea4335")
+    .setFontColor("#ffffff")
+    .setRanges([statusRange])
+    .build());
+
+  // In Process: background yellow, text white
+  condRules.push(SpreadsheetApp.newConditionalFormatRule()
+    .whenTextEqualTo("In Process")
+    .setBackground("#fbbc05")
+    .setFontColor("#ffffff")
+    .setRanges([statusRange])
+    .build());
+
+  // Complete: background green, text white
+  condRules.push(SpreadsheetApp.newConditionalFormatRule()
+    .whenTextEqualTo("Complete")
+    .setBackground("#34a853")
+    .setFontColor("#ffffff")
+    .setRanges([statusRange])
+    .build());
+
+  sheet.setConditionalFormatRules(condRules);
+
+  // Auto-resize all columns
+  sheet.autoResizeColumns(1, HEADERS.length);
+}
+
+/**
  * Handle POST requests from the report form
  */
 function doPost(e) {
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = ss.getSheetByName("Sheet1") || ss.getSheets()[0];
+    const sheet = ss.getSheetByName("2026-27 ODD") || ss.getSheetByName("Sheet1") || ss.getSheets()[0];
+    sheet.setName("2026-27 ODD");
 
-    // ── Auto-create header row if sheet is empty ──
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(HEADERS);
-
-      // Style the header row
-      const headerRange = sheet.getRange(1, 1, 1, HEADERS.length);
-      headerRange.setBackground("#1a237e");
-      headerRange.setFontColor("#ffffff");
-      headerRange.setFontWeight("bold");
-      headerRange.setFontSize(10);
-      headerRange.setHorizontalAlignment("center");
-      sheet.setFrozenRows(1);
-
-      // Auto-resize all columns
-      sheet.autoResizeColumns(1, HEADERS.length);
+    // ── Auto-initialize layout if sheet is empty/cleared ──
+    if (sheet.getLastRow() < 4) {
+      initializeSheet();
     }
 
     // ── Parse incoming JSON payload ──
@@ -83,7 +155,13 @@ function doPost(e) {
 
     const now = new Date();
     const submittedOn = Utilities.formatDate(now, Session.getScriptTimeZone(), "dd/MM/yyyy HH:mm:ss");
-    const srNo = sheet.getLastRow(); // Row count (excluding header = Sr. No.)
+    
+    // Calculate target row and Sr. No. (leaving row 3 and 5 blank)
+    let targetRow = sheet.getLastRow() + 1;
+    if (targetRow < 6) {
+      targetRow = 6;
+    }
+    const srNo = targetRow - 5;
 
     // ── Build the new row ──
     const newRow = [
@@ -103,45 +181,56 @@ function doPost(e) {
       data.division         || "-",                // N: Division/Class
       data.participants     || "-",                // O: No. of Participants
       data.coordinators     || "-",                // P: Faculty Coordinator(s)
-      data.objective        || "-",                // Q: Brief Objective
-      data.driveLink        || "-",                // R: Google Drive Link
-      "Pending"                                    // S: Status
+      data.driveLink        || "-",                // Q: Google Drive Link
+      "Pending"                                    // R: Status
     ];
 
-    sheet.appendRow(newRow);
+    // Write the new row
+    sheet.getRange(targetRow, 1, 1, newRow.length).setValues([newRow]);
 
     // ── Style the new data row ──
-    const lastRow = sheet.getLastRow();
-    const dataRange = sheet.getRange(lastRow, 1, 1, HEADERS.length);
+    const dataRange = sheet.getRange(targetRow, 1, 1, HEADERS.length);
 
     // Alternate row shading
-    if (lastRow % 2 === 0) {
+    if (targetRow % 2 === 0) {
       dataRange.setBackground("#e8eaf6");
     } else {
       dataRange.setBackground("#ffffff");
     }
     dataRange.setVerticalAlignment("middle");
     dataRange.setWrap(true);
+    dataRange.setBorder(true, true, true, true, true, true, "#dddddd", SpreadsheetApp.BorderStyle.SOLID);
 
     // Highlight the Sr. No. column
-    sheet.getRange(lastRow, 1).setFontWeight("bold").setHorizontalAlignment("center");
+    sheet.getRange(targetRow, 1).setFontWeight("bold").setHorizontalAlignment("center");
 
-    // Add dropdown validation for Status column (column S)
-    const statusCell = sheet.getRange(lastRow, HEADERS.length);
-    const rule = SpreadsheetApp.newDataValidation()
-      .requireValueInList(["Pending", "In Process", "Complete"], true)
-      .setAllowInvalid(false)
-      .build();
-    statusCell.setDataValidation(rule);
-
-    // Auto-resize columns after data entry (optional, can be slow on large sheets)
-    // sheet.autoResizeColumns(1, HEADERS.length);
+    // ── Status Column Dropdown (Preserving colors by copying validation from R8 or row above) ──
+    const statusCell = sheet.getRange(targetRow, HEADERS.length);
+    let templateRow = 8; // Row 8 has the user's custom colored dropdown validation
+    
+    // Check if the cell above is valid to use as template
+    if (targetRow > 6) {
+      templateRow = targetRow - 1;
+    }
+    
+    try {
+      const templateCell = sheet.getRange(templateRow, HEADERS.length);
+      // Copy only data validation rule to keep color chip style
+      templateCell.copyTo(statusCell, SpreadsheetApp.CopyPasteType.PASTE_DATA_VALIDATION, false);
+    } catch (e) {
+      // Fallback if template cell fails
+      const rule = SpreadsheetApp.newDataValidation()
+        .requireValueInList(["Pending", "In Process", "Complete"], true)
+        .setAllowInvalid(false)
+        .build();
+      statusCell.setDataValidation(rule);
+    }
 
     return ContentService
       .createTextOutput(JSON.stringify({
         success: true,
         message: "Report data saved to Google Sheet.",
-        row: lastRow,
+        row: targetRow,
         srNo: srNo
       }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -155,3 +244,19 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
+
+/**
+ * Fix validation for existing rows (6, 7, 8, etc.) by copying the validation from R8 (which has colors)
+ */
+function fixValidationForExistingRows() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("Sheet1") || ss.getSheets()[0];
+  const lastRow = sheet.getLastRow();
+  
+  if (lastRow >= 6) {
+    const templateCell = sheet.getRange(8, 18); // Cell R8 has your custom colored validation
+    const targetRange = sheet.getRange(6, 18, lastRow - 5, 1); // R6 to R[lastRow]
+    templateCell.copyTo(targetRange, SpreadsheetApp.CopyPasteType.PASTE_DATA_VALIDATION, false);
+  }
+}
+

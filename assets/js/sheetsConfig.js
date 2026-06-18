@@ -22,10 +22,10 @@
 
 const SHEETS_CONFIG = {
     // ← Paste your Apps Script Web App URL here after deployment
-    WEBAPP_URL: "https://script.google.com/macros/s/AKfycbwXsUVv7739qmTQK87zHUWgcqY3hKu_wVXRAj9n2qTPURuq7xZJWHYMxNKW-LPEMN_GLw/exec",
+    WEBAPP_URL: "https://script.google.com/macros/s/AKfycbxyEs9pmDaNXBqq0Li4XTjoJXiJeIcFOm0ph4PtsOFJ0ql7A9OP_7h978hmK48uMMGkTA/exec",
 
     // Sheet tab name where data will be written (default: Sheet1)
-    SHEET_NAME: "Sheet1",
+    SHEET_NAME: "2026-27 ODD",
 
     // Enable/disable Google Sheets integration (set false to disable)
     ENABLED: true

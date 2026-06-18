@@ -291,8 +291,9 @@
                                         <label class="form-label" for="semester">Semester <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="semester"
-                                            placeholder="e.g., 4th, 6th..." required>
-                                        <div class="invalid-feedback">Semester is required.</div>
+                                            placeholder="e.g., 4, 6..." 
+                                            oninput="this.value = this.value.replace(/[^0-9,\s-]/g, '')" required>
+                                        <div class="invalid-feedback">Semester is required (numbers only).</div>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label" for="divisionClass">Division/Class <span
