@@ -1537,14 +1537,14 @@
                 
                 <div style="padding: 25px; background-color: #ffffff; font-family: 'Playfair Display', serif;">
                     <p style="margin-top: 0; font-size: 15px; font-family: 'Playfair Display', serif;">
-                        ${isFacultyCopy ? `DEAR ${facultyName},` : `DEAR FACULTY MEMBER / IT ADMINISTRATOR,`}
+                        ${isFacultyCopy ? `<strong>DEAR FACULTY MEMBER / IT ADMINISTRATOR</strong>,` : `<strong>DEAR MR. DEV K DHOLAKIYA</strong>,`}
                     </p>
                     <p style="font-size: 14px; color: #555; font-family: 'Playfair Display', serif;">
-                        PLEASE REVIEW THE DETAILED ACTIVITY REPORT SUBMITTED BELOW. THIS DOCUMENTATION HAS BEEN LOGGED IN THE IT PORTAL ARCHIVE.
+                        PLEASE <strong>REVIEW</strong> THE <strong>DETAILED ACTIVITY REPORT</strong> SUBMITTED BELOW. THIS DOCUMENTATION HAS BEEN <strong>LOGGED IN THE IT PORTAL ARCHIVE</strong>.
                     </p>
-                    ${isFacultyCopy ? `
+                    ${!isFacultyCopy ? `
                     <p style="font-size: 14px; color: #555; font-family: 'Playfair Display', serif; margin-top: 10px;">
-                        THIS INFORMATION IS FOR YOUR REVIEW. PLEASE CHECK IF THERE IS ANY MISSING OR INCORRECT DETAIL. IF ANY CHANGES OR UPDATES ARE REQUIRED, PLEASE REPORT AND SUBMIT THEM TO Mr. DEV DHOLAKIYA.
+                        THIS INFORMATION IS FOR YOUR <strong>REVIEW</strong>. PLEASE CHECK IF THERE IS ANY <strong>MISSING OR INCORRECT DETAIL</strong>. IF ANY <strong>CHANGES OR UPDATES</strong> ARE REQUIRED, PLEASE <strong>REPORT AND SUBMIT</strong> THEM TO <strong>Mr. DEV DHOLAKIYA</strong>.
                     </p>
                     ` : ''}
                     
