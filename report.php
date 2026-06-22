@@ -664,6 +664,33 @@
                                                     placeholder="Auto-filled from Section 1..." readonly>
                                             </div>
                                             <div class="col-12">
+                                                <label class="form-label" for="ccEmails">CC Emails (Multi-select)</label>
+                                                <div class="custom-multiselect-wrap">
+                                                    <!-- Under original ID and name so the form/draft handlers work perfectly, but visually hidden -->
+                                                    <select class="form-select d-none" id="ccEmails" name="ccEmails[]" multiple>
+                                                        <!-- Dynamically populated options -->
+                                                    </select>
+                                                    
+                                                    <!-- Custom UI representing the multi-select -->
+                                                    <div class="multiselect-trigger form-control" id="ccEmailsTrigger">
+                                                        <span class="placeholder-text" id="ccPlaceholder">Select Faculty Members...</span>
+                                                        <div class="selected-badges-container d-none" id="ccSelectedBadges"></div>
+                                                        <i class="bi bi-chevron-down multiselect-arrow-icon"></i>
+                                                    </div>
+                                                    
+                                                    <div class="multiselect-dropdown" id="ccDropdown">
+                                                        <div class="multiselect-search-wrap">
+                                                            <i class="bi bi-search search-icon"></i>
+                                                            <input type="text" class="form-control form-control-sm" id="ccSearchInput" placeholder="Search faculty member..." autocomplete="off">
+                                                        </div>
+                                                        <div class="multiselect-options-list" id="ccOptionsList">
+                                                            <!-- JavaScript will render option rows with checkboxes here -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-text text-muted small mt-1">Select one or more faculty members to CC in the email copy.</div>
+                                            </div>
+                                            <div class="col-12">
                                                 <label class="form-label" for="refSubject">Subject</label>
                                                 <input type="text" class="form-control" id="refSubject"
                                                     value="Request Review: Departmental Activity Report" required>
@@ -944,6 +971,9 @@
             // Initialize searchable autocomplete drop downs
             initAutocompleteSearch("facultySearch", "facultyId", "facultyDropdownList", fillFacultyDetails);
 
+            // Populate CC emails multi-select dropdown
+            populateCcEmails();
+
             // Dynamic validation of Photos ZIP and Drive Link
             const photosInput = document.getElementById("activityPhotos");
             const driveInput = document.getElementById("driveLink");
@@ -1064,6 +1094,175 @@
             setTimeout(() => {
                 collapseAndExpand(1, 2);
             }, 600);
+        }
+
+        // Populate CC emails multi-select list dynamically and initialize custom multiselect
+        function populateCcEmails() {
+            const ccSelect = document.getElementById("ccEmails");
+            const optionsList = document.getElementById("ccOptionsList");
+            const trigger = document.getElementById("ccEmailsTrigger");
+            const dropdown = document.getElementById("ccDropdown");
+            const searchInput = document.getElementById("ccSearchInput");
+            const placeholder = document.getElementById("ccPlaceholder");
+            const badgesContainer = document.getElementById("ccSelectedBadges");
+
+            if (!ccSelect || !optionsList || !trigger || !dropdown || !searchInput || !placeholder || !badgesContainer || typeof facultyData === 'undefined') return;
+
+            // 1. Populate native hidden select
+            ccSelect.innerHTML = "";
+            facultyData.forEach(member => {
+                const option = document.createElement("option");
+                option.value = member.email;
+                option.textContent = `${member.name} (${member.email})`;
+                ccSelect.appendChild(option);
+            });
+
+            // 2. Populate custom list options in the dropdown
+            optionsList.innerHTML = "";
+            facultyData.forEach(member => {
+                const optionItem = document.createElement("div");
+                optionItem.className = "multiselect-option-item";
+                optionItem.setAttribute("data-email", member.email);
+                optionItem.setAttribute("data-name", member.name.toLowerCase());
+
+                optionItem.innerHTML = `
+                    <div class="multiselect-checkbox-wrap">
+                        <input type="checkbox" value="${member.email}">
+                    </div>
+                    <div class="item-avatar ${member.avatarClass}">${member.initials}</div>
+                    <div class="item-info">
+                        <div class="item-name">${member.name}</div>
+                        <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.empId}</div>
+                    </div>
+                `;
+
+                // Handle clicking anywhere on the option item row
+                optionItem.addEventListener("click", function(e) {
+                    const checkbox = optionItem.querySelector('input[type="checkbox"]');
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    toggleSelection(member.email, checkbox.checked);
+                });
+
+                optionsList.appendChild(optionItem);
+            });
+
+            // 3. Dropdown Toggle Click Event
+            trigger.addEventListener("click", function(e) {
+                e.stopPropagation();
+                const isOpen = dropdown.classList.toggle("show");
+                trigger.classList.toggle("active", isOpen);
+                if (isOpen) {
+                    searchInput.value = "";
+                    // Reset filter on open
+                    const items = optionsList.querySelectorAll(".multiselect-option-item");
+                    items.forEach(item => item.classList.remove("d-none"));
+                    searchInput.focus();
+                }
+            });
+
+            // 4. Click outside to close dropdown
+            document.addEventListener("click", function(e) {
+                if (!e.target.closest(".custom-multiselect-wrap")) {
+                    dropdown.classList.remove("show");
+                    trigger.classList.remove("active");
+                }
+            });
+
+            // Prevent dropdown closure when clicking inside it
+            dropdown.addEventListener("click", function(e) {
+                e.stopPropagation();
+            });
+
+            // 5. Search Filter Input Event
+            searchInput.addEventListener("input", function() {
+                const query = searchInput.value.toLowerCase().trim();
+                const items = optionsList.querySelectorAll(".multiselect-option-item");
+                
+                items.forEach(item => {
+                    const name = item.getAttribute("data-name");
+                    const email = item.getAttribute("data-email").toLowerCase();
+                    if (name.includes(query) || email.includes(query)) {
+                        item.classList.remove("d-none");
+                    } else {
+                        item.classList.add("d-none");
+                    }
+                });
+            });
+
+            // Toggle Selection logic helper
+            function toggleSelection(email, isSelected) {
+                // Update native select
+                Array.from(ccSelect.options).forEach(option => {
+                    if (option.value === email) {
+                        option.selected = isSelected;
+                    }
+                });
+
+                // Update custom UI badges
+                updateSelectedBadges();
+
+                // Trigger form/select change events to sync ASCII previews etc
+                const event = new Event('change', { bubbles: true });
+                ccSelect.dispatchEvent(event);
+            }
+
+            // Sync badges rendering
+            function updateSelectedBadges() {
+                badgesContainer.innerHTML = "";
+                const selectedOptions = Array.from(ccSelect.selectedOptions);
+
+                if (selectedOptions.length === 0) {
+                    placeholder.classList.remove("d-none");
+                    badgesContainer.classList.add("d-none");
+                } else {
+                    placeholder.classList.add("d-none");
+                    badgesContainer.classList.remove("d-none");
+
+                    selectedOptions.forEach(opt => {
+                        const email = opt.value;
+                        // Find matching faculty member to get name
+                        const member = facultyData.find(m => m.email === email);
+                        const name = member ? member.name : email;
+
+                        const badge = document.createElement("span");
+                        badge.className = "multiselect-badge";
+                        badge.innerHTML = `
+                            <span>${name}</span>
+                            <span class="multiselect-badge-remove" data-email="${email}">
+                                <i class="bi bi-x-circle-fill"></i>
+                            </span>
+                        `;
+
+                        // Badge remove click event
+                        badge.querySelector(".multiselect-badge-remove").addEventListener("click", function(e) {
+                            e.stopPropagation();
+                            // Uncheck dropdown checkbox
+                            const checkbox = optionsList.querySelector(`input[value="${email}"]`);
+                            if (checkbox) checkbox.checked = false;
+                            
+                            toggleSelection(email, false);
+                        });
+
+                        badgesContainer.appendChild(badge);
+                    });
+                }
+            }
+
+            // Make updates globally accessible so loadDraft, reset etc. can trigger synchronization
+            window.syncCcEmailsUi = function() {
+                // Update checkboxes based on native select state
+                const selectedEmails = Array.from(ccSelect.selectedOptions).map(opt => opt.value);
+                
+                const checkboxes = optionsList.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = selectedEmails.includes(checkbox.value);
+                });
+
+                // Update badges
+                updateSelectedBadges();
+            };
         }
 
         // ── Toggle Specific Report Specific Fields (Section 3) ──
@@ -1546,12 +1745,12 @@
                 
                 <div style="padding: 25px; background-color: #ffffff; font-family: 'Playfair Display', serif;">
                     <p style="margin-top: 0; font-size: 15px; font-family: 'Playfair Display', serif;">
-                        ${isFacultyCopy ? `<strong>DEAR FACULTY MEMBER / IT ADMINISTRATOR</strong>,` : `<strong>DEAR MR. DEV K DHOLAKIYA</strong>,`}
+                        ${isFacultyCopy ? `<strong>DEAR ${facultyName}</strong>,` : `<strong>DEAR FACULTY MEMBER / IT ADMINISTRATOR</strong>,`}
                     </p>
                     <p style="font-size: 14px; color: #555; font-family: 'Playfair Display', serif;">
                         PLEASE <strong>REVIEW</strong> THE <strong>DETAILED ACTIVITY REPORT</strong> SUBMITTED BELOW. THIS DOCUMENTATION HAS BEEN <strong>LOGGED IN THE IT PORTAL ARCHIVE</strong>.
                     </p>
-                    ${!isFacultyCopy ? `
+                    ${isFacultyCopy ? `
                     <p style="font-size: 14px; color: #555; font-family: 'Playfair Display', serif; margin-top: 10px;">
                         THIS INFORMATION IS FOR YOUR <strong>REVIEW</strong>. PLEASE CHECK IF THERE IS ANY <strong>MISSING OR INCORRECT DETAIL</strong>. IF ANY <strong>CHANGES OR UPDATES</strong> ARE REQUIRED, PLEASE <strong>REPORT AND SUBMIT</strong> THEM TO <strong>Mr. DEV DHOLAKIYA</strong>.
                     </p>
@@ -1747,6 +1946,9 @@ Department of Information Technology, GMIU`;
 
         // ── Local Storage Draft Saving ──
         function saveDraft() {
+            const ccSelect = document.getElementById("ccEmails");
+            const selectedCc = ccSelect ? Array.from(ccSelect.selectedOptions).map(opt => opt.value) : [];
+
             const draft = {
                 facultySearch: document.getElementById("facultySearch").value,
                 facultyId: document.getElementById("facultyId").value,
@@ -1772,7 +1974,8 @@ Department of Information Technology, GMIU`;
 
                 // Email fields
                 refSubject: document.getElementById("refSubject").value,
-                refMessage: document.getElementById("refMessage").value
+                refMessage: document.getElementById("refMessage").value,
+                ccEmails: selectedCc
             };
 
             localStorage.setItem("gmiu_it_report_draft", JSON.stringify(draft));
@@ -1827,6 +2030,18 @@ Department of Information Technology, GMIU`;
                 document.getElementById("refEmail").value = draft.facultyEmail || "";
                 document.getElementById("refSubject").value = draft.refSubject || "";
                 document.getElementById("refMessage").value = draft.refMessage || "";
+
+                if (draft.ccEmails) {
+                    const ccSelect = document.getElementById("ccEmails");
+                    if (ccSelect) {
+                        Array.from(ccSelect.options).forEach(option => {
+                            option.selected = draft.ccEmails.includes(option.value);
+                        });
+                        if (typeof window.syncCcEmailsUi === "function") {
+                            window.syncCcEmailsUi();
+                        }
+                    }
+                }
                 showToast("Previous saved report draft restored.");
             } catch (err) {
                 console.error("Failed to parse report draft", err);
@@ -1855,6 +2070,9 @@ Department of Information Technology, GMIU`;
 
             const htmlMessage = generateReportHtml(true);
 
+            const ccSelect = document.getElementById("ccEmails");
+            const selectedCcEmails = ccSelect ? Array.from(ccSelect.selectedOptions).map(option => option.value) : [];
+
             fetch("send-email.php", {
                 method: "POST",
                 headers: {
@@ -1862,6 +2080,7 @@ Department of Information Technology, GMIU`;
                 },
                 body: JSON.stringify({
                     to: to,
+                    cc: selectedCcEmails,
                     subject: subject,
                     html: htmlMessage
                 })
@@ -2076,6 +2295,9 @@ Department of Information Technology, GMIU`;
                 const htmlMessageAdmin = generateReportHtml(false);
                 const adminEmail = "adminit@gmiu.edu.in";
 
+                const ccSelect = document.getElementById("ccEmails");
+                const selectedCcEmails = ccSelect ? Array.from(ccSelect.selectedOptions).map(option => option.value) : [];
+
                 return fetch("send-email.php", {
                     method: "POST",
                     headers: {
@@ -2085,11 +2307,13 @@ Department of Information Technology, GMIU`;
                         emails: [
                             {
                                 to: facultyEmail,
+                                cc: selectedCcEmails,
                                 subject: `Submitted Report Copy: ${reportTitle}`,
                                 html: htmlMessageFaculty
                             },
                             {
                                 to: adminEmail,
+                                cc: selectedCcEmails,
                                 subject: `New Report Submission: ${reportTitle} (Faculty Copy)`,
                                 html: htmlMessageAdmin
                             }
@@ -2126,6 +2350,15 @@ Department of Information Technology, GMIU`;
         function resetReportForm() {
             document.getElementById("reportForm").reset();
             document.getElementById("reportForm").classList.remove("was-validated");
+
+            // Clear CC emails selection
+            const ccSelect = document.getElementById("ccEmails");
+            if (ccSelect) {
+                Array.from(ccSelect.options).forEach(option => option.selected = false);
+                if (typeof window.syncCcEmailsUi === "function") {
+                    window.syncCcEmailsUi();
+                }
+            }
 
             // Reset Autocompletes hidden
             document.getElementById("facultyId").value = "";
