@@ -815,6 +815,15 @@
                 </svg>
                 Drive Scanner
             </a>
+            <a href="zero-student-report.php" class="fab-link" id="nav-zero">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <line x1="17" y1="8" x2="23" y2="14" />
+                    <line x1="23" y1="8" x2="17" y2="14" />
+                </svg>
+                Zero Student Report
+            </a>
         </div>
 
         <button class="fab-btn" id="fabBtn" aria-label="Open Navigation">

@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 session_start();
 
 // Password Switch: 1 = ON (Ask for password), 0 = OFF (Password not asked)
-$password_required = 1;
+$password_required = 0;
 
 // Configure the correct password here
 // Default password: gmiu@it
