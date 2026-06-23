@@ -24,6 +24,9 @@ const SHEETS_CONFIG = {
     // ← Paste your Apps Script Web App URL here after deployment
     WEBAPP_URL: "https://script.google.com/macros/s/AKfycbxyEs9pmDaNXBqq0Li4XTjoJXiJeIcFOm0ph4PtsOFJ0ql7A9OP_7h978hmK48uMMGkTA/exec",
 
+    // Web App URL for Zero Student Log Spreadsheet
+    ZERO_WEBAPP_URL: "https://script.google.com/macros/s/AKfycbwJVs-JUh-TmNG0vbEhQcFnjFTQqUcw9YrHw55SAQF7DjbTFbBrUJYFmk7dz-nhQMzV/exec",
+
     // Sheet tab name where data will be written (default: Sheet1)
     SHEET_NAME: "2026-27 ODD",
 

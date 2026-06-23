@@ -2314,7 +2314,7 @@ Department of Information Technology, GMIU`;
                             {
                                 to: adminEmail,
                                 cc: selectedCcEmails,
-                                subject: `New Report Submission: ${reportTitle} (Faculty Copy)`,
+                                subject: `Make New Report : ${reportTitle} (Faculty Copy)`,
                                 html: htmlMessageAdmin
                             }
                         ],
