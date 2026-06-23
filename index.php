@@ -17,7 +17,7 @@
         href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="assets/css/portal.css">
+    <link rel="stylesheet" href="assets/css/portal.css?v=3">
 </head>
 
 <body>
@@ -66,17 +66,16 @@
 
                 <!-- Love-language tagline -->
                 <p class="home-tagline">
-                    We don't just teach code — we <span class="love-word">nurture</span> curiosity,
-                    <span class="love-word">ignite</span> brilliance, and <span class="love-word">craft</span>
-                    engineers who carry <span class="love-word">passion</span> in every line they write.
+                    We don't just teach syntax — we <span class="love-word">foster</span> curiosity,
+                    <span class="love-word">unleash</span> innovation, and <span class="love-word">inspire</span>
+                    the next generation of engineers to code with <span class="love-word">purpose</span>.
                 </p>
 
                 <!-- Inspirational Quote -->
                 <div class="home-quote">
                     <p>
-                        "Technology is best when it brings people together — and this department
-                        is where that journey begins."
-                        <cite>— GMIU IT Faculty, 2025</cite>
+                        "The best way to predict the future is to invent it — and this department is where those innovations begin."
+                        <cite>— GMIU IT Faculty, 2026</cite>
                     </p>
                 </div>
 
@@ -225,14 +224,14 @@
                             <span class="tdot yellow"></span>
                             <span class="tdot green"></span>
                         </div>
-                        <span class="terminal-title">it_department.js — GMIU</span>
+                        <span class="terminal-title">it_department.js</span>
                     </div>
                     <div class="terminal-body">
-                        <div class="code-line"><span class="cmt">// GMIU Department of Information Technology</span></div>
+                        <div class="code-line"><span class="cmt">// Department of Information Technology</span></div>
                         <div class="code-line"><span class="kw">const</span> <span class="var">itDept</span> = {</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">established</span>: <span class="num">2021</span>,</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">vision</span>: <span class="str">'Nurturing excellence & innovation'</span>,</div>
-                        <div class="code-line">&nbsp;&nbsp;<span class="key">degrees</span>: [<span class="str">'B.Tech IT'</span>, <span class="str">'Diploma IT'</span>],</div>
+                        <div class="code-line">&nbsp;&nbsp;<span class="key">degrees</span>: [<span class="str">'B.Tech IT'</span>, <span class="str">'Diploma IT'</span>,<span class="str">'PLM'</span>],</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">headOfDept</span>: <span class="str">'Prof. Dhaval Chandarana'</span>,</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">labs</span>: [<span class="str">'Apple iOS Dev Lab'</span>, <span class="str">'IoT Hub'</span>],</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">coreSubjects</span>: [</div>
@@ -240,7 +239,7 @@
                         <div class="code-line">&nbsp;&nbsp;]</div>
                         <div class="code-line">};</div>
                         <div class="code-line"></div>
-                        <div class="code-line"><span class="var">itDept</span>.<span class="fn">madeBy</span> = <span class="str">'<span class="blink-cursor">Dev K Dholakiya ▌</span>'</span>;</div>
+                        <div class="code-line"><span class="var">Develop</span>.<span class="fn">By</span> = <span class="str">'<span class="blink-cursor">DK Dholakiya...|</span>'</span>;</div>
                     </div>
                 </div>
 
@@ -256,6 +255,10 @@
                 <div class="floating-pill pill-3">
                     <span class="pill-icon">🚀</span>
                     <span>Innovation & Research</span>
+                </div>
+                <div class="floating-pill pill-4">
+                    <span class="pill-icon">🧠</span>
+                    <span>Proficient Learning Method PLM</span>
                 </div>
 
             </div>
