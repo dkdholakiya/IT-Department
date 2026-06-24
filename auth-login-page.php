@@ -194,7 +194,7 @@
                 </svg>
             </div>
             
-            <h1 class="auth-title">GMIU IT Faculty Portal</h1>
+            <h1 class="auth-title">GMIU IT </h1>
             <p class="auth-subtitle">Authentication required to access <span class="auth-target-page"><?php echo htmlspecialchars($page_label); ?></span>.</p>
             
             <form id="authForm" onsubmit="return false;">
