@@ -229,7 +229,6 @@
                     <div class="terminal-body">
                         <div class="code-line"><span class="cmt">// Department of Information Technology</span></div>
                         <div class="code-line"><span class="kw">const</span> <span class="var">itDept</span> = {</div>
-                        <div class="code-line">&nbsp;&nbsp;<span class="key">established</span>: <span class="num">2021</span>,</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">vision</span>: <span class="str">'Nurturing excellence & innovation'</span>,</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">degrees</span>: [<span class="str">'B.Tech IT'</span>, <span class="str">'Diploma IT'</span>,<span class="str">'PLM'</span>],</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">headOfDept</span>: <span class="str">'Prof. Dhaval Chandarana'</span>,</div>

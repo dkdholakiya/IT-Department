@@ -186,6 +186,7 @@
                     </div>
                     <h3 class="faculty-name">${member.name}</h3>
                     <div class="faculty-desg">${member.designation}</div>
+                    <div class="faculty-dept">${member.department || "Information Technology"}</div>
                     <p class="faculty-focus">Employee ID: ${member.empId}<br>Contact: ${member.email}</p>
                     <button type="button" class="details-btn" data-bs-toggle="modal" data-bs-target="#modal-${member.id}">
                         <span>View More Details</span>
@@ -211,6 +212,7 @@
                                 </div>
                                 <h4 class="modal-fac-name">${member.name}</h4>
                                 <p class="modal-fac-desg">${member.designation}</p>
+                                <p class="modal-fac-dept">${member.department || "Information Technology"}</p>
                                 
                                 <div class="modal-fac-cabin mb-3">
                                     <span>🆔</span>

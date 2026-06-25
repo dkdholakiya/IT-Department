@@ -1078,6 +1078,7 @@
             document.getElementById("facultyEmpId").value = member.empId;
             document.getElementById("facultyEmail").value = member.email;
             document.getElementById("facultyPhone").value = "+91 " + member.phone;
+            document.getElementById("facultyDept").value = member.department || "Information Technology";
 
             // Sync to Section 7 Block A (Reference Faculty Email details)
             document.getElementById("refName").value = member.name;
@@ -2157,6 +2158,7 @@ Department of Information Technology, GMIU`;
             document.getElementById("pFacultyDesignation").innerText = document.getElementById("facultyDesignation").value;
             document.getElementById("pFacultyEmail").innerText = document.getElementById("facultyEmail").value;
             document.getElementById("pFacultyPhone").innerText = document.getElementById("facultyPhone").value;
+            document.getElementById("pFacultyDept").innerText = document.getElementById("facultyDept").value;
 
             document.getElementById("pAcademicYear").innerText = academicYear;
             document.getElementById("pReportType").innerText = reportTypeLabel;
@@ -2190,6 +2192,9 @@ Department of Information Technology, GMIU`;
                     <tr>
                         <th class="table-light">Designation</th><td>${document.getElementById("facultyDesignation").value}</td>
                         <th class="table-light">Email Address</th><td>${document.getElementById("facultyEmail").value}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Department</th><td colspan="3">${document.getElementById("facultyDept").value}</td>
                     </tr>
                 </table>
 

@@ -435,7 +435,7 @@ function initFacultyAutocomplete() {
                 <div class="item-avatar ${member.avatarClass || ''}">${member.initials}</div>
                 <div class="item-info">
                     <div class="item-name">${member.name} (${member.initials})</div>
-                    <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.empId}</div>
+                    <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.department || "Information Technology"} &nbsp;·&nbsp; ${member.empId}</div>
                 </div>
             `;
             item.addEventListener("click", () => {
