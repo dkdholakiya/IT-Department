@@ -793,6 +793,7 @@ textarea {
     flex-direction: column;
     align-items: flex-end;
     gap: 10px;
+    pointer-events: none;
 }
 
 /* FAB Toggle Button */
@@ -811,6 +812,7 @@ textarea {
     transition: var(--transition);
     position: relative;
     z-index: 2;
+    pointer-events: auto;
 }
 
 /* Pulse Ring */
