@@ -336,6 +336,7 @@
         let gisInited = false;
 
         let reportData = []; // Array to store report objects
+        let scannedFoldersData = []; // Array to store detailed folders and files
 
         document.getElementById('auth-btn').style.display = 'none';
 
@@ -420,11 +421,75 @@
             if (ccInput) ccInput.value = '';
 
             reportData = [];
+            scannedFoldersData = [];
         }
 
         function extractFolderId(input) {
             const match = input.match(/folders\/([a-zA-Z0-9-_]+)/);
             return match ? match[1] : input.trim();
+        }
+
+        // Utility to format file sizes
+        function formatBytes(bytes) {
+            if (bytes === undefined || bytes === null) return 'N/A';
+            const b = parseInt(bytes);
+            if (isNaN(b)) return 'N/A';
+            if (b === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(b) / Math.log(k));
+            return parseFloat((b / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Utility to format dates
+        function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return 'N/A';
+            return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Utility to format MIME type into a readable form
+        function formatMimetype(mimeType, name) {
+            if (!mimeType) return 'Unknown File';
+            if (mimeType.startsWith('application/vnd.google-apps.')) {
+                // Google formats
+                const type = mimeType.split('.').pop();
+                return 'Google ' + type.charAt(0).toUpperCase() + type.slice(1);
+            }
+            // Use extension if present
+            const dotIdx = name.lastIndexOf('.');
+            if (dotIdx !== -1 && dotIdx < name.length - 1) {
+                return name.substring(dotIdx + 1).toUpperCase() + ' File';
+            }
+            // Standard MIME mapping fallback
+            if (mimeType === 'application/pdf') return 'PDF Document';
+            if (mimeType.startsWith('image/')) return 'Image File';
+            if (mimeType.startsWith('video/')) return 'Video File';
+            if (mimeType.startsWith('audio/')) return 'Audio File';
+            if (mimeType.startsWith('text/')) return 'Text Document';
+            return mimeType;
+        }
+
+        // Utility to ensure unique, valid Excel sheet names (max 31 characters, no invalid chars)
+        function getUniqueSheetName(name, existingNames) {
+            // Excel sheet names cannot contain: \ / ? * [ ] :
+            let sanitized = name.replace(/[\\\/\?\*\[\]\:]/g, ' ');
+            // Truncate to 31 characters
+            sanitized = sanitized.substring(0, 31).trim();
+            if (!sanitized) {
+                sanitized = "Folder Sheet";
+            }
+            let finalName = sanitized;
+            let counter = 1;
+            while (existingNames.has(finalName.toLowerCase())) {
+                const suffix = ` (${counter})`;
+                const maxLen = 31 - suffix.length;
+                finalName = sanitized.substring(0, maxLen).trim() + suffix;
+                counter++;
+            }
+            existingNames.add(finalName.toLowerCase());
+            return finalName;
         }
 
         async function startScan() {
@@ -437,63 +502,197 @@
                 return;
             }
 
-            document.getElementById('status').innerText = 'Fetching subfolders...';
+            document.getElementById('status').innerText = 'Initializing recursive scan...';
             document.getElementById('scan-btn').disabled = true;
 
+            let totalDocs = 0;
+            let emptyCount = 0;
+            let nonEmptyCount = 0;
+            let folderCount = 0;
+            let classFolders = [];
+
+            // 1. Determine Class Level target depth based on root parent folder name
+            let targetClassDepth = 3; // Default for root -> course -> semester -> class
+            let rootName = "Root";
+
+            async function findClassFolders(folderId, currentPath, depth) {
+                // Fetch subfolders of this folder
+                let subfolders = [];
+                let nextPageToken = null;
+                do {
+                    const response = await gapi.client.drive.files.list({
+                        q: `'${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+                        fields: 'nextPageToken, files(id, name)',
+                        pageSize: 100,
+                        pageToken: nextPageToken || undefined
+                    });
+                    const filesBatch = response.result.files || [];
+                    subfolders = subfolders.concat(filesBatch);
+                    nextPageToken = response.result.nextPageToken;
+                } while (nextPageToken);
+
+                // If we reached target depth or this is a leaf folder before target depth
+                if (depth === targetClassDepth || subfolders.length === 0) {
+                    classFolders.push({
+                        id: folderId,
+                        name: currentPath || rootName
+                    });
+                    return;
+                }
+
+                // Recurse into subfolders
+                for (const subfolder of subfolders) {
+                    const nextPath = currentPath ? `${currentPath} > ${subfolder.name}` : subfolder.name;
+                    await findClassFolders(subfolder.id, nextPath, depth + 1);
+                }
+            }
+
+            // Recursive function to scan subfolders and files inside a Class folder
+            async function scanClassContents(folderId, relativePath, classData) {
+                // Fetch subfolders of this directory
+                let subfolders = [];
+                let nextPageToken = null;
+                do {
+                    const response = await gapi.client.drive.files.list({
+                        q: `'${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+                        fields: 'nextPageToken, files(id, name)',
+                        pageSize: 100,
+                        pageToken: nextPageToken || undefined
+                    });
+                    const filesBatch = response.result.files || [];
+                    subfolders = subfolders.concat(filesBatch);
+                    nextPageToken = response.result.nextPageToken;
+                } while (nextPageToken);
+
+                // Fetch files of this directory
+                let filesInFolder = [];
+                let filePageToken = null;
+                do {
+                    const fileResponse = await gapi.client.drive.files.list({
+                        q: `'${folderId}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false`,
+                        fields: 'nextPageToken, files(id, name, mimeType, size, createdTime, webViewLink)',
+                        pageSize: 100,
+                        pageToken: filePageToken || undefined
+                    });
+                    const fileBatch = fileResponse.result.files || [];
+                    filesInFolder = filesInFolder.concat(fileBatch);
+                    filePageToken = fileResponse.result.nextPageToken;
+                } while (filePageToken);
+
+                // If this is a subfolder of the class (depth 4 or more)
+                if (relativePath) {
+                    classData.activities.push({
+                        name: relativePath,
+                        folderId: folderId,
+                        folderLink: `https://drive.google.com/drive/folders/${folderId}`,
+                        files: filesInFolder
+                    });
+                } else {
+                    // Direct files in the class folder itself
+                    if (filesInFolder.length > 0) {
+                        classData.activities.push({
+                            name: "Direct Files",
+                            folderId: folderId,
+                            folderLink: `https://drive.google.com/drive/folders/${folderId}`,
+                            files: filesInFolder
+                        });
+                    }
+                }
+
+                // If this is the class folder itself and it has no subfolders and no files
+                if (!relativePath && subfolders.length === 0 && filesInFolder.length === 0) {
+                    classData.activities.push({
+                        name: "Main Folder",
+                        folderId: folderId,
+                        folderLink: `https://drive.google.com/drive/folders/${folderId}`,
+                        files: []
+                    });
+                }
+
+                // Recurse into subfolders
+                for (const subfolder of subfolders) {
+                    const nextPath = relativePath ? `${relativePath} > ${subfolder.name}` : subfolder.name;
+                    await scanClassContents(subfolder.id, nextPath, classData);
+                }
+            }
+
             try {
-                const response = await gapi.client.drive.files.list({
-                    q: `'${parentFolderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
-                    fields: 'files(id, name)',
-                    pageSize: 100
+                // Fetch root folder metadata
+                const rootMeta = await gapi.client.drive.files.get({
+                    fileId: parentFolderId,
+                    fields: 'name'
                 });
+                rootName = rootMeta.result.name || "Root";
 
-                const subfolders = response.result.files;
+                // Dynamically adjust target class depth based on root folder name
+                const rootNameLower = rootName.toLowerCase();
+                if (rootNameLower.includes("semester") || rootNameLower.includes("sem ")) {
+                    targetClassDepth = 1;
+                } else if (rootNameLower === "b.tech" || rootNameLower === "diploma" || rootNameLower === "btech") {
+                    targetClassDepth = 2;
+                } else if (rootNameLower.includes("clss") || rootNameLower.includes("class")) {
+                    targetClassDepth = 0;
+                }
 
-                if (!subfolders || subfolders.length === 0) {
-                    document.getElementById('status').innerText = 'No subfolders found inside this directory.';
+                // Find class folders
+                document.getElementById('status').innerText = 'Locating class folders...';
+                await findClassFolders(parentFolderId, "", 0);
+
+                if (classFolders.length === 0) {
+                    document.getElementById('status').innerText = 'No class folders found inside this directory.';
                     document.getElementById('scan-btn').disabled = false;
                     return;
                 }
 
-                document.getElementById('status').innerText = `Found ${subfolders.length} subfolders. Scanning contents...`;
+                document.getElementById('status').innerText = `Found ${classFolders.length} class folders. Scanning contents...`;
 
-                let totalDocs = 0;
-                let emptyCount = 0;
-                let nonEmptyCount = 0;
+                for (let i = 0; i < classFolders.length; i++) {
+                    const classFolder = classFolders[i];
+                    document.getElementById('status').innerText = `Scanning class (${i + 1}/${classFolders.length}): ${classFolder.name}...`;
 
-                for (let i = 0; i < subfolders.length; i++) {
-                    const folder = subfolders[i];
-                    document.getElementById('status').innerText = `Scanning details: (${i + 1}/${subfolders.length}) ${folder.name}`;
+                    const classData = {
+                        id: classFolder.id,
+                        name: classFolder.name,
+                        activities: []
+                    };
 
-                    const fileResponse = await gapi.client.drive.files.list({
-                        q: `'${folder.id}' in parents and trashed = false`,
-                        fields: 'files(name)',
-                        pageSize: 100
-                    });
+                    await scanClassContents(classFolder.id, "", classData);
 
-                    const filesInFolder = fileResponse.result.files || [];
+                    // Compute metrics
+                    const totalAct = classData.activities.length;
+                    const emptyAct = classData.activities.filter(a => a.files.length === 0).length;
+                    const filledAct = totalAct - emptyAct;
+                    const docsCount = classData.activities.reduce((acc, a) => acc + a.files.length, 0);
 
-                    renderFolderResult(folder.name, filesInFolder);
-
-                    const fileCount = filesInFolder.length;
-                    totalDocs += fileCount;
-                    if (fileCount === 0) {
+                    totalDocs += docsCount;
+                    folderCount++;
+                    if (filledAct === 0) {
                         emptyCount++;
                     } else {
                         nonEmptyCount++;
                     }
 
-                    // Add structured data for Excel
+                    // Render in the HTML UI
+                    renderClassResult(classFolder.name, classData.activities);
+
+                    // Store class data for Excel generation
+                    scannedFoldersData.push(classData);
+
+                    // Build formatted activities summary for legacy Excel & email table
+                    const activitiesSummary = classData.activities.map(a => 
+                        `${a.name}: ${a.files.length === 0 ? "Empty" : a.files.length + " Files"}`
+                    ).join(' | ') || 'No Activities';
+
                     reportData.push({
-                        "Folder Name": folder.name,
-                        "Status": filesInFolder.length === 0 ? "Empty" : "Has Files",
-                        "File Count": filesInFolder.length,
-                        "File Names": filesInFolder.map(f => f.name).join(', ') // comma separated
+                        "Folder Name": classFolder.name,
+                        "Status": filledAct === 0 ? "Empty" : (emptyAct === 0 ? "Has Files" : "Partial"),
+                        "File Count": docsCount,
+                        "File Names": activitiesSummary
                     });
                 }
 
                 // Show summary metrics in HTML UI
-                document.getElementById('total-folders-val').innerText = subfolders.length;
+                document.getElementById('total-folders-val').innerText = folderCount;
                 document.getElementById('total-docs-val').innerText = totalDocs;
                 document.getElementById('non-empty-folders-val').innerText = nonEmptyCount;
                 document.getElementById('empty-folders-val').innerText = emptyCount;
@@ -515,7 +714,7 @@
                 reportData.push({
                     "Folder Name": "Total Folders Scanned",
                     "Status": "",
-                    "File Count": subfolders.length,
+                    "File Count": folderCount,
                     "File Names": ""
                 });
                 reportData.push({
@@ -551,53 +750,249 @@
             document.getElementById('scan-btn').disabled = false;
         }
 
-        function renderFolderResult(folderName, files) {
+        function renderClassResult(className, activities) {
             const emptyContainer = document.getElementById('empty-folders');
             const nonEmptyContainer = document.getElementById('non-empty-folders');
 
             const li = document.createElement('li');
+            li.className = 'folder-item';
 
-            if (files.length === 0) {
+            const total = activities.length;
+            const emptyActCount = activities.filter(a => a.files.length === 0).length;
+            const filledCount = total - emptyActCount;
+
+            let activitiesHtml = '<ul class="file-list" style="list-style-type: none; padding-left: 0; margin-top: 10px;">';
+            activities.forEach(activity => {
+                const isActEmpty = activity.files.length === 0;
+                const bullet = isActEmpty ? '🔴' : '🟢';
+                const statusText = isActEmpty ? '(Empty)' : `(${activity.files.length} documents)`;
+                
+                activitiesHtml += `<li style="margin-bottom: 8px; color: #cbd5e1; font-family: 'Merriweather Sans', sans-serif;">`;
+                activitiesHtml += `${bullet} <strong>${activity.name}</strong> ${statusText}`;
+                
+                if (activity.files.length > 0) {
+                    activitiesHtml += '<ul style="list-style-type: circle; padding-left: 20px; margin-top: 4px; font-size: 12.5px; color: #b4c6ef;">';
+                    activity.files.forEach(file => {
+                        activitiesHtml += `<li>${file.name}</li>`;
+                    });
+                    activitiesHtml += '</ul>';
+                }
+                activitiesHtml += '</li>';
+            });
+            activitiesHtml += '</ul>';
+
+            li.innerHTML = `
+                <div class="folder-name">${className}</div>
+                <div class="file-count" style="margin-top: 6px;">
+                    Activities: ${filledCount} / ${total} Filled &nbsp;·&nbsp; ${emptyActCount} Empty
+                </div>
+                ${activitiesHtml}
+            `;
+
+            if (filledCount === 0) {
                 li.className = 'folder-item empty';
-                li.innerHTML = `<div class="folder-name">${folderName}</div><div class="file-count">0 items (Empty)</div>`;
                 emptyContainer.appendChild(li);
             } else {
-                li.className = 'folder-item';
-                let fileListHtml = '<ul class="file-list">';
-                files.forEach(file => { fileListHtml += `<li>${file.name}</li>`; });
-                fileListHtml += '</ul>';
-
-                li.innerHTML = `
-                <div class="folder-name">${folderName}</div>
-                <div class="file-count">${files.length} document(s) detected</div>
-                ${fileListHtml}
-            `;
                 nonEmptyContainer.appendChild(li);
             }
         }
 
-        // Generate and download actual .xlsx file using SheetJS
+        // Generate and download actual .xlsx file using SheetJS with folder-wise sheets
         function downloadExcelReport() {
-            if (reportData.length === 0) {
+            if (scannedFoldersData.length === 0) {
                 alert("No data to download. Please scan a folder first.");
                 return;
             }
 
-            // Convert the JSON array into an Excel Worksheet
-            const worksheet = XLSX.utils.json_to_sheet(reportData);
+            // Draw text-based progress bar chart
+            function drawProgressBar(value, total) {
+                if (total === 0) return "[░░░░░░░░░░] 0%";
+                const percentage = Math.round((value / total) * 100);
+                const filledBlocks = Math.round(percentage / 10);
+                const emptyBlocks = 10 - filledBlocks;
+                const bar = "█".repeat(filledBlocks) + "░".repeat(emptyBlocks);
+                return `[${bar}] ${percentage}%`;
+            }
 
-            // Adjust column widths automatically based on headers
-            const wscols = [
-                { wch: 35 }, // Folder Name width
-                { wch: 15 }, // Status width
-                { wch: 12 }, // File count width
-                { wch: 60 }  // File Names width
-            ];
-            worksheet['!cols'] = wscols;
-
-            // Create a new Excel Workbook and append the Worksheet
+            // Create a new Excel Workbook
             const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Scan Results");
+
+            // 1. Add Summary Sheet (Overall Analysis dashboard)
+            const summaryRows = [];
+            summaryRows.push(["GMIU IT DEPARTMENT - GOOGLE DRIVE FOLDER SCAN REPORT"]);
+            summaryRows.push(["Report Generated At:", new Date().toLocaleString()]);
+            summaryRows.push([]); // spacer row
+
+            // Extract metrics counts
+            const totalFolders = scannedFoldersData.length;
+            let totalDocs = 0;
+            let emptyCount = 0;
+            let nonEmptyCount = 0;
+            scannedFoldersData.forEach(classFolder => {
+                const totalAct = classFolder.activities.length;
+                const emptyAct = classFolder.activities.filter(a => a.files.length === 0).length;
+                const filledAct = totalAct - emptyAct;
+                totalDocs += classFolder.activities.reduce((acc, a) => acc + a.files.length, 0);
+                if (filledAct === 0) {
+                    emptyCount++;
+                } else {
+                    nonEmptyCount++;
+                }
+            });
+
+            summaryRows.push(["METRICS SUMMARY"]);
+            summaryRows.push(["Total Classes Scanned", totalFolders]);
+            summaryRows.push(["Total Scanned Documents", totalDocs]);
+            summaryRows.push(["Filled Classes", nonEmptyCount]);
+            summaryRows.push(["Empty Classes (Action Required)", emptyCount]);
+            summaryRows.push(["Overall Completion Rate", drawProgressBar(nonEmptyCount, totalFolders)]);
+            summaryRows.push([]); // spacer row
+
+            summaryRows.push(["CLASS-WISE OVERALL STATUS LIST"]);
+            summaryRows.push(["S.No.", "Class Folder Path", "Status", "Activities Progress", "Total Docs", "Activities Detail Summary"]);
+
+            scannedFoldersData.forEach((classFolder, index) => {
+                const totalAct = classFolder.activities.length;
+                const emptyAct = classFolder.activities.filter(a => a.files.length === 0).length;
+                const filledAct = totalAct - emptyAct;
+                const docsCount = classFolder.activities.reduce((acc, a) => acc + a.files.length, 0);
+
+                let statusLabel = "🟢 FILLED";
+                if (filledAct === 0) statusLabel = "🔴 EMPTY";
+                else if (emptyAct > 0) statusLabel = "🟡 PARTIAL";
+
+                const detailSummary = classFolder.activities.map(a => 
+                    `${a.name}: ${a.files.length === 0 ? "🔴 Empty" : "🟢 " + a.files.length + " Docs"}`
+                ).join(' | ') || 'No Activities';
+
+                summaryRows.push([
+                    index + 1,
+                    classFolder.name,
+                    statusLabel,
+                    `${filledAct} / ${totalAct} Filled`,
+                    docsCount,
+                    detailSummary
+                ]);
+            });
+
+            const summarySheet = XLSX.utils.aoa_to_sheet(summaryRows);
+            summarySheet['!cols'] = [
+                { wch: 8 },  // S.No.
+                { wch: 45 }, // Class Folder Path
+                { wch: 15 }, // Status
+                { wch: 20 }, // Activities Progress
+                { wch: 12 }, // Total Docs
+                { wch: 65 }  // Activities Detail Summary
+            ];
+            XLSX.utils.book_append_sheet(workbook, summarySheet, "Overall Analysis");
+
+            // Track sheet names to ensure uniqueness (case-insensitive)
+            const existingNames = new Set(["overall analysis"]);
+
+            // 2. Add a detailed sheet for each Class Folder
+            scannedFoldersData.forEach(classFolder => {
+                const pathParts = classFolder.name.split(" > ");
+                const baseName = pathParts[pathParts.length - 1] || classFolder.name;
+                const sheetName = getUniqueSheetName(baseName, existingNames);
+                
+                const folderRows = [];
+
+                const totalAct = classFolder.activities.length;
+                const emptyAct = classFolder.activities.filter(a => a.files.length === 0).length;
+                const filledAct = totalAct - emptyAct;
+                const classDocsCount = classFolder.activities.reduce((acc, a) => acc + a.files.length, 0);
+
+                let statusLabel = "🟢 FILLED";
+                if (filledAct === 0) statusLabel = "🔴 EMPTY";
+                else if (emptyAct > 0) statusLabel = "🟡 PARTIAL";
+
+                // Metadata block
+                folderRows.push(["FOLDER ANALYSIS REPORT"]);
+                folderRows.push(["Class Folder Path:", classFolder.name]);
+                folderRows.push(["Status:", statusLabel]);
+                folderRows.push(["Activities Progress:", `${filledAct} / ${totalAct} Activities Filled`]);
+                folderRows.push(["Completion Bar:", drawProgressBar(filledAct, totalAct)]);
+                folderRows.push([]); // Empty spacer row
+
+                // Table Header
+                folderRows.push(["S.No.", "Activity / Subfolder Name", "Activity Status", "File Name", "MIME Type", "Size", "Uploaded Date", "Google Drive Link"]);
+
+                const dataRows = []; // Keep track of rows to add links
+
+                if (totalAct === 0) {
+                    folderRows.push([1, "Main Folder", "🔴 Empty", "No Files Uploaded", "-", "-", "-", "Open Folder"]);
+                    dataRows.push({
+                        linkUrl: `https://drive.google.com/drive/folders/${classFolder.id}`,
+                        linkText: "Open Folder"
+                    });
+                } else {
+                    let serialNo = 1;
+                    classFolder.activities.forEach(activity => {
+                        if (activity.files.length === 0) {
+                            folderRows.push([
+                                serialNo++,
+                                activity.name,
+                                "🔴 Empty",
+                                "No Files Uploaded",
+                                "-",
+                                "-",
+                                "-",
+                                "Open Folder"
+                            ]);
+                            dataRows.push({
+                                linkUrl: activity.folderLink,
+                                linkText: "Open Folder"
+                            });
+                        } else {
+                            activity.files.forEach(file => {
+                                folderRows.push([
+                                    serialNo++,
+                                    activity.name,
+                                    "🟢 Has Files",
+                                    file.name,
+                                    formatMimetype(file.mimeType, file.name),
+                                    formatBytes(file.size),
+                                    formatDate(file.createdTime),
+                                    "Open File"
+                                ]);
+                                dataRows.push({
+                                    linkUrl: file.webViewLink,
+                                    linkText: "Open File"
+                                });
+                            });
+                        }
+                    });
+                }
+
+                const ws = XLSX.utils.aoa_to_sheet(folderRows);
+
+                // Adjust column widths
+                ws['!cols'] = [
+                    { wch: 8 },  // S.No.
+                    { wch: 35 }, // Activity / Subfolder Name
+                    { wch: 15 }, // Activity Status
+                    { wch: 45 }, // File Name
+                    { wch: 25 }, // MIME Type
+                    { wch: 15 }, // Size
+                    { wch: 22 }, // Uploaded Date
+                    { wch: 15 }  // Link
+                ];
+
+                // Transform long URLs to clickable cell hyperlinks
+                dataRows.forEach((row, index) => {
+                    if (row.linkUrl) {
+                        const rowIndex = 7 + index; // Header is row index 6 (0-indexed)
+                        const cellRef = XLSX.utils.encode_cell({ r: rowIndex, c: 7 }); // Column H is index 7
+                        ws[cellRef] = {
+                            t: 's',
+                            v: row.linkText,
+                            l: { Target: row.linkUrl, Tooltip: row.linkText === 'Open Folder' ? 'Click to open folder' : 'Click to open file' }
+                        };
+                    }
+                });
+
+                XLSX.utils.book_append_sheet(workbook, ws, sheetName);
+            });
 
             // Trigger the download of the .xlsx file
             XLSX.writeFile(workbook, "Drive_Folder_Scan_Report.xlsx");
@@ -863,34 +1258,53 @@
                     <span>Sending...</span>
                 `;
 
-                // Build HTML table for email from reportData
-                const scanItems = reportData.filter(item => item["Status"] === "Empty" || item["Status"] === "Has Files");
-
+                // Build HTML table for email showing one row per activity folder
                 let tableRowsHtml = "";
-                scanItems.forEach((item, index) => {
-                    const bg = index % 2 === 0 ? '#ffffff' : '#f8fafc';
-                    const statusColor = item["Status"] === "Empty" ? "#ef4444" : "#10b981";
-                    const statusBg = item["Status"] === "Empty" ? "rgba(239, 68, 68, 0.08)" : "rgba(16, 185, 129, 0.08)";
-
-                    tableRowsHtml += `
-                        <tr style="background-color: ${bg};">
-                            <td style="padding: 12px 14px; text-align: center; border: 1px solid rgba(0,0,0,0.08); font-size: 13px; color: #64748b; font-family: 'Playfair Display', serif;">${index + 1}</td>
-                            <td style="padding: 12px 14px; border: 1px solid rgba(0,0,0,0.08); font-size: 13.5px; font-weight: 600; color: #0f172a; font-family: 'Playfair Display', serif;">${item["Folder Name"]}</td>
-                            <td style="padding: 12px 14px; text-align: center; border: 1px solid rgba(0,0,0,0.08); font-size: 12px; font-family: 'Playfair Display', serif;">
-                                <span style="display: inline-block; padding: 4px 10px; font-weight: 700; border-radius: 50px; background-color: ${statusBg}; color: ${statusColor}; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', serif;">${item["Status"]}</span>
-                            </td>
-                            <td style="padding: 12px 14px; text-align: center; border: 1px solid rgba(0,0,0,0.08); font-size: 13.5px; font-weight: bold; color: #1e293b; font-family: 'Playfair Display', serif;">${item["File Count"]}</td>
-                            <td style="padding: 12px 14px; border: 1px solid rgba(0,0,0,0.08); font-size: 13px; color: #475569; word-break: break-all; font-family: 'Playfair Display', serif;">${item["File Names"] || '-'}</td>
-                        </tr>
-                    `;
-                });
-
-                const totalFolders = scanItems.length;
-                const emptyFolders = scanItems.filter(item => item["Status"] === "Empty").length;
-                const nonEmptyFolders = scanItems.filter(item => item["Status"] === "Has Files").length;
-
+                let index = 0;
+                let totalFolders = 0;
+                let emptyFolders = 0;
+                let nonEmptyFolders = 0;
                 let totalDocs = 0;
-                scanItems.forEach(item => totalDocs += item["File Count"]);
+
+                scannedFoldersData.forEach(classFolder => {
+                    const pathParts = classFolder.name.split(" > ");
+                    const classBaseName = pathParts[pathParts.length - 1] || classFolder.name;
+
+                    classFolder.activities.forEach(activity => {
+                        index++;
+                        totalFolders++;
+
+                        const bg = index % 2 === 0 ? '#ffffff' : '#f8fafc';
+                        const isActEmpty = activity.files.length === 0;
+                        const statusColor = isActEmpty ? "#ef4444" : "#10b981";
+                        const statusBg = isActEmpty ? "rgba(239, 68, 68, 0.08)" : "rgba(16, 185, 129, 0.08)";
+                        const statusText = isActEmpty ? "EMPTY" : "HAS FILES";
+
+                        if (isActEmpty) {
+                            emptyFolders++;
+                        } else {
+                            nonEmptyFolders++;
+                        }
+
+                        const fileCount = activity.files.length;
+                        totalDocs += fileCount;
+
+                        const filesListStr = activity.files.map(f => f.name).join(', ') || '-';
+                        const displayName = `${classBaseName} > ${activity.name}`;
+
+                        tableRowsHtml += `
+                            <tr style="background-color: ${bg};">
+                                <td style="padding: 12px 14px; text-align: center; border: 1px solid rgba(0,0,0,0.08); font-size: 13px; color: #64748b; font-family: 'Playfair Display', serif;">${index}</td>
+                                <td style="padding: 12px 14px; border: 1px solid rgba(0,0,0,0.08); font-size: 13.5px; font-weight: 600; color: #0f172a; font-family: 'Playfair Display', serif;">${displayName}</td>
+                                <td style="padding: 12px 14px; text-align: center; border: 1px solid rgba(0,0,0,0.08); font-size: 12px; font-family: 'Playfair Display', serif;">
+                                    <span style="display: inline-block; padding: 4px 10px; font-weight: 700; border-radius: 50px; background-color: ${statusBg}; color: ${statusColor}; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', serif;">${statusText}</span>
+                                </td>
+                                <td style="padding: 12px 14px; text-align: center; border: 1px solid rgba(0,0,0,0.08); font-size: 13.5px; font-weight: bold; color: #1e293b; font-family: 'Playfair Display', serif;">${fileCount}</td>
+                                <td style="padding: 12px 14px; border: 1px solid rgba(0,0,0,0.08); font-size: 13px; color: #475569; word-break: break-all; font-family: 'Playfair Display', serif;">${filesListStr}</td>
+                            </tr>
+                        `;
+                    });
+                });
 
                 const recipientEmail = document.getElementById("facultyEmail").value;
                 const emailSubject = `Google Drive Folder Scan Analysis Report`;
