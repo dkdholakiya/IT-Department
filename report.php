@@ -201,22 +201,12 @@
                                         <select class="form-select" id="reportType" onchange="toggleReportTypeFields()"
                                             required>
                                             <option value="" disabled selected>Select Report Type...</option>
-                                            <option value="achievement">Achievement</option>
-                                            <option value="alumni">Alumni</option>
-                                            <option value="earn_startup">Earn, Startup & Project</option>
-                                            <option value="expert_talk">Expert Talk</option>
-                                            <option value="fdp">FDP</option>
-                                            <option value="flip_class">Flip Class</option>
-                                            <option value="aptitude">Logical Reasoning, IQ/EQ & Aptitude Test</option>
-                                            <option value="managerial">Managerial Skill</option>
-                                            <option value="stress">Stress Relief</option>
-                                            <option value="student_chapter">Student Chapter</option>
-                                            <option value="placement">Training & Placement Reports</option>
-                                            <option value="visit">Visit</option>
-                                            <option value="workshop">Workshop</option>
-                                            <option value="joy">7 MantrasJoy</option>
-                                            <option value="orientation">TPA Planner Orientation</option>
-                                            <option value="other">Other</option>
+                                            <option value="training_placement">Training & Placement Activity</option>
+                                            <option value="departmental">Departmental Activity</option>
+                                            <option value="startup">Startup Activity</option>
+                                            <option value="research">Research Activity</option>
+                                            <option value="international_relational">International Relational Activity</option>
+                                            <option value="central">Central Activity</option>
                                         </select>
                                         <div class="mt-2 d-none" id="customReportTypeWrap">
                                             <label class="form-label text-warning small" for="customReportType">Custom
@@ -309,12 +299,76 @@
                                             placeholder="e.g., 60" required>
                                         <div class="invalid-feedback">Participants count must be greater than 0.</div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label" for="batch">Batch <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="batch" required>
+                                            <option value="" disabled selected>Select Batch...</option>
+                                            <option value="Batch 2023">Batch 2023</option>
+                                            <option value="Batch 2024">Batch 2024</option>
+                                            <option value="Batch 2025">Batch 2025</option>
+                                            <option value="Batch 2026">Batch 2026</option>
+                                        </select>
+                                        <div class="invalid-feedback">Batch is required.</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label" for="studentCoordinator">Student Coordinator</label>
+                                        <input type="text" class="form-control" id="studentCoordinator" placeholder="Enter student coordinator name...">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Spacer grid to keep layout balanced -->
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-light">Report is published on GMIU Website? <span class="text-danger">*</span></label>
+                                        <div class="d-flex gap-3 mt-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="publishWebsite" id="publishYes" value="Yes" required>
+                                                <label class="form-check-label text-light" for="publishYes">Yes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="publishWebsite" id="publishNo" value="No" required>
+                                                <label class="form-check-label text-light" for="publishNo">No</label>
+                                            </div>
+                                        </div>
+                                        <div class="invalid-feedback text-danger">Please choose an option.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-light">Press Note Required? <span class="text-danger">*</span></label>
+                                        <div class="d-flex gap-3 mt-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="pressNote" id="pressYes" value="Yes" required>
+                                                <label class="form-check-label text-light" for="pressYes">Yes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="pressNote" id="pressNo" value="No" checked required>
+                                                <label class="form-check-label text-light" for="pressNo">No</label>
+                                            </div>
+                                        </div>
+                                        <div class="invalid-feedback text-danger">Please choose an option.</div>
+                                    </div>
                                     <div class="col-md-12">
                                         <label class="form-label" for="coordinators">Faculty Coordinator(s) <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="coordinators"
-                                            placeholder="Separate multiple coordinators with commas..." required>
-                                        <div class="invalid-feedback">Faculty Coordinator is required.</div>
+                                        <div class="custom-multiselect-wrap">
+                                            <input type="hidden" id="coordinators" name="coordinators" required>
+                                            
+                                            <!-- Custom UI representing the multi-select -->
+                                            <div class="multiselect-trigger form-control" id="coordEmailsTrigger">
+                                                <span class="placeholder-text" id="coordPlaceholder">Select Faculty Coordinator(s)...</span>
+                                                <div class="selected-badges-container d-none" id="coordSelectedBadges"></div>
+                                                <i class="bi bi-chevron-down multiselect-arrow-icon"></i>
+                                            </div>
+                                            
+                                            <div class="multiselect-dropdown" id="coordDropdown">
+                                                <div class="multiselect-search-wrap">
+                                                    <i class="bi bi-search search-icon"></i>
+                                                    <input type="text" class="form-control form-control-sm" id="coordSearchInput" placeholder="Search faculty member..." autocomplete="off">
+                                                </div>
+                                                <div class="multiselect-options-list" id="coordOptionsList">
+                                                    <!-- Javascript populated -->
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">Faculty Coordinator is required.</div>
+                                        </div>
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label" for="briefObjective">Brief Objective <span
@@ -372,256 +426,351 @@
                                     <i class="bi bi-exclamation-triangle-fill fs-3 text-warning d-block mb-2"></i>
                                     PLEASE SELECT A REPORT TYPE IN SECTION 2 TO DISPLAY SPECIFIC FIELDS.
                                 </div>
-
-                                <!-- Dynamic Achievement Section -->
-                                <div class="dynamic-report-section d-none" id="sec-achievement">
+                                                     <!-- Dynamic Training & Placement Activity Section -->
+                                <div class="dynamic-report-section d-none" id="sec-training_placement">
                                     <div class="row g-3">
-                                        <div class="col-md-6"><label class="form-label">Achievement Title</label><input
-                                                type="text" class="form-control dynamic-field" id="achTitle"></div>
-                                        <div class="col-md-6"><label class="form-label">Event Name</label><input
-                                                type="text" class="form-control dynamic-field" id="achEvent"></div>
-                                        <div class="col-md-4"><label class="form-label">Event Level</label><input
-                                                type="text" class="form-control dynamic-field" id="achLevel"
-                                                placeholder="e.g. National, State"></div>
-                                        <div class="col-md-4"><label class="form-label">Event Location</label><input
-                                                type="text" class="form-control dynamic-field" id="achLocation"></div>
-                                        <div class="col-md-4"><label class="form-label">Position/Award</label><input
-                                                type="text" class="form-control dynamic-field" id="achPosition"></div>
-                                        <div class="col-md-6"><label class="form-label">Team Members</label><input
-                                                type="text" class="form-control dynamic-field" id="achTeam"></div>
-                                        <div class="col-md-6"><label class="form-label">Faculty Mentor</label><input
-                                                type="text" class="form-control dynamic-field" id="achMentor"></div>
-                                    </div>
-                                </div>
-
-                                <!-- Dynamic Alumni Section -->
-                                <div class="dynamic-report-section d-none" id="sec-alumni">
-                                    <div class="row g-3">
-                                        <div class="col-md-4"><label class="form-label">Alumni Name</label><input
-                                                type="text" class="form-control dynamic-field" id="aluName"></div>
-                                        <div class="col-md-4"><label class="form-label">Organization</label><input
-                                                type="text" class="form-control dynamic-field" id="aluOrg"></div>
-                                        <div class="col-md-4"><label class="form-label">Designation</label><input
-                                                type="text" class="form-control dynamic-field" id="aluDesg"></div>
-                                        <div class="col-md-12"><label class="form-label">Interaction Topic</label><input
-                                                type="text" class="form-control dynamic-field" id="aluTopic"></div>
-                                        <div class="col-md-12"><label class="form-label">Key Takeaways</label><textarea
-                                                class="form-control dynamic-field" id="aluTakeaways"
-                                                rows="2"></textarea></div>
-                                    </div>
-                                </div>
-
-                                <!-- Dynamic Earn, Startup & Project Section -->
-                                <div class="dynamic-report-section d-none" id="sec-earn_startup">
-                                    <div class="row g-3">
-                                        <div class="col-md-6"><label class="form-label">Project Title</label><input
-                                                type="text" class="form-control dynamic-field" id="espProject"></div>
-                                        <div class="col-md-6"><label class="form-label">Startup Name</label><input
-                                                type="text" class="form-control dynamic-field" id="espStartup"></div>
-                                        <div class="col-md-12"><label class="form-label">Team Members</label><input
-                                                type="text" class="form-control dynamic-field" id="espTeam"></div>
-                                        <div class="col-md-6"><label class="form-label">Problem
-                                                Statement</label><textarea class="form-control dynamic-field"
-                                                id="espProblem" rows="2"></textarea></div>
-                                        <div class="col-md-6"><label class="form-label">Outcomes</label><textarea
-                                                class="form-control dynamic-field" id="espOutcomes" rows="2"></textarea>
+                                        <div class="col-md-12">
+                                            <label class="form-label text-light">Placement Activity Type <span class="text-danger">*</span></label>
+                                            <div class="d-flex gap-3 mt-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input dynamic-field" type="radio" name="placementActType" id="typeRLM" value="RLM" onchange="togglePlacementActType()">
+                                                    <label class="form-check-label text-light" for="typeRLM">RLM</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input dynamic-field" type="radio" name="placementActType" id="typePLM" value="PLM" onchange="togglePlacementActType()">
+                                                    <label class="form-check-label text-light" for="typePLM">PLM</label>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-md-12"><label class="form-label">Technologies Used</label><input
-                                                type="text" class="form-control dynamic-field" id="espTech"></div>
-                                    </div>
-                                </div>
+                                        
+                                        <!-- RLM Activity Dropdown -->
+                                        <div class="col-md-12 d-none" id="rlmDropdownWrap">
+                                            <label class="form-label" for="rlmActivity">RLM Activity <span class="text-danger">*</span></label>
+                                            <select class="form-select dynamic-field" id="rlmActivity" onchange="toggleRlmCustomActivity()">
+                                                <option value="" disabled selected>Select RLM Activity...</option>
+                                                <option value="1. Domain Selection Process">1. Domain Selection Process</option>
+                                                <option value="2. Industrial Visit">2. Industrial Visit</option>
+                                                <option value="3. Expert Talk">3. Expert Talk</option>
+                                                <option value="4. Workshop">4. Workshop</option>
+                                                
+                                                <optgroup label="Projects">
+                                                    <option value="5.1 Projects - Social Impact Projects">5.1 Social Impact Projects</option>
+                                                    <option value="5.2 Projects - Project Based Learning">5.2 Project Based Learning</option>
+                                                    <option value="5.3 Projects - Micro">5.3 Micro</option>
+                                                    <option value="5.4 Projects - Minor">5.4 Minor</option>
+                                                    <option value="5.5 Projects - Major">5.5 Major</option>
+                                                </optgroup>
 
-                                <!-- Dynamic Expert Talk Section -->
-                                <div class="dynamic-report-section d-none" id="sec-expert_talk">
-                                    <div class="row g-3">
-                                        <div class="col-md-4"><label class="form-label">Expert Name</label><input
-                                                type="text" class="form-control dynamic-field" id="expName"></div>
-                                        <div class="col-md-4"><label class="form-label">Organization</label><input
-                                                type="text" class="form-control dynamic-field" id="expOrg"></div>
-                                        <div class="col-md-4"><label class="form-label">Designation</label><input
-                                                type="text" class="form-control dynamic-field" id="expDesg"></div>
-                                        <div class="col-md-12"><label class="form-label">Topic</label><input type="text"
-                                                class="form-control dynamic-field" id="expTopic"></div>
-                                        <div class="col-md-12"><label class="form-label">Key Learnings</label><textarea
-                                                class="form-control dynamic-field" id="expLearnings"
-                                                rows="2"></textarea></div>
-                                    </div>
-                                </div>
+                                                <optgroup label="Exposure to Cutting Edge Technology">
+                                                    <option value="6.1 Exposure to Cutting Edge Technology - In - House (For Genius)">6.1 In - House (For Genius)</option>
+                                                    <option value="6.2 Exposure to Cutting Edge Technology - Online">6.2 Online</option>
+                                                </optgroup>
 
-                                <!-- Dynamic FDP Section -->
-                                <div class="dynamic-report-section d-none" id="sec-fdp">
-                                    <div class="row g-3">
-                                        <div class="col-md-6"><label class="form-label">FDP Title</label><input
-                                                type="text" class="form-control dynamic-field" id="fdpTitle"></div>
-                                        <div class="col-md-6"><label class="form-label">Organized By</label><input
-                                                type="text" class="form-control dynamic-field" id="fdpOrg"></div>
-                                        <div class="col-md-4"><label class="form-label">Mode</label><input type="text"
-                                                class="form-control dynamic-field" id="fdpMode"
-                                                placeholder="e.g., Online/Offline"></div>
-                                        <div class="col-md-4"><label class="form-label">Duration</label><input
-                                                type="text" class="form-control dynamic-field" id="fdpDuration"></div>
-                                        <div class="col-md-4"><label class="form-label">Faculty
-                                                Participants</label><input type="text"
-                                                class="form-control dynamic-field" id="fdpParticipants"></div>
-                                    </div>
-                                </div>
+                                                <optgroup label="Technical Event / Competition Participation">
+                                                    <option value="7.1 Technical Event / Competition Participation - In - House">7.1 In - House</option>
+                                                    <option value="7.2 Technical Event / Competition Participation - State Level (Colleges)">7.2 State Level (Colleges)</option>
+                                                    <option value="7.3 Technical Event / Competition Participation - National Level">7.3 National Level</option>
+                                                </optgroup>
 
-                                <!-- Dynamic Flip Class Section -->
-                                <div class="dynamic-report-section d-none" id="sec-flip_class">
-                                    <div class="row g-3">
-                                        <div class="col-md-12"><label class="form-label">Student Presenter
-                                                Names</label><input type="text" class="form-control dynamic-field"
-                                                id="fcPresenters"></div>
-                                        <div class="col-md-12"><label class="form-label">Topic</label><input type="text"
-                                                class="form-control dynamic-field" id="fcTopic"></div>
-                                        <div class="col-md-12"><label class="form-label">Learning
-                                                Outcomes</label><textarea class="form-control dynamic-field"
-                                                id="fcOutcomes" rows="2"></textarea></div>
-                                    </div>
-                                </div>
+                                                <option value="8. Communication Skill Enhancement Activity">8. Communication Skill Enhancement Activity</option>
+                                                <option value="9. Managerial / Leadership Skill Enhancement Activity">9. Managerial / Leadership Skill Enhancement Activity</option>
+                                                <option value="10. Association (Student Chapter) Activities">10. Association (Student Chapter) Activities</option>
 
-                                <!-- Dynamic Logical Reasoning & Aptitude Test Section -->
-                                <div class="dynamic-report-section d-none" id="sec-aptitude">
-                                    <div class="row g-3">
-                                        <div class="col-md-6"><label class="form-label">Session Topic</label><input
-                                                type="text" class="form-control dynamic-field" id="aptTopic"></div>
-                                        <div class="col-md-6"><label class="form-label">Test Type</label><input
-                                                type="text" class="form-control dynamic-field" id="aptType"
-                                                placeholder="e.g. MCQ, Written"></div>
-                                        <div class="col-md-4"><label class="form-label">Number of Students</label><input
-                                                type="number" class="form-control dynamic-field" id="aptCount"></div>
-                                        <div class="col-md-8"><label class="form-label">Result Summary</label><textarea
-                                                class="form-control dynamic-field" id="aptSummary" rows="2"></textarea>
+                                                <optgroup label="Pre - Placement Activity">
+                                                    <option value="11.1 Pre - Placement Activity - Resume Building">11.1 Resume Building</option>
+                                                    <option value="11.2 Pre - Placement Activity - Mock Interview">11.2 Mock Interview</option>
+                                                    <option value="11.3 Pre - Placement Activity - Aptitude Test">11.3 Aptitude Test</option>
+                                                    <option value="11.4 Pre - Placement Activity - Logical Reasoning Test">11.4 Logical Reasoning Test</option>
+                                                    <option value="11.5 Pre - Placement Activity - Group Discussion">11.5 Group Discussion</option>
+                                                    <option value="11.6 Pre - Placement Activity - Personality Grooming">11.6 Personality Grooming</option>
+                                                    <option value="11.7 Pre - Placement Activity - Pre Placement Talk">11.7 Pre Placement Talk</option>
+                                                </optgroup>
+
+                                                <option value="12. Special Event (Technical)">12. Special Event (Technical)</option>
+
+                                                <optgroup label="GEPS Activity">
+                                                    <option value="13.1 GEPS Activity - GEPS Card">13.1 GEPS Card</option>
+                                                    <option value="13.2 GEPS Activity - IQ / EQ Test">13.2 IQ / EQ Test</option>
+                                                    <option value="13.3 GEPS Activity - Practical Skill Proficiency">13.3 Practical Skill Proficiency</option>
+                                                    <option value="13.4 GEPS Activity - Software Skill Proficiency">13.4 Software Skill Proficiency</option>
+                                                    <option value="13.5 GEPS Activity - Linkedin Profile">13.5 Linkedin Profile</option>
+                                                    <option value="13.6 GEPS Activity - Free Lancer Profile">13.6 Free Lancer Profile</option>
+                                                </optgroup>
+                                                <option value="14. Internship / Training">14. Internship / Training</option>
+                                                <option value="15. Field Visit">15. Field Visit</option>
+                                                <option value="16. Alumni Interaction (Meet the Mastermind)">16. Alumni Interaction (Meet the Mastermind)</option>
+                                                <option value="17. Prominent Speaker (Celebrity) Talk">17. Prominent Speaker (Celebrity) Talk</option>
+                                                <option value="18. Startup & Incubation">18. Startup & Incubation</option>
+                                                <option value="19. International Exposure">19. International Exposure</option>
+                                                <option value="20. Research Activity">20. Research Activity</option>
+                                                <option value="21. Guidance for Higher & Overseas Study">21. Guidance for Higher & Overseas Study</option>
+                                                <option value="22. Entrepreneurship Development Program">22. Entrepreneurship Development Program</option>
+                                                <option value="23. Earn while Learn">23. Earn while Learn</option>
+                                                <option value="24. Professional Guidance & Development">24. Professional Guidance & Development</option>
+                                                <option value="25. Stress Relief Activity (Ex. Yoga / Meditation etc.)">25. Stress Relief Activity (Ex. Yoga / Meditation etc.)</option>
+                                                <option value="26. Innovative Teaching - Learning (Ex. Flipped / Blended Mode etc.)">26. Innovative Teaching - Learning (Ex. Flipped / Blended Mode etc.)</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                            
+                                            <!-- Custom RLM Activity input -->
+                                            <div class="mt-2 d-none" id="customRlmActivityWrap">
+                                                <label class="form-label text-warning small" for="customRlmActivity">Custom RLM Activity Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control dynamic-field" id="customRlmActivity" placeholder="Enter custom activity name...">
+                                                <div class="invalid-feedback">Please specify the custom RLM activity name.</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
 
-                                <!-- Dynamic Managerial Skill Section -->
-                                <div class="dynamic-report-section d-none" id="sec-managerial">
-                                    <div class="row g-3">
-                                        <div class="col-md-12"><label class="form-label">Activity Name</label><input
-                                                type="text" class="form-control dynamic-field" id="mngName"></div>
-                                        <div class="col-md-6"><label class="form-label">Skills Covered</label><textarea
-                                                class="form-control dynamic-field" id="mngSkills" rows="2"></textarea>
+                                        <!-- PLM Activity Dropdown -->
+                                        <div class="col-md-12 d-none" id="plmDropdownWrap">
+                                            <label class="form-label" for="plmActivity">PLM Activity <span class="text-danger">*</span></label>
+                                            <select class="form-select dynamic-field" id="plmActivity" onchange="togglePlmCustomActivity()">
+                                                <option value="" disabled selected>Select PLM Activity...</option>
+                                                <optgroup label="Industrial (Real World Exposure) - Experiential Learning">
+                                                    <option value="1. Expert Talk / Workshop (Industrial Expert)">1. Expert Talk / Workshop (Industrial Expert)</option>
+                                                    <option value="2. Internship (Domestic / International)">2. Internship (Domestic / International)</option>
+                                                    <option value="3. Real World Problem Solving (with industrial Tie Ups) Live Project (At least Once)">3. Real World Problem Solving (with industrial Tie Ups) Live Project (At least Once)</option>
+                                                    <option value="4. Vocational Training (Optional)">4. Vocational Training (Optional)</option>
+                                                </optgroup>
+                                                <optgroup label="Soft Skill Development">
+                                                    <option value="5. Participation in Debate">5. Participation in Debate</option>
+                                                    <option value="6. GD">6. GD</option>
+                                                    <option value="7. Public Speaking Experience">7. Public Speaking Experience</option>
+                                                    <option value="8. Logical Reasoning & Quantitative Aptitude Test">8. Logical Reasoning & Quantitative Aptitude Test</option>
+                                                </optgroup>
+                                                <optgroup label="Pre-Placement Activities">
+                                                    <option value="9. Resume Building">9. Resume Building</option>
+                                                    <option value="10. Updating Resume">10. Updating Resume</option>
+                                                    <option value="11. Mock Interview">11. Mock Interview</option>
+                                                    <option value="12. Free Lancer Profile">12. Free Lancer Profile</option>
+                                                </optgroup>
+                                                <optgroup label="Problem Solving Skill Development">
+                                                    <option value="13. Projects (Different Level) Micro, Mini, Major">13. Projects (Different Level) Micro, Mini, Major</option>
+                                                    <option value="14. Event Participation (Hackathon etc.) (At least Once)">14. Event Participation (Hackathon etc.) (At least Once)</option>
+                                                    <option value="15. Join / Start Innovation Clubs">15. Join / Start Innovation Clubs</option>
+                                                    <option value="16. Case Study Analysis (At least Once)">16. Case Study Analysis (At least Once)</option>
+                                                </optgroup>
+                                                <optgroup label="Cutting Edge Technology">
+                                                    <option value="17. External Certification Program (At least Once)">17. External Certification Program (At least Once)</option>
+                                                    <option value="18. Online Course / MOOC">18. Online Course / MOOC</option>
+                                                    <option value="19. Skill Development Program (At least Two) Online / In House">19. Skill Development Program (At least Two) Online / In House</option>
+                                                </optgroup>
+                                                <optgroup label="Networking & Community Engagement">
+                                                    <option value="20. Membership of Professional Society">20. Membership of Professional Society</option>
+                                                    <option value="21. Alumni Connect">21. Alumni Connect</option>
+                                                    <option value="22. LinkedIn Profile">22. LinkedIn Profile</option>
+                                                    <option value="23. Enrich LinkedIn Network">23. Enrich LinkedIn Network</option>
+                                                </optgroup>
+                                                <optgroup label="Placement">
+                                                    <option value="24. Preparing Company Profile (Targeted Company)">24. Preparing Company Profile (Targeted Company)</option>
+                                                    <option value="25. Placement Examination (eg TCS NQT etc) (At least once)">25. Placement Examination (eg TCS NQT etc) (At least once)</option>
+                                                    <option value="26. Placement Drive">26. Placement Drive</option>
+                                                </optgroup>
+                                                <optgroup label="Research & Development">
+                                                    <option value="27. Research Area Selection">27. Research Area Selection</option>
+                                                    <option value="28. Preparing Research Plan">28. Preparing Research Plan</option>
+                                                    <option value="29. Literature Review">29. Literature Review</option>
+                                                    <option value="30. Poster Presentation">30. Poster Presentation</option>
+                                                    <option value="31. Review Paper">31. Review Paper</option>
+                                                    <option value="32. Major Research Project">32. Major Research Project</option>
+                                                    <option value="33. IPR Awareness Program">33. IPR Awareness Program</option>
+                                                    <option value="34. Research Paper Publication / Patent">34. Research Paper Publication / Patent</option>
+                                                    <option value="35. Attending Conference">35. Attending Conference</option>
+                                                </optgroup>
+                                                <optgroup label="Startup & Entrepreneurship (Innovation)">
+                                                    <option value="36. Participation (Ideathon)">36. Participation (Ideathon)</option>
+                                                    <option value="37. Idea Generation (Innovative / Unique)">37. Idea Generation (Innovative / Unique)</option>
+                                                    <option value="38. Project-based Entrepreneurial Learning">38. Project-based Entrepreneurial Learning</option>
+                                                    <option value="39. Product Development (Concept to Product)">39. Product Development (Concept to Product)</option>
+                                                    <option value="40. Usage of Collaborative Platform (Like GitHub)">40. Usage of Collaborative Platform (Like GitHub)</option>
+                                                    <option value="41. Develop a Business Plan">41. Develop a Business Plan</option>
+                                                    <option value="42. Join / Visit Incubators / Accelerators">42. Join / Visit Incubators / Accelerators</option>
+                                                    <option value="43. Conduct Market Analysis">43. Conduct Market Analysis</option>
+                                                    <option value="44. Build a minimum viable product">44. Build a minimum viable product</option>
+                                                    <option value="45. Industrial Mentoring (Expert)">45. Industrial Mentoring (Expert)</option>
+                                                    <option value="46. Establish A Startup">46. Establish A Startup</option>
+                                                    <option value="47. Attend startup pitch competitions">47. Attend startup pitch competitions</option>
+                                                    <option value="48. Seek for Funding">48. Seek for Funding</option>
+                                                </optgroup>
+                                                <optgroup label="Global Exposure">
+                                                    <option value="49. International Summer Camp (Participation)">49. International Summer Camp (Participation)</option>
+                                                    <option value="50. Participation in Exchange Program">50. Participation in Exchange Program</option>
+                                                    <option value="51. Participate in Cultural / Immersion Program">51. Participate in Cultural / Immersion Program</option>
+                                                    <option value="52. International Internship (Physical / Remote)">52. International Internship (Physical / Remote)</option>
+                                                </optgroup>
+                                                <option value="other">Other</option>
+                                            </select>
+                                            
+                                            <!-- Custom PLM Activity input -->
+                                            <div class="mt-2 d-none" id="customPlmActivityWrap">
+                                                <label class="form-label text-warning small" for="customPlmActivity">Custom PLM Activity Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control dynamic-field" id="customPlmActivity" placeholder="Enter custom activity name...">
+                                                <div class="invalid-feedback">Please specify the custom PLM activity name.</div>
+                                            </div>
                                         </div>
-                                        <div class="col-md-6"><label class="form-label">Outcomes</label><textarea
-                                                class="form-control dynamic-field" id="mngOutcomes" rows="2"></textarea>
+
+                                        <!-- Placement Activity Sub-Type Dropdown -->
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="placementSubType">Activity Sub-Type</label>
+                                            <select class="form-select dynamic-field" id="placementSubType" onchange="togglePlacementCustomSubType()">
+                                                <option value="" selected>Select Sub-Type...</option>
+                                                <option value="Expert Talk">Expert Talk</option>
+                                                <option value="Workshop">Workshop</option>
+                                                <option value="Industrial Visit">Industrial Visit</option>
+                                                <option value="Seminar">Seminar</option>
+                                                <option value="Flip Class">Flip Class</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            
+                                            <!-- Custom Placement Activity Sub-Type input -->
+                                            <div class="mt-2 d-none" id="customPlacementSubTypeWrap">
+                                                <label class="form-label text-warning small" for="customPlacementSubType">Custom Sub-Type Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control dynamic-field" id="customPlacementSubType" placeholder="Enter custom sub-type...">
+                                                <div class="invalid-feedback">Please specify the custom sub-type.</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
 
-                                <!-- Dynamic Stress Relief Section -->
-                                <div class="dynamic-report-section d-none" id="sec-stress">
-                                    <div class="row g-3">
-                                        <div class="col-md-6"><label class="form-label">Activity Title</label><input
-                                                type="text" class="form-control dynamic-field" id="strTitle"></div>
-                                        <div class="col-md-6"><label class="form-label">Resource Person</label><input
-                                                type="text" class="form-control dynamic-field" id="strResource"></div>
-                                        <div class="col-md-12"><label class="form-label">Wellness
-                                                Outcomes</label><textarea class="form-control dynamic-field"
-                                                id="strOutcomes" rows="2"></textarea></div>
-                                    </div>
-                                </div>
+                                        <!-- Placement Speaker Details -->
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="placementSpeaker">Speaker / Resource Person Details</label>
+                                            <input type="text" class="form-control dynamic-field" id="placementSpeaker" placeholder="Enter speaker name & details...">
+                                        </div>
 
-                                <!-- Dynamic Student Chapter Section -->
-                                <div class="dynamic-report-section d-none" id="sec-student_chapter">
-                                    <div class="row g-3">
-                                        <div class="col-md-4"><label class="form-label">Chapter Name</label><input
-                                                type="text" class="form-control dynamic-field" id="scName"
-                                                placeholder="e.g. ACM, CSI"></div>
-                                        <div class="col-md-4"><label class="form-label">Activity Title</label><input
-                                                type="text" class="form-control dynamic-field" id="scTitle"></div>
-                                        <div class="col-md-4"><label class="form-label">Chapter
-                                                Coordinator</label><input type="text" class="form-control dynamic-field"
-                                                id="scCoordinator"></div>
-                                    </div>
-                                </div>
-
-                                <!-- Dynamic Training & Placement Reports Section -->
-                                <div class="dynamic-report-section d-none" id="sec-placement">
-                                    <div class="row g-3">
-                                        <div class="col-md-6"><label class="form-label">Company Name</label><input
-                                                type="text" class="form-control dynamic-field" id="tpCompany"></div>
-                                        <div class="col-md-6"><label class="form-label">Activity Type</label><input
-                                                type="text" class="form-control dynamic-field" id="tpType"
-                                                placeholder="e.g. Interview, Orientation"></div>
-                                        <div class="col-md-4"><label class="form-label">Number of Students</label><input
-                                                type="number" class="form-control dynamic-field" id="tpCount"></div>
-                                        <div class="col-md-8"><label class="form-label">Selection
-                                                Details</label><textarea class="form-control dynamic-field"
-                                                id="tpDetails" rows="2"></textarea></div>
-                                    </div>
-                                </div>
-
-                                <!-- Dynamic Visit Section -->
-                                <div class="dynamic-report-section d-none" id="sec-visit">
-                                    <div class="row g-3">
-                                        <div class="col-md-6"><label class="form-label">Industry/Organization
-                                                Name</label><input type="text" class="form-control dynamic-field"
-                                                id="vstName"></div>
-                                        <div class="col-md-6"><label class="form-label">Location</label><input
-                                                type="text" class="form-control dynamic-field" id="vstLocation"></div>
-                                        <div class="col-md-6"><label class="form-label">Purpose of
-                                                Visit</label><textarea class="form-control dynamic-field"
-                                                id="vstPurpose" rows="2"></textarea></div>
-                                        <div class="col-md-6"><label class="form-label">Learning
-                                                Outcomes</label><textarea class="form-control dynamic-field"
-                                                id="vstOutcomes" rows="2"></textarea></div>
-                                    </div>
-                                </div>
-
-                                <!-- Dynamic Workshop Section -->
-                                <div class="dynamic-report-section d-none" id="sec-workshop">
-                                    <div class="row g-3">
-                                        <div class="col-md-4"><label class="form-label">Workshop Title</label><input
-                                                type="text" class="form-control dynamic-field" id="wsTitle"></div>
-                                        <div class="col-md-4"><label class="form-label">Resource Person</label><input
-                                                type="text" class="form-control dynamic-field" id="wsResource"></div>
-                                        <div class="col-md-4"><label class="form-label">Technologies
-                                                Covered</label><input type="text" class="form-control dynamic-field"
-                                                id="wsTech"></div>
-                                        <div class="col-md-12"><label class="form-label">Hands-on
-                                                Activities</label><textarea class="form-control dynamic-field"
-                                                id="wsActivities" rows="2"></textarea></div>
-                                    </div>
-                                </div>
-
-                                <!-- Dynamic 7 MantrasJoy Section -->
-                                <div class="dynamic-report-section d-none" id="sec-joy">
-                                    <div class="row g-3">
-                                        <div class="col-md-12"><label class="form-label">Session Theme</label><input
-                                                type="text" class="form-control dynamic-field" id="joyTheme"></div>
-                                        <div class="col-md-6"><label class="form-label">Activities
-                                                Conducted</label><textarea class="form-control dynamic-field"
-                                                id="joyActivities" rows="2"></textarea></div>
-                                        <div class="col-md-6"><label class="form-label">Outcomes</label><textarea
-                                                class="form-control dynamic-field" id="joyOutcomes" rows="2"></textarea>
+                                        <!-- Placement Key Takeaways & Outcomes -->
+                                        <div class="col-md-12">
+                                            <label class="form-label" for="placementOutcomes">Key Takeaways & Outcomes</label>
+                                            <textarea class="form-control dynamic-field" id="placementOutcomes" rows="3" placeholder="Enter session outcomes..."></textarea>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Dynamic TPA Planner Orientation Section -->
-                                <div class="dynamic-report-section d-none" id="sec-orientation">
+                                <!-- Dynamic Departmental Activity Section -->
+                                <div class="dynamic-report-section d-none" id="sec-departmental">
                                     <div class="row g-3">
-                                        <div class="col-md-12"><label class="form-label">Orientation Topic</label><input
-                                                type="text" class="form-control dynamic-field" id="tpaTopic"></div>
-                                        <div class="col-md-6"><label class="form-label">Planner Features
-                                                Covered</label><textarea class="form-control dynamic-field"
-                                                id="tpaFeatures" rows="2"></textarea></div>
-                                        <div class="col-md-6"><label class="form-label">Participant
-                                                Details</label><textarea class="form-control dynamic-field"
-                                                id="tpaParticipants" rows="2"></textarea></div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="departmentalSubType">Activity Sub-Type <span class="text-danger">*</span></label>
+                                            <select class="form-select dynamic-field" id="departmentalSubType" onchange="toggleDepartmentalCustomSubType()">
+                                                <option value="" disabled selected>Select Sub-Type...</option>
+                                                <option value="Expert Talk">Expert Talk</option>
+                                                <option value="Workshop">Workshop</option>
+                                                <option value="Industrial Visit">Industrial Visit</option>
+                                                <option value="Seminar">Seminar</option>
+                                                <option value="Flip Class">Flip Class</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            
+                                            <!-- Custom Departmental Activity Sub-Type input -->
+                                            <div class="mt-2 d-none" id="customDepartmentalSubTypeWrap">
+                                                <label class="form-label text-warning small" for="customDepartmentalSubType">Custom Sub-Type Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control dynamic-field" id="customDepartmentalSubType" placeholder="Enter custom sub-type...">
+                                                <div class="invalid-feedback">Please specify the custom sub-type.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="departmentalSpeaker">Speaker / Resource Person Details</label>
+                                            <input type="text" class="form-control dynamic-field" id="departmentalSpeaker" placeholder="Enter speaker name & details...">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label" for="departmentalOutcomes">Key Takeaways & Outcomes <span class="text-danger">*</span></label>
+                                            <textarea class="form-control dynamic-field" id="departmentalOutcomes" rows="3" placeholder="Enter session outcomes..."></textarea>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Dynamic Other Section -->
-                                <div class="dynamic-report-section d-none" id="sec-other">
+                                <!-- Dynamic Startup Activity Section -->
+                                <div class="dynamic-report-section d-none" id="sec-startup">
                                     <div class="row g-3">
-                                        <div class="col-md-12"><label class="form-label">Activity
-                                                Details</label><textarea class="form-control dynamic-field"
-                                                id="othDetails" rows="2"></textarea></div>
-                                        <div class="col-md-12"><label class="form-label">Remarks</label><textarea
-                                                class="form-control dynamic-field" id="othRemarks" rows="2"></textarea>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="startupName">Startup Name / Project Title <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control dynamic-field" id="startupName" placeholder="Enter title...">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="startupStage">Current Stage <span class="text-danger">*</span></label>
+                                            <select class="form-select dynamic-field" id="startupStage">
+                                                <option value="" disabled selected>Select Stage...</option>
+                                                <option value="Ideation">Ideation</option>
+                                                <option value="Prototype">Prototype</option>
+                                                <option value="MVP">MVP</option>
+                                                <option value="Registered Startup">Registered Startup</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label" for="startupTeam">Team Members</label>
+                                            <input type="text" class="form-control dynamic-field" id="startupTeam" placeholder="Enter team member names...">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label" for="startupProblem">Problem Statement / Idea Description <span class="text-danger">*</span></label>
+                                            <textarea class="form-control dynamic-field" id="startupProblem" rows="3" placeholder="Enter problem statement..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dynamic Research Activity Section -->
+                                <div class="dynamic-report-section d-none" id="sec-research">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="researchPaperTitle">Research Paper Title / Topic <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control dynamic-field" id="researchPaperTitle" placeholder="Enter title...">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="researchAuthors">Authors / Researchers <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control dynamic-field" id="researchAuthors" placeholder="Enter author names...">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="researchJournal">Journal / Conference Name</label>
+                                            <input type="text" class="form-control dynamic-field" id="researchJournal" placeholder="Enter journal/conference name...">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="researchPubDate">Publication Date / Status</label>
+                                            <input type="text" class="form-control dynamic-field" id="researchPubDate" placeholder="e.g., Published May 2026, Submitted...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dynamic International Relational Activity Section -->
+                                <div class="dynamic-report-section d-none" id="sec-international_relational">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="intCollaboratingOrg">Collaborating Organization / Country <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control dynamic-field" id="intCollaboratingOrg" placeholder="e.g., University of California, USA...">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="intCollaborationType">Type of Collaboration <span class="text-danger">*</span></label>
+                                            <select class="form-select dynamic-field" id="intCollaborationType">
+                                                <option value="" disabled selected>Select Collaboration Type...</option>
+                                                <option value="Student Exchange">Student Exchange</option>
+                                                <option value="Faculty Exchange">Faculty Exchange</option>
+                                                <option value="Joint Research">Joint Research</option>
+                                                <option value="Webinar/Seminar">Webinar/Seminar</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label" for="intDescription">Brief Description <span class="text-danger">*</span></label>
+                                            <textarea class="form-control dynamic-field" id="intDescription" rows="3" placeholder="Enter collaboration details..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dynamic Central Activity Section -->
+                                <div class="dynamic-report-section d-none" id="sec-central">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="centralCategory">Event Category <span class="text-danger">*</span></label>
+                                            <select class="form-select dynamic-field" id="centralCategory">
+                                                <option value="" disabled selected>Select Category...</option>
+                                                <option value="Cultural">Cultural</option>
+                                                <option value="Sports">Sports</option>
+                                                <option value="Social Welfare">Social Welfare</option>
+                                                <option value="Tech-Fest">Tech-Fest</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- empty cell for alignment -->
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label" for="centralHighlights">Brief Description & Highlights <span class="text-danger">*</span></label>
+                                            <textarea class="form-control dynamic-field" id="centralHighlights" rows="3" placeholder="Enter event details and highlights..."></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -929,6 +1078,18 @@
                 <td id="pParticipantsCount">-</td>
             </tr>
             <tr>
+                <th>Batch</th>
+                <td id="pBatch">-</td>
+                <th>Student Coordinator</th>
+                <td id="pStudentCoordinator">-</td>
+            </tr>
+            <tr>
+                <th>Published on Website</th>
+                <td id="pPublishWebsite">-</td>
+                <th>Press Note Required</th>
+                <td id="pPressNote">-</td>
+            </tr>
+            <tr>
                 <th>Faculty Coordinator(s)</th>
                 <td colspan="3" id="pCoordinators">-</td>
             </tr>
@@ -970,10 +1131,11 @@
 
             // Initialize searchable autocomplete drop downs
             initAutocompleteSearch("facultySearch", "facultyId", "facultyDropdownList", fillFacultyDetails);
-
             // Populate CC emails multi-select dropdown
             populateCcEmails();
 
+            // Populate Faculty Coordinators multi-select dropdown
+            populateFacultyCoordinators();
             // Dynamic validation of Photos ZIP and Drive Link
             const photosInput = document.getElementById("activityPhotos");
             const driveInput = document.getElementById("driveLink");
@@ -1266,6 +1428,296 @@
             };
         }
 
+        // ── Faculty Coordinators Multiselect Dropdown ──
+        function populateFacultyCoordinators() {
+            const coordInput = document.getElementById("coordinators");
+            const optionsList = document.getElementById("coordOptionsList");
+            const trigger = document.getElementById("coordEmailsTrigger");
+            const dropdown = document.getElementById("coordDropdown");
+            const searchInput = document.getElementById("coordSearchInput");
+            const placeholder = document.getElementById("coordPlaceholder");
+            const badgesContainer = document.getElementById("coordSelectedBadges");
+
+            if (!coordInput || !optionsList || !trigger || !dropdown || !searchInput || !placeholder || !badgesContainer || typeof facultyData === 'undefined') return;
+
+            let selectedCoordinators = [];
+
+            // Helper to toggle selection
+            function toggleCoordSelection(name, checked) {
+                if (checked) {
+                    if (!selectedCoordinators.includes(name)) {
+                        selectedCoordinators.push(name);
+                    }
+                } else {
+                    selectedCoordinators = selectedCoordinators.filter(item => item !== name);
+                }
+                
+                // Update hidden input value (comma-separated names)
+                coordInput.value = selectedCoordinators.join(', ');
+                
+                // Update badges
+                updateCoordBadges();
+                
+                // Trigger form sync
+                syncEmailPreview();
+            }
+
+            function updateCoordBadges() {
+                badgesContainer.innerHTML = "";
+                if (selectedCoordinators.length === 0) {
+                    placeholder.classList.remove("d-none");
+                    badgesContainer.classList.add("d-none");
+                    trigger.classList.remove("has-badges");
+                    coordInput.value = "";
+                } else {
+                    placeholder.classList.add("d-none");
+                    badgesContainer.classList.remove("d-none");
+                    trigger.classList.add("has-badges");
+
+                    selectedCoordinators.forEach(name => {
+                        const badge = document.createElement("span");
+                        badge.className = "multiselect-badge";
+                        badge.innerHTML = `
+                            <span>${name}</span>
+                            <span class="multiselect-badge-remove" data-name="${name}">
+                                <i class="bi bi-x-circle-fill"></i>
+                            </span>
+                        `;
+                        badge.querySelector(".multiselect-badge-remove").addEventListener("click", function(e) {
+                            e.stopPropagation();
+                            toggleCoordSelection(name, false);
+                            // Uncheck in dropdown list
+                            const checkbox = optionsList.querySelector(`input[value="${name}"]`);
+                            if (checkbox) checkbox.checked = false;
+                        });
+                        badgesContainer.appendChild(badge);
+                    });
+                }
+                // Dispatch event so validation classes clear correctly
+                coordInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+
+            // Populate custom list options in the dropdown
+            optionsList.innerHTML = "";
+            facultyData.forEach(member => {
+                const optionItem = document.createElement("div");
+                optionItem.className = "multiselect-option-item";
+                optionItem.setAttribute("data-name", member.name.toLowerCase());
+
+                optionItem.innerHTML = `
+                    <div class="multiselect-checkbox-wrap">
+                        <input type="checkbox" value="${member.name}">
+                    </div>
+                    <div class="item-avatar ${member.avatarClass}">${member.initials}</div>
+                    <div class="item-info">
+                        <div class="item-name">${member.name}</div>
+                        <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.empId}</div>
+                    </div>
+                `;
+
+                optionItem.addEventListener("click", function(e) {
+                    const checkbox = optionItem.querySelector('input[type="checkbox"]');
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    toggleCoordSelection(member.name, checkbox.checked);
+                });
+
+                optionsList.appendChild(optionItem);
+            });
+
+            // Toggle dropdown open/close
+            trigger.addEventListener("click", function (e) {
+                e.stopPropagation();
+                const isOpen = dropdown.classList.toggle("show");
+                trigger.classList.toggle("active", isOpen);
+                if (isOpen) {
+                    searchInput.value = "";
+                    const items = optionsList.querySelectorAll(".multiselect-option-item");
+                    items.forEach(item => item.classList.remove("d-none"));
+                    searchInput.focus();
+                }
+            });
+
+            // Filter search input
+            searchInput.addEventListener("input", function () {
+                const q = searchInput.value.toLowerCase().replace("prof.", "").replace("mr.", "").trim();
+                const items = optionsList.querySelectorAll(".multiselect-option-item");
+                items.forEach(item => {
+                    const name = item.getAttribute("data-name");
+                    if (name.includes(q)) {
+                        item.classList.remove("d-none");
+                    } else {
+                        item.classList.add("d-none");
+                    }
+                });
+            });
+
+            // Close on click outside
+            document.addEventListener("click", function (e) {
+                if (!e.target.closest(".custom-multiselect-wrap")) {
+                    dropdown.classList.remove("show");
+                    trigger.classList.remove("active");
+                }
+            });
+
+            dropdown.addEventListener("click", function(e) {
+                e.stopPropagation();
+            });
+
+            // Expose a function to set coordinators programmatically (for loadSavedDraft)
+            window.syncCoordinatorsUi = function(value) {
+                selectedCoordinators = value ? value.split(', ').map(s => s.trim()).filter(Boolean) : [];
+                coordInput.value = value;
+                updateCoordBadges();
+                
+                // Update dropdown checkboxes
+                const checkboxes = optionsList.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = selectedCoordinators.includes(checkbox.value);
+                });
+            };
+        }
+
+        function toggleRlmCustomActivity() {
+            const rlmSelect = document.getElementById("rlmActivity");
+            const customWrap = document.getElementById("customRlmActivityWrap");
+            const customInput = document.getElementById("customRlmActivity");
+
+            if (rlmSelect && rlmSelect.value === "other") {
+                if (customWrap) customWrap.classList.remove("d-none");
+                if (customInput) customInput.setAttribute("required", "true");
+            } else {
+                if (customWrap) customWrap.classList.add("d-none");
+                if (customInput) {
+                    customInput.removeAttribute("required");
+                    customInput.value = "";
+                }
+            }
+            syncEmailPreview();
+        }
+
+        function togglePlmCustomActivity() {
+            const plmSelect = document.getElementById("plmActivity");
+            const customWrap = document.getElementById("customPlmActivityWrap");
+            const customInput = document.getElementById("customPlmActivity");
+
+            if (plmSelect && plmSelect.value === "other") {
+                if (customWrap) customWrap.classList.remove("d-none");
+                if (customInput) customInput.setAttribute("required", "true");
+            } else {
+                if (customWrap) customWrap.classList.add("d-none");
+                if (customInput) {
+                    customInput.removeAttribute("required");
+                    customInput.value = "";
+                }
+            }
+            syncEmailPreview();
+        }
+
+        function toggleDepartmentalCustomSubType() {
+            const select = document.getElementById("departmentalSubType");
+            const customWrap = document.getElementById("customDepartmentalSubTypeWrap");
+            const customInput = document.getElementById("customDepartmentalSubType");
+
+            if (select && select.value === "Other") {
+                if (customWrap) customWrap.classList.remove("d-none");
+                if (customInput) customInput.setAttribute("required", "true");
+            } else {
+                if (customWrap) customWrap.classList.add("d-none");
+                if (customInput) {
+                    customInput.removeAttribute("required");
+                    customInput.value = "";
+                }
+            }
+            syncEmailPreview();
+        }
+
+        function togglePlacementCustomSubType() {
+            const select = document.getElementById("placementSubType");
+            const customWrap = document.getElementById("customPlacementSubTypeWrap");
+            const customInput = document.getElementById("customPlacementSubType");
+
+            if (select && select.value === "Other") {
+                if (customWrap) customWrap.classList.remove("d-none");
+                if (customInput) customInput.setAttribute("required", "true");
+            } else {
+                if (customWrap) customWrap.classList.add("d-none");
+                if (customInput) {
+                    customInput.removeAttribute("required");
+                    customInput.value = "";
+                }
+            }
+            syncEmailPreview();
+        }
+
+        function togglePlacementActType() {
+            const rlmRadio = document.getElementById("typeRLM");
+            const plmRadio = document.getElementById("typePLM");
+            const rlmWrap = document.getElementById("rlmDropdownWrap");
+            const plmWrap = document.getElementById("plmDropdownWrap");
+            const rlmSelect = document.getElementById("rlmActivity");
+            const plmSelect = document.getElementById("plmActivity");
+
+            // Custom RLM wrappers
+            const rlmCustomWrap = document.getElementById("customRlmActivityWrap");
+            const rlmCustomInput = document.getElementById("customRlmActivity");
+
+            // Custom PLM wrappers
+            const plmCustomWrap = document.getElementById("customPlmActivityWrap");
+            const plmCustomInput = document.getElementById("customPlmActivity");
+
+            if (rlmRadio && rlmRadio.checked) {
+                rlmWrap.classList.remove("d-none");
+                rlmSelect.setAttribute("required", "true");
+                
+                plmWrap.classList.add("d-none");
+                plmSelect.removeAttribute("required");
+                plmSelect.value = "";
+
+                if (plmCustomWrap) plmCustomWrap.classList.add("d-none");
+                if (plmCustomInput) {
+                    plmCustomInput.removeAttribute("required");
+                    plmCustomInput.value = "";
+                }
+
+                toggleRlmCustomActivity();
+            } else if (plmRadio && plmRadio.checked) {
+                plmWrap.classList.remove("d-none");
+                plmSelect.setAttribute("required", "true");
+                
+                rlmWrap.classList.add("d-none");
+                rlmSelect.removeAttribute("required");
+                rlmSelect.value = "";
+
+                if (rlmCustomWrap) rlmCustomWrap.classList.add("d-none");
+                if (rlmCustomInput) {
+                    rlmCustomInput.removeAttribute("required");
+                    rlmCustomInput.value = "";
+                }
+
+                togglePlmCustomActivity();
+            } else {
+                if (rlmWrap) rlmWrap.classList.add("d-none");
+                if (plmWrap) plmWrap.classList.add("d-none");
+                if (rlmSelect) rlmSelect.removeAttribute("required");
+                if (plmSelect) plmSelect.removeAttribute("required");
+
+                if (rlmCustomWrap) rlmCustomWrap.classList.add("d-none");
+                if (rlmCustomInput) {
+                    rlmCustomInput.removeAttribute("required");
+                    rlmCustomInput.value = "";
+                }
+
+                if (plmCustomWrap) plmCustomWrap.classList.add("d-none");
+                if (plmCustomInput) {
+                    plmCustomInput.removeAttribute("required");
+                    plmCustomInput.value = "";
+                }
+            }
+            syncEmailPreview();
+        }
+
         // ── Toggle Specific Report Specific Fields (Section 3) ──
         function toggleReportTypeFields() {
             const reportType = document.getElementById("reportType").value;
@@ -1290,13 +1742,56 @@
             const sections = document.querySelectorAll(".dynamic-report-section");
             sections.forEach(sec => sec.classList.add("d-none"));
 
-            // Show relevant sub section
+            // Remove required attribute from all dynamic fields first
+            const allDynamicFields = document.querySelectorAll(".dynamic-report-section input, .dynamic-report-section select, .dynamic-report-section textarea");
+            allDynamicFields.forEach(field => {
+                field.removeAttribute("required");
+            });
+
+            // Show relevant sub section and make its appropriate fields required
             const targetSection = document.getElementById("sec-" + reportType);
             if (targetSection) {
                 targetSection.classList.remove("d-none");
+                
+                // Add required to selects, inputs, and textareas inside targetSection
+                // (Except for optional fields and dynamically toggled custom inputs)
+                const inputsToRequire = targetSection.querySelectorAll("input:not(#departmentalSpeaker):not(#placementSpeaker):not(#startupTeam):not(#researchJournal):not(#researchPubDate):not(#customRlmActivity):not(#customPlmActivity):not(#customDepartmentalSubType):not(#customPlacementSubType), select:not(#rlmActivity):not(#plmActivity):not(#placementSubType), textarea:not(#placementOutcomes)");
+                inputsToRequire.forEach(input => {
+                    if (input.type === "radio") {
+                        const name = input.name;
+                        targetSection.querySelectorAll(`input[name="${name}"]`).forEach(r => r.setAttribute("required", "true"));
+                    } else {
+                        input.setAttribute("required", "true");
+                    }
+                });
             } else {
                 placeholder.classList.remove("d-none");
             }
+
+            // Specific toggle logic for Training & Placement (clear sub dropdowns if changed)
+            if (reportType !== "training_placement") {
+                const typeRLM = document.getElementById("typeRLM");
+                const typePLM = document.getElementById("typePLM");
+                if (typeRLM) typeRLM.checked = false;
+                if (typePLM) typePLM.checked = false;
+                
+                const placementSubTypeSelect = document.getElementById("placementSubType");
+                if (placementSubTypeSelect) placementSubTypeSelect.value = "";
+
+                const placementSpeaker = document.getElementById("placementSpeaker");
+                if (placementSpeaker) placementSpeaker.value = "";
+
+                const placementOutcomes = document.getElementById("placementOutcomes");
+                if (placementOutcomes) placementOutcomes.value = "";
+            }
+            if (reportType !== "departmental") {
+                const departmentalSubTypeSelect = document.getElementById("departmentalSubType");
+                if (departmentalSubTypeSelect) departmentalSubTypeSelect.value = "";
+            }
+            
+            togglePlacementActType();
+            toggleDepartmentalCustomSubType();
+            togglePlacementCustomSubType();
 
             syncEmailPreview();
             updateStepState(2, true);
@@ -1530,6 +2025,41 @@
                 unlockSection(3);
                 collapseAndExpand(2, 3);
             } else if (currentStep === 3) {
+                const container = document.getElementById("collapseThree");
+                const fields = container.querySelectorAll("input, select, textarea");
+                let isValid = true;
+                fields.forEach(field => {
+                    // Check if field is inside a hidden container (i.e. d-none)
+                    let isHidden = false;
+                    let p = field;
+                    while (p && p !== container) {
+                        if (p.classList.contains("d-none")) {
+                            isHidden = true;
+                            break;
+                        }
+                        p = p.parentElement;
+                    }
+                    if (isHidden) return; // skip hidden fields
+
+                    if (!field.checkValidity()) {
+                        field.classList.add("is-invalid");
+                        isValid = false;
+                    } else {
+                        field.classList.remove("is-invalid");
+                    }
+                });
+
+                if (!isValid) {
+                    container.classList.add("was-validated");
+                    // Scroll to the first invalid field
+                    const firstInvalid = container.querySelector(".is-invalid, :invalid");
+                    if (firstInvalid) {
+                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstInvalid.focus();
+                    }
+                    return;
+                }
+
                 updateStepState(3, true);
                 unlockSection(4);
                 collapseAndExpand(3, 4);
@@ -1542,7 +2072,6 @@
             }
         }
 
-        // ── Pre-populating/syncing Email previews automatically (Section 7) ──
         // ── ASCII Plain-Text Table Generator for Email/Textarea Preview ──
         function generateReportTextTable() {
             const facultyName = (document.getElementById("facultySearch").value || "-").toUpperCase();
@@ -1581,14 +2110,40 @@
             const zipName = (zipInput.files.length > 0 ? zipInput.files[0].name : "NOT UPLOADED").toUpperCase();
             const driveLink = (document.getElementById("driveLink").value || "NOT PROVIDED").toUpperCase();
 
+            // New core fields
+            const batch = (document.getElementById("batch").value || "-").toUpperCase();
+            const studentCoordinator = (document.getElementById("studentCoordinator").value || "-").toUpperCase();
+            const publishWebsite = (document.querySelector('input[name="publishWebsite"]:checked')?.value || "-").toUpperCase();
+            const pressNote = (document.querySelector('input[name="pressNote"]:checked')?.value || "-").toUpperCase();
+
             const specificFields = [];
             const activeSec = document.querySelector(`.dynamic-report-section:not(.d-none)`);
             if (activeSec) {
-                const inputs = activeSec.querySelectorAll("input, textarea");
+                const inputs = activeSec.querySelectorAll("input, select, textarea");
                 inputs.forEach(input => {
-                    const label = (input.previousElementSibling ? input.previousElementSibling.innerText : "Field").toUpperCase();
-                    const val = (input.value || "-").toUpperCase();
-                    specificFields.push({ label, val });
+                    let isHidden = false;
+                    let p = input;
+                    while (p && p !== activeSec) {
+                        if (p.classList.contains("d-none")) {
+                            isHidden = true;
+                            break;
+                        }
+                        p = p.parentElement;
+                    }
+                    if (isHidden) return;
+
+                    if (input.type === "radio") {
+                        if (input.checked) {
+                            const parentLabel = input.closest(".col-md-12")?.querySelector(".form-label")?.innerText || "Activity Type";
+                            const label = parentLabel.replace("*", "").trim().toUpperCase();
+                            const val = input.value.toUpperCase();
+                            specificFields.push({ label, val });
+                        }
+                    } else {
+                        const label = (input.previousElementSibling ? input.previousElementSibling.innerText : "Field").replace("*", "").trim().toUpperCase();
+                        const val = (input.value || "-").toUpperCase();
+                        specificFields.push({ label, val });
+                    }
                 });
             }
 
@@ -1659,6 +2214,10 @@
             table += formatRow("Programme(s)", programmes);
             table += formatRow("Sem / Division", `Sem ${semester} (${division})`);
             table += formatRow("Participants Count", participants);
+            table += formatRow("Batch", batch);
+            table += formatRow("Student Coordinator", studentCoordinator);
+            table += formatRow("Publish on Website", publishWebsite);
+            table += formatRow("Press Note Required", pressNote);
             table += formatRow("Coordinator(s)", coordinators);
             table += formatRow("Brief Objective", objective);
             table += formatRow("ZIP Photo File", zipName);
@@ -1715,19 +2274,50 @@
             const rawDriveLink = document.getElementById("driveLink").value || "Not Provided";
             const driveLink = rawDriveLink.toUpperCase();
 
+            // New core fields
+            const batch = (document.getElementById("batch").value || "-").toUpperCase();
+            const studentCoordinator = (document.getElementById("studentCoordinator").value || "-").toUpperCase();
+            const publishWebsite = (document.querySelector('input[name="publishWebsite"]:checked')?.value || "-").toUpperCase();
+            const pressNote = (document.querySelector('input[name="pressNote"]:checked')?.value || "-").toUpperCase();
+
             let specificHtml = "";
             const activeSec = document.querySelector(`.dynamic-report-section:not(.d-none)`);
             if (activeSec) {
-                const inputs = activeSec.querySelectorAll("input, textarea");
+                const inputs = activeSec.querySelectorAll("input, select, textarea");
                 inputs.forEach(input => {
-                    const label = (input.previousElementSibling ? input.previousElementSibling.innerText : "Field").toUpperCase();
-                    const val = (input.value || "-").toUpperCase();
-                    specificHtml += `
-                        <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Playfair Display', serif;">${label}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${val}</td>
-                        </tr>
-                    `;
+                    let isHidden = false;
+                    let p = input;
+                    while (p && p !== activeSec) {
+                        if (p.classList.contains("d-none")) {
+                            isHidden = true;
+                            break;
+                        }
+                        p = p.parentElement;
+                    }
+                    if (isHidden) return;
+
+                    if (input.type === "radio") {
+                        if (input.checked) {
+                            const parentLabel = input.closest(".col-md-12")?.querySelector(".form-label")?.innerText || "Activity Type";
+                            const label = parentLabel.replace("*", "").trim().toUpperCase();
+                            const val = input.value.toUpperCase();
+                            specificHtml += `
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Playfair Display', serif;">${label}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${val}</td>
+                                </tr>
+                            `;
+                        }
+                    } else {
+                        const label = (input.previousElementSibling ? input.previousElementSibling.innerText : "Field").replace("*", "").trim().toUpperCase();
+                        const val = (input.value || "-").toUpperCase();
+                        specificHtml += `
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Playfair Display', serif;">${label}</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${val}</td>
+                            </tr>
+                        `;
+                    }
                 });
             }
 
@@ -1824,6 +2414,22 @@
                             <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${participants}</td>
                         </tr>
                         <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">BATCH</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${batch}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">STUDENT COORDINATOR</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${studentCoordinator}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">PUBLISHED ON WEBSITE</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${publishWebsite}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">PRESS NOTE REQUIRED</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${pressNote}</td>
+                        </tr>
+                        <tr>
                             <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">FACULTY COORDINATOR(S)</td>
                             <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${coordinators}</td>
                         </tr>
@@ -1912,7 +2518,6 @@ Department of Information Technology, GMIU`;
                 jumpToSection(2);
                 return false;
             }
-
             // Check ZIP or Drive validation
             const photosInput = document.getElementById("activityPhotos");
             const driveInput = document.getElementById("driveLink");
@@ -1922,6 +2527,18 @@ Department of Information Technology, GMIU`;
                 isValid = false;
                 jumpToSection(2);
                 return false;
+            }
+
+            // Check coordinators multiselect validation
+            const coordTrigger = document.getElementById("coordEmailsTrigger");
+            if (coordTrigger) {
+                coordTrigger.classList.remove("is-invalid");
+                if (!document.getElementById("coordinators").value.trim()) {
+                    coordTrigger.classList.add("is-invalid");
+                    isValid = false;
+                    jumpToSection(2);
+                    return false;
+                }
             }
 
             // Trigger HTML5 validations
@@ -1940,119 +2557,211 @@ Department of Information Technology, GMIU`;
                 }
             } else {
                 form.classList.add("was-validated");
-            }
+                    }
 
-            return isValid;
-        }
-
-        // ── Local Storage Draft Saving ──
-        function saveDraft() {
-            const ccSelect = document.getElementById("ccEmails");
-            const selectedCc = ccSelect ? Array.from(ccSelect.selectedOptions).map(opt => opt.value) : [];
-
-            const draft = {
-                facultySearch: document.getElementById("facultySearch").value,
-                facultyId: document.getElementById("facultyId").value,
-                facultyDesignation: document.getElementById("facultyDesignation").value,
-                facultyEmpId: document.getElementById("facultyEmpId").value,
-                facultyEmail: document.getElementById("facultyEmail").value,
-                facultyPhone: document.getElementById("facultyPhone").value,
-
-                academicYear: document.getElementById("academicYear").value,
-                reportType: document.getElementById("reportType").value,
-                customReportType: document.getElementById("customReportType").value,
-                reportTitle: document.getElementById("reportTitle").value,
-                activityDate: document.getElementById("activityDate").value,
-                startTime: document.getElementById("startTime").value,
-                endTime: document.getElementById("endTime").value,
-                venue: document.getElementById("venue").value,
-                semester: document.getElementById("semester").value,
-                divisionClass: document.getElementById("divisionClass").value,
-                participantsCount: document.getElementById("participantsCount").value,
-                coordinators: document.getElementById("coordinators").value,
-                briefObjective: document.getElementById("briefObjective").value,
-                driveLink: document.getElementById("driveLink").value,
-
-                // Email fields
-                refSubject: document.getElementById("refSubject").value,
-                refMessage: document.getElementById("refMessage").value,
-                ccEmails: selectedCc
-            };
-
-            localStorage.setItem("gmiu_it_report_draft", JSON.stringify(draft));
-            showToast("Draft successfully saved locally!");
-        }
-
-        // ── Local Storage Draft Loading ──
-        function loadSavedDraft() {
-            const rawDraft = localStorage.getItem("gmiu_it_report_draft");
-            if (!rawDraft) return;
-
-            try {
-                const draft = JSON.parse(rawDraft);
-
-                // Populate Section 1
-                document.getElementById("facultySearch").value = draft.facultySearch || "";
-                document.getElementById("facultyId").value = draft.facultyId || "";
-                document.getElementById("facultyDesignation").value = draft.facultyDesignation || "";
-                document.getElementById("facultyEmpId").value = draft.facultyEmpId || "";
-                document.getElementById("facultyEmail").value = draft.facultyEmail || "";
-                document.getElementById("facultyPhone").value = draft.facultyPhone || "";
-                if (draft.facultyId) {
-                    updateStepState(1, true);
-                    unlockSection(2);
+                    return isValid;
                 }
 
-                // Populate Section 2
-                document.getElementById("academicYear").value = draft.academicYear || "2026-27";
-                document.getElementById("reportType").value = draft.reportType || "";
-                document.getElementById("customReportType").value = draft.customReportType || "";
-                document.getElementById("reportTitle").value = draft.reportTitle || "";
-                document.getElementById("activityDate").value = draft.activityDate || "";
-                document.getElementById("startTime").value = draft.startTime || "";
-                document.getElementById("endTime").value = draft.endTime || "";
-                document.getElementById("venue").value = draft.venue || "";
-                document.getElementById("semester").value = draft.semester || "";
-                document.getElementById("divisionClass").value = draft.divisionClass || "";
-                document.getElementById("participantsCount").value = draft.participantsCount || "";
-                document.getElementById("coordinators").value = draft.coordinators || "";
-                document.getElementById("briefObjective").value = draft.briefObjective || "";
-                document.getElementById("driveLink").value = draft.driveLink || "";
-                if (draft.reportType) {
-                    toggleReportTypeFields();
-                    updateStepState(2, true);
-                    unlockSection(3);
-                    unlockSection(4);
-                    unlockSection(5);
-                }
-
-                // Populate Emails
-                document.getElementById("refName").value = draft.facultySearch || "";
-                document.getElementById("refEmail").value = draft.facultyEmail || "";
-                document.getElementById("refSubject").value = draft.refSubject || "";
-                document.getElementById("refMessage").value = draft.refMessage || "";
-
-                if (draft.ccEmails) {
+                // ── Local Storage Draft Saving ──
+                function saveDraft() {
                     const ccSelect = document.getElementById("ccEmails");
-                    if (ccSelect) {
-                        Array.from(ccSelect.options).forEach(option => {
-                            option.selected = draft.ccEmails.includes(option.value);
-                        });
-                        if (typeof window.syncCcEmailsUi === "function") {
-                            window.syncCcEmailsUi();
+                    const selectedCc = ccSelect ? Array.from(ccSelect.selectedOptions).map(opt => opt.value) : [];
+
+                    const draft = {
+                        facultySearch: document.getElementById("facultySearch").value,
+                        facultyId: document.getElementById("facultyId").value,
+                        facultyDesignation: document.getElementById("facultyDesignation").value,
+                        facultyEmpId: document.getElementById("facultyEmpId").value,
+                        facultyEmail: document.getElementById("facultyEmail").value,
+                        facultyPhone: document.getElementById("facultyPhone").value,
+
+                        academicYear: document.getElementById("academicYear").value,
+                        reportType: document.getElementById("reportType").value,
+                        customReportType: document.getElementById("customReportType").value,
+                        reportTitle: document.getElementById("reportTitle").value,
+                        activityDate: document.getElementById("activityDate").value,
+                        startTime: document.getElementById("startTime").value,
+                        endTime: document.getElementById("endTime").value,
+                        venue: document.getElementById("venue").value,
+                        semester: document.getElementById("semester").value,
+                        divisionClass: document.getElementById("divisionClass").value,
+                        participantsCount: document.getElementById("participantsCount").value,
+                        coordinators: document.getElementById("coordinators").value,
+                        briefObjective: document.getElementById("briefObjective").value,
+                        driveLink: document.getElementById("driveLink").value,
+
+                        // New fields
+                        batch: document.getElementById("batch").value,
+                        studentCoordinator: document.getElementById("studentCoordinator").value,
+                        publishWebsite: document.querySelector('input[name="publishWebsite"]:checked')?.value || "",
+                        pressNote: document.querySelector('input[name="pressNote"]:checked')?.value || "",
+                        placementActType: document.querySelector('input[name="placementActType"]:checked')?.value || "",
+                        rlmActivity: document.getElementById("rlmActivity").value,
+                        customRlmActivity: document.getElementById("customRlmActivity").value,
+                        plmActivity: document.getElementById("plmActivity").value,
+                        customPlmActivity: document.getElementById("customPlmActivity").value,
+
+                        // Other dynamic activity fields
+                        departmentalSubType: document.getElementById("departmentalSubType").value,
+                        customDepartmentalSubType: document.getElementById("customDepartmentalSubType").value,
+                        departmentalSpeaker: document.getElementById("departmentalSpeaker").value,
+                        departmentalOutcomes: document.getElementById("departmentalOutcomes").value,
+                        placementSubType: document.getElementById("placementSubType").value,
+                        customPlacementSubType: document.getElementById("customPlacementSubType").value,
+                        placementSpeaker: document.getElementById("placementSpeaker").value,
+                        placementOutcomes: document.getElementById("placementOutcomes").value,
+                        startupName: document.getElementById("startupName").value,
+                        startupStage: document.getElementById("startupStage").value,
+                        startupTeam: document.getElementById("startupTeam").value,
+                        startupProblem: document.getElementById("startupProblem").value,
+                        researchPaperTitle: document.getElementById("researchPaperTitle").value,
+                        researchAuthors: document.getElementById("researchAuthors").value,
+                        researchJournal: document.getElementById("researchJournal").value,
+                        researchPubDate: document.getElementById("researchPubDate").value,
+                        intCollaboratingOrg: document.getElementById("intCollaboratingOrg").value,
+                        intCollaborationType: document.getElementById("intCollaborationType").value,
+                        intDescription: document.getElementById("intDescription").value,
+                        centralCategory: document.getElementById("centralCategory").value,
+                        centralHighlights: document.getElementById("centralHighlights").value,
+
+                        // Email fields
+                        refSubject: document.getElementById("refSubject").value,
+                        refMessage: document.getElementById("refMessage").value,
+                        ccEmails: selectedCc
+                    };
+
+                    localStorage.setItem("gmiu_it_report_draft", JSON.stringify(draft));
+                    showToast("Draft successfully saved locally!");
+                }
+
+                // ── Local Storage Draft Loading ──
+                function loadSavedDraft() {
+                    const rawDraft = localStorage.getItem("gmiu_it_report_draft");
+                    if (!rawDraft) return;
+
+                    try {
+                        const draft = JSON.parse(rawDraft);
+
+                        // Populate Section 1
+                        document.getElementById("facultySearch").value = draft.facultySearch || "";
+                        document.getElementById("facultyId").value = draft.facultyId || "";
+                        document.getElementById("facultyDesignation").value = draft.facultyDesignation || "";
+                        document.getElementById("facultyEmpId").value = draft.facultyEmpId || "";
+                        document.getElementById("facultyEmail").value = draft.facultyEmail || "";
+                        document.getElementById("facultyPhone").value = draft.facultyPhone || "";
+                        if (draft.facultyId) {
+                            updateStepState(1, true);
+                            unlockSection(2);
                         }
+
+                        // Populate Section 2
+                        document.getElementById("academicYear").value = draft.academicYear || "2026-27";
+                        let draftReportType = draft.reportType || "";
+                        if (draftReportType === "training") {
+                            draftReportType = "training_placement";
+                        }
+                        document.getElementById("reportType").value = draftReportType;
+                        document.getElementById("customReportType").value = draft.customReportType || "";
+                        document.getElementById("reportTitle").value = draft.reportTitle || "";
+                        document.getElementById("activityDate").value = draft.activityDate || "";
+                        document.getElementById("startTime").value = draft.startTime || "";
+                        document.getElementById("endTime").value = draft.endTime || "";
+                        document.getElementById("venue").value = draft.venue || "";
+                        document.getElementById("semester").value = draft.semester || "";
+                        document.getElementById("divisionClass").value = draft.divisionClass || "";
+                        document.getElementById("participantsCount").value = draft.participantsCount || "";
+                        document.getElementById("briefObjective").value = draft.briefObjective || "";
+                        document.getElementById("driveLink").value = draft.driveLink || "";
+
+                        // Populate new basic fields
+                        document.getElementById("batch").value = draft.batch || "";
+                        document.getElementById("studentCoordinator").value = draft.studentCoordinator || "";
+                        
+                        if (draft.publishWebsite) {
+                            const rb = document.querySelector(`input[name="publishWebsite"][value="${draft.publishWebsite}"]`);
+                            if (rb) rb.checked = true;
+                        }
+                        if (draft.pressNote) {
+                            const rb = document.querySelector(`input[name="pressNote"][value="${draft.pressNote}"]`);
+                            if (rb) rb.checked = true;
+                        }
+                        if (draft.coordinators && typeof window.syncCoordinatorsUi === "function") {
+                            window.syncCoordinatorsUi(draft.coordinators);
+                        }
+                        if (draftReportType) {
+                            toggleReportTypeFields();
+                            updateStepState(2, true);
+                            unlockSection(3);
+                            unlockSection(4);
+                            unlockSection(5);
+                        }
+
+                        // Restore Placement Activity Category (RLM vs PLM) and sub-dropdowns
+                        if (draft.placementActType) {
+                            const rb = document.querySelector(`input[name="placementActType"][value="${draft.placementActType}"]`);
+                            if (rb) {
+                                rb.checked = true;
+                                togglePlacementActType();
+                            }
+                        }
+                        if (draft.rlmActivity) {
+                            document.getElementById("rlmActivity").value = draft.rlmActivity;
+                            toggleRlmCustomActivity();
+                        }
+                        if (draft.customRlmActivity) {
+                            document.getElementById("customRlmActivity").value = draft.customRlmActivity;
+                        }
+                        if (draft.plmActivity) {
+                            document.getElementById("plmActivity").value = draft.plmActivity;
+                            togglePlmCustomActivity();
+                        }
+                        if (draft.customPlmActivity) {
+                            document.getElementById("customPlmActivity").value = draft.customPlmActivity;
+                        }
+
+                        // Restore other dynamic fields
+                        const dynFields = [
+                            "departmentalSubType", "customDepartmentalSubType", "departmentalSpeaker", "departmentalOutcomes",
+                            "placementSubType", "customPlacementSubType", "placementSpeaker", "placementOutcomes",
+                            "startupName", "startupStage", "startupTeam", "startupProblem",
+                            "researchPaperTitle", "researchAuthors", "researchJournal", "researchPubDate",
+                            "intCollaboratingOrg", "intCollaborationType", "intDescription",
+                            "centralCategory", "centralHighlights"
+                        ];
+                        dynFields.forEach(id => {
+                            const el = document.getElementById(id);
+                            if (el && draft[id] !== undefined) el.value = draft[id];
+                        });
+
+                        toggleDepartmentalCustomSubType();
+                        togglePlacementCustomSubType();
+
+                        // Populate Emails
+                        document.getElementById("refName").value = draft.facultySearch || "";
+                        document.getElementById("refEmail").value = draft.facultyEmail || "";
+                        document.getElementById("refSubject").value = draft.refSubject || "";
+                        document.getElementById("refMessage").value = draft.refMessage || "";
+
+                        if (draft.ccEmails) {
+                            const ccSelect = document.getElementById("ccEmails");
+                            if (ccSelect) {
+                                Array.from(ccSelect.options).forEach(option => {
+                                    option.selected = draft.ccEmails.includes(option.value);
+                                });
+                                if (typeof window.syncCcEmailsUi === "function") {
+                                    window.syncCcEmailsUi();
+                                }
+                            }
+                        }
+                        showToast("Previous saved report draft restored.");
+                    } catch (err) {
+                        console.error("Failed to parse report draft", err);
                     }
                 }
-                showToast("Previous saved report draft restored.");
-            } catch (err) {
-                console.error("Failed to parse report draft", err);
-            }
-        }
 
         // ── Actual Email Transmission using send-email.php backend ──
         function sendReferenceEmail() {
             const to = document.getElementById("refEmail").value;
-            const subject = document.getElementById("refSubject").value;
 
             if (!to) {
                 showToast("ERROR: Recipient email is missing.");
@@ -2130,6 +2839,12 @@ Department of Information Technology, GMIU`;
             const coordinators = document.getElementById("coordinators").value;
             const briefObjective = document.getElementById("briefObjective").value;
 
+            // New core fields
+            const batch = document.getElementById("batch").value || "-";
+            const studentCoordinator = document.getElementById("studentCoordinator").value || "-";
+            const publishWebsite = document.querySelector('input[name="publishWebsite"]:checked')?.value || "-";
+            const pressNote = document.querySelector('input[name="pressNote"]:checked')?.value || "-";
+
             // Checked programmes
             const progs = [];
             document.querySelectorAll(".prog-checkbox:checked").forEach(cb => progs.push(cb.value));
@@ -2138,16 +2853,41 @@ Department of Information Technology, GMIU`;
             let specificHtml = "";
             const activeSec = document.querySelector(`.dynamic-report-section:not(.d-none)`);
             if (activeSec) {
-                const inputs = activeSec.querySelectorAll("input, textarea");
+                const inputs = activeSec.querySelectorAll("input, select, textarea");
                 inputs.forEach(input => {
-                    const label = input.previousElementSibling ? input.previousElementSibling.innerText : "Field";
-                    const val = input.value || "-";
-                    specificHtml += `
-                        <tr>
-                            <th>${label}</th>
-                            <td colspan="3">${val}</td>
-                        </tr>
-                    `;
+                    let isHidden = false;
+                    let p = input;
+                    while (p && p !== activeSec) {
+                        if (p.classList.contains("d-none")) {
+                            isHidden = true;
+                            break;
+                        }
+                        p = p.parentElement;
+                    }
+                    if (isHidden) return;
+
+                    if (input.type === "radio") {
+                        if (input.checked) {
+                            const parentLabel = input.closest(".col-md-12")?.querySelector(".form-label")?.innerText || "Activity Type";
+                            const label = parentLabel.replace("*", "").trim();
+                            const val = input.value;
+                            specificHtml += `
+                                <tr>
+                                    <th>${label}</th>
+                                    <td colspan="3">${val}</td>
+                                </tr>
+                            `;
+                        }
+                    } else {
+                        const label = (input.previousElementSibling ? input.previousElementSibling.innerText : "Field").replace("*", "").trim();
+                        const val = input.value || "-";
+                        specificHtml += `
+                            <tr>
+                                <th>${label}</th>
+                                <td colspan="3">${val}</td>
+                            </tr>
+                        `;
+                    }
                 });
             }
 
@@ -2169,6 +2909,10 @@ Department of Information Technology, GMIU`;
             document.getElementById("pProgramme").innerText = progs.join(", ");
             document.getElementById("pSemesterClass").innerText = `Sem ${semester} (${divisionClass})`;
             document.getElementById("pParticipantsCount").innerText = participantsCount;
+            document.getElementById("pBatch").innerText = batch;
+            document.getElementById("pStudentCoordinator").innerText = studentCoordinator;
+            document.getElementById("pPublishWebsite").innerText = publishWebsite;
+            document.getElementById("pPressNote").innerText = pressNote;
             document.getElementById("pCoordinators").innerText = coordinators;
             document.getElementById("pBriefObjective").innerText = briefObjective;
 
@@ -2218,6 +2962,14 @@ Department of Information Technology, GMIU`;
                     <tr>
                         <th class="table-light">Semester / Class</th><td>Sem ${semester} (${divisionClass})</td>
                         <th class="table-light">Participants Count</th><td>${participantsCount} student(s)</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Batch</th><td>${batch}</td>
+                        <th class="table-light">Student Coordinator</th><td>${studentCoordinator}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Published on Website</th><td>${publishWebsite}</td>
+                        <th class="table-light">Press Note Required</th><td>${pressNote}</td>
                     </tr>
                     <tr>
                         <th class="table-light">Coordinators</th><td colspan="3">${coordinators}</td>
@@ -2368,6 +3120,66 @@ Department of Information Technology, GMIU`;
             // Reset Autocompletes hidden
             document.getElementById("facultyId").value = "";
 
+            // Clear Faculty Coordinators selection
+            const coordInput = document.getElementById("coordinators");
+            if (coordInput) {
+                coordInput.value = "";
+                if (typeof window.syncCoordinatorsUi === "function") {
+                    window.syncCoordinatorsUi("");
+                }
+            }
+
+            // Clear custom PLM/RLM activity inputs
+            const plmCustomInput = document.getElementById("customPlmActivity");
+            if (plmCustomInput) {
+                plmCustomInput.value = "";
+                plmCustomInput.removeAttribute("required");
+            }
+            const plmCustomWrap = document.getElementById("customPlmActivityWrap");
+            if (plmCustomWrap) plmCustomWrap.classList.add("d-none");
+
+            const rlmCustomInput = document.getElementById("customRlmActivity");
+            if (rlmCustomInput) {
+                rlmCustomInput.value = "";
+                rlmCustomInput.removeAttribute("required");
+            }
+            const rlmCustomWrap = document.getElementById("customRlmActivityWrap");
+            if (rlmCustomWrap) rlmCustomWrap.classList.add("d-none");
+
+            // Reset Sub-Type Selects and Custom inputs
+            const customDeptSubInput = document.getElementById("customDepartmentalSubType");
+            if (customDeptSubInput) {
+                customDeptSubInput.value = "";
+                customDeptSubInput.removeAttribute("required");
+            }
+            const customDeptSubWrap = document.getElementById("customDepartmentalSubTypeWrap");
+            if (customDeptSubWrap) customDeptSubWrap.classList.add("d-none");
+
+            const customPlaceSubInput = document.getElementById("customPlacementSubType");
+            if (customPlaceSubInput) {
+                customPlaceSubInput.value = "";
+                customPlaceSubInput.removeAttribute("required");
+            }
+            const customPlaceSubWrap = document.getElementById("customPlacementSubTypeWrap");
+            if (customPlaceSubWrap) customPlaceSubWrap.classList.add("d-none");
+
+            const deptSubTypeSelect = document.getElementById("departmentalSubType");
+            if (deptSubTypeSelect) deptSubTypeSelect.value = "";
+
+            const placeSubTypeSelect = document.getElementById("placementSubType");
+            if (placeSubTypeSelect) placeSubTypeSelect.value = "";
+
+            const placementSpeaker = document.getElementById("placementSpeaker");
+            if (placementSpeaker) placementSpeaker.value = "";
+
+            const placementOutcomes = document.getElementById("placementOutcomes");
+            if (placementOutcomes) placementOutcomes.value = "";
+
+            // Reset dynamic placement activities visibility/required state
+            togglePlacementActType();
+            toggleDepartmentalCustomSubType();
+            togglePlacementCustomSubType();
+
             // Hide dynamic section and show placeholder
             const sections = document.querySelectorAll(".dynamic-report-section");
             sections.forEach(sec => sec.classList.add("d-none"));
@@ -2482,6 +3294,89 @@ Department of Information Technology, GMIU`;
             const objective = document.getElementById('briefObjective').value || '';
             const driveLink = document.getElementById('driveLink').value || '';
 
+            // New fields for sheet
+            const batch = document.getElementById('batch').value || '';
+            const studentCoordinator = document.getElementById('studentCoordinator').value || '';
+            const publishWebsiteRaw = document.querySelector('input[name="publishWebsite"]:checked')?.value || '';
+            const publishWebsite = (publishWebsiteRaw.toLowerCase() === 'yes') ? '✅' : ((publishWebsiteRaw.toLowerCase() === 'no') ? '❌' : '-');
+            const pressNoteRaw = document.querySelector('input[name="pressNote"]:checked')?.value || '';
+            const pressNote = (pressNoteRaw.toLowerCase() === 'yes') ? '✅' : ((pressNoteRaw.toLowerCase() === 'no') ? '❌' : '-');
+            const placementActType = document.querySelector('input[name="placementActType"]:checked')?.value || '-';
+
+            // Compile dynamic activity-specific details
+            let activityDetails = '';
+            const activeSec = document.querySelector('.dynamic-report-section:not(.d-none)');
+            if (activeSec) {
+                if (reportSelect.value === 'training_placement') {
+                    const rlmRadio = document.getElementById('typeRLM');
+                    const plmRadio = document.getElementById('typePLM');
+                    let actVal = '';
+                    if (rlmRadio && rlmRadio.checked) {
+                        const rlmVal = document.getElementById('rlmActivity').value || '';
+                        if (rlmVal === 'other') {
+                            actVal = document.getElementById('customRlmActivity').value || '';
+                        } else {
+                            actVal = rlmVal;
+                        }
+                    } else if (plmRadio && plmRadio.checked) {
+                        const plmVal = document.getElementById('plmActivity').value || '';
+                        if (plmVal === 'other') {
+                            actVal = document.getElementById('customPlmActivity').value || '';
+                        } else {
+                            actVal = plmVal;
+                        }
+                    }
+                    
+                    const subTypeSelect = document.getElementById('placementSubType');
+                    let subTypeVal = subTypeSelect ? subTypeSelect.value : '';
+                    if (subTypeVal === 'Other') {
+                        subTypeVal = document.getElementById('customPlacementSubType').value || '';
+                    }
+                    
+                    const placementSpeaker = document.getElementById('placementSpeaker')?.value || '';
+                    const placementOutcomes = document.getElementById('placementOutcomes')?.value || '';
+                    activityDetails = `Activity: ${actVal}`;
+                    if (subTypeVal) {
+                        activityDetails += ` | Activity Sub-Type: ${subTypeVal}`;
+                    }
+                    if (placementSpeaker) {
+                        activityDetails += ` | Speaker: ${placementSpeaker}`;
+                    }
+                    if (placementOutcomes) {
+                        activityDetails += ` | Outcomes: ${placementOutcomes}`;
+                    }
+                } else {
+                    const detailsArr = [];
+                    const inputs = activeSec.querySelectorAll('input, select, textarea');
+                    inputs.forEach(input => {
+                        let isHidden = false;
+                        let p = input;
+                        while (p && p !== activeSec) {
+                            if (p.classList.contains('d-none')) {
+                                isHidden = true;
+                                break;
+                            }
+                            p = p.parentElement;
+                        }
+                        if (isHidden) return;
+
+                        if (input.type === 'radio') {
+                            if (input.checked) {
+                                const parentLabel = input.closest('.col-md-12')?.querySelector('.form-label')?.innerText || 'Activity Type';
+                                const label = parentLabel.replace('*', '').trim();
+                                const val = input.value;
+                                detailsArr.push(`${label}: ${val}`);
+                            }
+                        } else {
+                            const label = (input.previousElementSibling ? input.previousElementSibling.innerText : 'Field').replace('*', '').trim();
+                            const val = input.value || '-';
+                            detailsArr.push(`${label}: ${val}`);
+                        }
+                    });
+                    activityDetails = detailsArr.join(' | ');
+                }
+            }
+
             const payload = {
                 facultyName,
                 empId,
@@ -2499,8 +3394,13 @@ Department of Information Technology, GMIU`;
                 division,
                 participants,
                 coordinators,
-                objective,
-                driveLink
+                driveLink,
+                batch,
+                studentCoordinator,
+                publishWebsite,
+                pressNote,
+                placementActType,
+                activityDetails
             };
 
             // ── POST to Apps Script Web App ──

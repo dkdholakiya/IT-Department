@@ -22,7 +22,7 @@
 
 const SHEETS_CONFIG = {
     // ← Paste your Apps Script Web App URL here after deployment
-    WEBAPP_URL: "https://script.google.com/macros/s/AKfycbxyEs9pmDaNXBqq0Li4XTjoJXiJeIcFOm0ph4PtsOFJ0ql7A9OP_7h978hmK48uMMGkTA/exec",
+    WEBAPP_URL: "https://script.google.com/macros/s/AKfycbzAZyhE8DkK_DnrDhxj4fCx75TlDFRufpUyD7cgI6TXg39HC2hTgXXNGPaw_pg9m2UIiQ/exec",
 
     // Web App URL for Zero Student Log Spreadsheet
     ZERO_WEBAPP_URL: "https://script.google.com/macros/s/AKfycbwJVs-JUh-TmNG0vbEhQcFnjFTQqUcw9YrHw55SAQF7DjbTFbBrUJYFmk7dz-nhQMzV/exec",
