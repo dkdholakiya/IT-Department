@@ -8,6 +8,11 @@
 ignore_user_abort(true);
 set_time_limit(0);
 
+// Add security hardening headers
+header("X-Frame-Options: SAMEORIGIN");
+header("X-Content-Type-Options: nosniff");
+header("X-XSS-Protection: 1; mode=block");
+
 // Enable CORS and configure JSON response
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -34,24 +39,63 @@ if (!$input) {
     exit;
 }
 
-// Dynamically parse Gmail SMTP credentials from emailConfig.js
-$configFile = __DIR__ . '/assets/js/emailConfig.js';
-if (!file_exists($configFile)) {
-    http_response_code(500);
-    echo json_encode(["success" => false, "error" => "Configuration file emailConfig.js not found."]);
-    exit;
+// SECURITY: Open Relay Prevention
+// Extract and check all target email addresses (both 'to' and 'cc' keys)
+$emails_to_validate = [];
+$emails = $input['emails'] ?? [];
+if (!empty($emails) && is_array($emails)) {
+    foreach ($emails as $item) {
+        if (!empty($item['to'])) {
+            $emails_to_validate[] = $item['to'];
+        }
+        if (!empty($item['cc']) && is_array($item['cc'])) {
+            foreach ($item['cc'] as $cc_email) {
+                $emails_to_validate[] = $cc_email;
+            }
+        }
+    }
+} else {
+    $to = $input['to'] ?? '';
+    if (!empty($to)) {
+        $emails_to_validate[] = $to;
+    }
+    $cc = $input['cc'] ?? [];
+    if (!empty($cc) && is_array($cc)) {
+        foreach ($cc as $cc_email) {
+            $emails_to_validate[] = $cc_email;
+        }
+    }
 }
 
-$configContent = file_get_contents($configFile);
-preg_match('/email\s*:\s*["\']([^"\']+)["\']/', $configContent, $emailMatches);
-preg_match('/appPassword\s*:\s*["\']([^"\']+)["\']/', $configContent, $passwordMatches);
+// Validate all target email addresses strictly end with @gmiu.edu.in
+foreach ($emails_to_validate as $check_email) {
+    $check_email = trim($check_email);
+    if (empty($check_email)) {
+        continue;
+    }
+    if (substr(strtolower($check_email), -12) !== '@gmiu.edu.in') {
+        http_response_code(403);
+        echo json_encode(["success" => false, "error" => "Forbidden. Recipient email address must be an official @gmiu.edu.in domain."]);
+        exit;
+    }
+}
 
-$email = $emailMatches[1] ?? '';
-$appPassword = $passwordMatches[1] ?? '';
+// Load secure config
+define('SECURE_ACCESS', true);
+$config_file = __DIR__ . '/config.php';
+if (!file_exists($config_file)) {
+    http_response_code(500);
+    echo json_encode(["success" => false, "error" => "Configuration file not found."]);
+    exit;
+}
+$config = include $config_file;
+
+$email = $config['smtp_email'] ?? '';
+$appPassword = $config['smtp_password'] ?? '';
 
 if (empty($email) || empty($appPassword)) {
     http_response_code(500);
-    echo json_encode(["success" => false, "error" => "Failed to parse credentials from emailConfig.js."]);
+    echo json_encode(["success" => false, "error" => "Failed to load SMTP configuration."]);
     exit;
 }
 
@@ -124,6 +168,7 @@ if (!empty($emails) && is_array($emails)) {
     }
     exit;
 }
+
 
 /**
  * Direct SMTP socket client to send mail via Gmail SSL port 465

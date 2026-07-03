@@ -3,6 +3,8 @@
  * GMIU IT Department Password Verification Backend
  */
 
+define('SECURE_ACCESS', true);
+
 // Enable CORS and configure JSON response
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -15,14 +17,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Start PHP Session
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Load secure config
+$config_file = __DIR__ . '/config.php';
+if (!file_exists($config_file)) {
+    http_response_code(500);
+    echo json_encode(["success" => false, "error" => "Configuration file not found."]);
+    exit;
+}
+$config = include $config_file;
 
 // Password Switch: 1 = ON (Ask for password), 0 = OFF (Password not asked)
-$password_required = 0;
-
-// Configure the correct password here
-// Default password: gmiu@it
-$correct_password = "gmiu@it";
+$password_required = $config['password_required'] ?? 1;
+$correct_password = $config['correct_password'] ?? '';
 
 // Clear session action
 if (isset($_GET['action']) && $_GET['action'] === 'clear') {
@@ -69,8 +79,16 @@ if (empty($password)) {
 }
 
 $is_valid = false;
-if ($password === $correct_password) {
-    $is_valid = true;
+// Check if the configured password is a bcrypt hash (starts with $2y$ and is 60 characters long)
+if (strpos($correct_password, '$2y$') === 0 && strlen($correct_password) === 60) {
+    if (password_verify($password, $correct_password)) {
+        $is_valid = true;
+    }
+} else {
+    // Fallback to plain text check if not hashed
+    if ($password === $correct_password) {
+        $is_valid = true;
+    }
 }
 
 if ($is_valid) {
@@ -80,4 +98,5 @@ if ($is_valid) {
     echo json_encode(["success" => false, "error" => "Invalid password."]);
 }
 exit;
+
 

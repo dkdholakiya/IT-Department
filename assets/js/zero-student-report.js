@@ -275,19 +275,21 @@ function handleAddEntry() {
         </html>
     `;
 
-    // 5. Submit to Google Sheet (pointing to the ZERO_WEBAPP_URL)
-    let sheetsPromise = Promise.resolve();
-    if (typeof SHEETS_CONFIG !== 'undefined' && SHEETS_CONFIG.ENABLED && SHEETS_CONFIG.ZERO_WEBAPP_URL) {
-        sheetsPromise = fetch(SHEETS_CONFIG.ZERO_WEBAPP_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(sheetsPayload)
-        });
-    }
+    // 5. Submit to Google Sheet via secure backend proxy
+    const sheetsPromise = fetch('proxy-sheets?target=zero', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sheetsPayload)
+    }).then(res => {
+        if (!res.ok) throw new Error('Proxy response not ok');
+        return res.json();
+    }).then(data => {
+        if (!data.success) throw new Error(data.error || 'Logging failed');
+        return data;
+    });
 
     // 6. Send Email Notification
-    const emailPromise = fetch('send-email.php', {
+    const emailPromise = fetch('send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

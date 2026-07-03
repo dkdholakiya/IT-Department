@@ -44,7 +44,7 @@
         <!-- ── Page Header ── -->
         <header class="rp-header container">
             <div class="rp-header-inner">
-                <a href="index.php" class="back-btn">
+                <a href="index" class="back-btn">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 24 24">
                         <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -92,7 +92,7 @@
         <div class="container mb-4">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb bg-transparent p-0 m-0 rp-breadcrumb-list">
-                    <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-muted">Home</a>
+                    <li class="breadcrumb-item"><a href="index" class="text-decoration-none text-muted">Home</a>
                     </li>
                     <li class="breadcrumb-item active text-danger" aria-current="page">Report Management System</li>
                 </ol>
@@ -950,14 +950,14 @@
     <!-- ░░ FLOATING NAV BUTTON (Bottom Right) ░░ -->
     <div class="fab-nav" id="fabNav">
         <div class="fab-menu" id="fabMenu">
-            <a href="index.php" class="fab-link" id="nav-home">
+            <a href="index" class="fab-link" id="nav-home">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
                 Home
             </a>
-            <a href="faculty.php" class="fab-link" id="nav-faculty">
+            <a href="faculty" class="fab-link" id="nav-faculty">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
@@ -966,7 +966,7 @@
                 </svg>
                 Faculty Team
             </a>
-            <a href="report.php" class="fab-link active" id="nav-report">
+            <a href="report" class="fab-link active" id="nav-report">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                     <polyline points="14 2 14 8 20 8" />
@@ -975,7 +975,7 @@
                 </svg>
                 Report Request
             </a>
-            <a href="ctlactivity.php" class="fab-link" id="nav-ctl">
+            <a href="ctlactivity" class="fab-link" id="nav-ctl">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                     <line x1="9" y1="3" x2="9" y2="21" />
@@ -985,13 +985,13 @@
                 </svg>
                 CTL Activity
             </a>
-            <a href="ctldrive.php" class="fab-link" id="nav-drive">
+            <a href="ctldrive" class="fab-link" id="nav-drive">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                 </svg>
                 Drive Scanner
             </a>
-            <a href="zero-student-report.php" class="fab-link" id="nav-zero">
+            <a href="zero-student-report" class="fab-link" id="nav-zero">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
@@ -1118,7 +1118,7 @@
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Shared Faculty Database -->
-    <script src="assets/js/sheetsConfig.js"></script>
+    <!-- Google Sheets configuration loaded securely from backend proxy -->
     <script src="assets/js/facultyData.js" defer></script>
 
     <!-- Department Report System logic -->
@@ -2783,7 +2783,7 @@ Department of Information Technology, GMIU`;
             const ccSelect = document.getElementById("ccEmails");
             const selectedCcEmails = ccSelect ? Array.from(ccSelect.selectedOptions).map(option => option.value) : [];
 
-            fetch("send-email.php", {
+            fetch("send-email", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -3055,7 +3055,7 @@ Department of Information Technology, GMIU`;
                 const ccSelect = document.getElementById("ccEmails");
                 const selectedCcEmails = ccSelect ? Array.from(ccSelect.selectedOptions).map(option => option.value) : [];
 
-                return fetch("send-email.php", {
+                return fetch("send-email", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -3251,16 +3251,6 @@ Department of Information Technology, GMIU`;
         //  Reads SHEETS_CONFIG from assets/js/sheetsConfig.js
         // ═══════════════════════════════════════════════════════════
         function appendToGoogleSheet() {
-            // Guard: skip if not configured or disabled
-            if (
-                typeof SHEETS_CONFIG === 'undefined' ||
-                !SHEETS_CONFIG.ENABLED ||
-                !SHEETS_CONFIG.WEBAPP_URL ||
-                SHEETS_CONFIG.WEBAPP_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE'
-            ) {
-                console.warn('[GMIU Sheets] Google Sheets integration not configured. Skipping.');
-                return;
-            }
 
             // ── Collect form data ──
             const facultyName = document.getElementById('facultySearch').value || '';
@@ -3403,16 +3393,23 @@ Department of Information Technology, GMIU`;
                 activityDetails
             };
 
-            // ── POST to Apps Script Web App ──
-            fetch(SHEETS_CONFIG.WEBAPP_URL, {
+            // ── POST to Backend Sheets Proxy ──
+            fetch('proxy-sheets?target=report', {
                 method: 'POST',
-                mode: 'no-cors',   // Apps Script requires no-cors
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
-                .then(() => {
-                    console.info('[GMIU Sheets] Data sent to Google Sheet successfully.');
-                    showToast('✔ Report data logged to Department Sheet.');
+                .then(res => {
+                    if (!res.ok) throw new Error('Network response not ok');
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        console.info('[GMIU Sheets] Data logged to sheet successfully.');
+                        showToast('✔ Report data logged to Department Sheet.');
+                    } else {
+                        console.warn('[GMIU Sheets] Failed to log:', data.error);
+                    }
                 })
                 .catch(err => {
                     console.warn('[GMIU Sheets] Failed to write to Google Sheet:', err);

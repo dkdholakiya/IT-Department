@@ -4,21 +4,38 @@
  * Securely blocks access to PHP pages if session is not authenticated
  */
 
+// Disable displaying PHP errors to browser in production
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL); // Still log all errors internally
+
+// Configure secure session cookies
+ini_set('session.cookie_httponly', 1);
+ini_set('session.use_only_cookies', 1);
+if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['SERVER_PORT'] == 443)) {
+    ini_set('session.cookie_secure', 1);
+}
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$password_required = 1;
+// Add security hardening headers
+header("X-Frame-Options: SAMEORIGIN");
+header("X-Content-Type-Options: nosniff");
+header("X-XSS-Protection: 1; mode=block");
 
-// Read setting from verify-password.php directly without executing it (avoid sending headers)
-$verify_file = __DIR__ . '/verify-password.php';
-if (file_exists($verify_file)) {
-    $verify_content = file_get_contents($verify_file);
-    // Use regex to parse $password_required value (0 or false)
-    if (preg_match('/\$password_required\s*=\s*(0|false)/i', $verify_content)) {
-        $password_required = 0;
-    }
+define('SECURE_ACCESS', true);
+
+// Load secure config
+$config_file = __DIR__ . '/config.php';
+if (!file_exists($config_file)) {
+    header("HTTP/1.1 500 Internal Server Error");
+    exit("Server Configuration Error: config.php not found.");
 }
+$config = include $config_file;
+
+$password_required = $config['password_required'] ?? 1;
 
 // Determine if user is authenticated
 $authenticated = false;
@@ -40,3 +57,4 @@ if (!$authenticated) {
     include __DIR__ . '/auth-login-page.php';
     exit;
 }
+

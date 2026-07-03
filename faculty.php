@@ -53,7 +53,7 @@
         <!-- ── Page Header (matches report.php structure) ── -->
         <header class="rp-header">
             <div class="rp-header-inner">
-                <a href="index.php" class="back-btn">
+                <a href="index" class="back-btn">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 24 24">
                         <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -95,14 +95,14 @@
     <!-- ░░ FLOATING NAV BUTTON (Bottom Right) ░░ -->
     <div class="fab-nav" id="fabNav">
         <div class="fab-menu" id="fabMenu">
-            <a href="index.php" class="fab-link" id="nav-home">
+            <a href="index" class="fab-link" id="nav-home">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
                 Home
             </a>
-            <a href="faculty.php" class="fab-link active" id="nav-faculty">
+            <a href="faculty" class="fab-link active" id="nav-faculty">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
@@ -111,7 +111,7 @@
                 </svg>
                 Faculty Team
             </a>
-            <a href="report.php" class="fab-link" id="nav-report">
+            <a href="report" class="fab-link" id="nav-report">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                     <polyline points="14 2 14 8 20 8" />
@@ -120,7 +120,7 @@
                 </svg>
                 Report Request
             </a>
-            <a href="ctlactivity.php" class="fab-link" id="nav-ctl">
+            <a href="ctlactivity" class="fab-link" id="nav-ctl">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                     <line x1="9" y1="3" x2="9" y2="21" />
@@ -130,13 +130,13 @@
                 </svg>
                 CTL Activity
             </a>
-            <a href="ctldrive.php" class="fab-link" id="nav-drive">
+            <a href="ctldrive" class="fab-link" id="nav-drive">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                 </svg>
                 Drive Scanner
             </a>
-            <a href="zero-student-report.php" class="fab-link" id="nav-zero">
+            <a href="zero-student-report" class="fab-link" id="nav-zero">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />

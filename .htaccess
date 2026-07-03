@@ -1,0 +1,34 @@
+# Apache Configuration — GMIU IT Portal Live Server Readiness
+
+# 1. Prevent Directory Indexing (Directory Browsing)
+Options -Indexes
+
+# 2. Block direct web access to sensitive config files
+<Files "config.php">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from all
+    </IfModule>
+</Files>
+
+# Block hidden files (like .env, .git, etc.)
+RedirectMatch 403 /\..*$
+
+# 3. URL Rewriting System
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect direct requests for *.php files to extensionless URLs
+    # Uses THE_REQUEST to avoid infinite redirection loops with internal rewrites
+    RewriteCond %{THE_REQUEST} \s/+(.+)\.php[\s?] [NC]
+    RewriteRule ^ /%1 [R=301,L]
+
+    # Map extensionless URLs internally to .php files if they exist (subdirectory-safe)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*)$ $1.php [NC,L]
+</IfModule>

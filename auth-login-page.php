@@ -228,7 +228,7 @@
                 </div>
             </form>
             
-            <a href="index.php" class="auth-back-link">
+            <a href="index" class="auth-back-link">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path d="M19 12H5M12 5l-7 7 7 7" />
                 </svg>
@@ -285,7 +285,7 @@
             `;
 
             try {
-                const response = await fetch("verify-password.php", {
+                const response = await fetch("verify-password", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ password: pwd })
