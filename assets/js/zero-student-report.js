@@ -850,6 +850,7 @@ async function handleBatchImport() {
     let successCount = 0;
     let failCount = 0;
     let duplicateCount = 0;
+    let errorDetails = [];
 
     const formatTimeTo12hWithSec = (timeStr) => {
         if (!timeStr) return "";
@@ -971,7 +972,17 @@ async function handleBatchImport() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(sheetsPayload)
             });
-            if (!sheetRes.ok) throw new Error('Google sheet proxy write failed');
+            
+            if (!sheetRes.ok) {
+                let errMsg = 'Google sheet proxy write failed';
+                try {
+                    const errData = await sheetRes.json();
+                    if (errData && errData.error) {
+                        errMsg = errData.error + (errData.details ? " (" + errData.details + ")" : "");
+                    }
+                } catch (e) {}
+                throw new Error(errMsg);
+            }
 
             const sheetData = await sheetRes.json();
             if (sheetData.duplicate) {
@@ -987,17 +998,21 @@ async function handleBatchImport() {
                 continue;
             }
 
-            // Send email
-            await fetch('send-email', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    to: facultyEmail,
-                    cc: [],
-                    subject: `Zero Student As Per Timetable — ${row.faculty}`,
-                    html: emailHtml
-                })
-            });
+            // Send email (catch any connection reset/close errors locally so sheet write success is kept)
+            try {
+                await fetch('send-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        to: facultyEmail,
+                        cc: [],
+                        subject: `Zero Student As Per Timetable — ${row.faculty}`,
+                        html: emailHtml
+                    })
+                });
+            } catch (emailErr) {
+                console.warn("Email dispatch connection warning:", emailErr);
+            }
 
             successCount++;
             if (tr) {
@@ -1007,6 +1022,7 @@ async function handleBatchImport() {
             }
         } catch (error) {
             console.error(`Import failed for index ${index}: `, error);
+            errorDetails.push(`Row ${index + 1} (${row.subject} by ${row.faculty}): ${error.message}`);
             failCount++;
             if (tr) {
                 tr.className = "error-row";
@@ -1031,5 +1047,10 @@ async function handleBatchImport() {
     let finalMsg = `PDF Import complete: ${successCount} success`;
     if (duplicateCount > 0) finalMsg += `, ${duplicateCount} skipped duplicates`;
     if (failCount > 0) finalMsg += `, ${failCount} failed`;
-    showToast(finalMsg, failCount > 0 ? "error" : "success");
+    
+    if (failCount > 0) {
+        alert(finalMsg + "\n\nError details:\n" + errorDetails.join("\n"));
+    } else {
+        showToast(finalMsg, "success");
+    }
 }
