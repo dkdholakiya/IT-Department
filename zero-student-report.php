@@ -26,6 +26,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
+    <!-- PDF.js CDN Library for client-side PDF reading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    </script>
+
     <!-- Scoped Page Stylesheet -->
     <link rel="stylesheet" href="assets/css/zero-student-report.css">
 </head>
@@ -80,17 +86,28 @@
         <!-- ── Main Centered Card Layout ── -->
         <main class="zs-main">
             <div class="zs-form-card">
-                <div class="zs-form-header">
-                    <div class="zs-form-icon">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                <div class="zs-form-header" style="justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 14px; flex: 1;">
+                        <div class="zs-form-icon">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2>Log Zero Class</h2>
+                            <p>Record a class where no students reported.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="import-pdf-btn" id="import-pdf-btn">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
                         </svg>
-                    </div>
-                    <div>
-                        <h2>Log Zero Class</h2>
-                        <p>Record a class where no students reported.</p>
-                    </div>
+                        <span>Import PDF</span>
+                    </button>
+                    <input type="file" id="pdf-import-input" accept=".pdf" style="display: none;">
                 </div>
 
                 <div class="zs-form-body">
@@ -141,7 +158,7 @@
                         <input type="text" id="entry-branch" placeholder="e.g. CLASS C B.TECH(IT)(ICT)" required>
                     </div>
 
-                    <div class="form-row-2">
+                    <div class="form-row-2 form-row-2-preserve">
                         <div class="form-group">
                             <label for="entry-timein">Time In <span class="req">*</span></label>
                             <input type="text" id="entry-timein" required>
@@ -152,9 +169,15 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="entry-remarks">Remarks</label>
-                        <input type="text" id="entry-remarks" value="NO STUDENT">
+                    <div class="form-row-2 form-row-2-preserve">
+                        <div class="form-group">
+                            <label for="entry-remarks">Remarks</label>
+                            <input type="text" id="entry-remarks" value="NO STUDENT">
+                        </div>
+                        <div class="form-group">
+                            <label for="entry-students">No. of Students</label>
+                            <input type="text" id="entry-students" value="---" placeholder="e.g. --- or 10 or 0">
+                        </div>
                     </div>
 
                     <button type="button" class="submit-btn" id="add-entry-btn">
@@ -281,6 +304,56 @@
             }
         });
     </script>
+
+    <!-- ── PDF Import Preview Modal ── -->
+    <div class="zs-modal-overlay" id="pdfPreviewModal">
+        <div class="zs-modal-card">
+            <div class="zs-modal-header">
+                <h3>Verify Parsed PDF Records</h3>
+                <button class="zs-modal-close" id="pdfModalClose">&times;</button>
+            </div>
+            <div class="zs-modal-body">
+                <p class="zs-modal-intro">The following records match our faculty team initials. Please review and confirm the import.</p>
+                
+                <!-- Import Progress Section -->
+                <div class="zs-import-progress-container" id="importProgressContainer" style="display: none;">
+                    <div class="zs-progress-header">
+                        <span id="importProgressText">Importing records: 0 / 0</span>
+                        <span id="importProgressPercent">0%</span>
+                    </div>
+                    <div class="zs-progress-bar-bg">
+                        <div class="zs-progress-bar-fill" id="importProgressBarFill" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="zs-table-container">
+                    <table class="zs-modal-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-pdf-rows" checked></th>
+                                <th>Date</th>
+                                <th>Class/Lab</th>
+                                <th>Subject</th>
+                                <th>Faculty</th>
+                                <th>Branch</th>
+                                <th>Sem</th>
+                                <th>Time</th>
+                                <th>Students</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pdf-parsed-rows-body">
+                            <!-- Rows will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="zs-modal-footer">
+                <button type="button" class="zs-modal-btn secondary" id="pdfModalCancel">Cancel</button>
+                <button type="button" class="zs-modal-btn primary" id="pdfModalImportBtn">Import Selected (0)</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

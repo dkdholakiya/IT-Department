@@ -99,6 +99,50 @@ function doPost(e) {
       targetRow = 5;
     }
 
+    // Check for duplicate entry (same date, room, subject, faculty, timeIn, timeOut)
+    const lastRow = sheet.getLastRow();
+    let isDuplicate = false;
+    
+    if (lastRow >= 5) {
+      const values = sheet.getRange(5, 1, lastRow - 4, 9).getValues();
+      const newDate = (data.date || "").toString().trim().toUpperCase();
+      const newRoom = (data.room || "").toString().trim().toUpperCase();
+      const newSubject = (data.subject || "").toString().trim().toUpperCase();
+      const newFaculty = (data.faculty || "").toString().trim().toUpperCase();
+      const newTimeIn = (data.timeIn || "").toString().trim().toUpperCase();
+      const newTimeOut = (data.timeOut || "").toString().trim().toUpperCase();
+      
+      for (let i = 0; i < values.length; i++) {
+        const rowVal = values[i];
+        const existingDate = rowVal[0].toString().trim().toUpperCase();
+        const existingRoom = rowVal[1].toString().trim().toUpperCase();
+        const existingSubject = rowVal[2].toString().trim().toUpperCase();
+        const existingFaculty = rowVal[3].toString().trim().toUpperCase();
+        const existingTimeIn = rowVal[6].toString().trim().toUpperCase();
+        const existingTimeOut = rowVal[7].toString().trim().toUpperCase();
+        
+        if (existingDate === newDate &&
+            existingRoom === newRoom &&
+            existingSubject === newSubject &&
+            existingFaculty === newFaculty &&
+            existingTimeIn === newTimeIn &&
+            existingTimeOut === newTimeOut) {
+          isDuplicate = true;
+          break;
+        }
+      }
+    }
+
+    if (isDuplicate) {
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          success: true,
+          duplicate: true,
+          message: "Duplicate entry. Record already exists in Google Sheet."
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     // Build the new row matching columns A-I
     const newRow = [
       data.date      || "-", // A: DATE (e.g. 26-Jul-2025)

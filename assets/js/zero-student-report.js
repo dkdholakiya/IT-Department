@@ -46,6 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Event listeners
     const addBtn = document.getElementById("add-entry-btn");
     if (addBtn) addBtn.addEventListener("click", handleAddEntry);
+
+    // Initialize PDF Import feature
+    initPdfImport();
 });
 
 // ── Dropdown Autocomplete Utility ──
@@ -113,6 +116,7 @@ function handleAddEntry() {
     const timeInInput = document.getElementById("entry-timein");
     const timeOutInput = document.getElementById("entry-timeout");
     const remarksInput = document.getElementById("entry-remarks");
+    const studentsInput = document.getElementById("entry-students");
     const submitBtn = document.getElementById("add-entry-btn");
 
     if (!dateInput || !roomInput || !subjectInput || !facultyInput || !branchInput || !semInput || !timeInInput || !timeOutInput) return;
@@ -144,6 +148,7 @@ function handleAddEntry() {
     const timeInVal = timeInInput.value;
     const timeOutVal = timeOutInput.value;
     const remarksVal = remarksInput.value.trim() || "NO STUDENT";
+    const studentsVal = studentsInput ? studentsInput.value.trim() : "---";
 
     // Disable button & show spinner
     submitBtn.disabled = true;
@@ -202,7 +207,8 @@ function handleAddEntry() {
         semester: semVal,
         timeIn: formatTimeTo12hWithSec(timeInVal),
         timeOut: formatTimeTo12hWithSec(timeOutVal),
-        remarks: remarksVal
+        remarks: remarksVal,
+        noOfStudents: studentsVal
     };
 
     // 4. Construct inline styled email body
@@ -257,6 +263,10 @@ function handleAddEntry() {
                                 <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Timing</td>
                                 <td style="padding: 10px 0; color: #0f172a;">${formatTimeTo12hWithSec(timeInVal)} - ${formatTimeTo12hWithSec(timeOutVal)}</td>
                             </tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+                                <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">No. of Students</td>
+                                <td style="padding: 10px 0; color: #0f172a;">${studentsVal}</td>
+                            </tr>
                             <tr>
                                 <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Remarks</td>
                                 <td style="padding: 10px 0; font-weight: bold; color: #ef4444;">${remarksVal}</td>
@@ -275,92 +285,86 @@ function handleAddEntry() {
         </html>
     `;
 
+    // Helper function to reset form inputs
+    const resetInputs = () => {
+        roomInput.value = "";
+        subjectInput.value = "";
+        facultyInput.value = "";
+        branchInput.value = "";
+
+        if (timeInInput._flatpickr) {
+            timeInInput._flatpickr.clear();
+        } else {
+            timeInInput.value = "";
+        }
+
+        if (timeOutInput._flatpickr) {
+            timeOutInput._flatpickr.clear();
+        } else {
+            timeOutInput.value = "";
+        }
+
+        if (remarksInput) remarksInput.value = "NO STUDENT";
+        if (studentsInput) studentsInput.value = "---";
+
+        // Set date back to today
+        const today = new Date().toISOString().split("T")[0];
+        if (dateInput._flatpickr) {
+            dateInput._flatpickr.setDate(today);
+        } else if (dateInput) {
+            dateInput.value = today;
+        }
+    };
+
     // 5. Submit to Google Sheet via secure backend proxy
-    const sheetsPromise = fetch('proxy-sheets?target=zero', {
+    fetch('proxy-sheets?target=zero', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(sheetsPayload)
-    }).then(res => {
+    })
+    .then(res => {
         if (!res.ok) throw new Error('Proxy response not ok');
         return res.json();
-    }).then(data => {
-        if (!data.success) throw new Error(data.error || 'Logging failed');
-        return data;
-    });
+    })
+    .then(sheetData => {
+        if (!sheetData.success) throw new Error(sheetData.error || 'Logging failed');
 
-    // 6. Send Email Notification
-    const emailPromise = fetch('send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            to: facultyEmail,
-            cc: [],
-            subject: `Zero Student As Per Timetable — ${facultyInitials}`,
-            html: emailHtml
+        if (sheetData.duplicate) {
+            showToast("Duplicate entry. Record already exists in Google Sheet.", "error");
+            resetInputs();
+            return;
+        }
+
+        // 6. Send Email Notification (only if not duplicate!)
+        fetch('send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                to: facultyEmail,
+                cc: [],
+                subject: `Zero Student As Per Timetable — ${facultyInitials}`,
+                html: emailHtml
+            })
         })
-    }).then(res => res.json());
-
-    // Resolve both actions
-    Promise.all([sheetsPromise, emailPromise])
-        .then(([sheetRes, emailRes]) => {
+        .then(res => res.json())
+        .then(emailRes => {
             showToast("Log submitted to Sheet & emailed successfully!");
-
-            // Reset inputs
-            roomInput.value = "";
-            subjectInput.value = "";
-            facultyInput.value = "";
-            branchInput.value = "";
-
-            if (timeInInput._flatpickr) {
-                timeInInput._flatpickr.clear();
-            } else {
-                timeInInput.value = "";
-            }
-
-            if (timeOutInput._flatpickr) {
-                timeOutInput._flatpickr.clear();
-            } else {
-                timeOutInput.value = "";
-            }
-
-            if (remarksInput) remarksInput.value = "NO STUDENT";
-
-            // Set date back to today
-            const today = new Date().toISOString().split("T")[0];
-            if (dateInput._flatpickr) {
-                dateInput._flatpickr.setDate(today);
-            } else if (dateInput) {
-                dateInput.value = today;
-            }
+            resetInputs();
         })
         .catch(err => {
-            console.error("Submission failed:", err);
-            showToast("Log submitted successfully!", "success"); // Often Apps Script CORS throws an error even if POST succeeds
-
-            // Reset inputs
-            roomInput.value = "";
-            subjectInput.value = "";
-            facultyInput.value = "";
-            branchInput.value = "";
-
-            if (timeInInput._flatpickr) {
-                timeInInput._flatpickr.clear();
-            } else {
-                timeInInput.value = "";
-            }
-
-            if (timeOutInput._flatpickr) {
-                timeOutInput._flatpickr.clear();
-            } else {
-                timeOutInput.value = "";
-            }
-
-            if (remarksInput) remarksInput.value = "NO STUDENT";
-        })
-        .finally(() => {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalContent;
+            console.error("Email failed:", err);
+            showToast("Log submitted to Sheet, but email failed.", "error");
+            resetInputs();
         });
+    })
+    .catch(err => {
+        console.error("Submission failed:", err);
+        showToast("Log submission failed.", "error");
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalContent;
+    });
 }
 
 // ── Toast Alert Helper ──
@@ -447,4 +451,585 @@ function initFacultyAutocomplete() {
             dropdown.appendChild(item);
         });
     }
+}
+
+// ── PDF Import and Parsing Logic ──
+let pdfParsedData = []; // Store parsed records in global array
+
+function initPdfImport() {
+    const importBtn = document.getElementById("import-pdf-btn");
+    const fileInput = document.getElementById("pdf-import-input");
+    const modal = document.getElementById("pdfPreviewModal");
+    const closeBtn = document.getElementById("pdfModalClose");
+    const cancelBtn = document.getElementById("pdfModalCancel");
+    const importConfirmBtn = document.getElementById("pdfModalImportBtn");
+    const selectAllCheckbox = document.getElementById("select-all-pdf-rows");
+
+    if (!importBtn || !fileInput || !modal) return;
+
+    // Trigger file dialog
+    importBtn.addEventListener("click", () => {
+        fileInput.value = ""; // clear previous select
+        fileInput.click();
+    });
+
+    // Handle file selection
+    fileInput.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        showToast("Reading PDF file...", "success");
+        try {
+            const data = await parsePDFFile(file);
+            if (data.length === 0) {
+                showToast("No matching records found in PDF for our faculty initials.", "error");
+                return;
+            }
+            pdfParsedData = data;
+            renderPreviewRows();
+            openModal();
+        } catch (error) {
+            console.error("PDF Parse error: ", error);
+            showToast("Failed to parse PDF: " + error.message, "error");
+        }
+    });
+
+    // Modal control
+    const openModal = () => {
+        modal.classList.add("show");
+        // Reset progress bar UI
+        document.getElementById("importProgressContainer").style.display = "none";
+        document.getElementById("importProgressBarFill").style.width = "0%";
+        importConfirmBtn.disabled = false;
+        importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
+        selectAllCheckbox.checked = true;
+    };
+
+    const closeModal = () => {
+        modal.classList.remove("show");
+    };
+
+    closeBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener("click", closeModal);
+
+    // Select all handler
+    selectAllCheckbox.addEventListener("change", (e) => {
+        const checked = e.target.checked;
+        const rowCheckboxes = document.querySelectorAll(".pdf-row-checkbox");
+        rowCheckboxes.forEach(cb => cb.checked = checked);
+        importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
+    });
+
+    // Import confirmation handler
+    importConfirmBtn.addEventListener("click", handleBatchImport);
+}
+
+function getSelectedCount() {
+    const rowCheckboxes = document.querySelectorAll(".pdf-row-checkbox:checked");
+    return rowCheckboxes.length;
+}
+
+function renderPreviewRows() {
+    const tbody = document.getElementById("pdf-parsed-rows-body");
+    const importConfirmBtn = document.getElementById("pdfModalImportBtn");
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+    pdfParsedData.forEach((row, index) => {
+        const tr = document.createElement("tr");
+        tr.id = `pdf-row-${index}`;
+        
+        // Match faculty name
+        const facultyInitials = row.faculty.toUpperCase();
+        const matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === facultyInitials);
+        const facultyLabel = matchedFaculty ? `${matchedFaculty.name} (${facultyInitials})` : `Prof. ${facultyInitials}`;
+
+        tr.innerHTML = `
+            <td style="text-align: center;"><input type="checkbox" class="pdf-row-checkbox" data-index="${index}" checked></td>
+            <td>${row.formattedDate || row.date}</td>
+            <td><strong>${row.room}</strong></td>
+            <td>${row.subject}</td>
+            <td>${facultyLabel}</td>
+            <td>${row.branch}</td>
+            <td style="text-align: center;">${row.semester}</td>
+            <td>${row.timeInStr} - ${row.timeOutStr}</td>
+            <td style="text-align: center;">${row.noOfStudents}</td>
+            <td style="font-size: 11px;">${row.remarks || "NO STUDENT"}</td>
+        `;
+
+        // Update select count on checkbox change
+        const checkbox = tr.querySelector(".pdf-row-checkbox");
+        checkbox.addEventListener("change", () => {
+            importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
+        });
+
+        tbody.appendChild(tr);
+    });
+}
+
+async function parsePDFFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async function() {
+            try {
+                const typedarray = new Uint8Array(this.result);
+                const pdf = await pdfjsLib.getDocument({data: typedarray}).promise;
+                let parsedRows = [];
+                let currentDate = "";
+
+                // Extract text coordinates from all pages
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const textContent = await page.getTextContent();
+                    const items = textContent.items;
+
+                    if (items.length === 0) continue;
+
+                    // Group by Y-coordinate
+                    let yGroups = {};
+                    items.forEach(item => {
+                        const str = item.str;
+                        if (str === undefined || str === null) return;
+                        const trimmed = str.trim();
+                        if (!trimmed) return;
+                        
+                        const y = Math.round(item.transform[5] * 10) / 10;
+                        const tolerance = 4.0;
+                        let matchedY = null;
+                        
+                        for (const key of Object.keys(yGroups)) {
+                            if (Math.abs(parseFloat(key) - y) <= tolerance) {
+                                matchedY = key;
+                                break;
+                            }
+                        }
+                        if (matchedY !== null) {
+                            yGroups[matchedY].push(item);
+                        } else {
+                            yGroups[y] = [item];
+                        }
+                    });
+
+                    // Sort rows top-to-bottom (Y descending)
+                    const sortedYs = Object.keys(yGroups).map(Number).sort((a, b) => b - a);
+                    const rows = sortedYs.map(y => {
+                        const rowItems = yGroups[y];
+                        rowItems.sort((a, b) => a.transform[4] - b.transform[4]);
+                        return rowItems;
+                    });
+
+                    // Merge adjacent horizontal elements in each row (like words inside a cell)
+                    const mergedRows = rows.map(mergeCloseItems);
+
+                    // Find headers on this page
+                    let headerRow = null;
+                    let headerRowIdx = -1;
+                    for (let r = 0; r < mergedRows.length; r++) {
+                        const row = mergedRows[r];
+                        const joinedText = row.map(item => item.str.toUpperCase()).join(" ");
+                        if (joinedText.includes("DATE") && (joinedText.includes("CLASS") || joinedText.includes("LAB")) && joinedText.includes("FACULTY")) {
+                            headerRow = row;
+                            headerRowIdx = r;
+                            break;
+                        }
+                    }
+
+                    if (!headerRow) {
+                        if (pageNum === 1) {
+                            throw new Error("Could not find table headers in PDF. Please verify PDF format.");
+                        }
+                    }
+
+                    // Identify column mapping dynamically using centers of header columns
+                    let headerColumns = headerRow || [];
+
+                    // Parse data rows below the header
+                    const dataRowsStartIdx = headerRow ? headerRowIdx + 1 : 0;
+                    for (let r = dataRowsStartIdx; r < mergedRows.length; r++) {
+                        const row = mergedRows[r];
+                        
+                        // Map each text item to its closest header column
+                        let colValues = Array(headerColumns.length || 14).fill("");
+                        row.forEach(item => {
+                            const itemCenter = item.transform[4] + item.width / 2;
+                            let closestHeaderIdx = 0;
+                            let minDistance = Infinity;
+                            
+                            headerColumns.forEach((h, idx) => {
+                                const hCenter = h.transform[4] + h.width / 2;
+                                const dist = Math.abs(hCenter - itemCenter);
+                                if (dist < minDistance) {
+                                    minDistance = dist;
+                                    closestHeaderIdx = idx;
+                                }
+                            });
+                            
+                            if (colValues[closestHeaderIdx]) {
+                                colValues[closestHeaderIdx] += " " + item.str;
+                            } else {
+                                colValues[closestHeaderIdx] = item.str;
+                            }
+                        });
+
+                        // Clean columns: trim values
+                        colValues = colValues.map(v => v ? v.trim() : "");
+
+                        let dateVal = "";
+                        let srNoVal = "";
+                        let roomVal = "";
+                        let subjectVal = "";
+                        let facultyInitials = "";
+                        let branchVal = "";
+                        let semVal = "";
+                        let timeInVal = "";
+                        let timeOutVal = "";
+                        let remarksVal = "";
+                        let studentsVal = "";
+
+                        // Map values based on header names
+                        if (headerColumns.length > 0) {
+                            headerColumns.forEach((colHeader, index) => {
+                                const hText = colHeader.str.toUpperCase();
+                                const val = colValues[index] || "";
+                                if (hText.includes("DATE")) dateVal = val;
+                                else if (hText.includes("SR") || hText.includes("NO.")) srNoVal = val;
+                                else if (hText.includes("CLASS") || hText.includes("LAB")) roomVal = val;
+                                else if (hText.includes("SUBJECT")) subjectVal = val;
+                                else if (hText.includes("FACULTY")) facultyInitials = val;
+                                else if (hText.includes("BRANCH")) branchVal = val;
+                                else if (hText.includes("SEM")) semVal = val;
+                                else if (hText.includes("TIME IN")) timeInVal = val;
+                                else if (hText.includes("TIME OUT")) timeOutVal = val;
+                                else if (hText.includes("REMARKS")) remarksVal = val;
+                                else if (hText.includes("STUDENT")) studentsVal = val;
+                            });
+                        }
+
+                        // Validate if this is a valid data row (SR NO must be a number)
+                        if (!srNoVal || isNaN(parseInt(srNoVal, 10))) {
+                            continue;
+                        }
+
+                        // Propagate date if empty
+                        if (dateVal) {
+                            currentDate = dateVal;
+                        } else {
+                            dateVal = currentDate;
+                        }
+
+                        // Skip if basic info is missing
+                        if (!facultyInitials || !roomVal || !subjectVal) {
+                            continue;
+                        }
+
+                        // Check if faculty initials match our department (facultyData)
+                        const facInit = facultyInitials.toUpperCase().trim();
+                        const hasFacultyMatch = facultyData.some(f => f.initials.toUpperCase() === facInit);
+                        if (!hasFacultyMatch) {
+                            continue; // Skip
+                        }
+
+                        // Format Date to sheets format: DD-MMM-YYYY
+                        let parsedDateVal = "";
+                        let formattedDate = "";
+                        if (dateVal) {
+                            const dateParts = dateVal.split(/[\/\-]/);
+                            if (dateParts.length === 3) {
+                                let day = dateParts[0].padStart(2, '0');
+                                let month = dateParts[1].padStart(2, '0');
+                                let year = dateParts[2];
+                                if (year.length === 2) year = "20" + year;
+                                parsedDateVal = `${year}-${month}-${day}`;
+                                
+                                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                                const mIdx = parseInt(month, 10) - 1;
+                                if (mIdx >= 0 && mIdx < 12) {
+                                    formattedDate = `${parseInt(day, 10)}-${months[mIdx]}-${year}`;
+                                }
+                            }
+                        }
+                        if (!parsedDateVal) {
+                            parsedDateVal = new Date().toISOString().split("T")[0];
+                        }
+
+                        // Parse times to 24h
+                        const parseTimeTo24h = (timeStr) => {
+                            if (!timeStr) return "";
+                            const clean = timeStr.replace(/\s*[AP]M\s*/gi, "").trim();
+                            const parts = clean.split(":");
+                            if (parts.length < 2) return timeStr;
+                            let hrs = parseInt(parts[0], 10);
+                            const mins = parts[1];
+                            
+                            let isPm = timeStr.toLowerCase().includes("pm");
+                            if (!isPm && !timeStr.toLowerCase().includes("am")) {
+                                if (hrs === 12 || (hrs >= 1 && hrs <= 7)) {
+                                    isPm = true;
+                                }
+                            }
+
+                            if (isPm && hrs < 12) hrs += 12;
+                            if (!isPm && hrs === 12) hrs = 0;
+                            return `${hrs.toString().padStart(2, '0')}:${mins}`;
+                        };
+
+                        const timeIn24 = parseTimeTo24h(timeInVal);
+                        const timeOut24 = parseTimeTo24h(timeOutVal);
+
+                        parsedRows.push({
+                            date: parsedDateVal,
+                            formattedDate: formattedDate || dateVal,
+                            room: roomVal.toUpperCase(),
+                            subject: subjectVal.toUpperCase(),
+                            faculty: facInit,
+                            branch: branchVal || "B TECH CIVIL",
+                            semester: semVal || "3",
+                            timeIn: timeIn24,
+                            timeOut: timeOut24,
+                            timeInStr: timeInVal,
+                            timeOutStr: timeOutVal,
+                            remarks: remarksVal || "NO STUDENT",
+                            noOfStudents: studentsVal || "---"
+                        });
+                    }
+                }
+
+                resolve(parsedRows);
+            } catch (err) {
+                reject(err);
+            }
+        };
+        reader.onerror = () => reject(new Error("FileReader read error."));
+        reader.readAsArrayBuffer(file);
+    });
+}
+
+function mergeCloseItems(items) {
+    if (items.length === 0) return [];
+    let merged = [];
+    let current = { ...items[0] };
+    
+    for (let i = 1; i < items.length; i++) {
+        const next = items[i];
+        const distance = next.transform[4] - (current.transform[4] + current.width);
+        if (distance < 12) {
+            current.str += " " + next.str;
+            current.width = (next.transform[4] + next.width) - current.transform[4];
+        } else {
+            merged.push(current);
+            current = { ...next };
+        }
+    }
+    merged.push(current);
+    return merged;
+}
+
+async function handleBatchImport() {
+    const rowCheckboxes = document.querySelectorAll(".pdf-row-checkbox:checked");
+    if (rowCheckboxes.length === 0) {
+        showToast("No records selected for import.", "error");
+        return;
+    }
+
+    const indicesToImport = Array.from(rowCheckboxes).map(cb => parseInt(cb.getAttribute("data-index"), 10));
+    const total = indicesToImport.length;
+
+    const progressContainer = document.getElementById("importProgressContainer");
+    const progressText = document.getElementById("importProgressText");
+    const progressBarFill = document.getElementById("importProgressBarFill");
+    const progressPercent = document.getElementById("importProgressPercent");
+    const importBtn = document.getElementById("pdfModalImportBtn");
+    const cancelBtn = document.getElementById("pdfModalCancel");
+    const closeBtn = document.getElementById("pdfModalClose");
+
+    importBtn.disabled = true;
+    cancelBtn.disabled = true;
+    closeBtn.style.visibility = "hidden";
+    progressContainer.style.display = "block";
+
+    let successCount = 0;
+    let failCount = 0;
+    let duplicateCount = 0;
+
+    const formatTimeTo12hWithSec = (timeStr) => {
+        if (!timeStr) return "";
+        const parts = timeStr.split(":");
+        if (parts.length < 2) return timeStr;
+        let hrs = parseInt(parts[0], 10);
+        const mins = parts[1];
+        const ampm = hrs >= 12 ? "PM" : "AM";
+        hrs = hrs % 12;
+        hrs = hrs ? hrs : 12;
+        return `${hrs}:${mins}:00 ${ampm}`;
+    };
+
+    for (let i = 0; i < total; i++) {
+        const index = indicesToImport[i];
+        const row = pdfParsedData[index];
+        const tr = document.getElementById(`pdf-row-${index}`);
+
+        const progress = Math.round((i / total) * 100);
+        progressBarFill.style.width = `${progress}%`;
+        progressPercent.innerText = `${progress}%`;
+        progressText.innerText = `Importing: ${i + 1} of ${total} (${row.subject} by ${row.faculty})`;
+
+        if (tr) {
+            const cb = tr.querySelector(".pdf-row-checkbox");
+            if (cb) cb.disabled = true;
+        }
+
+        try {
+            const matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === row.faculty.toUpperCase());
+            const facultyName = matchedFaculty ? matchedFaculty.name : "Prof. " + row.faculty;
+            const facultyEmail = matchedFaculty ? matchedFaculty.email : "adminit@gmiu.edu.in";
+
+            const sheetsPayload = {
+                date: row.formattedDate,
+                room: row.room,
+                subject: row.subject,
+                faculty: row.faculty,
+                branch: row.branch,
+                semester: row.semester,
+                timeIn: formatTimeTo12hWithSec(row.timeIn),
+                timeOut: formatTimeTo12hWithSec(row.timeOut),
+                remarks: row.remarks,
+                noOfStudents: row.noOfStudents
+            };
+
+            const emailHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        body, table, td, th, div, span, p, a, h1, h2 {
+                            font-family: 'Playfair Display', Georgia, serif !important;
+                        }
+                    </style>
+                </head>
+                <body style="margin: 0; padding: 0; background-color: #f8fafc; color: #334155;">
+                    <div style="background-color: #f8fafc; padding: 40px 20px;">
+                        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);">
+                            <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 24px; text-align: center;">
+                                <h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">Zero Student Timetable Log</h1>
+                                <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 12px;">Gyanmanjari Innovative University &nbsp;·&nbsp; Department of IT</p>
+                            </div>
+                            <div style="padding: 24px;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 13px; color: #334155;">
+                                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 10px 0; font-weight: bold; width: 150px; color: #64748b; text-transform: uppercase;">Faculty Initials</td>
+                                        <td style="padding: 10px 0; font-weight: 600; color: #0f172a;">${row.faculty} (${facultyName})</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Session Date</td>
+                                        <td style="padding: 10px 0; font-weight: 600; color: #0f172a;">${row.formattedDate}</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Classroom/Lab</td>
+                                        <td style="padding: 10px 0; font-weight: 600; color: #0369a1;"><span style="padding: 3px 8px; background-color: #e0f2fe; border-radius: 4px; font-family: monospace;">${row.room}</span></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Subject</td>
+                                        <td style="padding: 10px 0; font-weight: 600; color: #b45309;"><span style="padding: 3px 8px; background-color: #fef3c7; border-radius: 4px;">${row.subject}</span></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Branch/Class</td>
+                                        <td style="padding: 10px 0; color: #0f172a;">${row.branch}</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Semester</td>
+                                        <td style="padding: 10px 0; color: #0f172a;">${row.semester}</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Timing</td>
+                                        <td style="padding: 10px 0; color: #0f172a;">${formatTimeTo12hWithSec(row.timeIn)} - ${formatTimeTo12hWithSec(row.timeOut)}</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">No. of Students</td>
+                                        <td style="padding: 10px 0; color: #0f172a;">${row.noOfStudents}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Remarks</td>
+                                        <td style="padding: 10px 0; font-weight: bold; color: #ef4444;">${row.remarks}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="footer-container" style="background-color: #f8fafc; padding: 24px 24px; border-top: 1px solid #cbd5e1; text-align: center; font-family: 'Playfair Display', serif;">
+                                <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.5; font-family: 'Playfair Display', serif;">THIS EMAIL WAS AUTOMATICALLY GENERATED BY THE <br><a href="${window.location.href}" style="color: #c0392b; text-decoration: none; font-weight: 600; font-family: 'Playfair Display', serif;">IT DEPARTMENT</a>.</p>
+                                <p style="margin: 4px 0 0 0; font-size: 11px; color: #94a3b8; font-family: 'Playfair Display', serif;">&copy; 2026 <a href="${window.location.href}" style="color: #64748b; text-decoration: none; font-weight: 600; font-family: 'Playfair Display', serif;"></a>ALL RIGHTS RESERVED.</p>
+                            </div>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            // Submit sheet
+            const sheetRes = await fetch('proxy-sheets?target=zero', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(sheetsPayload)
+            });
+            if (!sheetRes.ok) throw new Error('Google sheet proxy write failed');
+
+            const sheetData = await sheetRes.json();
+            if (sheetData.duplicate) {
+                duplicateCount++;
+                if (tr) {
+                    tr.className = "unmatched-row";
+                    const cb = tr.querySelector(".pdf-row-checkbox");
+                    if (cb) {
+                        cb.checked = false;
+                        cb.disabled = true;
+                    }
+                }
+                continue;
+            }
+
+            // Send email
+            await fetch('send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    to: facultyEmail,
+                    cc: [],
+                    subject: `Zero Student As Per Timetable — ${row.faculty}`,
+                    html: emailHtml
+                })
+            });
+
+            successCount++;
+            if (tr) {
+                tr.className = "imported-row";
+                const cb = tr.querySelector(".pdf-row-checkbox");
+                if (cb) cb.checked = false;
+            }
+        } catch (error) {
+            console.error(`Import failed for index ${index}: `, error);
+            failCount++;
+            if (tr) {
+                tr.className = "error-row";
+            }
+        }
+    }
+
+    progressBarFill.style.width = "100%";
+    progressPercent.innerText = "100%";
+    
+    let summaryText = `Completed: ${successCount} imported successfully`;
+    if (duplicateCount > 0) summaryText += `, ${duplicateCount} duplicate(s) skipped`;
+    if (failCount > 0) summaryText += `, ${failCount} failed`;
+    progressText.innerText = summaryText;
+
+    cancelBtn.disabled = false;
+    cancelBtn.innerText = "Close";
+    closeBtn.style.visibility = "visible";
+    importBtn.disabled = false;
+    importBtn.innerText = "Import Selected (0)";
+
+    let finalMsg = `PDF Import complete: ${successCount} success`;
+    if (duplicateCount > 0) finalMsg += `, ${duplicateCount} skipped duplicates`;
+    if (failCount > 0) finalMsg += `, ${failCount} failed`;
+    showToast(finalMsg, failCount > 0 ? "error" : "success");
 }

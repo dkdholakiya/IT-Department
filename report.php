@@ -207,6 +207,7 @@
                                             <option value="research">Research Activity</option>
                                             <option value="international_relational">International Relational Activity</option>
                                             <option value="central">Central Activity</option>
+                                            <option value="other">Other</option>
                                         </select>
                                         <div class="mt-2 d-none" id="customReportTypeWrap">
                                             <label class="form-label text-warning small" for="customReportType">Custom
@@ -379,23 +380,28 @@
                                         <div class="invalid-feedback">Brief Objective is required.</div>
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="form-label" for="activityPhotos">Upload Activity Photos (ZIP
-                                            format only) <span class="text-danger">*</span></label>
+                                        <label class="form-label text-light">Photo Submission Method <span class="text-danger">*</span></label>
+                                        <div class="d-flex gap-3 mt-1 mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="photoMethod" id="photoMethodZip" value="zip" checked required>
+                                                <label class="form-check-label text-light" for="photoMethodZip">Upload ZIP File</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="photoMethod" id="photoMethodDrive" value="drive" required>
+                                                <label class="form-check-label text-light" for="photoMethodDrive">Google Drive Link</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" id="activityPhotosWrap">
+                                        <label class="form-label" for="activityPhotos">Upload Activity Photos (ZIP format only) <span class="text-danger">*</span></label>
                                         <input type="file" class="form-control" id="activityPhotos" accept=".zip">
                                         <div class="selected-files-list" id="activityPhotosList"></div>
-                                        <div class="invalid-feedback">Please upload a ZIP file containing the photos, or
-                                            enter a Google Drive link below.</div>
+                                        <div class="invalid-feedback">Please upload a ZIP file containing the photos.</div>
                                     </div>
-                                    <div class="col-md-12">
-                                        <label class="form-label" for="driveLink">Or Google Drive Link <span
-                                                class="text-danger">*</span></label>
-                                        <input type="url" class="form-control" id="driveLink"
-                                            placeholder="https://drive.google.com/..." oninput="syncEmailPreview()">
-                                        <div class="form-text text-muted small mt-1">
-                                            Please upload a ZIP file of the photos OR provide a Google Drive link.
-                                        </div>
-                                        <div class="invalid-feedback">Please enter a valid Google Drive link, or upload
-                                            a ZIP file above.</div>
+                                    <div class="col-md-12 d-none" id="driveLinkWrap">
+                                        <label class="form-label" for="driveLink">Google Drive Link <span class="text-danger">*</span></label>
+                                        <input type="url" class="form-control" id="driveLink" placeholder="https://drive.google.com/..." oninput="syncEmailPreview()">
+                                        <div class="invalid-feedback">Please enter a valid Google Drive link.</div>
                                     </div>
                                     <div class="col-md-12 d-flex justify-content-between mt-4">
                                         <button type="button" class="btn btn-outline-light px-4"
@@ -735,7 +741,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label" for="intCollaborationType">Type of Collaboration <span class="text-danger">*</span></label>
-                                            <select class="form-select dynamic-field" id="intCollaborationType">
+                                            <select class="form-select dynamic-field" id="intCollaborationType" onchange="toggleIntCollaborationCustomType()">
                                                 <option value="" disabled selected>Select Collaboration Type...</option>
                                                 <option value="Student Exchange">Student Exchange</option>
                                                 <option value="Faculty Exchange">Faculty Exchange</option>
@@ -743,6 +749,13 @@
                                                 <option value="Webinar/Seminar">Webinar/Seminar</option>
                                                 <option value="Other">Other</option>
                                             </select>
+                                            
+                                            <!-- Custom International Collaboration Type input -->
+                                            <div class="mt-2 d-none" id="customIntCollaborationTypeWrap">
+                                                <label class="form-label text-warning small" for="customIntCollaborationType">Custom Collaboration Type Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control dynamic-field" id="customIntCollaborationType" placeholder="Enter custom collaboration type...">
+                                                <div class="invalid-feedback">Please specify the custom collaboration type.</div>
+                                            </div>
                                         </div>
                                         <div class="col-md-12">
                                             <label class="form-label" for="intDescription">Brief Description <span class="text-danger">*</span></label>
@@ -756,7 +769,7 @@
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <label class="form-label" for="centralCategory">Event Category <span class="text-danger">*</span></label>
-                                            <select class="form-select dynamic-field" id="centralCategory">
+                                            <select class="form-select dynamic-field" id="centralCategory" onchange="toggleCentralCustomCategory()">
                                                 <option value="" disabled selected>Select Category...</option>
                                                 <option value="Cultural">Cultural</option>
                                                 <option value="Sports">Sports</option>
@@ -764,6 +777,13 @@
                                                 <option value="Tech-Fest">Tech-Fest</option>
                                                 <option value="Other">Other</option>
                                             </select>
+                                            
+                                            <!-- Custom Central Category input -->
+                                            <div class="mt-2 d-none" id="customCentralCategoryWrap">
+                                                <label class="form-label text-warning small" for="customCentralCategory">Custom Event Category Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control dynamic-field" id="customCentralCategory" placeholder="Enter custom event category...">
+                                                <div class="invalid-feedback">Please specify the custom event category.</div>
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
                                             <!-- empty cell for alignment -->
@@ -1148,6 +1168,12 @@
             photosInput.addEventListener("change", clearPhotoDriveValidation);
             driveInput.addEventListener("input", clearPhotoDriveValidation);
 
+            // Toggle submission method listeners
+            document.querySelectorAll('input[name="photoMethod"]').forEach(radio => {
+                radio.addEventListener("change", togglePhotoMethod);
+            });
+            togglePhotoMethod();
+
             // Initialize Character Counters
             initCharacterCounters();
 
@@ -1173,6 +1199,23 @@
                 }
             });
         });
+
+        // ── Visual Toggle for Photo Submission Method ──
+        function togglePhotoMethod() {
+            const method = document.querySelector('input[name="photoMethod"]:checked')?.value || "zip";
+            const zipWrap = document.getElementById("activityPhotosWrap");
+            const driveWrap = document.getElementById("driveLinkWrap");
+
+            if (zipWrap && driveWrap) {
+                if (method === "zip") {
+                    zipWrap.classList.remove("d-none");
+                    driveWrap.classList.add("d-none");
+                } else {
+                    zipWrap.classList.add("d-none");
+                    driveWrap.classList.remove("d-none");
+                }
+            }
+        }
 
         // ── Autocomplete Search Feature ──
         function initAutocompleteSearch(inputId, hiddenId, dropdownId, selectCallback) {
@@ -1615,6 +1658,42 @@
             syncEmailPreview();
         }
 
+        function toggleIntCollaborationCustomType() {
+            const select = document.getElementById("intCollaborationType");
+            const customWrap = document.getElementById("customIntCollaborationTypeWrap");
+            const customInput = document.getElementById("customIntCollaborationType");
+
+            if (select && select.value === "Other") {
+                if (customWrap) customWrap.classList.remove("d-none");
+                if (customInput) customInput.setAttribute("required", "true");
+            } else {
+                if (customWrap) customWrap.classList.add("d-none");
+                if (customInput) {
+                    customInput.removeAttribute("required");
+                    customInput.value = "";
+                }
+            }
+            syncEmailPreview();
+        }
+
+        function toggleCentralCustomCategory() {
+            const select = document.getElementById("centralCategory");
+            const customWrap = document.getElementById("customCentralCategoryWrap");
+            const customInput = document.getElementById("customCentralCategory");
+
+            if (select && select.value === "Other") {
+                if (customWrap) customWrap.classList.remove("d-none");
+                if (customInput) customInput.setAttribute("required", "true");
+            } else {
+                if (customWrap) customWrap.classList.add("d-none");
+                if (customInput) {
+                    customInput.removeAttribute("required");
+                    customInput.value = "";
+                }
+            }
+            syncEmailPreview();
+        }
+
         function toggleDepartmentalCustomSubType() {
             const select = document.getElementById("departmentalSubType");
             const customWrap = document.getElementById("customDepartmentalSubTypeWrap");
@@ -1755,7 +1834,7 @@
                 
                 // Add required to selects, inputs, and textareas inside targetSection
                 // (Except for optional fields and dynamically toggled custom inputs)
-                const inputsToRequire = targetSection.querySelectorAll("input:not(#departmentalSpeaker):not(#placementSpeaker):not(#startupTeam):not(#researchJournal):not(#researchPubDate):not(#customRlmActivity):not(#customPlmActivity):not(#customDepartmentalSubType):not(#customPlacementSubType), select:not(#rlmActivity):not(#plmActivity):not(#placementSubType), textarea:not(#placementOutcomes)");
+                const inputsToRequire = targetSection.querySelectorAll("input:not(#departmentalSpeaker):not(#placementSpeaker):not(#startupTeam):not(#researchJournal):not(#researchPubDate):not(#customRlmActivity):not(#customPlmActivity):not(#customDepartmentalSubType):not(#customPlacementSubType):not(#customIntCollaborationType):not(#customCentralCategory), select:not(#rlmActivity):not(#plmActivity):not(#placementSubType), textarea:not(#placementOutcomes)");
                 inputsToRequire.forEach(input => {
                     if (input.type === "radio") {
                         const name = input.name;
@@ -1788,11 +1867,20 @@
                 const departmentalSubTypeSelect = document.getElementById("departmentalSubType");
                 if (departmentalSubTypeSelect) departmentalSubTypeSelect.value = "";
             }
+            if (reportType !== "international_relational") {
+                const intCollaborationTypeSelect = document.getElementById("intCollaborationType");
+                if (intCollaborationTypeSelect) intCollaborationTypeSelect.value = "";
+            }
+            if (reportType !== "central") {
+                const centralCategorySelect = document.getElementById("centralCategory");
+                if (centralCategorySelect) centralCategorySelect.value = "";
+            }
             
             togglePlacementActType();
             toggleDepartmentalCustomSubType();
             togglePlacementCustomSubType();
-
+            toggleIntCollaborationCustomType();
+            toggleCentralCustomCategory();
             syncEmailPreview();
             updateStepState(2, true);
         }
@@ -2589,6 +2677,7 @@ Department of Information Technology, GMIU`;
                         coordinators: document.getElementById("coordinators").value,
                         briefObjective: document.getElementById("briefObjective").value,
                         driveLink: document.getElementById("driveLink").value,
+                        photoMethod: document.querySelector('input[name="photoMethod"]:checked')?.value || "zip",
 
                         // New fields
                         batch: document.getElementById("batch").value,
@@ -2620,10 +2709,12 @@ Department of Information Technology, GMIU`;
                         researchPubDate: document.getElementById("researchPubDate").value,
                         intCollaboratingOrg: document.getElementById("intCollaboratingOrg").value,
                         intCollaborationType: document.getElementById("intCollaborationType").value,
+                        customIntCollaborationType: document.getElementById("customIntCollaborationType").value,
                         intDescription: document.getElementById("intDescription").value,
                         centralCategory: document.getElementById("centralCategory").value,
+                        customCentralCategory: document.getElementById("customCentralCategory").value,
                         centralHighlights: document.getElementById("centralHighlights").value,
-
+ 
                         // Email fields
                         refSubject: document.getElementById("refSubject").value,
                         refMessage: document.getElementById("refMessage").value,
@@ -2696,6 +2787,12 @@ Department of Information Technology, GMIU`;
                             unlockSection(5);
                         }
 
+                        if (draft.photoMethod) {
+                            const rb = document.querySelector(`input[name="photoMethod"][value="${draft.photoMethod}"]`);
+                            if (rb) rb.checked = true;
+                        }
+                        togglePhotoMethod();
+
                         // Restore Placement Activity Category (RLM vs PLM) and sub-dropdowns
                         if (draft.placementActType) {
                             const rb = document.querySelector(`input[name="placementActType"][value="${draft.placementActType}"]`);
@@ -2718,23 +2815,25 @@ Department of Information Technology, GMIU`;
                         if (draft.customPlmActivity) {
                             document.getElementById("customPlmActivity").value = draft.customPlmActivity;
                         }
-
+                        
                         // Restore other dynamic fields
                         const dynFields = [
                             "departmentalSubType", "customDepartmentalSubType", "departmentalSpeaker", "departmentalOutcomes",
                             "placementSubType", "customPlacementSubType", "placementSpeaker", "placementOutcomes",
                             "startupName", "startupStage", "startupTeam", "startupProblem",
                             "researchPaperTitle", "researchAuthors", "researchJournal", "researchPubDate",
-                            "intCollaboratingOrg", "intCollaborationType", "intDescription",
-                            "centralCategory", "centralHighlights"
+                            "intCollaboratingOrg", "intCollaborationType", "customIntCollaborationType", "intDescription",
+                            "centralCategory", "customCentralCategory", "centralHighlights"
                         ];
                         dynFields.forEach(id => {
                             const el = document.getElementById(id);
                             if (el && draft[id] !== undefined) el.value = draft[id];
                         });
-
+ 
                         toggleDepartmentalCustomSubType();
                         togglePlacementCustomSubType();
+                        toggleIntCollaborationCustomType();
+                        toggleCentralCustomCategory();
 
                         // Populate Emails
                         document.getElementById("refName").value = draft.facultySearch || "";
@@ -3163,6 +3262,22 @@ Department of Information Technology, GMIU`;
             const customPlaceSubWrap = document.getElementById("customPlacementSubTypeWrap");
             if (customPlaceSubWrap) customPlaceSubWrap.classList.add("d-none");
 
+            const customIntCollabInput = document.getElementById("customIntCollaborationType");
+            if (customIntCollabInput) {
+                customIntCollabInput.value = "";
+                customIntCollabInput.removeAttribute("required");
+            }
+            const customIntCollabWrap = document.getElementById("customIntCollaborationTypeWrap");
+            if (customIntCollabWrap) customIntCollabWrap.classList.add("d-none");
+
+            const customCentralCatInput = document.getElementById("customCentralCategory");
+            if (customCentralCatInput) {
+                customCentralCatInput.value = "";
+                customCentralCatInput.removeAttribute("required");
+            }
+            const customCentralCatWrap = document.getElementById("customCentralCategoryWrap");
+            if (customCentralCatWrap) customCentralCatWrap.classList.add("d-none");
+
             const deptSubTypeSelect = document.getElementById("departmentalSubType");
             if (deptSubTypeSelect) deptSubTypeSelect.value = "";
 
@@ -3179,6 +3294,8 @@ Department of Information Technology, GMIU`;
             togglePlacementActType();
             toggleDepartmentalCustomSubType();
             togglePlacementCustomSubType();
+            toggleIntCollaborationCustomType();
+            toggleCentralCustomCategory();
 
             // Hide dynamic section and show placeholder
             const sections = document.querySelectorAll(".dynamic-report-section");
@@ -3203,8 +3320,10 @@ Department of Information Technology, GMIU`;
             const driveInput = document.getElementById("driveLink");
             photosInput.classList.remove("is-invalid");
             driveInput.classList.remove("is-invalid");
-            photosInput.setAttribute("required", "true");
-            driveInput.setAttribute("required", "true");
+            
+            const zipRadio = document.getElementById("photoMethodZip");
+            if (zipRadio) zipRadio.checked = true;
+            togglePhotoMethod();
 
             // Lock and hide sections 2, 3, and 4
             const secTwo = document.getElementById("secItemTwo");

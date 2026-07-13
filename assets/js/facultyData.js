@@ -307,5 +307,39 @@ const facultyData = [
         phone: "98254 05933",
         avatarClass: "av-bm",
         initials: "BDM"
+    },
+    {
+        id: "pdc",
+        name: "Prof. Prashansa Choksi",
+        designation: "Assistant Professor",
+        department: "Computer Engineering",
+        empId: "#5018",
+        email: "pdchoksi@gmiu.edu.in",
+        phone: "8141336361",
+        avatarClass: "PDC",
+        initials: "PDC"
+    },
+    {
+        id: "VDV",
+        name: "Prof. Vishrantiba Vadher",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#5021",
+        email: "vdvadher@gmiu.edu.in",
+        phone: "8141927737",
+        avatarClass: "VDV",
+        initials: "VDV"
+    },
+    {
+        id: "TDO",
+        name: "Prof. Tanvi Oza",
+        designation: "Assistant Professor",
+        department: "Computer Engineering",
+        empId: "#5023",
+        email: "tdoza@gmiu.edu.in",
+        phone: "9427111626",
+        avatarClass: "TDO",
+        initials: "TDO"
     }
+
 ];
