@@ -340,6 +340,203 @@ const facultyData = [
         phone: "9427111626",
         avatarClass: "TDO",
         initials: "TDO"
+    },
+    {
+        id: "mkc",
+        name: "Prof. Mayank Champaneri",
+        designation: "Assistant Professor",
+        department: "Computer Engineering",
+        empId: "#10657",
+        email: "mkchampaneri@gmiu.edu.in",
+        phone: "81415 20199",
+        avatarClass: "av-mkc",
+        initials: "MKC"
+    },
+    {
+        id: "mcs",
+        name: "Prof. Mansi Shanishwra",
+        designation: "Assistant Professor",
+        department: "Computer Engineering",
+        empId: "#10658",
+        email: "mcshanishwara@gmiu.edu.in",
+        phone: "99042 42221",
+        avatarClass: "av-mcs",
+        initials: "MCS"
+    },
+    {
+        id: "pmb",
+        name: "Prof. Priyanka Bhatt",
+        designation: "Teaching Assistant",
+        department: "Computer Engineering",
+        empId: "#10659",
+        email: "pmbhatt@gmiu.edu.in",
+        phone: "94082 56550",
+        avatarClass: "av-pmb",
+        initials: "PMB"
+    },
+    {
+        id: "nrj",
+        name: "Prof. Nandani Jadeja",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10660",
+        email: "nrjadeja@gmiu.edu.in",
+        phone: "79908 24431",
+        avatarClass: "av-nrj",
+        initials: "NRJ"
+    },
+    {
+        id: "pkg",
+        name: "Prof. Priyanka Gandhi",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10661",
+        email: "pkgandhi@gmiu.edu.in",
+        phone: "84603 20183",
+        avatarClass: "av-pkg",
+        initials: "PKG"
+    },
+    {
+        id: "rpj",
+        name: "Prof. Rahul Jani",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10662",
+        email: "rjani@gmiu.edu.in",
+        phone: "63534 74152",
+        avatarClass: "av-rpj",
+        initials: "RPJ"
+    },
+    {
+        id: "jam",
+        name: "Prof. Jainul Musani",
+        designation: "Assistant Professor",
+        department: "Computer Engineering",
+        empId: "#10663",
+        email: "jamusani@gmiu.edu.in",
+        phone: "94093 14004",
+        avatarClass: "av-jam",
+        initials: "JAM"
+    },
+    {
+        id: "jbs",
+        name: "Prof. Jeel Saraliya",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10664",
+        email: "jbsaraliya@gmiu.edu.in",
+        phone: "76229 92547",
+        avatarClass: "av-jbs",
+        initials: "JBS"
+    },
+    {
+        id: "dpz",
+        name: "Prof. Dipendrasinh Zala",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10665",
+        email: "dpzala@gmiu.edu.in",
+        phone: "63547 04061",
+        avatarClass: "av-dpz",
+        initials: "DPZ"
+    },
+    {
+        id: "dbv",
+        name: "Prof. Dhara Vadgama",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10666",
+        email: "dbvadgama@gmiu.edu.in",
+        phone: "76006 63547",
+        avatarClass: "av-dbv",
+        initials: "DBV"
+    },
+    {
+        id: "iap",
+        name: "Prof. Ishani Pattani",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10667",
+        email: "iapattani@gmiu.edu.in",
+        phone: "90544 44106",
+        avatarClass: "av-iap",
+        initials: "IAP"
+    },
+    {
+        id: "rfd",
+        name: "Prof. Remona Dennis",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10668",
+        email: "fdremona@gmiu.edu.in",
+        phone: "99097 30707",
+        avatarClass: "av-rfd",
+        initials: "RFD"
+    },
+    {
+        id: "hpg",
+        name: "Prof. Hirva Gohel",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10669",
+        email: "hpgohel@gmiu.edu.in",
+        phone: "94098 06364",
+        avatarClass: "av-hpg",
+        initials: "HPG"
+    },
+    {
+        id: "hds",
+        name: "Prof. Hitagna Shah",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10670",
+        email: "hdshah@gmiu.edu.in",
+        phone: "79849 32848",
+        avatarClass: "av-hds",
+        initials: "HDS"
+    },
+    {
+        id: "knr",
+        name: "Prof. Khushi Rupera",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10671",
+        email: "knrupera@gmiu.edu.in",
+        phone: "94267 51762",
+        avatarClass: "av-knr",
+        initials: "KNR"
+    },
+    {
+        id: "hag",
+        name: "Prof. Harsh Gohil",
+        designation: "Lecturer",
+        department: "Information Technology",
+        empId: "#10672",
+        email: "hagohil@gmiu.edu.in",
+        phone: "81571 31430",
+        avatarClass: "av-hag",
+        initials: "HAG"
+    },
+    {
+        id: "srm",
+        name: "Prof. Sahil Malek",
+        designation: "Lecturer",
+        department: "Information Technology",
+        empId: "#10673",
+        email: "srmalek@gmiu.edu.in",
+        phone: "95103 20090",
+        avatarClass: "av-srm",
+        initials: "SRM"
+    },
+    {
+        id: "hpj",
+        name: "Prof. Hansaniba Jadeja",
+        designation: "Lecturer",
+        department: "Information Technology",
+        empId: "#10674",
+        email: "hpjadeja@gmiu.edu.in",
+        phone: "79846 88579",
+        avatarClass: "av-hpj",
+        initials: "HPJ"
     }
-
 ];
