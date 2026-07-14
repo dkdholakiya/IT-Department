@@ -18,7 +18,7 @@ return [
 
     // Google Sheets Apps Script Web App URLs
     'sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbzAZyhE8DkK_DnrDhxj4fCx75TlDFRufpUyD7cgI6TXg39HC2hTgXXNGPaw_pg9m2UIiQ/exec',
-    'zero_sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbwJVs-JUh-TmNG0vbEhQcFnjFTQqUcw9YrHw55SAQF7DjbTFbBrUJYFmk7dz-nhQMzV/exec',
+    'zero_sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbw1zMUC-u2HP1S1ld58Dc4HtIEqWTrcR8h1G0wNfc6bod2KW3rX9knynzW99c2z0oWf/exec',
 
     // Password configuration
     'password_required' => 0, // Toggle: 1 to require password, 0 to bypass (matches verify-password.php current state)

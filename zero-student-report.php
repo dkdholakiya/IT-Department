@@ -57,7 +57,7 @@
     <!-- Grid overlay -->
     <div class="zs-grid-overlay" aria-hidden="true"></div>
 
-    <div class="zs-page">
+    <div class="zs-page" id="zsPage">
 
         <!-- ── Page Header ── -->
         <header class="rp-header">
@@ -71,9 +71,9 @@
                 </a>
 
                 <div class="rp-header-center">
-                    <div class="rp-dept-badge">
+                    <div class="rp-dept-badge" id="rp-dept-badge">
                         <span class="rp-badge-dot"></span>
-                        Department of Information Technology
+                        <span id="rp-dept-badge-text">Department of Information Technology</span>
                     </div>
                     <h1 class="rp-title">Zero Student Report</h1>
                     <p class="rp-subtitle">Gyanmanjari Innovative University &nbsp;·&nbsp; Academic Timetable Logs</p>
@@ -111,6 +111,14 @@
                 </div>
 
                 <div class="zs-form-body">
+                    <div class="form-group">
+                        <label>Department / Branch Select</label>
+                        <div class="zs-segment-control">
+                            <button type="button" class="segment-btn active" id="dept-it-btn" data-dept="Information Technology">Information Technology</button>
+                            <button type="button" class="segment-btn" id="dept-ce-btn" data-dept="Computer Engineering">Computer Engineering</button>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="entry-date">Session Date <span class="req">*</span></label>
                         <input type="text" id="entry-date" required>
@@ -155,7 +163,10 @@
 
                     <div class="form-group">
                         <label for="entry-branch">Branch/Class <span class="req">*</span></label>
-                        <input type="text" id="entry-branch" placeholder="e.g. CLASS C B.TECH(IT)(ICT)" required>
+                        <div class="search-select-wrap">
+                            <input type="text" id="entry-branch" placeholder="e.g. CLASS C B.TECH(IT)(ICT)" autocomplete="off" required>
+                            <div class="search-dropdown-list" id="branchDropdownList"></div>
+                        </div>
                     </div>
 
                     <div class="form-row-2 form-row-2-preserve">

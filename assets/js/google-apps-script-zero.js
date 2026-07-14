@@ -11,6 +11,7 @@
 // Column header row matching the design
 const HEADERS = [
   "DATE",
+  "DEPT",
   "CLAS",
   "SUBJECT",
   "FAC",
@@ -48,8 +49,8 @@ function initializeZeroSheet() {
   
   // 1. Title Row (Row 2) - "Zero students report as per Time Table"
   sheet.getRange("A2").setValue("Zero students report as per Time Table");
-  sheet.getRange("A2:I2").merge();
-  const titleRange = sheet.getRange("A2:I2");
+  sheet.getRange("A2:J2").merge();
+  const titleRange = sheet.getRange("A2:J2");
   titleRange.setFontFamily("Times New Roman");
   titleRange.setFontStyle("italic");
   titleRange.setFontWeight("bold");
@@ -83,8 +84,21 @@ function doPost(e) {
     const sheet = ss.getSheetByName("2026-27 ODD") || ss.getSheetByName("Sheet1") || ss.getSheets()[0];
     sheet.setName("2026-27 ODD");
 
-    // Auto-initialize layout if sheet is empty/cleared
-    if (sheet.getLastRow() < 4) {
+    // Auto-initialize layout if sheet is empty/cleared or if headers don't match the new design
+    let headersMatch = true;
+    try {
+      const currentHeaders = sheet.getRange(4, 1, 1, HEADERS.length).getValues()[0];
+      for (let i = 0; i < HEADERS.length; i++) {
+        if (currentHeaders[i] !== HEADERS[i]) {
+          headersMatch = false;
+          break;
+        }
+      }
+    } catch(err) {
+      headersMatch = false;
+    }
+
+    if (sheet.getLastRow() < 4 || !headersMatch) {
       initializeZeroSheet();
     }
 
@@ -104,7 +118,7 @@ function doPost(e) {
     let isDuplicate = false;
     
     if (lastRow >= 5) {
-      const values = sheet.getRange(5, 1, lastRow - 4, 9).getValues();
+      const values = sheet.getRange(5, 1, lastRow - 4, 10).getValues();
       const newDate = (data.date || "").toString().trim().toUpperCase();
       const newRoom = (data.room || "").toString().trim().toUpperCase();
       const newSubject = (data.subject || "").toString().trim().toUpperCase();
@@ -115,11 +129,11 @@ function doPost(e) {
       for (let i = 0; i < values.length; i++) {
         const rowVal = values[i];
         const existingDate = rowVal[0].toString().trim().toUpperCase();
-        const existingRoom = rowVal[1].toString().trim().toUpperCase();
-        const existingSubject = rowVal[2].toString().trim().toUpperCase();
-        const existingFaculty = rowVal[3].toString().trim().toUpperCase();
-        const existingTimeIn = rowVal[6].toString().trim().toUpperCase();
-        const existingTimeOut = rowVal[7].toString().trim().toUpperCase();
+        const existingRoom = rowVal[2].toString().trim().toUpperCase();
+        const existingSubject = rowVal[3].toString().trim().toUpperCase();
+        const existingFaculty = rowVal[4].toString().trim().toUpperCase();
+        const existingTimeIn = rowVal[7].toString().trim().toUpperCase();
+        const existingTimeOut = rowVal[8].toString().trim().toUpperCase();
         
         if (existingDate === newDate &&
             existingRoom === newRoom &&
@@ -143,17 +157,18 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // Build the new row matching columns A-I
+    // Build the new row matching columns A-J
     const newRow = [
-      data.date      || "-", // A: DATE (e.g. 26-Jul-2025)
-      data.room      || "-", // B: CLAS (e.g. FF-11)
-      data.subject   || "-", // C: SUBJECT (e.g. CV)
-      data.faculty   || "-", // D: FAC (e.g. HMP)
-      data.branch    || "-", // E: BRANCH (e.g. CLASS C B.TECH(IT)(ICT))
-      data.semester  || "-", // F: SEM. (e.g. 5)
-      data.timeIn    || "-", // G: TIME IN (e.g. 3:30:00 AM)
-      data.timeOut   || "-", // H: TIME OUT (e.g. 5:30:00 AM)
-      data.remarks   || "NO STUDENT" // I: REMARKS (e.g. NO STUDENT)
+      data.date      || "-", // A: DATE
+      data.dept      || "-", // B: DEPT
+      data.room      || "-", // C: CLAS
+      data.subject   || "-", // D: SUBJECT
+      data.faculty   || "-", // E: FAC
+      data.branch    || "-", // F: BRANCH
+      data.semester  || "-", // G: SEM.
+      data.timeIn    || "-", // H: TIME IN
+      data.timeOut   || "-", // I: TIME OUT
+      data.remarks   || "NO STUDENT" // J: REMARKS
     ];
 
     // Write row to sheet
@@ -167,11 +182,11 @@ function doPost(e) {
     rowRange.setHorizontalAlignment("center");
     rowRange.setBorder(true, true, true, true, true, true, "#cccccc", SpreadsheetApp.BorderStyle.SOLID);
 
-    // Left align BRANCH (Column E)
-    sheet.getRange(targetRow, 5).setHorizontalAlignment("left");
+    // Left align BRANCH (Column F)
+    sheet.getRange(targetRow, 6).setHorizontalAlignment("left");
 
     // Highlight REMARKS cell with light blue background matching the image
-    const remarksCell = sheet.getRange(targetRow, 9);
+    const remarksCell = sheet.getRange(targetRow, 10);
     remarksCell.setBackground("#a4c2f4");
     remarksCell.setFontColor("#000000");
     remarksCell.setFontWeight("bold");
