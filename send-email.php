@@ -90,6 +90,12 @@ if (!file_exists($config_file)) {
 }
 $config = include $config_file;
 
+$mail_enabled = $config['mail_enabled'] ?? 1;
+if ($mail_enabled == 0) {
+    echo json_encode(["success" => true, "message" => "Email transmission is disabled in config."]);
+    exit;
+}
+
 $email = $config['smtp_email'] ?? '';
 $appPassword = $config['smtp_password'] ?? '';
 
