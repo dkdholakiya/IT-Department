@@ -2343,6 +2343,105 @@ body.ce-active .multiselect-badge:hover {
     border-color: rgba(37, 99, 235, 0.6) !important;
 }
 
+/* ── CC Emails Multi-select Tag Input ── */
+.cc-select-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(6, 10, 28, 0.7);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    min-height: 46px;
+    cursor: text;
+    width: 100%;
+    position: relative;
+}
+
+.cc-select-wrap:focus-within {
+    border-color: var(--border-focus);
+    background: rgba(10, 16, 38, 0.9);
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+body.ce-active .cc-select-wrap:focus-within {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+}
+
+.cc-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.cc-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(192, 57, 43, 0.15);
+    border: 1px solid rgba(192, 57, 43, 0.3);
+    color: #fca5a5;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 50px;
+    transition: var(--transition);
+}
+
+body.ce-active .cc-tag {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    color: #93c5fd !important;
+}
+
+.cc-tag:hover {
+    background: rgba(192, 57, 43, 0.25);
+}
+
+body.ce-active .cc-tag:hover {
+    background: rgba(37, 99, 235, 0.25) !important;
+}
+
+.cc-tag-remove {
+    cursor: pointer;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.cc-tag-remove:hover {
+    color: #f87171;
+}
+
+body.ce-active .cc-tag-remove:hover {
+    color: #60a5fa !important;
+}
+
+#ccSearch {
+    flex: 1;
+    min-width: 150px;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    height: 30px !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: var(--text-primary) !important;
+}
+
+#ccSearch::placeholder {
+    color: var(--text-dim);
+}
+
 /* ── Dynamic Avatar Theme Backgrounds ── */
 .av-theme-red {
     background: linear-gradient(145deg, #3b1b22, #7f1d1d) !important;

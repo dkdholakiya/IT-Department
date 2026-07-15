@@ -345,27 +345,13 @@
                                         <div class="invalid-feedback text-danger">Please choose an option.</div>
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="form-label" for="coordinators">Faculty Coordinator(s) <span
+                                        <label class="form-label" for="coordSearch">Faculty Coordinator(s) <span
                                                 class="text-danger">*</span></label>
-                                        <div class="custom-multiselect-wrap">
+                                        <div class="cc-select-wrap">
                                             <input type="hidden" id="coordinators" name="coordinators" required>
-                                            
-                                            <!-- Custom UI representing the multi-select -->
-                                            <div class="multiselect-trigger form-control" id="coordEmailsTrigger">
-                                                <span class="placeholder-text" id="coordPlaceholder">Select Faculty Coordinator(s)...</span>
-                                                <div class="selected-badges-container d-none" id="coordSelectedBadges"></div>
-                                                <i class="bi bi-chevron-down multiselect-arrow-icon"></i>
-                                            </div>
-                                            
-                                            <div class="multiselect-dropdown" id="coordDropdown">
-                                                <div class="multiselect-search-wrap">
-                                                    <i class="bi bi-search search-icon"></i>
-                                                    <input type="text" class="form-control form-control-sm" id="coordSearchInput" placeholder="Search faculty member..." autocomplete="off">
-                                                </div>
-                                                <div class="multiselect-options-list" id="coordOptionsList">
-                                                    <!-- Javascript populated -->
-                                                </div>
-                                            </div>
+                                            <div class="cc-tags-container" id="coordTagsContainer"></div>
+                                            <input type="text" id="coordSearch" placeholder="Type or click to select coordinators..." autocomplete="off">
+                                            <div class="search-dropdown-list" id="coordDropdownList"></div>
                                             <div class="invalid-feedback">Faculty Coordinator is required.</div>
                                         </div>
                                     </div>
@@ -831,29 +817,15 @@
                                                     placeholder="Auto-filled from Section 1..." readonly>
                                             </div>
                                             <div class="col-12">
-                                                <label class="form-label" for="ccEmails">CC Emails (Multi-select)</label>
-                                                <div class="custom-multiselect-wrap">
+                                                <label class="form-label" for="ccSearch">CC Emails (Multi-select)</label>
+                                                <div class="cc-select-wrap">
                                                     <!-- Under original ID and name so the form/draft handlers work perfectly, but visually hidden -->
                                                     <select class="form-select d-none" id="ccEmails" name="ccEmails[]" multiple>
                                                         <!-- Dynamically populated options -->
                                                     </select>
-                                                    
-                                                    <!-- Custom UI representing the multi-select -->
-                                                    <div class="multiselect-trigger form-control" id="ccEmailsTrigger">
-                                                        <span class="placeholder-text" id="ccPlaceholder">Select Faculty Members...</span>
-                                                        <div class="selected-badges-container d-none" id="ccSelectedBadges"></div>
-                                                        <i class="bi bi-chevron-down multiselect-arrow-icon"></i>
-                                                    </div>
-                                                    
-                                                    <div class="multiselect-dropdown" id="ccDropdown">
-                                                        <div class="multiselect-search-wrap">
-                                                            <i class="bi bi-search search-icon"></i>
-                                                            <input type="text" class="form-control form-control-sm" id="ccSearchInput" placeholder="Search faculty member..." autocomplete="off">
-                                                        </div>
-                                                        <div class="multiselect-options-list" id="ccOptionsList">
-                                                            <!-- JavaScript will render option rows with checkboxes here -->
-                                                        </div>
-                                                    </div>
+                                                    <div class="cc-tags-container" id="ccTagsContainer"></div>
+                                                    <input type="text" id="ccSearch" placeholder="Type or click to select CC emails..." autocomplete="off">
+                                                    <div class="search-dropdown-list" id="ccDropdownList"></div>
                                                 </div>
                                                 <div class="form-text text-muted small mt-1">Select one or more faculty members to CC in the email copy.</div>
                                             </div>
@@ -1266,322 +1238,285 @@
         }
 
         // Populate CC emails multi-select list dynamically and initialize custom multiselect
+        // Populate CC emails multi-select list dynamically and initialize custom multiselect
         function populateCcEmails() {
+            const ccSearch = document.getElementById("ccSearch");
+            const ccDropdownList = document.getElementById("ccDropdownList");
+            const ccTagsContainer = document.getElementById("ccTagsContainer");
             const ccSelect = document.getElementById("ccEmails");
-            const optionsList = document.getElementById("ccOptionsList");
-            const trigger = document.getElementById("ccEmailsTrigger");
-            const dropdown = document.getElementById("ccDropdown");
-            const searchInput = document.getElementById("ccSearchInput");
-            const placeholder = document.getElementById("ccPlaceholder");
-            const badgesContainer = document.getElementById("ccSelectedBadges");
 
-            if (!ccSelect || !optionsList || !trigger || !dropdown || !searchInput || !placeholder || !badgesContainer || typeof facultyData === 'undefined') return;
+            if (!ccSearch || !ccDropdownList || !ccTagsContainer || !ccSelect || typeof facultyData === 'undefined') return;
 
-            // 1. Populate native hidden select
-            ccSelect.innerHTML = "";
-            facultyData.forEach(member => {
-                const option = document.createElement("option");
-                option.value = member.email;
-                option.textContent = `${member.name} (${member.email})`;
-                ccSelect.appendChild(option);
-            });
+            let selectedCCEmails = [];
 
-            // 2. Populate custom list options in the dropdown
-            optionsList.innerHTML = "";
-            facultyData.forEach(member => {
-                const optionItem = document.createElement("div");
-                optionItem.className = "multiselect-option-item";
-                optionItem.setAttribute("data-email", member.email);
-                optionItem.setAttribute("data-name", member.name.toLowerCase());
+            const ccSelectWrap = ccSearch.closest(".cc-select-wrap");
 
-                optionItem.innerHTML = `
-                    <div class="multiselect-checkbox-wrap">
-                        <input type="checkbox" value="${member.email}">
-                    </div>
-                    <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
-                    <div class="item-info">
-                        <div class="item-name">${member.name}</div>
-                        <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.empId}</div>
-                    </div>
-                `;
-
-                // Handle clicking anywhere on the option item row
-                optionItem.addEventListener("click", function(e) {
-                    const checkbox = optionItem.querySelector('input[type="checkbox"]');
-                    if (e.target !== checkbox) {
-                        checkbox.checked = !checkbox.checked;
-                    }
-                    toggleSelection(member.email, checkbox.checked);
-                });
-
-                optionsList.appendChild(optionItem);
-            });
-
-            // 3. Dropdown Toggle Click Event
-            trigger.addEventListener("click", function(e) {
-                e.stopPropagation();
-                const isOpen = dropdown.classList.toggle("show");
-                trigger.classList.toggle("active", isOpen);
-                if (isOpen) {
-                    searchInput.value = "";
-                    // Reset filter on open
-                    const items = optionsList.querySelectorAll(".multiselect-option-item");
-                    items.forEach(item => item.classList.remove("d-none"));
-                    searchInput.focus();
+            // Focus search input when clicking the wrapper container
+            ccSelectWrap.addEventListener("click", function (e) {
+                if (e.target === ccSelectWrap || e.target === ccTagsContainer) {
+                    ccSearch.focus();
                 }
             });
 
-            // 4. Click outside to close dropdown
-            document.addEventListener("click", function(e) {
-                if (!e.target.closest(".custom-multiselect-wrap")) {
-                    dropdown.classList.remove("show");
-                    trigger.classList.remove("active");
+            // Populate all emails initially
+            renderCCDropdown(facultyData);
+
+            ccSearch.addEventListener("focus", function () {
+                ccDropdownList.classList.add("show");
+                filterCCEmails();
+            });
+
+            ccSearch.addEventListener("input", function () {
+                ccDropdownList.classList.add("show");
+                filterCCEmails();
+            });
+
+            // Backspace to remove last tag if input is empty
+            ccSearch.addEventListener("keydown", function (e) {
+                if (e.key === "Backspace" && ccSearch.value === "" && selectedCCEmails.length > 0) {
+                    removeCCTag(selectedCCEmails[selectedCCEmails.length - 1]);
                 }
             });
 
-            // Prevent dropdown closure when clicking inside it
-            dropdown.addEventListener("click", function(e) {
-                e.stopPropagation();
+            // Close dropdown when clicking outside
+            document.addEventListener("click", function (e) {
+                if (!e.target.closest(".cc-select-wrap")) {
+                    ccDropdownList.classList.remove("show");
+                    ccSearch.value = "";
+                }
             });
 
-            // 5. Search Filter Input Event
-            searchInput.addEventListener("input", function() {
-                const query = searchInput.value.toLowerCase().trim();
-                const items = optionsList.querySelectorAll(".multiselect-option-item");
-                
-                items.forEach(item => {
-                    const name = item.getAttribute("data-name");
-                    const email = item.getAttribute("data-email").toLowerCase();
-                    if (name.includes(query) || email.includes(query)) {
-                        item.classList.remove("d-none");
-                    } else {
-                        item.classList.add("d-none");
-                    }
-                });
-            });
+            function filterCCEmails() {
+                const query = ccSearch.value.toLowerCase().trim();
+                // Filter out already selected emails
+                const available = facultyData.filter(member => !selectedCCEmails.includes(member.email));
 
-            // Toggle Selection logic helper
-            function toggleSelection(email, isSelected) {
-                // Update native select
-                Array.from(ccSelect.options).forEach(option => {
-                    if (option.value === email) {
-                        option.selected = isSelected;
-                    }
-                });
+                // Match by email or name
+                const filtered = available.filter(member =>
+                    member.email.toLowerCase().includes(query) ||
+                    member.name.toLowerCase().includes(query)
+                );
 
-                // Update custom UI badges
-                updateSelectedBadges();
-
-                // Trigger form/select change events to sync ASCII previews etc
-                const event = new Event('change', { bubbles: true });
-                ccSelect.dispatchEvent(event);
+                renderCCDropdown(filtered);
             }
 
-            // Sync badges rendering
-            function updateSelectedBadges() {
-                badgesContainer.innerHTML = "";
-                const selectedOptions = Array.from(ccSelect.selectedOptions);
-
-                if (selectedOptions.length === 0) {
-                    placeholder.classList.remove("d-none");
-                    badgesContainer.classList.add("d-none");
-                } else {
-                    placeholder.classList.add("d-none");
-                    badgesContainer.classList.remove("d-none");
-
-                    selectedOptions.forEach(opt => {
-                        const email = opt.value;
-                        // Find matching faculty member to get name
-                        const member = facultyData.find(m => m.email === email);
-                        const name = member ? member.name : email;
-
-                        const badge = document.createElement("span");
-                        badge.className = "multiselect-badge";
-                        badge.innerHTML = `
-                            <span>${name}</span>
-                            <span class="multiselect-badge-remove" data-email="${email}">
-                                <i class="bi bi-x-circle-fill"></i>
-                            </span>
-                        `;
-
-                        // Badge remove click event
-                        badge.querySelector(".multiselect-badge-remove").addEventListener("click", function(e) {
-                            e.stopPropagation();
-                            // Uncheck dropdown checkbox
-                            const checkbox = optionsList.querySelector(`input[value="${email}"]`);
-                            if (checkbox) checkbox.checked = false;
-                            
-                            toggleSelection(email, false);
-                        });
-
-                        badgesContainer.appendChild(badge);
-                    });
+            function renderCCDropdown(list) {
+                ccDropdownList.innerHTML = "";
+                if (list.length === 0) {
+                    ccDropdownList.innerHTML = `<div class="no-results-item">No matching emails found</div>`;
+                    return;
                 }
+
+                list.forEach(member => {
+                    const item = document.createElement("div");
+                    item.className = "dropdown-item";
+                    item.innerHTML = `
+                        <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
+                        <div class="item-info">
+                            <div class="item-name">${member.email}</div>
+                            <div class="item-desg">${member.name}</div>
+                        </div>
+                    `;
+                    item.addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        addCCTag(member.email);
+                    });
+                    ccDropdownList.appendChild(item);
+                });
+            }
+
+            function addCCTag(email) {
+                if (!selectedCCEmails.includes(email)) {
+                    selectedCCEmails.push(email);
+                    updateCCTagsUI();
+                }
+                ccSearch.value = "";
+                ccSearch.focus();
+                filterCCEmails();
+            }
+
+            function removeCCTag(email) {
+                selectedCCEmails = selectedCCEmails.filter(e => e !== email);
+                updateCCTagsUI();
+                ccSearch.focus();
+                filterCCEmails();
+            }
+
+            function updateCCTagsUI() {
+                ccTagsContainer.innerHTML = "";
+                
+                // Clear and update the hidden select options
+                ccSelect.innerHTML = "";
+                
+                selectedCCEmails.forEach(email => {
+                    const tag = document.createElement("div");
+                    tag.className = "cc-tag";
+                    tag.innerHTML = `
+                        <span>${email}</span>
+                        <button type="button" class="cc-tag-remove">&times;</button>
+                    `;
+                    tag.querySelector(".cc-tag-remove").addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        removeCCTag(email);
+                    });
+                    ccTagsContainer.appendChild(tag);
+                    
+                    const opt = document.createElement("option");
+                    opt.value = email;
+                    opt.selected = true;
+                    ccSelect.appendChild(opt);
+                });
+
+                // Trigger change event to update previews or form state
+                ccSelect.dispatchEvent(new Event('change', { bubbles: true }));
             }
 
             // Make updates globally accessible so loadDraft, reset etc. can trigger synchronization
             window.syncCcEmailsUi = function() {
-                // Update checkboxes based on native select state
-                const selectedEmails = Array.from(ccSelect.selectedOptions).map(opt => opt.value);
+                // Update selectedCCEmails based on native select state
+                selectedCCEmails = Array.from(ccSelect.options)
+                    .filter(opt => opt.selected)
+                    .map(opt => opt.value);
                 
-                const checkboxes = optionsList.querySelectorAll('input[type="checkbox"]');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = selectedEmails.includes(checkbox.value);
-                });
-
-                // Update badges
-                updateSelectedBadges();
+                // Update UI tags
+                updateCCTagsUI();
             };
         }
 
         // ── Faculty Coordinators Multiselect Dropdown ──
         function populateFacultyCoordinators() {
+            const coordSearch = document.getElementById("coordSearch");
+            const coordDropdownList = document.getElementById("coordDropdownList");
+            const coordTagsContainer = document.getElementById("coordTagsContainer");
             const coordInput = document.getElementById("coordinators");
-            const optionsList = document.getElementById("coordOptionsList");
-            const trigger = document.getElementById("coordEmailsTrigger");
-            const dropdown = document.getElementById("coordDropdown");
-            const searchInput = document.getElementById("coordSearchInput");
-            const placeholder = document.getElementById("coordPlaceholder");
-            const badgesContainer = document.getElementById("coordSelectedBadges");
 
-            if (!coordInput || !optionsList || !trigger || !dropdown || !searchInput || !placeholder || !badgesContainer || typeof facultyData === 'undefined') return;
+            if (!coordSearch || !coordDropdownList || !coordTagsContainer || !coordInput || typeof facultyData === 'undefined') return;
 
             let selectedCoordinators = [];
 
-            // Helper to toggle selection
-            function toggleCoordSelection(name, checked) {
-                if (checked) {
-                    if (!selectedCoordinators.includes(name)) {
-                        selectedCoordinators.push(name);
-                    }
-                } else {
-                    selectedCoordinators = selectedCoordinators.filter(item => item !== name);
+            const coordSelectWrap = coordSearch.closest(".cc-select-wrap");
+
+            // Focus search input when clicking the wrapper container
+            coordSelectWrap.addEventListener("click", function (e) {
+                if (e.target === coordSelectWrap || e.target === coordTagsContainer) {
+                    coordSearch.focus();
                 }
+            });
+
+            // Populate all options initially
+            renderCoordDropdown(facultyData);
+
+            coordSearch.addEventListener("focus", function () {
+                coordDropdownList.classList.add("show");
+                filterCoordinators();
+            });
+
+            coordSearch.addEventListener("input", function () {
+                coordDropdownList.classList.add("show");
+                filterCoordinators();
+            });
+
+            // Backspace to remove last tag if input is empty
+            coordSearch.addEventListener("keydown", function (e) {
+                if (e.key === "Backspace" && coordSearch.value === "" && selectedCoordinators.length > 0) {
+                    removeCoordTag(selectedCoordinators[selectedCoordinators.length - 1]);
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener("click", function (e) {
+                if (!e.target.closest(".cc-select-wrap")) {
+                    coordDropdownList.classList.remove("show");
+                    coordSearch.value = "";
+                }
+            });
+
+            function filterCoordinators() {
+                const query = coordSearch.value.toLowerCase().replace("prof.", "").replace("mr.", "").trim();
+                // Filter out already selected coordinators
+                const available = facultyData.filter(member => !selectedCoordinators.includes(member.name));
+
+                // Match by name
+                const filtered = available.filter(member =>
+                    member.name.toLowerCase().includes(query)
+                );
+
+                renderCoordDropdown(filtered);
+            }
+
+            function renderCoordDropdown(list) {
+                coordDropdownList.innerHTML = "";
+                if (list.length === 0) {
+                    coordDropdownList.innerHTML = `<div class="no-results-item">No faculty members found</div>`;
+                    return;
+                }
+
+                list.forEach(member => {
+                    const item = document.createElement("div");
+                    item.className = "dropdown-item";
+                    item.innerHTML = `
+                        <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
+                        <div class="item-info">
+                            <div class="item-name">${member.name}</div>
+                            <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.empId}</div>
+                        </div>
+                    `;
+                    item.addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        addCoordTag(member.name);
+                    });
+                    coordDropdownList.appendChild(item);
+                });
+            }
+
+            function addCoordTag(name) {
+                if (!selectedCoordinators.includes(name)) {
+                    selectedCoordinators.push(name);
+                    updateCoordTagsUI();
+                }
+                coordSearch.value = "";
+                coordSearch.focus();
+                filterCoordinators();
+            }
+
+            function removeCoordTag(name) {
+                selectedCoordinators = selectedCoordinators.filter(c => c !== name);
+                updateCoordTagsUI();
+                coordSearch.focus();
+                filterCoordinators();
+            }
+
+            function updateCoordTagsUI() {
+                coordTagsContainer.innerHTML = "";
                 
+                selectedCoordinators.forEach(name => {
+                    const tag = document.createElement("div");
+                    tag.className = "cc-tag";
+                    tag.innerHTML = `
+                        <span>${name}</span>
+                        <button type="button" class="cc-tag-remove">&times;</button>
+                    `;
+                    tag.querySelector(".cc-tag-remove").addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        removeCoordTag(name);
+                    });
+                    coordTagsContainer.appendChild(tag);
+                });
+
                 // Update hidden input value (comma-separated names)
                 coordInput.value = selectedCoordinators.join(', ');
-                
-                // Update badges
-                updateCoordBadges();
-                
-                // Trigger form sync
+
+                // Dispatch input event for real-time validation checks
+                coordInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+                // Sync email body preview
                 syncEmailPreview();
             }
-
-            function updateCoordBadges() {
-                badgesContainer.innerHTML = "";
-                if (selectedCoordinators.length === 0) {
-                    placeholder.classList.remove("d-none");
-                    badgesContainer.classList.add("d-none");
-                    trigger.classList.remove("has-badges");
-                    coordInput.value = "";
-                } else {
-                    placeholder.classList.add("d-none");
-                    badgesContainer.classList.remove("d-none");
-                    trigger.classList.add("has-badges");
-
-                    selectedCoordinators.forEach(name => {
-                        const badge = document.createElement("span");
-                        badge.className = "multiselect-badge";
-                        badge.innerHTML = `
-                            <span>${name}</span>
-                            <span class="multiselect-badge-remove" data-name="${name}">
-                                <i class="bi bi-x-circle-fill"></i>
-                            </span>
-                        `;
-                        badge.querySelector(".multiselect-badge-remove").addEventListener("click", function(e) {
-                            e.stopPropagation();
-                            toggleCoordSelection(name, false);
-                            // Uncheck in dropdown list
-                            const checkbox = optionsList.querySelector(`input[value="${name}"]`);
-                            if (checkbox) checkbox.checked = false;
-                        });
-                        badgesContainer.appendChild(badge);
-                    });
-                }
-                // Dispatch event so validation classes clear correctly
-                coordInput.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-
-            // Populate custom list options in the dropdown
-            optionsList.innerHTML = "";
-            facultyData.forEach(member => {
-                const optionItem = document.createElement("div");
-                optionItem.className = "multiselect-option-item";
-                optionItem.setAttribute("data-name", member.name.toLowerCase());
-
-                optionItem.innerHTML = `
-                    <div class="multiselect-checkbox-wrap">
-                        <input type="checkbox" value="${member.name}">
-                    </div>
-                    <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
-                    <div class="item-info">
-                        <div class="item-name">${member.name}</div>
-                        <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.empId}</div>
-                    </div>
-                `;
-
-                optionItem.addEventListener("click", function(e) {
-                    const checkbox = optionItem.querySelector('input[type="checkbox"]');
-                    if (e.target !== checkbox) {
-                        checkbox.checked = !checkbox.checked;
-                    }
-                    toggleCoordSelection(member.name, checkbox.checked);
-                });
-
-                optionsList.appendChild(optionItem);
-            });
-
-            // Toggle dropdown open/close
-            trigger.addEventListener("click", function (e) {
-                e.stopPropagation();
-                const isOpen = dropdown.classList.toggle("show");
-                trigger.classList.toggle("active", isOpen);
-                if (isOpen) {
-                    searchInput.value = "";
-                    const items = optionsList.querySelectorAll(".multiselect-option-item");
-                    items.forEach(item => item.classList.remove("d-none"));
-                    searchInput.focus();
-                }
-            });
-
-            // Filter search input
-            searchInput.addEventListener("input", function () {
-                const q = searchInput.value.toLowerCase().replace("prof.", "").replace("mr.", "").trim();
-                const items = optionsList.querySelectorAll(".multiselect-option-item");
-                items.forEach(item => {
-                    const name = item.getAttribute("data-name");
-                    if (name.includes(q)) {
-                        item.classList.remove("d-none");
-                    } else {
-                        item.classList.add("d-none");
-                    }
-                });
-            });
-
-            // Close on click outside
-            document.addEventListener("click", function (e) {
-                if (!e.target.closest(".custom-multiselect-wrap")) {
-                    dropdown.classList.remove("show");
-                    trigger.classList.remove("active");
-                }
-            });
-
-            dropdown.addEventListener("click", function(e) {
-                e.stopPropagation();
-            });
 
             // Expose a function to set coordinators programmatically (for loadSavedDraft)
             window.syncCoordinatorsUi = function(value) {
                 selectedCoordinators = value ? value.split(', ').map(s => s.trim()).filter(Boolean) : [];
-                coordInput.value = value;
-                updateCoordBadges();
-                
-                // Update dropdown checkboxes
-                const checkboxes = optionsList.querySelectorAll('input[type="checkbox"]');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = selectedCoordinators.includes(checkbox.value);
-                });
+                updateCoordTagsUI();
             };
         }
 
