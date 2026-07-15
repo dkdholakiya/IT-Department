@@ -538,5 +538,60 @@ const facultyData = [
         phone: "79846 88579",
         avatarClass: "av-hpj",
         initials: "HPJ"
+    },
+    {
+        id: "apv",
+        name: "Prof. Aarti Vandra",
+        designation: "Lecturer",
+        department: "Information Technology",
+        empId: "#10675",
+        email: "apvandra@gmiu.edu.in",
+        phone: "0",
+        avatarClass: "av-apv",
+        initials: "APV"
+    },
+    {
+        id: "dyv",
+        name: "Prof. Dhruvik Vaghela",
+        designation: "Lecturer",
+        department: "Information Technology",
+        empId: "#10676",
+        email: "dyvaghela@gmiu.edu.in",
+        phone: "0",
+        avatarClass: "av-dyv",
+        initials: "DYV"
+    },
+    {
+        id: "pjv",
+        name: "Prof. Prashant J. Viradiya",
+        designation: "HOD",
+        department: "Computer Engineering",
+        empId: "#5028",
+        email: "pjviradiya@gmiu.edu.in",
+        phone: "94296 41564",
+        avatarClass: "av-pjv",
+        initials: "PJV"
+    },
+    {
+        id: "blv",
+        name: "Prof. B. L. Vyas",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10677",
+        email: "blvyas@gmiu.edu.in",
+        phone: "0",
+        avatarClass: "av-blv",
+        initials: "BLV"
+    },
+    {
+        id: "Ac",
+        name: "Admin Ce",
+        designation: "Admin Ce",
+        department: "Computer Engineering",
+        empId: "#22222",
+        email: "admincecse@gmiu.edu.in",
+        phone: "0000000000",
+        avatarClass: "av-AC",
+        initials: "AC"
     }
 ];

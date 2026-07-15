@@ -785,7 +785,7 @@
                     </html>
                 `;
 
-                const recipientEmail = document.getElementById("facultyEmail").value || "adminit@gmiu.edu.in";
+                const recipientEmail = document.getElementById("facultyEmail").value || (localStorage.getItem("portal_dept") === "CE" ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
 
                 // Generate subject line dynamically based on active filters, excluding faculty name
                 const statusVal = document.getElementById("statusFilter").value;
@@ -810,7 +810,8 @@
                         to: recipientEmail,
                         cc: selectedCCEmails,
                         subject: emailSubject,
-                        html: emailHtml
+                        html: emailHtml,
+                        dept: (selectedFaculty && selectedFaculty.department === "Computer Engineering") ? "CE" : "IT"
                     })
                 })
                     .then(response => {

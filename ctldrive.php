@@ -1241,7 +1241,7 @@
                     });
                 });
 
-                const recipientEmail = document.getElementById("facultyEmail").value;
+                const recipientEmail = document.getElementById("facultyEmail").value || (localStorage.getItem("portal_dept") === "CE" ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
                 const emailSubject = `Google Drive Folder Scan Analysis Report`;
 
                 const emailHtml = `
@@ -1388,7 +1388,8 @@
                         to: recipientEmail,
                         cc: selectedCCEmails,
                         subject: emailSubject,
-                        html: emailHtml
+                        html: emailHtml,
+                        dept: (selectedFaculty && (selectedFaculty.initials === "DRC" || selectedFaculty.name.includes("Dhaval Chandarana")) ? (localStorage.getItem("portal_dept") === "CE" ? "CE" : "IT") : ((selectedFaculty && selectedFaculty.department === "Computer Engineering") ? "CE" : "IT"))
                     })
                 })
                     .then(response => response.json().then(data => {

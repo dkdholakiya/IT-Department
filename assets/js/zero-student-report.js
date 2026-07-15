@@ -170,12 +170,30 @@ function handleAddEntry() {
     `;
 
     // 1. Resolve Faculty Initials to get full name and email
-    const matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === facultyInitials);
-    const facultyName = matchedFaculty ? matchedFaculty.name : "Prof. " + facultyInitials;
-    const facultyEmail = matchedFaculty ? matchedFaculty.email : "adminit@gmiu.edu.in";
+    let facInitNormalized = facultyInitials.toUpperCase().trim();
+    if (facInitNormalized === "PHC") facInitNormalized = "PHK";
+    if (facInitNormalized === "PMM") facInitNormalized = "PMB";
 
+    let matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === facInitNormalized);
+    if (!matchedFaculty) {
+        const parenMatch = facultyInitials.match(/\(([^)]+)\)/);
+        if (parenMatch) {
+            let extractedInitials = parenMatch[1].toUpperCase().trim();
+            if (extractedInitials === "PHC") extractedInitials = "PHK";
+            if (extractedInitials === "PMM") extractedInitials = "PMB";
+            matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === extractedInitials);
+        }
+    }
+    if (!matchedFaculty) {
+        matchedFaculty = facultyData.find(f => {
+            const cleanName = f.name.replace(/Prof\.\s*/i, "").toUpperCase().trim();
+            return facInitNormalized.includes(cleanName) || facInitNormalized.includes(f.initials.toUpperCase());
+        });
+    }
     const deptName = matchedFaculty ? (matchedFaculty.department || currentDepartment) : currentDepartment;
     const deptAbbr = (deptName === "Computer Engineering") ? "CE" : "IT";
+    const facultyName = matchedFaculty ? matchedFaculty.name : "Prof. " + facultyInitials;
+    const facultyEmail = matchedFaculty ? matchedFaculty.email : (deptAbbr === "CE" ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
 
     // Convert 24h format (HH:MM) to formatted 12h format (H:MM:SS AM/PM) matching the sheet image
     const formatTimeTo12h = (timeStr) => {
@@ -212,9 +230,12 @@ function handleAddEntry() {
     // 2. Prepare payload for Google Sheets matching the Column A-J layout
     const sheetsPayload = {
         date: formattedDate,
+        srNo: "---",
         room: roomVal,
         subject: subjectVal,
-        faculty: facultyInitials,
+        faculty: facInitNormalized,
+        alteration: "---",
+        pt: "---",
         branch: branchVal,
         semester: semVal,
         timeIn: formatTimeTo12hWithSec(timeInVal),
@@ -355,8 +376,10 @@ function handleAddEntry() {
             body: JSON.stringify({
                 to: facultyEmail,
                 cc: [],
-                subject: `Zero Student As Per Timetable — ${facultyInitials} (${deptAbbr})`,
-                html: emailHtml
+                subject: `Zero Student As Per Timetable — ${facInitNormalized} (${deptAbbr})`,
+                html: emailHtml,
+                module: 'zero',
+                dept: deptAbbr
             })
         })
         .then(res => res.json())
@@ -475,7 +498,9 @@ function initFacultyAutocomplete() {
 }
 
 // ── PDF Import and Parsing Logic ──
-let pdfParsedData = []; // Store parsed records in global array
+let pdfParsedData = [];
+let pdfTotalRowsDetected = 0;
+let pdfEligibleRowsCount = 0;
 
 function initPdfImport() {
     const importBtn = document.getElementById("import-pdf-btn");
@@ -499,19 +524,20 @@ function initPdfImport() {
         const file = e.target.files[0];
         if (!file) return;
 
-        showToast("Reading PDF file...", "success");
+        showToast("Reading Excel file...", "success");
         try {
-            const data = await parsePDFFile(file);
-            if (data.length === 0) {
-                showToast("No matching records found in PDF for our faculty initials.", "error");
+            const data = await parseExcelFile(file);
+            processParsedExcelRows(data);
+            
+            if (pdfParsedData.length === 0) {
+                showToast("No matching records found in Excel for our faculty initials.", "error");
                 return;
             }
-            pdfParsedData = data;
             renderPreviewRows();
             openModal();
         } catch (error) {
-            console.error("PDF Parse error: ", error);
-            showToast("Failed to parse PDF: " + error.message, "error");
+            console.error("Excel Parse error: ", error);
+            showToast("Failed to parse Excel: " + error.message, "error");
         }
     });
 
@@ -521,6 +547,7 @@ function initPdfImport() {
         // Reset progress bar UI
         document.getElementById("importProgressContainer").style.display = "none";
         document.getElementById("importProgressBarFill").style.width = "0%";
+        document.getElementById("validationSummaryContainer").style.display = "none";
         importConfirmBtn.disabled = false;
         importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
         selectAllCheckbox.checked = true;
@@ -556,19 +583,9 @@ function renderPreviewRows() {
     if (!tbody) return;
 
     tbody.innerHTML = "";
-    
-    // Filter rows by current selected department
-    const filteredRows = [];
-    pdfParsedData.forEach((row, originalIndex) => {
-        const facInit = row.faculty.toUpperCase().trim();
-        const matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === facInit);
-        if (matchedFaculty && matchedFaculty.department === currentDepartment) {
-            filteredRows.push({ row, originalIndex });
-        }
-    });
 
-    if (filteredRows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--text-muted); padding: 24px;">No records found for the ${currentDepartment} department in this PDF.</td></tr>`;
+    if (pdfParsedData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-muted); padding: 24px;">No records with remarks found in this Excel file.</td></tr>`;
         importConfirmBtn.innerText = `Import Selected (0)`;
         importConfirmBtn.disabled = true;
         return;
@@ -576,30 +593,49 @@ function renderPreviewRows() {
 
     importConfirmBtn.disabled = false;
 
-    filteredRows.forEach(({ row, originalIndex }) => {
+    pdfParsedData.forEach((row, index) => {
         const tr = document.createElement("tr");
-        tr.id = `pdf-row-${originalIndex}`;
+        tr.id = `pdf-row-${index}`;
         
-        // Match faculty name
-        const facultyInitials = row.faculty.toUpperCase();
-        const matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === facultyInitials);
-        const facultyLabel = matchedFaculty ? `${matchedFaculty.name} (${facultyInitials})` : `Prof. ${facultyInitials}`;
+        // Checked by default only if auto-detected dept matches currently selected portal tab AND has a valid remark
+        const isCurrentDept = (row.selectedDept === currentDepartment);
+        const isCheckedStr = (isCurrentDept && row.hasValidRemark) ? "checked" : "";
 
-        const isCe = currentDepartment === "Computer Engineering";
-        const deptBadge = `<span class="zs-dept-badge-pill ${isCe ? 'ce' : 'it'}">${isCe ? 'CE' : 'IT'}</span>`;
+        // Build interactive dropdown select for Department
+        const deptSelectHtml = `
+            <select class="zs-row-dept-select" data-index="${index}" style="background: #0f172a; color: #f8fafc; border: 1px solid #334155; border-radius: 4px; padding: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">
+                <option value="Information Technology" ${row.selectedDept === "Information Technology" ? "selected" : ""}>IT</option>
+                <option value="Computer Engineering" ${row.selectedDept === "Computer Engineering" ? "selected" : ""}>CE</option>
+                <option value="" ${!row.selectedDept ? "selected" : ""}>Skip</option>
+            </select>
+        `;
 
         tr.innerHTML = `
-            <td style="text-align: center;"><input type="checkbox" class="pdf-row-checkbox" data-index="${originalIndex}" checked></td>
+            <td style="text-align: center;"><input type="checkbox" class="pdf-row-checkbox" data-index="${index}" ${isCheckedStr}></td>
+            <td style="text-align: center; color: var(--text-muted); font-size: 11px;">${index + 1}</td>
             <td>${row.formattedDate || row.date}</td>
             <td><strong>${row.room}</strong></td>
             <td>${row.subject}</td>
-            <td>${facultyLabel}${deptBadge}</td>
+            <td>${row.facultyLabel}</td>
             <td>${row.branch}</td>
             <td style="text-align: center;">${row.semester}</td>
             <td>${row.timeInStr} - ${row.timeOutStr}</td>
             <td style="text-align: center;">${row.noOfStudents}</td>
             <td style="font-size: 11px;">${row.remarks || "NO STUDENT"}</td>
+            <td style="text-align: center;">${deptSelectHtml}</td>
         `;
+
+        // Update selectedDept and check state on change
+        const selectEl = tr.querySelector(".zs-row-dept-select");
+        selectEl.addEventListener("change", (e) => {
+            row.selectedDept = e.target.value;
+            const cb = tr.querySelector(".pdf-row-checkbox");
+            if (cb) {
+                // Auto-check if department is selected, uncheck if set to Skip
+                cb.checked = (e.target.value !== "");
+            }
+            importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
+        });
 
         // Update select count on checkbox change
         const checkbox = tr.querySelector(".pdf-row-checkbox");
@@ -613,343 +649,129 @@ function renderPreviewRows() {
     importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
 }
 
-function isBranchMatching(branchStr, department) {
-    if (!branchStr) return false;
-    
-    // Strip dots, spaces, hyphens, and ampersands to normalize
-    const cleanBranch = branchStr.toUpperCase().replace(/[\.\s\-\&]/g, "");
-    
-    // Whitelist generic or sub-class layout remnants from multi-line PDF text
-    const genericKeywords = ["BTECH", "DIPLOMA", "MTECH", "BE", "B", "ENGINEERING", "SCIENCE", "BTECHCE", "BTECHIT"];
-    if (genericKeywords.includes(cleanBranch) || cleanBranch.includes("CLASS")) {
-        return true;
-    }
-    
-    if (department === "Computer Engineering") {
-        return (cleanBranch.includes("CE") && !cleanBranch.includes("SCIENCE")) || 
-               cleanBranch.includes("COMPUTER") || 
-               cleanBranch.includes("COMP") || 
-               cleanBranch.includes("CSE");
-    } else {
-        return cleanBranch.includes("IT") || 
-               cleanBranch.includes("INFORMATION") || 
-               cleanBranch.includes("INFO") || 
-               cleanBranch.includes("ICT");
-    }
-}
-
-async function parsePDFFile(file) {
+async function parseExcelFile(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = async function() {
+        reader.onload = function(e) {
             try {
-                const typedarray = new Uint8Array(this.result);
-                const pdf = await pdfjsLib.getDocument({data: typedarray}).promise;
-                let parsedRows = [];
-                let currentDate = "";
-                let globalHeaderColumns = [];
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                
+                const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false });
+                if (rows.length === 0) {
+                    resolve([]);
+                    return;
+                }
 
-                // Extract text coordinates from all pages
-                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-                    const page = await pdf.getPage(pageNum);
-                    const textContent = await page.getTextContent();
-                    const items = textContent.items;
-
-                    if (items.length === 0) continue;
-
-                    // Group by Y-coordinate
-                    let yGroups = {};
-                    items.forEach(item => {
-                        const str = item.str;
-                        if (str === undefined || str === null) return;
-                        const trimmed = str.trim();
-                        if (!trimmed) return;
-                        
-                        const y = Math.round(item.transform[5] * 10) / 10;
-                        const tolerance = 8.0;
-                        let matchedY = null;
-                        
-                        for (const key of Object.keys(yGroups)) {
-                            if (Math.abs(parseFloat(key) - y) <= tolerance) {
-                                matchedY = key;
-                                break;
-                            }
-                        }
-                        if (matchedY !== null) {
-                            yGroups[matchedY].push(item);
-                        } else {
-                            yGroups[y] = [item];
-                        }
-                    });
-
-                    // Sort rows top-to-bottom (Y descending)
-                    const sortedYs = Object.keys(yGroups).map(Number).sort((a, b) => b - a);
-                    const rows = sortedYs.map(y => {
-                        const rowItems = yGroups[y];
-                        rowItems.sort((a, b) => a.transform[4] - b.transform[4]);
-                        return rowItems;
-                    });
-
-                    // Merge adjacent horizontal elements in each row (like words inside a cell)
-                    const mergedRows = rows.map(mergeCloseItems);
-
-                    // Find headers on this page
-                    let headerRow = null;
-                    let headerRowIdx = -1;
-                    for (let r = 0; r < mergedRows.length; r++) {
-                        const row = mergedRows[r];
-                        const joinedText = row.map(item => item.str.toUpperCase()).join(" ");
-                        if (joinedText.includes("DATE") && (joinedText.includes("CLASS") || joinedText.includes("LAB")) && joinedText.includes("FACULTY")) {
-                            headerRow = row;
-                            headerRowIdx = r;
-                            break;
-                        }
-                    }
-
-                    if (!headerRow) {
-                        if (pageNum === 1) {
-                            throw new Error("Could not find table headers in PDF. Please verify PDF format.");
-                        }
-                    }
-
-                    // Identify column mapping dynamically using centers of header columns
-                    if (headerRow) {
-                        let headerColumns = headerRow;
-
-                        // Pre-process headerColumns to merge split headers like "TIME" + "IN" or "TIME" + "OUT"
-                        let cleanHeaders = [];
-                        for (let i = 0; i < headerColumns.length; i++) {
-                            const current = headerColumns[i];
-                            const currentStr = current.str.toUpperCase().trim();
-                            
-                            if (i < headerColumns.length - 1) {
-                                const next = headerColumns[i + 1];
-                                const nextStr = next.str.toUpperCase().trim();
-                                
-                                // Merge "TIME" + "IN"
-                                if (currentStr === "TIME" && nextStr === "IN") {
-                                    current.str = "TIME IN";
-                                    current.width = (next.transform[4] + next.width) - current.transform[4];
-                                    cleanHeaders.push(current);
-                                    i++; // skip next
-                                    continue;
-                                }
-                                // Merge "TIME" + "OUT"
-                                if (currentStr === "TIME" && nextStr === "OUT") {
-                                    current.str = "TIME OUT";
-                                    current.width = (next.transform[4] + next.width) - current.transform[4];
-                                    cleanHeaders.push(current);
-                                    i++; // skip next
-                                    continue;
-                                }
-                                // Merge "SR" + "NO" / "NO."
-                                if (currentStr === "SR" && (nextStr === "NO" || nextStr === "NO.")) {
-                                    current.str = "SR NO";
-                                    current.width = (next.transform[4] + next.width) - current.transform[4];
-                                    cleanHeaders.push(current);
-                                    i++; // skip next
-                                    continue;
-                                }
-                                // Merge "NO" + "OF" + "STUDENTS"
-                                if ((currentStr === "NO OF" || currentStr === "NO") && nextStr.includes("STUDENT")) {
-                                    current.str = "NO OF STUDENTS";
-                                    current.width = (next.transform[4] + next.width) - current.transform[4];
-                                    cleanHeaders.push(current);
-                                    i++; // skip next
-                                    continue;
-                                }
-                            }
-                            cleanHeaders.push(current);
-                        }
-                        globalHeaderColumns = cleanHeaders;
-                    }
-
-                    // Parse data rows below the header
-                    const dataRowsStartIdx = headerRow ? headerRowIdx + 1 : 0;
-                    for (let r = dataRowsStartIdx; r < mergedRows.length; r++) {
-                        const row = mergedRows[r];
-                        
-                        // Map each text item to its closest header column
-                        let colValues = Array(globalHeaderColumns.length || 14).fill("");
-                        row.forEach(item => {
-                            const itemCenter = item.transform[4] + item.width / 2;
-                            let closestHeaderIdx = 0;
-                            let minDistance = Infinity;
-                            
-                            globalHeaderColumns.forEach((h, idx) => {
-                                const hCenter = h.transform[4] + h.width / 2;
-                                const dist = Math.abs(hCenter - itemCenter);
-                                if (dist < minDistance) {
-                                    minDistance = dist;
-                                    closestHeaderIdx = idx;
-                                }
-                            });
-                            
-                            if (colValues[closestHeaderIdx]) {
-                                colValues[closestHeaderIdx] += " " + item.str;
-                            } else {
-                                colValues[closestHeaderIdx] = item.str;
-                            }
-                        });
-
-                        // Clean columns: trim values
-                        colValues = colValues.map(v => v ? v.trim() : "");
-
-                        let dateVal = "";
-                        let srNoVal = "";
-                        let roomVal = "";
-                        let subjectVal = "";
-                        let facultyInitials = "";
-                        let branchVal = "";
-                        let semVal = "";
-                        let timeInVal = "";
-                        let timeOutVal = "";
-                        let remarksVal = "";
-                        let studentsVal = "";
-
-                        // Map values based on header names
-                        if (globalHeaderColumns.length > 0) {
-                            globalHeaderColumns.forEach((colHeader, index) => {
-                                const hText = colHeader.str.toUpperCase();
-                                const val = colValues[index] || "";
-                                if (hText.includes("DATE")) dateVal = val;
-                                else if (hText.includes("SR") || hText.includes("NO.")) srNoVal = val;
-                                else if (hText.includes("CLASS") || hText.includes("LAB")) roomVal = val;
-                                else if (hText.includes("SUBJECT")) subjectVal = val;
-                                else if (hText.includes("FACULTY")) facultyInitials = val;
-                                else if (hText.includes("BRANCH")) branchVal = val;
-                                else if (hText.includes("SEM")) semVal = val;
-                                else if (hText.includes("TIME IN")) timeInVal = val;
-                                else if (hText.includes("TIME OUT")) timeOutVal = val;
-                                else if (hText.includes("REMARKS")) remarksVal = val;
-                                else if (hText.includes("STUDENT")) studentsVal = val;
-                            });
-                        }
-
-                        // Validate if this is a valid data row (SR NO must be a number)
-                        if (!srNoVal || isNaN(parseInt(srNoVal, 10))) {
-                            continue;
-                        }
-
-                        // Propagate date if empty
-                        if (dateVal) {
-                            currentDate = dateVal;
-                        } else {
-                            dateVal = currentDate;
-                        }
-
-                        // Skip if basic info is missing
-                        if (!facultyInitials || !roomVal || !subjectVal) {
-                            continue;
-                        }
-
-                        // Check if faculty initials match our department (facultyData)
-                        const facInit = facultyInitials.toUpperCase().trim();
-                        const matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === facInit);
-                        if (!matchedFaculty) {
-                            continue; // Skip
-                        }
-
-                        // Verify if the parsed branch matches the faculty's department keywords
-                        if (!isBranchMatching(branchVal, matchedFaculty.department)) {
-                            continue; // Skip if branch does not match
-                        }
-
-                        // Format Date to sheets format: DD-MMM-YYYY
-                        let parsedDateVal = "";
-                        let formattedDate = "";
-                        if (dateVal) {
-                            const cleanDate = dateVal.replace(/\s+/g, "");
-                            const match = cleanDate.match(/^(\d{1,2})[\/\-]?(\d{1,2})[\/\-]?(\d{4})$/);
-                            if (match) {
-                                let day = match[1].padStart(2, '0');
-                                let month = match[2].padStart(2, '0');
-                                let year = match[3];
-                                parsedDateVal = `${year}-${month}-${day}`;
-                                
-                                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                                const mIdx = parseInt(month, 10) - 1;
-                                if (mIdx >= 0 && mIdx < 12) {
-                                    formattedDate = `${parseInt(day, 10)}-${months[mIdx]}-${year}`;
-                                }
-                            } else {
-                                const dateParts = cleanDate.split(/[\/\-]/);
-                                if (dateParts.length === 3) {
-                                    let day = dateParts[0].padStart(2, '0');
-                                    let month = dateParts[1].padStart(2, '0');
-                                    let year = dateParts[2];
-                                    if (year.length === 2) year = "20" + year;
-                                    parsedDateVal = `${year}-${month}-${day}`;
-                                    
-                                    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                                    const mIdx = parseInt(month, 10) - 1;
-                                    if (mIdx >= 0 && mIdx < 12) {
-                                        formattedDate = `${parseInt(day, 10)}-${months[mIdx]}-${year}`;
-                                    }
-                                }
-                            }
-                        }
-                        if (!parsedDateVal) {
-                            parsedDateVal = new Date().toISOString().split("T")[0];
-                        }
-
-                        // Parse times to 24h
-                        const parseTimeTo24h = (timeStr) => {
-                            if (!timeStr) return "";
-                            const clean = timeStr.replace(/\s*[AP]M\s*/gi, "").trim();
-                            const parts = clean.split(":");
-                            if (parts.length < 2) return timeStr;
-                            let hrs = parseInt(parts[0], 10);
-                            const mins = parts[1];
-                            
-                            let isPm = timeStr.toLowerCase().includes("pm");
-                            if (!isPm && !timeStr.toLowerCase().includes("am")) {
-                                if (hrs === 12 || (hrs >= 1 && hrs <= 7)) {
-                                    isPm = true;
-                                }
-                            }
-
-                            if (isPm && hrs < 12) hrs += 12;
-                            if (!isPm && hrs === 12) hrs = 0;
-                            return `${hrs.toString().padStart(2, '0')}:${mins}`;
-                        };
-
-                        const timeIn24 = parseTimeTo24h(timeInVal);
-                        const timeOut24 = parseTimeTo24h(timeOutVal);
-
-                        // Differentiate zero-student classes from regular conducted classes
-                        const hasStudents = (studentsVal && !isNaN(parseInt(studentsVal, 10)) && parseInt(studentsVal, 10) > 0);
-                        const cleanRemarks = remarksVal.toUpperCase();
-                        
-                        // If it has students and remarks do not state 'NO STUDENT', skip it from the zero-student report list
-                        if (hasStudents && !cleanRemarks.includes("NO STUDENT") && !cleanRemarks.includes("NO STUDENTS")) {
-                            continue; 
-                        }
-
-                        // Determine remarks value: fallback to "NO STUDENT" only if student count matches zero class
-                        let finalRemarks = remarksVal;
-                        if (!finalRemarks) {
-                            finalRemarks = (studentsVal === "0" || studentsVal === "---" || !studentsVal) ? "NO STUDENT" : "-";
-                        }
-
-                        parsedRows.push({
-                            date: parsedDateVal,
-                            formattedDate: formattedDate || dateVal,
-                            room: roomVal.toUpperCase(),
-                            subject: subjectVal.toUpperCase(),
-                            faculty: facInit,
-                            branch: branchVal || "B TECH CIVIL",
-                            semester: semVal || "3",
-                            timeIn: timeIn24,
-                            timeOut: timeOut24,
-                            timeInStr: timeInVal,
-                            timeOutStr: timeOutVal,
-                            remarks: finalRemarks,
-                            noOfStudents: studentsVal || "---"
-                        });
+                // Find header row dynamically
+                let headerIdx = -1;
+                for (let r = 0; r < rows.length; r++) {
+                    const row = rows[r];
+                    if (row && row.some(cell => typeof cell === 'string' && cell.toUpperCase().includes("DATE")) &&
+                        row.some(cell => typeof cell === 'string' && cell.toUpperCase().includes("SR NO"))) {
+                        headerIdx = r;
+                        break;
                     }
                 }
 
+                if (headerIdx === -1) {
+                    throw new Error("Could not find table headers in Excel. Please verify Excel format.");
+                }
+
+                const headerRow = rows[headerIdx];
+                let colMapping = {
+                    date: -1, srNo: -1, room: -1, subject: -1, faculty: -1, alteration: -1, pt: -1,
+                    branch: -1, semester: -1, timeIn: -1, timeOut: -1, remarks: -1, students: -1
+                };
+
+                headerRow.forEach((cell, idx) => {
+                    if (!cell) return;
+                    const hText = cell.toString().toUpperCase().trim();
+                    if (hText.includes("DATE")) colMapping.date = idx;
+                    else if (hText.includes("SR") || hText.includes("NO.")) colMapping.srNo = idx;
+                    else if (hText.includes("CLASS") || hText.includes("LAB")) colMapping.room = idx;
+                    else if (hText.includes("SUBJECT")) colMapping.subject = idx;
+                    else if (hText.includes("FACULTY")) colMapping.faculty = idx;
+                    else if (hText.includes("ALTERATION")) colMapping.alteration = idx;
+                    else if (hText.includes("P/T")) colMapping.pt = idx;
+                    else if (hText.includes("BRANCH")) colMapping.branch = idx;
+                    else if (hText.includes("SEM")) colMapping.semester = idx;
+                    else if (hText.includes("TIME IN")) colMapping.timeIn = idx;
+                    else if (hText.includes("TIME OUT")) colMapping.timeOut = idx;
+                    else if (hText.includes("REMARKS")) colMapping.remarks = idx;
+                    else if (hText.includes("STUDENT")) colMapping.students = idx;
+                });
+
+                let parsedRows = [];
+                let currentDate = "";
+                let currentFormattedDate = "";
+                
+                const cleanStr = (val) => {
+                    if (val === undefined || val === null) return "";
+                    return val.toString().replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim();
+                };
+
+                let totalRows = 0;
+
+                for (let r = headerIdx + 1; r < rows.length; r++) {
+                    const row = rows[r];
+                    if (!row) continue;
+
+                    const srNoVal = colMapping.srNo !== -1 ? cleanStr(row[colMapping.srNo]) : "";
+                    const roomVal = colMapping.room !== -1 ? cleanStr(row[colMapping.room]) : "";
+                    const subjectVal = colMapping.subject !== -1 ? cleanStr(row[colMapping.subject]) : "";
+                    const rawDate = colMapping.date !== -1 ? cleanStr(row[colMapping.date]) : "";
+                    const facultyInitials = colMapping.faculty !== -1 ? cleanStr(row[colMapping.faculty]) : "";
+                    const alterationVal = colMapping.alteration !== -1 ? cleanStr(row[colMapping.alteration]) : "";
+                    const ptVal = colMapping.pt !== -1 ? cleanStr(row[colMapping.pt]) : "";
+                    const branchVal = colMapping.branch !== -1 ? cleanStr(row[colMapping.branch]) : "";
+                    const semVal = colMapping.semester !== -1 ? cleanStr(row[colMapping.semester]) : "";
+                    const timeInVal = colMapping.timeIn !== -1 ? cleanStr(row[colMapping.timeIn]) : "";
+                    const timeOutVal = colMapping.timeOut !== -1 ? cleanStr(row[colMapping.timeOut]) : "";
+                    const remarksVal = colMapping.remarks !== -1 ? cleanStr(row[colMapping.remarks]) : "";
+                    const studentsVal = colMapping.students !== -1 ? cleanStr(row[colMapping.students]) : "";
+
+                    if (!srNoVal && !roomVal && !subjectVal) continue;
+
+                    totalRows++;
+
+                    let parsedDateVal = "";
+                    let formattedDate = "";
+                    
+                    if (rawDate) {
+                        const res = formatPDFDate(rawDate);
+                        currentDate = res.parsed;
+                        currentFormattedDate = res.formatted;
+                    }
+                    parsedDateVal = currentDate;
+                    formattedDate = currentFormattedDate;
+
+                    const timeIn24 = parseTimeTo24h(timeInVal);
+                    const timeOut24 = parseTimeTo24h(timeOutVal);
+
+                    parsedRows.push({
+                        srNo: srNoVal,
+                        date: parsedDateVal,
+                        formattedDate: formattedDate || rawDate,
+                        room: roomVal.toUpperCase(),
+                        subject: subjectVal.toUpperCase(),
+                        faculty: facultyInitials.toUpperCase(),
+                        alteration: alterationVal,
+                        pt: ptVal.toUpperCase(),
+                        branch: branchVal,
+                        semester: semVal,
+                        timeIn: timeIn24,
+                        timeOut: timeOut24,
+                        timeInStr: timeInVal,
+                        timeOutStr: timeOutVal,
+                        remarks: remarksVal,
+                        noOfStudents: studentsVal || "---"
+                    });
+                }
+
+                pdfTotalRowsDetected = totalRows;
                 resolve(parsedRows);
             } catch (err) {
                 reject(err);
@@ -958,6 +780,158 @@ async function parsePDFFile(file) {
         reader.onerror = () => reject(new Error("FileReader read error."));
         reader.readAsArrayBuffer(file);
     });
+}
+
+function processParsedExcelRows(allRows) {
+    const normalizeBranch = (str) => {
+        if (!str) return "";
+        return str.toUpperCase().replace(/[\.\s\-\&]/g, "").replace(/[\(\)]/g, "");
+    };
+
+    let filtered = [];
+    let seenKeys = new Set();
+
+    allRows.forEach(row => {
+        const cleanRemarks = row.remarks ? row.remarks.trim() : "";
+        const hasValidRemark = (cleanRemarks !== "" && cleanRemarks !== "---");
+        row.hasValidRemark = hasValidRemark;
+
+        const clean = normalizeBranch(row.branch);
+
+        // 2. Resolve faculty initials with mappings for variations
+        let facInit = row.faculty.toUpperCase().trim();
+        if (facInit === "PHC") facInit = "PHK";
+        if (facInit === "PMM") facInit = "PMB";
+
+        let matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === facInit);
+        if (!matchedFaculty) {
+            const parenMatch = row.faculty.match(/\(([^)]+)\)/);
+            if (parenMatch) {
+                let extractedInitials = parenMatch[1].toUpperCase().trim();
+                if (extractedInitials === "PHC") extractedInitials = "PHK";
+                if (extractedInitials === "PMM") extractedInitials = "PMB";
+                matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === extractedInitials);
+            }
+        }
+        if (!matchedFaculty) {
+            matchedFaculty = facultyData.find(f => {
+                const cleanName = f.name.replace(/Prof\.\s*/i, "").toUpperCase().trim();
+                return facInit.includes(cleanName) || facInit.includes(f.initials.toUpperCase());
+            });
+        }
+
+        const facultyLabel = matchedFaculty ? `${matchedFaculty.name} (${matchedFaculty.initials})` : `Prof. ${facInit}`;
+        const facultyDept = matchedFaculty ? matchedFaculty.department : "";
+
+        // 3. Auto-detect department (CE/CSE vs IT vs Skip)
+        let autoDept = "";
+        if (clean) {
+            const cleanLower = clean.toLowerCase();
+            // Strict CE and CSE branch detection (excludes CS)
+            const isCeOrCse = cleanLower.includes("computerengineering") || cleanLower.includes("cse") || (cleanLower.includes("computerscience") && cleanLower.includes("engineering"));
+            const isItBranch = cleanLower.includes("it") || cleanLower.includes("info") || cleanLower.includes("ict");
+
+            if (isCeOrCse) {
+                autoDept = "Computer Engineering";
+            } else if (isItBranch) {
+                autoDept = "Information Technology";
+            } else {
+                // If branch is ambiguous, check the faculty's home department
+                if (facultyDept === "Computer Engineering" || facultyDept === "Information Technology") {
+                    autoDept = facultyDept;
+                }
+            }
+        }
+
+        const facultyEmail = matchedFaculty ? matchedFaculty.email : (autoDept === "Computer Engineering" ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
+
+        row.resolvedFaculty = matchedFaculty ? matchedFaculty.initials : facInit;
+        row.facultyLabel = facultyLabel;
+        row.facultyEmail = facultyEmail;
+        row.facultyDept = facultyDept;
+        row.autoDept = autoDept;
+        row.selectedDept = autoDept; // Default to auto-detected department
+
+        const uniqueKey = `${row.date}|${row.srNo}|${row.room}|${row.subject}|${row.resolvedFaculty}|${row.branch}|${row.semester}|${row.timeInStr}-${row.timeOutStr}`;
+        if (seenKeys.has(uniqueKey)) return;
+        seenKeys.add(uniqueKey);
+
+        filtered.push(row);
+    });
+
+    pdfParsedData = filtered;
+    pdfEligibleRowsCount = filtered.length;
+}
+
+function formatPDFDate(dateStr) {
+    if (!dateStr) return { parsed: "", formatted: "" };
+    const cleanDate = dateStr.replace(/\s+/g, "");
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    
+    const monthRegex = new RegExp(`^(\\d{1,2})[\\/\\-]?(${monthNames.join("|")})[\\/\\-]?(\\d{4})$`, "i");
+    const mMatch = cleanDate.match(monthRegex);
+    if (mMatch) {
+        const day = mMatch[1].padStart(2, '0');
+        const monthName = mMatch[2];
+        const year = mMatch[3];
+        const monthIndex = monthNames.findIndex(m => m.toLowerCase() === monthName.toLowerCase());
+        const monthNum = (monthIndex + 1).toString().padStart(2, '0');
+        return {
+            parsed: `${year}-${monthNum}-${day}`,
+            formatted: `${parseInt(day, 10)}-${monthNames[monthIndex]}-${year}`
+        };
+    }
+
+    const match = cleanDate.match(/^(\d{1,2})[\/\-]?(\d{1,2})[\/\-]?(\d{4})$/);
+    if (match) {
+        const day = match[1].padStart(2, '0');
+        const month = match[2].padStart(2, '0');
+        const year = match[3];
+        const mIdx = parseInt(month, 10) - 1;
+        if (mIdx >= 0 && mIdx < 12) {
+            return {
+                parsed: `${year}-${month}-${day}`,
+                formatted: `${parseInt(day, 10)}-${monthNames[mIdx]}-${year}`
+            };
+        }
+    }
+    
+    const dateParts = cleanDate.split(/[\/\-]/);
+    if (dateParts.length === 3) {
+        let day = dateParts[0].padStart(2, '0');
+        let month = dateParts[1].padStart(2, '0');
+        let year = dateParts[2];
+        if (year.length === 2) year = "20" + year;
+        const mIdx = parseInt(month, 10) - 1;
+        if (mIdx >= 0 && mIdx < 12) {
+            return {
+                parsed: `${year}-${month}-${day}`,
+                formatted: `${parseInt(day, 10)}-${monthNames[mIdx]}-${year}`
+            };
+        }
+    }
+    
+    return { parsed: "", formatted: "" };
+}
+
+function parseTimeTo24h(timeStr) {
+    if (!timeStr) return "";
+    const clean = timeStr.replace(/\s*[AP]M\s*/gi, "").trim();
+    const parts = clean.split(":");
+    if (parts.length < 2) return timeStr;
+    let hrs = parseInt(parts[0], 10);
+    const mins = parts[1];
+    
+    let isPm = timeStr.toLowerCase().includes("pm");
+    if (!isPm && !timeStr.toLowerCase().includes("am")) {
+        if (hrs === 12 || (hrs >= 1 && hrs <= 7)) {
+            isPm = true;
+        }
+    }
+
+    if (isPm && hrs < 12) hrs += 12;
+    if (!isPm && hrs === 12) hrs = 0;
+    return `${hrs.toString().padStart(2, '0')}:${mins}`;
 }
 
 function mergeCloseItems(items) {
@@ -1036,18 +1010,30 @@ async function handleBatchImport() {
         }
 
         try {
-            const matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === row.faculty.toUpperCase());
-            const facultyName = matchedFaculty ? matchedFaculty.name : "Prof. " + row.faculty;
-            const facultyEmail = matchedFaculty ? matchedFaculty.email : "adminit@gmiu.edu.in";
+            // Get selected department from the dropdown of the current row
+            let targetDept = row.selectedDept;
+            if (tr) {
+                const selectEl = tr.querySelector(".zs-row-dept-select");
+                if (selectEl) {
+                    targetDept = selectEl.value;
+                }
+            }
 
-            const deptName = matchedFaculty ? (matchedFaculty.department || currentDepartment) : currentDepartment;
-            const deptAbbr = (deptName === "Computer Engineering") ? "CE" : "IT";
+            if (!targetDept) {
+                // If set to Skip, bypass this row
+                continue;
+            }
+
+            const deptAbbr = (targetDept === "Computer Engineering") ? "CE" : "IT";
 
             const sheetsPayload = {
                 date: row.formattedDate,
+                srNo: row.srNo || "---",
                 room: row.room,
                 subject: row.subject,
-                faculty: row.faculty,
+                faculty: row.resolvedFaculty,
+                alteration: row.alteration || "---",
+                pt: row.pt || "---",
                 branch: row.branch,
                 semester: row.semester,
                 timeIn: formatTimeTo12hWithSec(row.timeIn),
@@ -1080,7 +1066,7 @@ async function handleBatchImport() {
                                 <table style="width: 100%; border-collapse: collapse; font-size: 13px; color: #334155;">
                                     <tr style="border-bottom: 1px solid #e2e8f0;">
                                         <td style="padding: 10px 0; font-weight: bold; width: 150px; color: #64748b; text-transform: uppercase;">Faculty Initials</td>
-                                        <td style="padding: 10px 0; font-weight: 600; color: #0f172a;">${row.faculty} (${facultyName})</td>
+                                        <td style="padding: 10px 0; font-weight: 600; color: #0f172a;">${row.resolvedFaculty} (${row.facultyName})</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #e2e8f0;">
                                         <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Session Date</td>
@@ -1164,10 +1150,12 @@ async function handleBatchImport() {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        to: facultyEmail,
+                        to: row.facultyEmail,
                         cc: [],
-                        subject: `Zero Student As Per Timetable — ${row.faculty} (${deptAbbr})`,
-                        html: emailHtml
+                        subject: `Zero Student As Per Timetable — ${row.resolvedFaculty} (${deptAbbr})`,
+                        html: emailHtml,
+                        module: 'zero',
+                        dept: deptAbbr
                     })
                 });
             } catch (emailErr) {
@@ -1204,7 +1192,37 @@ async function handleBatchImport() {
     importBtn.disabled = false;
     importBtn.innerText = "Import Selected (0)";
 
-    let finalMsg = `PDF Import complete: ${successCount} success`;
+    // Show and populate Validation Summary
+    const valSummary = document.getElementById("validationSummaryContainer");
+    if (valSummary) {
+        valSummary.style.display = "block";
+        document.getElementById("val-total").innerText = pdfTotalRowsDetected;
+        document.getElementById("val-eligible").innerText = pdfEligibleRowsCount;
+        document.getElementById("val-imported").innerText = successCount;
+        document.getElementById("val-missing").innerText = failCount;
+        document.getElementById("val-duplicate").innerText = duplicateCount;
+        
+        const statusBox = document.getElementById("val-status-box");
+        const detailsBox = document.getElementById("val-mismatch-details");
+        
+        if (failCount === 0) {
+            statusBox.style.background = "rgba(16, 185, 129, 0.2)";
+            statusBox.style.color = "#10b981";
+            statusBox.style.border = "1px solid #10b981";
+            statusBox.innerText = "✓ Perfect Match";
+            detailsBox.style.display = "none";
+        } else {
+            statusBox.style.background = "rgba(239, 68, 68, 0.2)";
+            statusBox.style.color = "#ef4444";
+            statusBox.style.border = "1px solid #ef4444";
+            statusBox.innerText = "✗ Mismatch";
+            
+            detailsBox.style.display = "block";
+            detailsBox.innerHTML = `<strong>Error Details:</strong><br>` + errorDetails.join("<br>");
+        }
+    }
+
+    let finalMsg = `Excel Import complete: ${successCount} success`;
     if (duplicateCount > 0) finalMsg += `, ${duplicateCount} skipped duplicates`;
     if (failCount > 0) finalMsg += `, ${failCount} failed`;
     
@@ -1299,11 +1317,13 @@ function setDepartment(dept) {
         if (ceBtn) ceBtn.classList.add("active");
         if (pageContainer) pageContainer.classList.add("ce-active");
         if (badgeText) badgeText.innerText = "Department of Computer Engineering";
+        localStorage.setItem('portal_dept', 'CE');
     } else {
         if (ceBtn) ceBtn.classList.remove("active");
         if (itBtn) itBtn.classList.add("active");
         if (pageContainer) pageContainer.classList.remove("ce-active");
         if (badgeText) badgeText.innerText = "Department of Information Technology";
+        localStorage.setItem('portal_dept', 'IT');
     }
 
     // Refresh Branch suggestions

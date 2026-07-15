@@ -11,10 +11,16 @@ if (!defined('SECURE_ACCESS')) {
 }
 
 return [
-    // Gmail SMTP credentials
+    // IT Department Gmail SMTP credentials
     'smtp_email' => 'adminit@gmiu.edu.in',
     'smtp_password' => 'gevb rfuj sxoj lwwc',
-    'mail_enabled' => 0, // Toggle: 1 to enable email system, 0 to disable
+
+    // CE Department Gmail SMTP credentials
+    'smtp_email_ce' => 'admincecse@gmiu.edu.in',
+    'smtp_password_ce' => 'wrws fjmw sqig bxxn',
+
+    'mail_enabled' => 1, // Toggle: 1 to enable email system, 0 to disable
+    'zero_mail_enabled' => 0, // Toggle: 1 to enable email for zero student report, 0 to disable
 
     // Google Sheets Apps Script Web App URLs
     'sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbzAZyhE8DkK_DnrDhxj4fCx75TlDFRufpUyD7cgI6TXg39HC2hTgXXNGPaw_pg9m2UIiQ/exec',

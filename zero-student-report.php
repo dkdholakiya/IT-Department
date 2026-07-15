@@ -26,11 +26,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    <!-- PDF.js CDN Library for client-side PDF reading -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-    </script>
+    <!-- SheetJS CDN Library for client-side Excel reading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <!-- Scoped Page Stylesheet -->
     <link rel="stylesheet" href="assets/css/zero-student-report.css">
@@ -104,9 +101,9 @@
                             <polyline points="17 8 12 3 7 8"/>
                             <line x1="12" y1="3" x2="12" y2="15"/>
                         </svg>
-                        <span>Import PDF</span>
+                        <span>Import Excel</span>
                     </button>
-                    <input type="file" id="pdf-import-input" accept=".pdf" style="display: none;">
+                    <input type="file" id="pdf-import-input" accept=".xlsx, .xls" style="display: none;">
                 </div>
 
                 <div class="zs-form-body">
@@ -227,11 +224,11 @@
         // Redundant FAB toggle logic removed
     </script>
 
-    <!-- ── PDF Import Preview Modal ── -->
+    <!-- ── Excel Import Preview Modal ── -->
     <div class="zs-modal-overlay" id="pdfPreviewModal">
         <div class="zs-modal-card">
             <div class="zs-modal-header">
-                <h3>Verify Parsed PDF Records</h3>
+                <h3>Verify Parsed Excel Records</h3>
                 <button class="zs-modal-close" id="pdfModalClose">&times;</button>
             </div>
             <div class="zs-modal-body">
@@ -248,11 +245,30 @@
                     </div>
                 </div>
 
+                <!-- Validation Summary Section -->
+                <div class="zs-validation-summary-container" id="validationSummaryContainer" style="display: none; margin-top: 15px; padding: 12px; background: rgba(30, 41, 59, 0.5); border-radius: 8px; border: 1px solid #334155; font-size: 13px;">
+                    <h4 style="margin: 0 0 8px 0; color: #f8fafc; font-size: 14px; font-weight: 600;">Validation Summary</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; color: #94a3b8; font-family: monospace;">
+                        <div>Total rows detected in Excel: <span id="val-total" style="color: #f8fafc; font-weight: bold;">0</span></div>
+                        <div>Eligible rows after filtering: <span id="val-eligible" style="color: #f8fafc; font-weight: bold;">0</span></div>
+                        <div>Rows imported: <span id="val-imported" style="color: #34d399; font-weight: bold;">0</span></div>
+                        <div>Missing rows: <span id="val-missing" style="color: #ef4444; font-weight: bold;">0</span></div>
+                        <div>Duplicate rows: <span id="val-duplicate" style="color: #fb923c; font-weight: bold;">0</span></div>
+                    </div>
+                    <div id="val-status-box" style="margin-top: 12px; padding: 8px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 14px;">
+                        <!-- Status text here -->
+                    </div>
+                    <div id="val-mismatch-details" style="display: none; margin-top: 10px; max-height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; color: #ef4444; padding: 6px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                        <!-- List of missing/duplicate records -->
+                    </div>
+                </div>
+
                 <div class="zs-table-container">
                     <table class="zs-modal-table">
                         <thead>
                             <tr>
                                 <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-pdf-rows" checked></th>
+                                <th style="width: 40px; text-align: center;">#</th>
                                 <th>Date</th>
                                 <th>Class/Lab</th>
                                 <th>Subject</th>
@@ -262,6 +278,7 @@
                                 <th>Time</th>
                                 <th>Students</th>
                                 <th>Remarks</th>
+                                <th style="text-align: center;">Dept</th>
                             </tr>
                         </thead>
                         <tbody id="pdf-parsed-rows-body">

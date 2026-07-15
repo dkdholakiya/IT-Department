@@ -93,7 +93,6 @@
                 <ol class="breadcrumb bg-transparent p-0 m-0 rp-breadcrumb-list">
                     <li class="breadcrumb-item"><a href="index" class="text-decoration-none text-muted">Home</a>
                     </li>
-                    <li class="breadcrumb-item active text-danger" aria-current="page">Report Management System</li>
                 </ol>
             </nav>
         </div>
@@ -1218,7 +1217,16 @@
             document.getElementById("facultyEmpId").value = member.empId;
             document.getElementById("facultyEmail").value = member.email;
             document.getElementById("facultyPhone").value = "+91 " + member.phone;
-            document.getElementById("facultyDept").value = member.department || "Information Technology";
+            let deptVal = member.department || "Information Technology";
+            if (member.initials === "DRC" || member.name.includes("Dhaval Chandarana")) {
+                const activeDept = localStorage.getItem("portal_dept");
+                if (activeDept === "CE") {
+                    deptVal = "Computer Engineering";
+                } else if (activeDept === "IT") {
+                    deptVal = "Information Technology";
+                }
+            }
+            document.getElementById("facultyDept").value = deptVal;
 
             // Sync to Section 7 Block A (Reference Faculty Email details)
             document.getElementById("refName").value = member.name;
@@ -2826,7 +2834,8 @@ Department of CE & IT, GMIU`;
                     to: to,
                     cc: selectedCcEmails,
                     subject: subject,
-                    html: htmlMessage
+                    html: htmlMessage,
+                    dept: document.getElementById("facultyDept").value === "Computer Engineering" ? "CE" : "IT"
                 })
             })
                 .then(res => res.json())
@@ -3110,7 +3119,8 @@ Department of CE & IT, GMIU`;
                             }
                         ],
                         attachment: attachInfo.attachment,
-                        filename: attachInfo.filename
+                        filename: attachInfo.filename,
+                        dept: document.getElementById("facultyDept").value === "Computer Engineering" ? "CE" : "IT"
                     })
                 }).then(res => res.json());
             })

@@ -983,8 +983,8 @@ body {
     background: rgba(11, 21, 48, 0.96);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-md);
-    width: 100%;
-    max-width: 900px;
+    width: 95%;
+    max-width: 1300px;
     max-height: 85vh;
     display: flex;
     flex-direction: column;

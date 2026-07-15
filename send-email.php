@@ -96,8 +96,26 @@ if ($mail_enabled == 0) {
     exit;
 }
 
+$module = $input['module'] ?? '';
+if ($module === 'zero') {
+    $zero_mail_enabled = $config['zero_mail_enabled'] ?? 1;
+    if ($zero_mail_enabled == 0) {
+        echo json_encode(["success" => true, "message" => "Email transmission is disabled for Zero Student module."]);
+        exit;
+    }
+}
+
+$dept = $input['dept'] ?? '';
+
+// Default to IT SMTP credentials
 $email = $config['smtp_email'] ?? '';
 $appPassword = $config['smtp_password'] ?? '';
+
+// If target department is Computer Engineering, use CE credentials
+if (strtoupper($dept) === 'CE') {
+    $email = $config['smtp_email_ce'] ?? $email;
+    $appPassword = $config['smtp_password_ce'] ?? $appPassword;
+}
 
 if (empty($email) || empty($appPassword)) {
     http_response_code(500);

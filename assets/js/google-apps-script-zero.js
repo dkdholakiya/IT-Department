@@ -11,15 +11,19 @@
 // Column header row matching the design
 const HEADERS = [
   "DATE",
-  "DEPT",
-  "CLAS",
+  "SR NO",
+  "CLASS/LAB",
   "SUBJECT",
-  "FAC",
+  "FACULTY",
+  "ALTERATION",
+  "P/T",
   "BRANCH",
   "SEM.",
   "TIME IN",
   "TIME OUT",
-  "REMARKS"
+  "REMARKS",
+  "NO OF STUDENTS",
+  "REMARK (Academic Convener)"
 ];
 
 /**
@@ -47,10 +51,10 @@ function initializeZeroSheet() {
   sheet.setRowHeight(3, 20); // Spacer Row 3
   sheet.setRowHeight(4, 30); // Header Row 4
   
-  // 1. Title Row (Row 2) - "Zero students report as per Time Table"
-  sheet.getRange("A2").setValue("Zero students report as per Time Table");
-  sheet.getRange("A2:J2").merge();
-  const titleRange = sheet.getRange("A2:J2");
+  // 1. Title Row (Row 2) - matching screenshot exactly
+  sheet.getRange("A2").setValue("(ENG.) Lobby super-vision late time faculty report and remarks (2025-26)");
+  sheet.getRange("A2:N2").merge();
+  const titleRange = sheet.getRange("A2:N2");
   titleRange.setFontFamily("Times New Roman");
   titleRange.setFontStyle("italic");
   titleRange.setFontWeight("bold");
@@ -118,7 +122,7 @@ function doPost(e) {
     let isDuplicate = false;
     
     if (lastRow >= 5) {
-      const values = sheet.getRange(5, 1, lastRow - 4, 10).getValues();
+      const values = sheet.getRange(5, 1, lastRow - 4, 14).getValues();
       const newDate = (data.date || "").toString().trim().toUpperCase();
       const newRoom = (data.room || "").toString().trim().toUpperCase();
       const newSubject = (data.subject || "").toString().trim().toUpperCase();
@@ -132,8 +136,8 @@ function doPost(e) {
         const existingRoom = rowVal[2].toString().trim().toUpperCase();
         const existingSubject = rowVal[3].toString().trim().toUpperCase();
         const existingFaculty = rowVal[4].toString().trim().toUpperCase();
-        const existingTimeIn = rowVal[7].toString().trim().toUpperCase();
-        const existingTimeOut = rowVal[8].toString().trim().toUpperCase();
+        const existingTimeIn = rowVal[9].toString().trim().toUpperCase();
+        const existingTimeOut = rowVal[10].toString().trim().toUpperCase();
         
         if (existingDate === newDate &&
             existingRoom === newRoom &&
@@ -157,18 +161,22 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // Build the new row matching columns A-J
+    // Build the new row matching the 14 columns
     const newRow = [
-      data.date      || "-", // A: DATE
-      data.dept      || "-", // B: DEPT
-      data.room      || "-", // C: CLAS
-      data.subject   || "-", // D: SUBJECT
-      data.faculty   || "-", // E: FAC
-      data.branch    || "-", // F: BRANCH
-      data.semester  || "-", // G: SEM.
-      data.timeIn    || "-", // H: TIME IN
-      data.timeOut   || "-", // I: TIME OUT
-      data.remarks   || "NO STUDENT" // J: REMARKS
+      data.date         || "-", // A: DATE
+      data.srNo         || "-", // B: SR NO
+      data.room         || "-", // C: CLASS/LAB
+      data.subject      || "-", // D: SUBJECT
+      data.faculty      || "-", // E: FACULTY
+      data.alteration   || "---", // F: ALTERATION
+      data.pt           || "---", // G: P/T
+      data.branch       || "-", // H: BRANCH
+      data.semester     || "-", // I: SEM.
+      data.timeIn       || "-", // J: TIME IN
+      data.timeOut      || "-", // K: TIME OUT
+      data.remarks      || "NO STUDENT", // L: REMARKS
+      data.noOfStudents || "---", // M: NO OF STUDENTS
+      data.convenerRemark || "---" // N: REMARK (Academic Convener)
     ];
 
     // Write row to sheet
@@ -182,11 +190,11 @@ function doPost(e) {
     rowRange.setHorizontalAlignment("center");
     rowRange.setBorder(true, true, true, true, true, true, "#cccccc", SpreadsheetApp.BorderStyle.SOLID);
 
-    // Left align BRANCH (Column F)
-    sheet.getRange(targetRow, 6).setHorizontalAlignment("left");
+    // Left align BRANCH (Column H / Column 8)
+    sheet.getRange(targetRow, 8).setHorizontalAlignment("left");
 
-    // Highlight REMARKS cell with light blue background matching the image
-    const remarksCell = sheet.getRange(targetRow, 10);
+    // Highlight REMARKS cell with light blue background matching the image (Column L / Column 12)
+    const remarksCell = sheet.getRange(targetRow, 12);
     remarksCell.setBackground("#a4c2f4");
     remarksCell.setFontColor("#000000");
     remarksCell.setFontWeight("bold");
