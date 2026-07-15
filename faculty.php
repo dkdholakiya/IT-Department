@@ -122,18 +122,39 @@
                 let cardsHtml = "";
                 let modalsHtml = "";
 
+                const getAvatarClass = (member) => {
+                    const legacyClasses = ["av-dc", "av-sw", "av-eu", "av-tv"];
+                    if (member.avatarClass && legacyClasses.includes(member.avatarClass)) {
+                        return member.avatarClass;
+                    }
+                    const colors = [
+                        'av-theme-red', 'av-theme-blue', 'av-theme-purple', 
+                        'av-theme-teal', 'av-theme-green', 'av-theme-orange', 
+                        'av-theme-indigo', 'av-theme-cyan', 'av-theme-pink'
+                    ];
+                    let hash = 0;
+                    const name = member.name || "";
+                    for (let i = 0; i < name.length; i++) {
+                        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                    }
+                    const index = Math.abs(hash) % colors.length;
+                    return colors[index];
+                };
+
                 facultyData.forEach(member => {
                     const dept = member.department || "Information Technology";
                     if (filterDept !== "all" && dept !== filterDept) {
                         return; // skip if it doesn't match the active filter
                     }
 
+                    const avatarClass = getAvatarClass(member);
+
                     // Generate Card HTML
                     cardsHtml += `
                     <div class="faculty-card">
                         <div class="avatar-wrapper">
                             <div class="avatar-glow"></div>
-                            <div class="avatar-image-placeholder ${member.avatarClass}">${member.initials}</div>
+                            <div class="avatar-image-placeholder ${avatarClass}">${member.initials}</div>
                         </div>
                         <h3 class="faculty-name">${member.name}</h3>
                         <div class="faculty-desg">${member.designation}</div>
@@ -159,7 +180,7 @@
                                 </div>
                                 <div class="modal-body text-center">
                                     <div class="modal-avatar-wrapper mx-auto mb-3">
-                                        <div class="modal-avatar-gradient ${member.avatarClass}">${member.initials}</div>
+                                        <div class="modal-avatar-gradient ${avatarClass}">${member.initials}</div>
                                     </div>
                                     <h4 class="modal-fac-name">${member.name}</h4>
                                     <p class="modal-fac-desg">${member.designation}</p>

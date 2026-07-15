@@ -11,6 +11,25 @@ const defaultBranchesCE = ["CLASS A B.TECH(CE)", "CLASS B B.TECH(CE)", "CLASS C 
 // Keep track of active department selection
 let currentDepartment = "Information Technology";
 
+const getAvatarClass = (member) => {
+    const legacyClasses = ["av-dc", "av-sw", "av-eu", "av-tv"];
+    if (member.avatarClass && legacyClasses.includes(member.avatarClass)) {
+        return member.avatarClass;
+    }
+    const colors = [
+        'av-theme-red', 'av-theme-blue', 'av-theme-purple', 
+        'av-theme-teal', 'av-theme-green', 'av-theme-orange', 
+        'av-theme-indigo', 'av-theme-cyan', 'av-theme-pink'
+    ];
+    let hash = 0;
+    const name = member.name || "";
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     const today = new Date().toISOString().split("T")[0];
 
@@ -479,7 +498,7 @@ function initFacultyAutocomplete() {
             const item = document.createElement("div");
             item.className = "dropdown-item";
             item.innerHTML = `
-                <div class="item-avatar ${member.avatarClass || ''}">${member.initials}</div>
+                <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
                 <div class="item-info">
                     <div class="item-name">${member.name} (${member.initials})</div>
                     <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.department || "Information Technology"} &nbsp;·&nbsp; ${member.empId}</div>
