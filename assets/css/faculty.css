@@ -86,10 +86,10 @@ html {
     border: 1px solid rgba(192, 57, 43, 0.3);
     color: #fca5a5;
     font-family: 'Share Tech', monospace;
-    font-size: 10px;
+    font-size: 13px;
     letter-spacing: 1.8px;
     text-transform: uppercase;
-    padding: 6px 14px;
+    padding: 8px 18px;
     border-radius: 50px;
     margin-bottom: 10px;
 }
@@ -182,18 +182,6 @@ html {
         padding: 24px 0 16px;
     }
 
-    .rp-header-inner {
-        flex-direction: column;
-        align-items: center;
-        gap: 14px;
-    }
-
-    .rp-header-center {
-        order: -1;
-        text-align: center;
-        width: 100%;
-    }
-
     .rp-dept-badge {
         white-space: normal;
         text-align: center;
@@ -208,6 +196,49 @@ html {
     }
 }
 
+@media (max-width: 768px) {
+    .rp-header {
+        padding: 12px 0 8px !important;
+    }
+
+    .rp-header-inner {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        text-align: center;
+    }
+
+    .rp-header-center {
+        grid-column: span 2 !important;
+        order: -1 !important;
+        width: 100% !important;
+    }
+
+    .back-btn {
+        grid-column: 1 !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+        padding: 6px 12px !important;
+    }
+
+    .portal-badge {
+        grid-column: 2 !important;
+        text-align: center !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+        padding: 6px 12px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    .rp-dept-badge {
+        font-size: 11px !important;
+        padding: 6px 14px !important;
+        letter-spacing: 1.2px !important;
+        margin-bottom: 4px !important;
+    }
+}
+
 @media (max-width: 599px) {
     .back-btn {
         font-size: 12px;
@@ -219,7 +250,7 @@ html {
     }
 
     .rp-dept-badge {
-        font-size: 9px;
+        font-size: 11px;
         letter-spacing: 1.2px;
     }
 }
@@ -897,4 +928,79 @@ html {
     .fac-page {
         padding: 0 16px 50px;
     }
+}
+
+/* ── Faculty Filter Styling ── */
+.fac-filter-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 30px;
+    margin-top: 10px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+    animation: rp-header-fade 0.7s ease both;
+}
+
+.fac-filter-container .zs-segment-control {
+    max-width: 540px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+@media (max-width: 580px) {
+    .fac-filter-container .zs-segment-control {
+        flex-direction: column;
+        max-width: 320px;
+        gap: 6px;
+        padding: 6px;
+    }
+
+    .fac-filter-container .segment-btn {
+        padding: 8px 12px;
+    }
+}
+
+/* ── CE Active Theme Overrides for Faculty Directory ── */
+body.ce-active .rp-dept-badge {
+    background: rgba(37, 99, 235, 0.1) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    color: #93c5fd !important;
+}
+
+body.ce-active .portal-badge {
+    color: #93c5fd !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    background: rgba(37, 99, 235, 0.08) !important;
+}
+
+body.ce-active .back-btn:hover {
+    color: #93c5fd !important;
+    border-color: rgba(37, 99, 235, 0.4) !important;
+    background: rgba(37, 99, 235, 0.1) !important;
+}
+
+body.ce-active .faculty-card:hover {
+    border-color: rgba(37, 99, 235, 0.35) !important;
+    box-shadow:
+        0 20px 45px rgba(37, 99, 235, 0.15),
+        0 8px 25px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.ce-active .faculty-card::before {
+    background: linear-gradient(90deg, var(--blue) 0%, var(--cyan) 100%) !important;
+}
+
+body.ce-active .faculty-desg {
+    color: #60a5fa !important;
+}
+
+body.ce-active .details-btn:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, var(--blue) 100%) !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4) !important;
+}
+
+body.ce-active .avatar-glow {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--cyan) 50%, var(--violet) 100%) !important;
 }

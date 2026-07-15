@@ -38,6 +38,8 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden !important;
+    width: 100% !important;
 }
 
 body {
@@ -46,7 +48,8 @@ body {
     font-family: 'Merriweather Sans', 'Segoe UI', sans-serif;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    overflow-x: hidden !important;
+    width: 100% !important;
 }
 
 /* ── Custom Styled Scrollbar ── */
@@ -292,10 +295,10 @@ body::before {
     border: 1px solid rgba(192, 57, 43, 0.3);
     color: #fca5a5;
     font-family: 'Share Tech', monospace;
-    font-size: 10px;
+    font-size: 13px;
     letter-spacing: 1.8px;
     text-transform: uppercase;
-    padding: 6px 14px;
+    padding: 8px 18px;
     border-radius: 50px;
     margin-bottom: 10px;
 }
@@ -624,10 +627,14 @@ textarea {
    FOOTER
 ══════════════════════ */
 .rp-footer {
-    margin-top: 32px;
+    margin-top: auto;
+    padding-top: 40px;
+    padding-bottom: 20px;
     text-align: center;
-    font-size: 12.5px;
-    color: var(--text-dim);
+    font-family: 'Share Tech', monospace;
+    font-size: 14.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.8px;
     animation: rp-fade-up 0.6s ease 0.2s both;
 }
 
@@ -651,23 +658,44 @@ textarea {
 ══════════════════════ */
 @media (max-width: 768px) {
     .rp-header {
-        padding: 28px 0 20px;
+        padding: 12px 0 8px !important;
     }
 
     .rp-header-inner {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 14px;
-    }
-
-    .rp-header-inner>.back-btn,
-    .rp-header-inner>.portal-badge {
-        align-self: flex-start;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        text-align: center;
     }
 
     .rp-header-center {
-        order: -1;
-        text-align: center;
+        grid-column: span 2 !important;
+        order: -1 !important;
+        width: 100% !important;
+    }
+
+    .back-btn {
+        grid-column: 1 !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+        padding: 6px 12px !important;
+    }
+
+    .portal-badge {
+        grid-column: 2 !important;
+        text-align: center !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+        padding: 6px 12px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    .rp-dept-badge {
+        font-size: 11px !important;
+        padding: 6px 14px !important;
+        letter-spacing: 1.2px !important;
+        margin-bottom: 4px !important;
     }
 
     .rp-section {
@@ -750,7 +778,7 @@ textarea {
 
 @media (max-width: 400px) {
     .rp-dept-badge {
-        font-size: 9px;
+        font-size: 11px;
         letter-spacing: 1.2px;
     }
 
@@ -1280,9 +1308,10 @@ textarea {
     }
 
     .rp-footer {
-        margin-top: 32px;
+        margin-top: auto;
         flex-shrink: 0;
-        padding-bottom: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 }
 
@@ -1427,6 +1456,7 @@ textarea {
 
 /* Stepper Style overrides */
 .stepper-wrapper {
+    margin-top: 20px;
     margin-bottom: 2.5rem;
     animation: rp-fade-up 0.6s ease both;
 }
@@ -1709,7 +1739,7 @@ textarea {
     position: fixed;
     bottom: 24px;
     left: 50%;
-    transform: translateX(-50%) translateY(100px);
+    transform: translateX(-50%) translateY(200px);
     background: rgba(11, 21, 48, 0.95);
     border: 1px solid rgba(16, 185, 129, 0.3);
     border-left: 5px solid var(--green);
@@ -2132,4 +2162,183 @@ textarea {
 
 .multiselect-option-item .item-desg {
     font-size: 10.5px;
+}
+
+/* ── CE Active Theme Overrides for Report System ── */
+body.ce-active {
+    --red: #2563eb;
+    --red-bright: #3b82f6;
+    --red-glow: rgba(37, 99, 235, 0.5);
+    --border-focus: rgba(37, 99, 235, 0.6);
+    scrollbar-color: rgba(37, 99, 235, 0.35) #060d1f !important;
+}
+
+body.ce-active ::-webkit-scrollbar-thumb {
+    background: rgba(37, 99, 235, 0.35) !important;
+}
+
+body.ce-active ::-webkit-scrollbar-thumb:hover {
+    background: rgba(37, 99, 235, 0.7) !important;
+}
+
+body.ce-active .rp-orb-1 {
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, transparent 65%) !important;
+}
+
+body.ce-active .rp-orb-2 {
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.14) 0%, transparent 65%) !important;
+}
+
+body.ce-active .rp-dept-badge {
+    background: rgba(37, 99, 235, 0.1) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    color: #93c5fd !important;
+}
+
+body.ce-active .portal-badge {
+    color: #93c5fd !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    background: rgba(37, 99, 235, 0.08) !important;
+}
+
+body.ce-active .back-btn:hover {
+    color: #93c5fd !important;
+    border-color: rgba(37, 99, 235, 0.4) !important;
+    background: rgba(37, 99, 235, 0.1) !important;
+}
+
+body.ce-active .submit-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 60%, #1e3a8a 100%) !important;
+    box-shadow: 0 6px 28px rgba(37, 99, 235, 0.4), 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.ce-active .submit-btn:hover {
+    box-shadow: 0 12px 40px rgba(37, 99, 235, 0.6), 0 4px 12px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.ce-active .rp-section-icon {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    color: #93c5fd !important;
+}
+
+body.ce-active input:focus,
+body.ce-active textarea:focus {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+}
+
+body.ce-active .select-wrap select:focus {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+}
+
+.breadcrumb-item.active {
+    color: var(--red-bright) !important;
+}
+
+body.ce-active .step-node.active .step-circle {
+    background: #2563eb !important;
+    box-shadow: 0 0 12px rgba(37, 99, 235, 0.5) !important;
+    border-color: #3b82f6 !important;
+}
+
+body.ce-active .step-node.active {
+    color: #93c5fd !important;
+}
+
+body.ce-active .stepper-progress-bar {
+    background: #2563eb !important;
+}
+
+body.ce-active .multiselect-option-item:hover {
+    background: rgba(37, 99, 235, 0.12) !important;
+}
+
+body.ce-active .fab-btn {
+    background: linear-gradient(135deg, #3b82f6, #1e3a8a) !important;
+    box-shadow: 0 8px 26px rgba(37, 99, 235, 0.4), 0 2px 8px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.ce-active .fab-btn::before {
+    border-color: rgba(37, 99, 235, 0.4) !important;
+}
+
+body.ce-active .fab-link:hover {
+    background: rgba(37, 99, 235, 0.14) !important;
+    border-color: rgba(37, 99, 235, 0.45) !important;
+    color: #93c5fd !important;
+}
+
+body.ce-active .fab-link.active {
+    color: #93c5fd !important;
+    border-color: rgba(37, 99, 235, 0.35) !important;
+    background: rgba(37, 99, 235, 0.09) !important;
+}
+
+body.ce-active .btn-danger {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+}
+
+body.ce-active .btn-danger:hover {
+    background-color: #1d4ed8 !important;
+    border-color: #1d4ed8 !important;
+}
+
+body.ce-active .form-control:focus {
+    border-color: rgba(37, 99, 235, 0.6) !important;
+}
+
+body.ce-active .search-dropdown-item:hover {
+    background: rgba(37, 99, 235, 0.15) !important;
+}
+
+body.ce-active .multiselect-checkbox-wrap input[type="checkbox"] {
+    accent-color: #3b82f6 !important;
+}
+
+body.ce-active .rp-particles span:nth-child(1) {
+    background: rgba(37, 99, 235, 0.5) !important;
+}
+
+body.ce-active .rp-particles span:nth-child(7) {
+    background: rgba(37, 99, 235, 0.4) !important;
+}
+
+body.ce-active .fab-btn::before {
+    border-color: rgba(37, 99, 235, 0.4) !important;
+}
+
+body.ce-active .report-accordion .accordion-item:hover {
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    box-shadow: 0 15px 40px rgba(37, 99, 235, 0.1), 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.ce-active .report-accordion .accordion-button:not(.collapsed) {
+    color: #93c5fd !important;
+    background: rgba(37, 99, 235, 0.15) !important;
+}
+
+body.ce-active .form-control:focus,
+body.ce-active .form-select:focus {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18) !important;
+}
+
+body.ce-active .dropdown-item:hover {
+    background: rgba(37, 99, 235, 0.15) !important;
+    color: #93c5fd !important;
+}
+
+body.ce-active .multiselect-trigger.active {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18) !important;
+}
+
+body.ce-active .multiselect-badge {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border: 1px solid rgba(37, 99, 235, 0.4) !important;
+    color: #93c5fd !important;
+}
+
+body.ce-active .multiselect-badge:hover {
+    background: rgba(37, 99, 235, 0.25) !important;
+    border-color: rgba(37, 99, 235, 0.6) !important;
 }

@@ -51,28 +51,34 @@
             <!-- ════════ LEFT CONTENT ════════ -->
             <div class="home-left">
 
+                <!-- Department Selector Toggle -->
+                <div class="zs-segment-control">
+                    <button type="button" class="segment-btn active" id="dept-it-btn" data-dept="Information Technology">Information Technology</button>
+                    <button type="button" class="segment-btn" id="dept-ce-btn" data-dept="Computer Engineering">Computer Engineering</button>
+                </div>
+
                 <!-- University Badge -->
-                <div class="badge">
+                <!-- <div class="badge">
                     <span class="badge-dot"></span>
                     Gyanmanjari Innovative University
-                </div>
+                </div> -->
 
                 <!-- Main Heading -->
                 <h1 class="home-heading">
                     <span class="heading-line1">Department of</span>
-                    <span class="heading-main">Information</span>
-                    <span class="heading-accent">Technology.</span>
+                    <span class="heading-main" id="headingMain">Information</span>
+                    <span class="heading-accent" id="headingAccent">Technology.</span>
                 </h1>
 
                 <!-- Love-language tagline -->
-                <p class="home-tagline">
+                <p class="home-tagline" id="homeTagline">
                     We don't just teach syntax — we <span class="love-word">foster</span> curiosity,
                     <span class="love-word">unleash</span> innovation, and <span class="love-word">inspire</span>
                     the next generation of engineers to code with <span class="love-word">purpose</span>.
                 </p>
 
                 <!-- Inspirational Quote -->
-                <div class="home-quote">
+                <div class="home-quote" id="homeQuote">
                     <p>
                         "The best way to predict the future is to invent it — and this department is where those innovations begin."
                         <cite>— GMIU IT Faculty, 2026</cite>
@@ -224,14 +230,15 @@
                             <span class="tdot yellow"></span>
                             <span class="tdot green"></span>
                         </div>
-                        <span class="terminal-title">it_department.js</span>
+                        <span class="terminal-title" id="terminalTitle">it_department.js</span>
                     </div>
-                    <div class="terminal-body">
+                    <div class="terminal-body" id="terminalBody">
                         <div class="code-line"><span class="cmt">// Department of Information Technology</span></div>
                         <div class="code-line"><span class="kw">const</span> <span class="var">itDept</span> = {</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">vision</span>: <span class="str">'Nurturing excellence & innovation'</span>,</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">degrees</span>: [<span class="str">'B.Tech IT'</span>, <span class="str">'Diploma IT'</span>,<span class="str">'PLM'</span>],</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">headOfDept</span>: <span class="str">'Prof. Dhaval Chandarana'</span>,</div>
+                        <div class="code-line">&nbsp;&nbsp;<span class="key">inchargeHod</span>: <span class="str">'Prof. Shwetaba Chauhan'</span>,</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">labs</span>: [<span class="str">'Apple iOS Dev Lab'</span>, <span class="str">'IoT Hub'</span>],</div>
                         <div class="code-line">&nbsp;&nbsp;<span class="key">coreSubjects</span>: [</div>
                         <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">'Web Tech'</span>, <span class="str">'Data Science'</span>, <span class="str">'AI & ML'</span></div>
@@ -243,19 +250,19 @@
                 </div>
 
                 <!-- Floating Info Pills -->
-                <div class="floating-pill pill-1">
+                <div class="floating-pill pill-1" id="pill1">
                     <span class="pill-icon">🎓</span>
                     <span>B.Tech & Diploma IT</span>
                 </div>
-                <div class="floating-pill pill-2">
+                <div class="floating-pill pill-2" id="pill2">
                     <span class="pill-icon">💻</span>
                     <span>Advanced Programming Labs</span>
                 </div>
-                <div class="floating-pill pill-3">
+                <div class="floating-pill pill-3" id="pill3">
                     <span class="pill-icon">🚀</span>
                     <span>Innovation & Research</span>
                 </div>
-                <div class="floating-pill pill-4">
+                <div class="floating-pill pill-4" id="pill4">
                     <span class="pill-icon">🧠</span>
                     <span>Proficient Learning Method PLM</span>
                 </div>
@@ -267,106 +274,124 @@
         <!-- /home-container -->
 
         <!-- Footer -->
-        <!-- <footer class="home-footer">
-            <p>&copy; 2026 Department of Information Technology, GMIU &nbsp;·&nbsp; Designed with <span style="color:#f87171;">♥</span> by Dev Dholakiya</p>
-        </footer> -->
+        
 
     </section>
 
     <!-- ░░ FLOATING NAV BUTTON (Bottom Right) ░░ -->
-    <div class="fab-nav" id="fabNav">
-        <div class="fab-menu" id="fabMenu">
-            <a href="index" class="fab-link active" id="nav-home">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-                Home
-            </a>
-            <a href="faculty" class="fab-link" id="nav-faculty">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-                Faculty Team
-            </a>
-            <a href="report" class="fab-link" id="nav-report">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                    <line x1="16" y1="13" x2="8" y2="13" />
-                    <line x1="16" y1="17" x2="8" y2="17" />
-                </svg>
-                Report Request
-            </a>
-            <a href="ctlactivity" class="fab-link" id="nav-ctl">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                    <line x1="9" y1="3" x2="9" y2="21" />
-                    <line x1="15" y1="3" x2="15" y2="21" />
-                    <line x1="3" y1="9" x2="21" y2="9" />
-                    <line x1="3" y1="15" x2="21" y2="15" />
-                </svg>
-                CTL Activity
-            </a>
-            <a href="ctldrive" class="fab-link" id="nav-drive">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                </svg>
-                Drive Scanner
-            </a>
-            <a href="zero-student-report" class="fab-link" id="nav-zero">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <line x1="17" y1="8" x2="23" y2="14" />
-                    <line x1="23" y1="8" x2="17" y2="14" />
-                </svg>
-                Zero Student Report
-            </a>
-        </div>
-
-        <button class="fab-btn" id="fabBtn" aria-label="Open Navigation">
-            <svg class="fab-icon-menu" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"
-                viewBox="0 0 24 24">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <svg class="fab-icon-close" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"
-                viewBox="0 0 24 24" style="display:none;">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-    </div>
-
+    <?php 
+    $active_page = 'home';
+    include 'fab-nav.php'; 
+    ?>
 
     <script>
-        // ── FAB Nav Toggle ──
-        const fabBtn = document.getElementById('fabBtn');
-        const fabMenu = document.getElementById('fabMenu');
-        const iconMenu = fabBtn.querySelector('.fab-icon-menu');
-        const iconClose = fabBtn.querySelector('.fab-icon-close');
+        // ── Department Selection Toggle ──
+        const itBtn = document.getElementById('dept-it-btn');
+        const ceBtn = document.getElementById('dept-ce-btn');
 
-        fabBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isOpen = fabMenu.classList.toggle('open');
-            fabBtn.classList.toggle('active', isOpen);
-            iconMenu.style.display = isOpen ? 'none' : 'block';
-            iconClose.style.display = isOpen ? 'block' : 'none';
-        });
+        const headingMain = document.getElementById('headingMain');
+        const headingAccent = document.getElementById('headingAccent');
+        const homeTagline = document.getElementById('homeTagline');
+        const homeQuote = document.getElementById('homeQuote');
+        const terminalTitle = document.getElementById('terminalTitle');
+        const terminalBody = document.getElementById('terminalBody');
+        const pill1 = document.getElementById('pill1');
+        const pill2 = document.getElementById('pill2');
+        const pill3 = document.getElementById('pill3');
+        const pill4 = document.getElementById('pill4');
 
-        document.addEventListener('click', (e) => {
-            if (!document.getElementById('fabNav').contains(e.target)) {
-                fabMenu.classList.remove('open');
-                fabBtn.classList.remove('active');
-                iconMenu.style.display = 'block';
-                iconClose.style.display = 'none';
+        const itContent = {
+            headingMain: "Information",
+            headingAccent: "Technology.",
+            tagline: `We don't just teach syntax — we <span class="love-word">foster</span> curiosity, <span class="love-word">unleash</span> innovation, and <span class="love-word">inspire</span> the next generation of engineers to code with <span class="love-word">purpose</span>.`,
+            quote: `<p>"The best way to predict the future is to invent it — and this department is where those innovations begin."<cite>— GMIU IT Faculty, 2026</cite></p>`,
+            terminalTitle: "it_department.js",
+            terminalBody: `
+                <div class="code-line"><span class="cmt">// Department of Information Technology</span></div>
+                <div class="code-line"><span class="kw">const</span> <span class="var">itDept</span> = {</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">vision</span>: <span class="str">'Nurturing excellence & innovation'</span>,</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">degrees</span>: [<span class="str">'B.Tech IT'</span>, <span class="str">'Diploma IT'</span>,<span class="str">'PLM'</span>],</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">headOfDept</span>: <span class="str">'Prof. Dhaval Chandarana'</span>,</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">inchargeHod</span>: <span class="str">'Prof. Shwetaba Chauhan'</span>,</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">labs</span>: [<span class="str">'Apple iOS Dev Lab'</span>, <span class="str">'IoT Hub'</span>],</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">coreSubjects</span>: [</div>
+                <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">'Web Tech'</span>, <span class="str">'Data Science'</span>, <span class="str">'AI & ML'</span></div>
+                <div class="code-line">&nbsp;&nbsp;]</div>
+                <div class="code-line">};</div>
+                <div class="code-line"></div>
+                <div class="code-line"><span class="var">Develop</span>.<span class="fn">By</span> = <span class="str">'<span class="blink-cursor">DK Dholakiya...|</span>'</span>;
+            `,
+            pill1: `<span class="pill-icon">🎓</span><span>B.Tech & Diploma IT</span>`,
+            pill2: `<span class="pill-icon">💻</span><span>Advanced Programming Labs</span>`,
+            pill3: `<span class="pill-icon">🚀</span><span>Innovation & Research</span>`,
+            pill4: `<span class="pill-icon">🧠</span><span>Proficient Learning Method PLM</span>`
+        };
+
+        const ceContent = {
+            headingMain: "Computer",
+            headingAccent: "Engineering.",
+            tagline: `We don't just build software — we <span class="love-word">design</span> systems, <span class="love-word">architect</span> algorithms, and <span class="love-word">empower</span> the future of technology through scalable computing.`,
+            quote: `<p>"Computing is not about computers, it's about life and solving real-world challenges through logic."<cite>— GMIU CE Faculty, 2026</cite></p>`,
+            terminalTitle: "ce_department.js",
+            terminalBody: `
+                <div class="code-line"><span class="cmt">// Department of Computer Engineering</span></div>
+                <div class="code-line"><span class="kw">const</span> <span class="var">ceDept</span> = {</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">vision</span>: <span class="str">'Architecting scalable software'</span>,</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">degrees</span>: [<span class="str">'B.Tech CE'</span>, <span class="str">'Diploma CE'</span>],</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">headOfDept</span>: <span class="str">'Prof. Dhaval Chandarana'</span>,</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">inchargeHod</span>: <span class="str">'Prof. Ekta Unagar'</span>,</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">labs</span>: [<span class="str">'Supercomputing Lab'</span>, <span class="str">'Web Tech Hub'</span>],</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">coreSubjects</span>: [</div>
+                <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">'Algorithms'</span>, <span class="str">'System Design'</span>, <span class="str">'Cloud Computing'</span></div>
+                <div class="code-line">&nbsp;&nbsp;]</div>
+                <div class="code-line">};</div>
+                <div class="code-line"></div>
+                <div class="code-line"><span class="var">Develop</span>.<span class="fn">By</span> = <span class="str">'<span class="blink-cursor">DK Dholakiya...|</span>'</span>;
+            `,
+            pill1: `<span class="pill-icon">🎓</span><span>B.Tech & Diploma CE</span>`,
+            pill2: `<span class="pill-icon">💻</span><span>Supercomputing Lab</span>`,
+            pill3: `<span class="pill-icon">🚀</span><span>System Architectures</span>`,
+            pill4: `<span class="pill-icon">🧠</span><span>Logic & Problem Solving</span>`
+        };
+
+        function updateDepartmentContent(isCe) {
+            document.body.classList.toggle('ce-active', isCe);
+            
+            const content = isCe ? ceContent : itContent;
+            headingMain.innerText = content.headingMain;
+            headingAccent.innerText = content.headingAccent;
+            homeTagline.innerHTML = content.tagline;
+            homeQuote.innerHTML = content.quote;
+            terminalTitle.innerText = content.terminalTitle;
+            terminalBody.innerHTML = content.terminalBody;
+            pill1.innerHTML = content.pill1;
+            pill2.innerHTML = content.pill2;
+            pill3.innerHTML = content.pill3;
+            pill4.innerHTML = content.pill4;
+            
+            if (isCe) {
+                itBtn.classList.remove('active');
+                ceBtn.classList.add('active');
+                localStorage.setItem('portal_dept', 'CE');
+            } else {
+                ceBtn.classList.remove('active');
+                itBtn.classList.add('active');
+                localStorage.setItem('portal_dept', 'IT');
             }
-        });
+        }
 
+        if (itBtn && ceBtn) {
+            itBtn.addEventListener('click', () => updateDepartmentContent(false));
+            ceBtn.addEventListener('click', () => updateDepartmentContent(true));
+        }
+
+        // Load saved selection on load
+        const savedDept = localStorage.getItem('portal_dept');
+        if (savedDept === 'CE') {
+            updateDepartmentContent(true);
+        } else {
+            updateDepartmentContent(false);
+        }
 
         // ── 3D Mouse-Tilt on Terminal Card ──
         const card = document.getElementById('terminalCard');
@@ -382,8 +407,6 @@
                 card.style.transform = 'perspective(1000px) rotateY(-10deg) rotateX(5deg)';
             });
         }
-
-
     </script>
 
 </body>

@@ -673,6 +673,7 @@ html {
     font-size: 12.5px;
     line-height: 1.8;
     color: #dde6f0;
+    overflow-x: auto;
 }
 
 .code-line {
@@ -1055,7 +1056,11 @@ html {
         align-items: center;
         flex-direction: column;
         width: 100%;
-        overflow-x: hidden;
+        overflow: visible !important;
+    }
+
+    .orb {
+        position: fixed !important;
     }
 
     .home-container {
@@ -1063,6 +1068,11 @@ html {
         padding: 0 40px;
         gap: 0;
         text-align: center;
+        min-width: 0 !important;
+    }
+
+    .home-left {
+        min-width: 0 !important;
     }
 
     .badge {
@@ -1094,8 +1104,33 @@ html {
         margin: 0 auto;
     }
 
+    .zs-segment-control {
+        margin: 0 auto 24px !important;
+    }
+
     .home-right {
-        display: none;
+        display: flex;
+        width: 100%;
+        height: auto;
+        margin-top: 48px;
+        justify-content: center;
+        align-items: center;
+        perspective: none;
+        min-width: 0 !important;
+    }
+
+    .terminal-card {
+        transform: none !important;
+        max-width: 460px;
+        width: 100%;
+        margin: 0 auto;
+        min-width: 0 !important;
+    }
+
+    .floating-pill,
+    .hero-img-frame,
+    .tech-img-card {
+        display: none !important;
     }
 
     .home-heading {
@@ -1237,6 +1272,23 @@ html {
         font-size: 12.5px;
         padding: 10px 14px;
         gap: 8px;
+    }
+
+    .zs-segment-control {
+        flex-direction: column !important;
+        max-width: 320px !important;
+        gap: 6px !important;
+        padding: 6px !important;
+        margin: 0 auto 24px !important;
+    }
+
+    .segment-btn {
+        padding: 8px 12px !important;
+    }
+
+    .terminal-body {
+        padding: 14px 16px !important;
+        font-size: 10.5px !important;
     }
 }
 
@@ -1392,10 +1444,14 @@ html {
    FOOTER STYLE UNIFICATION
    ══════════════════════ */
 .rp-footer {
-    margin-top: 40px;
+    margin-top: auto;
+    padding-top: 40px;
+    padding-bottom: 20px;
     text-align: center;
-    font-size: 12.5px;
-    color: var(--text-dim);
+    font-family: 'Share Tech', monospace;
+    font-size: 14.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.8px;
     width: 100%;
 }
 
@@ -1405,8 +1461,10 @@ html {
     left: 0;
     right: 0;
     text-align: center;
-    font-size: 12.5px;
-    color: var(--text-dim);
+    font-family: 'Share Tech', monospace;
+    font-size: 14.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.8px;
     z-index: 10;
     animation: slide-in 0.7s ease 0.45s both;
 }
@@ -1421,4 +1479,123 @@ html {
         margin-top: 40px;
         padding-bottom: 20px;
     }
+}
+
+/* ── Segment Control ── */
+.zs-segment-control {
+    display: flex;
+    background: rgba(11, 21, 48, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    gap: 4px;
+    position: relative;
+    z-index: 10;
+    max-width: 320px;
+    width: 100%;
+    margin: 0 0 24px 0;
+    overflow: hidden;
+}
+
+.segment-btn {
+    flex: 1;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.segment-btn:hover {
+    color: var(--text-primary);
+}
+
+.segment-btn.active {
+    background: rgba(192, 57, 43, 0.2);
+    border: 1px solid rgba(192, 57, 43, 0.4);
+    color: #fca5a5;
+}
+
+/* ── CE Active Overrides ── */
+body.ce-active .segment-btn.active {
+    background: rgba(37, 99, 235, 0.2) !important;
+    border: 1px solid rgba(37, 99, 235, 0.4) !important;
+    color: #93c5fd !important;
+}
+
+body.ce-active .home {
+    background:
+        radial-gradient(ellipse 80% 60% at 15% 50%, rgba(37, 99, 235, 0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 70% at 85% 50%, rgba(6, 182, 212, 0.14) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 100%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
+        linear-gradient(160deg, #060d1f 0%, #080f24 40%, #070c1c 100%) !important;
+}
+
+body.ce-active .orb-1 {
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.25) 0%, transparent 65%) !important;
+}
+
+body.ce-active .orb-2 {
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 65%) !important;
+}
+
+body.ce-active .orb-3 {
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 65%) !important;
+}
+
+body.ce-active .heading-accent {
+    background: linear-gradient(130deg, #3b82f6 0%, #2563eb 45%, #06b6d4 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+body.ce-active .badge {
+    background: rgba(37, 99, 235, 0.1) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    color: #93c5fd !important;
+}
+
+body.ce-active .home-quote {
+    background: rgba(37, 99, 235, 0.07) !important;
+    border-left-color: #2563eb !important;
+}
+
+body.ce-active .love-word {
+    color: #93c5fd !important;
+    text-decoration-color: rgba(147, 197, 253, 0.35) !important;
+}
+
+body.ce-active .cta-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 60%, #1e3a8a 100%) !important;
+    box-shadow: 0 6px 28px rgba(37, 99, 235, 0.4), 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.ce-active .cta-btn:hover {
+    box-shadow: 0 14px 42px rgba(37, 99, 235, 0.6), 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.ce-active .terminal-header .tdot.red {
+    background: #3b82f6 !important;
+    box-shadow: 0 0 7px #3b82f6 !important;
+}
+
+body.ce-active .terminal-header .tdot.yellow {
+    background: #60a5fa !important;
+    box-shadow: 0 0 7px #60a5fa !important;
+}
+
+body.ce-active .terminal-header .tdot.green {
+    background: #06b6d4 !important;
+    box-shadow: 0 0 7px #06b6d4 !important;
+}
+
+body.ce-active .terminal-card {
+    border-color: rgba(37, 99, 235, 0.25) !important;
 }

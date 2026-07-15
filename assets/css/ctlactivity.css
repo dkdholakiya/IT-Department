@@ -150,10 +150,10 @@ body::before {
     border: 1px solid rgba(192, 57, 43, 0.3);
     color: #fca5a5;
     font-family: 'Share Tech', monospace;
-    font-size: 10px;
+    font-size: 13px;
     letter-spacing: 1.8px;
     text-transform: uppercase;
-    padding: 6px 14px;
+    padding: 8px 18px;
     border-radius: 50px;
     margin-bottom: 10px;
 }
@@ -583,10 +583,14 @@ tr:hover td {
 
 /* ── Footer ── */
 .rp-footer {
-    margin-top: 10px;
+    margin-top: auto;
+    padding-top: 40px;
+    padding-bottom: 20px;
     text-align: center;
-    font-size: 12.5px;
-    color: var(--text-dim);
+    font-family: 'Share Tech', monospace;
+    font-size: 14.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.8px;
     animation: rp-fade-up 0.6s ease 0.3s both;
 }
 
@@ -655,9 +659,10 @@ tr:hover td {
     }
 
     .rp-footer {
-        margin-top: 16px;
+        margin-top: auto;
         flex-shrink: 0;
-        padding-bottom: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 
     /* Custom scrollbar for main content container */
@@ -688,23 +693,44 @@ tr:hover td {
 
 @media (max-width: 768px) {
     .rp-header {
-        padding: 28px 0 20px;
+        padding: 12px 0 8px !important;
     }
 
     .rp-header-inner {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 14px;
-    }
-
-    .rp-header-inner>.back-btn,
-    .rp-header-inner>.portal-badge {
-        align-self: flex-start;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        text-align: center;
     }
 
     .rp-header-center {
-        order: -1;
-        text-align: center;
+        grid-column: span 2 !important;
+        order: -1 !important;
+        width: 100% !important;
+    }
+
+    .back-btn {
+        grid-column: 1 !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+        padding: 6px 12px !important;
+    }
+
+    .portal-badge {
+        grid-column: 2 !important;
+        text-align: center !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+        padding: 6px 12px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    .rp-dept-badge {
+        font-size: 11px !important;
+        padding: 6px 14px !important;
+        letter-spacing: 1.2px !important;
+        margin-bottom: 4px !important;
     }
 
     .top-panel {

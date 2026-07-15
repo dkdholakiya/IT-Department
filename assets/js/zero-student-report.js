@@ -626,7 +626,7 @@ function isBranchMatching(branchStr, department) {
     }
     
     if (department === "Computer Engineering") {
-        return cleanBranch.includes("CE") || 
+        return (cleanBranch.includes("CE") && !cleanBranch.includes("SCIENCE")) || 
                cleanBranch.includes("COMPUTER") || 
                cleanBranch.includes("COMP") || 
                cleanBranch.includes("CSE");
