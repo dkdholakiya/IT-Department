@@ -2426,7 +2426,7 @@ body.ce-active .cc-tag-remove:hover {
     color: #60a5fa !important;
 }
 
-#ccSearch {
+.cc-select-wrap input[type="text"] {
     flex: 1;
     min-width: 150px;
     border: none !important;
@@ -2438,7 +2438,7 @@ body.ce-active .cc-tag-remove:hover {
     color: var(--text-primary) !important;
 }
 
-#ccSearch::placeholder {
+.cc-select-wrap input[type="text"]::placeholder {
     color: var(--text-dim);
 }
 
