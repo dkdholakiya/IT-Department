@@ -45,6 +45,15 @@ $active_page = isset($active_page) ? $active_page : 'home';
             </svg>
             Drive Scanner
         </a>
+        <a href="timetable" class="fab-link <?php echo ($active_page === 'timetable') ? 'active' : ''; ?>" id="nav-timetable">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Timetable
+        </a>
         <a href="zero-student-report" class="fab-link <?php echo ($active_page === 'zero-student-report') ? 'active' : ''; ?>" id="nav-zero">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />

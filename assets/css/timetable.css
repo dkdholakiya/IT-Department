@@ -1,0 +1,607 @@
+/* ══════════════════════════════════════════════════════════
+   timetable.css  ·  CE & IT Faculty Timetable Viewer  ·  v1
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+    --bg-dark: #060d1f;
+    --glass: rgba(15, 23, 42, 0.45);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-glow: rgba(192, 57, 43, 0.15);
+    --white: #ffffff;
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    
+    /* IT Department Theme Colors (Default) */
+    --theme-color: #c0392b;
+    --theme-color-rgb: 192, 57, 43;
+    --theme-bright: #ef4444;
+    --theme-glow: rgba(192, 57, 43, 0.25);
+    
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* CE Department Theme Override */
+body.ce-active {
+    --theme-color: #2563eb;
+    --theme-color-rgb: 37, 99, 235;
+    --theme-bright: #38bdf8;
+    --theme-glow: rgba(37, 99, 235, 0.25);
+}
+
+/* ── HTML & Body ── */
+html {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    width: 100% !important;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Outfit', 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ── Background Orbs ── */
+.orb {
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.18;
+    z-index: 1;
+    pointer-events: none;
+    transition: var(--transition);
+}
+
+.orb-1 {
+    top: -10%;
+    left: -10%;
+    background: radial-gradient(circle, rgba(var(--theme-color-rgb), 0.8) 0%, transparent 80%);
+}
+
+.orb-2 {
+    bottom: 10%;
+    right: -10%;
+    background: radial-gradient(circle, rgba(var(--theme-color-rgb), 0.6) 0%, transparent 80%);
+}
+
+/* ── Custom Scrollbar ── */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #060d1f;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(var(--theme-color-rgb), 0.35);
+    border-radius: 50px;
+    border: 2px solid #060d1f;
+    transition: background 0.3s;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--theme-color-rgb), 0.7);
+}
+
+/* ── Page Layout ── */
+.timetable-container {
+    width: 100%;
+    max-width: 1280px;
+    padding: 0 24px 60px;
+    box-sizing: border-box;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* ── Controls Section (Search & Filter) ── */
+.controls-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 20;
+}
+
+.controls-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+}
+
+.selector-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.selector-label {
+    font-family: 'Share Tech', monospace;
+    font-size: 14px;
+    color: var(--text-muted);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.custom-select-trigger {
+    background: rgba(8, 15, 30, 0.6);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: var(--transition);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.custom-select-trigger:hover, .custom-select-trigger.active {
+    border-color: var(--theme-color);
+    box-shadow: 0 0 12px var(--theme-glow), inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.custom-select-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: #0b1528;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    z-index: 100;
+    max-height: 350px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: var(--transition);
+}
+
+.custom-select-options.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.select-search-box {
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    background: #0b1528;
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 10;
+}
+
+.select-search-input {
+    width: 100%;
+    background: rgba(6, 12, 24, 0.8);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    font-size: 13px;
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    outline: none;
+    transition: var(--transition);
+}
+
+.select-search-input:focus {
+    border-color: var(--theme-color);
+    box-shadow: 0 0 8px var(--theme-glow);
+}
+
+.select-option {
+    padding: 10px 16px;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.select-option:hover {
+    background: rgba(var(--theme-color-rgb), 0.15);
+    color: var(--white);
+}
+
+.select-option.selected {
+    background: linear-gradient(135deg, var(--theme-color) 0%, rgba(var(--theme-color-rgb), 0.8) 100%);
+    color: var(--white);
+}
+
+.option-initials {
+    font-family: 'Share Tech', monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--text-primary);
+}
+
+/* ── Faculty Detail Card ── */
+.faculty-info-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.faculty-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--theme-color) 0%, rgba(var(--theme-color-rgb), 0.5) 100%);
+    border: 2px solid var(--theme-color);
+    box-shadow: 0 0 16px var(--theme-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech', monospace;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--white);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.faculty-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.faculty-name-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--white);
+    margin: 0;
+}
+
+.faculty-dept-badge {
+    font-family: 'Share Tech', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+/* ── Table Styling ── */
+.table-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.timetable-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 14px;
+    table-layout: fixed;
+    min-width: 900px;
+}
+
+.timetable-table th, .timetable-table td {
+    padding: 16px 12px;
+    border: 1px solid var(--glass-border);
+    vertical-align: middle;
+}
+
+.timetable-table th {
+    background: rgba(8, 15, 30, 0.8);
+    font-family: 'Share Tech', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.timetable-table th.time-col-header {
+    width: 150px;
+}
+
+.time-cell {
+    font-family: 'Share Tech', monospace;
+    font-size: 13.5px;
+    font-weight: bold;
+    color: var(--text-primary);
+    background: rgba(6, 12, 24, 0.4);
+}
+
+/* ── Slots States ── */
+.slot-free {
+    color: var(--text-dim);
+    font-size: 12.5px;
+    font-family: 'Share Tech', monospace;
+    font-style: italic;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.slot-occupied {
+    position: relative;
+    background: rgba(var(--theme-color-rgb), 0.08);
+    transition: var(--transition);
+}
+
+.slot-occupied:hover {
+    background: rgba(var(--theme-color-rgb), 0.15);
+    box-shadow: inset 0 0 12px rgba(var(--theme-color-rgb), 0.2);
+}
+
+.occupied-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+}
+
+.class-badge {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.room-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Share Tech', monospace;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.slot-occupied:hover .room-badge {
+    background: rgba(var(--theme-color-rgb), 0.25);
+    border-color: var(--theme-color);
+    box-shadow: 0 0 6px var(--theme-glow);
+}
+
+/* ── Recess Styling ── */
+.recess-row {
+    background: rgba(8, 15, 30, 0.9) !important;
+}
+
+.recess-cell {
+    font-family: 'Share Tech', monospace;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.02),
+        rgba(255, 255, 255, 0.02) 10px,
+        transparent 10px,
+        transparent 20px
+    );
+}
+
+/* ── Faculty Meta Left/Right Layout ── */
+.faculty-meta-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.faculty-meta-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.faculty-meta-right {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: right;
+    align-items: flex-end;
+}
+
+.faculty-designation-badge {
+    font-family: 'Share Tech', monospace;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.faculty-semester-info {
+    font-family: 'Share Tech', monospace;
+    font-size: 14px;
+    color: var(--theme-bright);
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    background: rgba(var(--theme-color-rgb), 0.12);
+    border: 1px solid rgba(var(--theme-color-rgb), 0.4);
+    padding: 4px 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Responsive adjustments ── */
+@media (max-width: 768px) {
+    .rp-header {
+        padding: 12px 16px 8px !important;
+    }
+    .timetable-container {
+        padding: 0 16px 40px;
+    }
+    .controls-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+    .selector-group {
+        max-width: 100%;
+    }
+    .faculty-info-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
+    .faculty-meta-wrapper {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        gap: 12px;
+    }
+    .faculty-meta-right {
+        text-align: center;
+        align-items: center;
+    }
+    .timetable-table th, .timetable-table td {
+        padding: 10px 8px;
+        font-size: 12.5px;
+    }
+    .time-cell {
+        font-size: 12px;
+    }
+    .class-badge {
+        font-size: 11.5px;
+    }
+    .room-badge {
+        font-size: 10px;
+        padding: 1px 6px;
+    }
+}
+
+@media (max-width: 540px) {
+    .selector-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .selector-label {
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .timetable-container {
+        gap: 16px;
+    }
+    .controls-card {
+        padding: 16px 12px;
+        gap: 16px;
+    }
+    .faculty-info-card {
+        padding: 16px 12px;
+        gap: 12px;
+    }
+    .faculty-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
+    }
+    .faculty-name-title {
+        font-size: 18px;
+    }
+    .faculty-designation-badge {
+        font-size: 12px;
+    }
+    .faculty-dept-badge {
+        font-size: 11px;
+    }
+    .faculty-semester-info {
+        font-size: 12.5px;
+        padding: 3px 10px;
+    }
+    .zs-segment-control {
+        flex-direction: column;
+        max-width: 100%;
+        gap: 6px;
+        padding: 6px;
+    }
+    .segment-btn {
+        width: 100%;
+        padding: 8px 12px !important;
+        text-align: center;
+    }
+}
+
+@media (max-width: 360px) {
+    .timetable-container {
+        padding: 0 12px 30px;
+    }
+    .controls-card {
+        padding: 12px 10px;
+    }
+    .faculty-info-card {
+        padding: 12px 10px;
+    }
+    .faculty-name-title {
+        font-size: 16px;
+    }
+}
