@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authentication Required — GMIU IT Portal</title>
+    <title>Authentication Required — GMIU CE & IT Portal</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -194,7 +194,7 @@
                 </svg>
             </div>
             
-            <h1 class="auth-title">GMIU IT </h1>
+            <h1 class="auth-title">GMIU CE & IT</h1>
             <p class="auth-subtitle">Authentication required to access <span class="auth-target-page"><?php echo htmlspecialchars($page_label); ?></span>.</p>
             
             <form id="authForm" onsubmit="return false;">

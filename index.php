@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="GMIU Department of Information Technology — Faculty Portal for report submission and academic event management.">
-    <title>IT Department — GMIU Faculty Portal</title>
+    <title>CE & IT Department — GMIU Faculty Portal</title>
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
@@ -373,10 +373,12 @@
                 itBtn.classList.remove('active');
                 ceBtn.classList.add('active');
                 localStorage.setItem('portal_dept', 'CE');
+                document.title = "CE Department — GMIU Faculty Portal";
             } else {
                 ceBtn.classList.remove('active');
                 itBtn.classList.add('active');
                 localStorage.setItem('portal_dept', 'IT');
+                document.title = "IT Department — GMIU Faculty Portal";
             }
         }
 
@@ -385,13 +387,8 @@
             ceBtn.addEventListener('click', () => updateDepartmentContent(true));
         }
 
-        // Load saved selection on load
-        const savedDept = localStorage.getItem('portal_dept');
-        if (savedDept === 'CE') {
-            updateDepartmentContent(true);
-        } else {
-            updateDepartmentContent(false);
-        }
+        // Always default to IT department on page load
+        updateDepartmentContent(false);
 
         // ── 3D Mouse-Tilt on Terminal Card ──
         const card = document.getElementById('terminalCard');

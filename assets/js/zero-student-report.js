@@ -1337,12 +1337,14 @@ function setDepartment(dept) {
         if (pageContainer) pageContainer.classList.add("ce-active");
         if (badgeText) badgeText.innerText = "Department of Computer Engineering";
         localStorage.setItem('portal_dept', 'CE');
+        document.title = "Zero Student Log — GMIU CE Department";
     } else {
         if (ceBtn) ceBtn.classList.remove("active");
         if (itBtn) itBtn.classList.add("active");
         if (pageContainer) pageContainer.classList.remove("ce-active");
         if (badgeText) badgeText.innerText = "Department of Information Technology";
         localStorage.setItem('portal_dept', 'IT');
+        document.title = "Zero Student Log — GMIU IT Department";
     }
 
     // Refresh Branch suggestions

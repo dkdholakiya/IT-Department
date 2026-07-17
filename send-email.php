@@ -107,14 +107,16 @@ if ($module === 'zero') {
 
 $dept = $input['dept'] ?? '';
 
-// Default to IT SMTP credentials
+// Default to IT SMTP credentials and From Name
 $email = $config['smtp_email'] ?? '';
 $appPassword = $config['smtp_password'] ?? '';
+$from_name = 'IT Department';
 
 // If target department is Computer Engineering, use CE credentials
 if (strtoupper($dept) === 'CE') {
     $email = $config['smtp_email_ce'] ?? $email;
     $appPassword = $config['smtp_password_ce'] ?? $appPassword;
+    $from_name = 'CE Department';
 }
 
 if (empty($email) || empty($appPassword)) {
@@ -163,7 +165,7 @@ if (!empty($emails) && is_array($emails)) {
             $subject = $item['subject'] ?? '';
             $html = $item['html'] ?? '';
             if (!empty($to)) {
-                send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $attachment, $filename);
+                send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $attachment, $filename, $from_name);
             }
         }
     } catch (Exception $e) {
@@ -186,7 +188,7 @@ if (!empty($emails) && is_array($emails)) {
     send_instant_success_response();
     
     try {
-        send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $attachment, $filename);
+        send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $attachment, $filename, $from_name);
     } catch (Exception $e) {
         error_log("Single SMTP Error: " . $e->getMessage());
     }
@@ -197,7 +199,7 @@ if (!empty($emails) && is_array($emails)) {
 /**
  * Direct SMTP socket client to send mail via Gmail SSL port 465
  */
-function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attachment = '', $filename = '') {
+function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attachment = '', $filename = '', $from_name = 'IT Department') {
     $timeout = 15;
     $smtp = fsockopen("ssl://smtp.gmail.com", 465, $errno, $errstr, $timeout);
     if (!$smtp) {
@@ -279,7 +281,7 @@ function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attac
             "MIME-Version: 1.0",
             "Content-Type: multipart/mixed; boundary=\"$boundary\"",
             "To: $to",
-            "From: \"IT Department\" <$username>",
+            "From: \"$from_name\" <$username>",
             "Subject: =?UTF-8?B?" . base64_encode($subject) . "?="
         ];
 
@@ -310,7 +312,7 @@ function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attac
             "MIME-Version: 1.0",
             "Content-Type: text/html; charset=UTF-8",
             "To: $to",
-            "From: \"IT Department\" <$username>",
+            "From: \"$from_name\" <$username>",
             "Subject: =?UTF-8?B?" . base64_encode($subject) . "?="
         ];
 

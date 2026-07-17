@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="GMIU IT Department — Departmental Report Management System for academic events, Expert talks, and achievement documentation.">
-    <title>IT Report System — GMIU IT Department</title>
+    <title>Report System — GMIU CE & IT Department</title>
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
@@ -1219,6 +1219,13 @@
                 }
             }
             document.getElementById("facultyDept").value = deptVal;
+
+            // Dynamically update document title based on resolved department
+            if (deptVal === "Computer Engineering") {
+                document.title = "Report System — GMIU CE Department";
+            } else {
+                document.title = "Report System — GMIU IT Department";
+            }
 
             // Sync to Section 7 Block A (Reference Faculty Email details)
             document.getElementById("refName").value = member.name;

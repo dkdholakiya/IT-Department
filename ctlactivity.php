@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="GMIU IT Department — CTL Activity Dashboard for academic tracking and expert session analytics.">
-    <title>CTL Activity Dashboard — GMIU IT Department</title>
+    <title>CTL Activity Dashboard — GMIU CE & IT Department</title>
 
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
@@ -369,6 +369,12 @@
                 facultyError.classList.add("hidden");
 
                 facultyDropdownList.classList.remove("show");
+
+                // Dynamically update document title based on selected faculty department
+                const isCe = (member.initials === "DRC" || member.name.includes("Dhaval Chandarana")) 
+                    ? (localStorage.getItem("portal_dept") === "CE") 
+                    : (member.department === "Computer Engineering");
+                document.title = isCe ? "CTL Activity Dashboard — GMIU CE Department" : "CTL Activity Dashboard — GMIU IT Department";
             }
 
             function clearSelection() {

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="GMIU IT Department Faculty Directory — Meet our academic mentors, researchers, and creators shaping the future of IT.">
-    <title>Faculty Directory — GMIU IT Department</title>
+    <title>Faculty Directory — GMIU CE & IT Department</title>
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link class="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
@@ -82,6 +82,17 @@
             </div>
         </div>
 
+        <!-- ── Faculty Search ── -->
+        <div class="fac-search-container">
+            <div class="search-input-wrap" id="searchWrapper">
+                <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="faculty-search-input" placeholder="Search by name or initials (e.g. Dhaval or DRC)..." autocomplete="off">
+            </div>
+        </div>
+
         <!-- ── Faculty Grid Container ── -->
         <main class="faculty-grid" id="facultyGrid">
             <!-- Dynamic cards rendered by JS -->
@@ -117,10 +128,14 @@
             const grid = document.getElementById("facultyGrid");
             const modalContainer = document.getElementById("modalContainer");
 
-            // Render function with optional department filtering
-            function renderFaculty(filterDept = "all") {
+            let currentFilterDept = "all";
+            let currentSearchQuery = "";
+
+            // Render function with optional department and search filtering
+            function renderFaculty(filterDept = "all", searchQuery = "") {
                 let cardsHtml = "";
                 let modalsHtml = "";
+                const query = searchQuery.toLowerCase().trim();
 
                 const getAvatarClass = (member) => {
                     const legacyClasses = ["av-dc", "av-sw", "av-eu", "av-tv"];
@@ -145,6 +160,15 @@
                     const dept = member.department || "Information Technology";
                     if (filterDept !== "all" && dept !== filterDept) {
                         return; // skip if it doesn't match the active filter
+                    }
+
+                    // Check search query against name and initials
+                    if (query !== "") {
+                        const nameMatches = (member.name || "").toLowerCase().includes(query);
+                        const initialsMatches = (member.initials || "").toLowerCase().includes(query);
+                        if (!nameMatches && !initialsMatches) {
+                            return; // skip if it doesn't match name or initials
+                        }
                     }
 
                     const avatarClass = getAvatarClass(member);
@@ -228,37 +252,58 @@
                 btn.addEventListener("click", function() {
                     filterBtns.forEach(b => b.classList.remove("active"));
                     this.classList.add("active");
-                    const targetDept = this.getAttribute("data-dept");
+                    currentFilterDept = this.getAttribute("data-dept");
                     
                     // Toggle theme class and update header texts dynamically
-                    if (targetDept === "Computer Engineering") {
+                    if (currentFilterDept === "Computer Engineering") {
                         document.body.classList.add("ce-active");
                         if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Computer Engineering";
                         if (portalBadge) portalBadge.textContent = "CE Faculty";
                         localStorage.setItem('portal_dept', 'CE');
-                    } else if (targetDept === "Information Technology") {
+                        document.title = "Faculty Directory — GMIU CE Department";
+                    } else if (currentFilterDept === "Information Technology") {
                         document.body.classList.remove("ce-active");
                         if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Information Technology";
                         if (portalBadge) portalBadge.textContent = "IT Faculty";
                         localStorage.setItem('portal_dept', 'IT');
+                        document.title = "Faculty Directory — GMIU IT Department";
                     } else {
                         // "all"
                         document.body.classList.remove("ce-active");
                         if (rpDeptBadgeText) rpDeptBadgeText.textContent = "IT & CE Departments";
                         if (portalBadge) portalBadge.textContent = "All Faculty";
                         // Note: Don't overwrite local storage for 'all' tab click to preserve base page default
+                        document.title = "Faculty Directory — GMIU CE & IT Department";
                     }
                     
-                    renderFaculty(targetDept);
+                    renderFaculty(currentFilterDept, currentSearchQuery);
                 });
             });
+
+            // Search input keyup/input event listener
+            const searchInput = document.getElementById("faculty-search-input");
+            const searchWrapper = document.getElementById("searchWrapper");
+            if (searchInput) {
+                searchInput.addEventListener("input", function() {
+                    currentSearchQuery = this.value;
+                    renderFaculty(currentFilterDept, currentSearchQuery);
+                });
+
+                searchInput.addEventListener("focus", () => {
+                    if (searchWrapper) searchWrapper.classList.add("focused");
+                });
+
+                searchInput.addEventListener("blur", () => {
+                    if (searchWrapper) searchWrapper.classList.remove("focused");
+                });
+            }
 
             // Default to all departments on initial page load
             const allBtn = document.getElementById("filter-all-btn");
             if (allBtn) {
                 allBtn.click();
             } else {
-                renderFaculty("all");
+                renderFaculty("all", "");
             }
 
             // Redundant FAB toggle logic removed
