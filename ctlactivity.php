@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="GMIU IT Department — CTL Activity Dashboard for academic tracking and expert session analytics.">
-    <title>CTL Activity Dashboard — GMIU CE & IT Department</title>
+        content="CTL Activity Dashboard for academic tracking and expert session analytics.">
+    <title>CTL Activity Dashboard — CE & IT Department</title>
 
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
@@ -63,7 +63,7 @@
         <!-- ── Page Header ── -->
         <header class="rp-header container">
             <div class="rp-header-inner">
-                <a href="index" class="back-btn">
+                <a href="./" class="back-btn">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 24 24">
                         <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -374,7 +374,7 @@
                 const isCe = (member.initials === "DRC" || member.name.includes("Dhaval Chandarana")) 
                     ? (localStorage.getItem("portal_dept") === "CE") 
                     : (member.department === "Computer Engineering");
-                document.title = isCe ? "CTL Activity Dashboard — GMIU CE Department" : "CTL Activity Dashboard — GMIU IT Department";
+                document.title = isCe ? "CTL Activity Dashboard — CE Department" : "CTL Activity Dashboard — IT Department";
             }
 
             function clearSelection() {

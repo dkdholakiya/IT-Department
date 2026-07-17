@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="GMIU IT Department Faculty Directory — Meet our academic mentors, researchers, and creators shaping the future of IT.">
-    <title>Faculty Directory — GMIU CE & IT Department</title>
+        content="Faculty Directory — Meet our academic mentors, researchers, and creators shaping the future of IT.">
+    <title>Faculty Directory — CE & IT Department</title>
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link class="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
@@ -53,7 +53,7 @@
         <!-- ── Page Header (matches report.php structure) ── -->
         <header class="rp-header">
             <div class="rp-header-inner">
-                <a href="index" class="back-btn">
+                <a href="./" class="back-btn">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 24 24">
                         <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -89,7 +89,7 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" id="faculty-search-input" placeholder="Search by name or initials (e.g. Dhaval or DRC)..." autocomplete="off">
+                <input type="text" id="faculty-search-input" placeholder="Search by name or initials" autocomplete="off">
             </div>
         </div>
 
@@ -260,20 +260,20 @@
                         if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Computer Engineering";
                         if (portalBadge) portalBadge.textContent = "CE Faculty";
                         localStorage.setItem('portal_dept', 'CE');
-                        document.title = "Faculty Directory — GMIU CE Department";
+                        document.title = "Faculty Directory — CE Department";
                     } else if (currentFilterDept === "Information Technology") {
                         document.body.classList.remove("ce-active");
                         if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Information Technology";
                         if (portalBadge) portalBadge.textContent = "IT Faculty";
                         localStorage.setItem('portal_dept', 'IT');
-                        document.title = "Faculty Directory — GMIU IT Department";
+                        document.title = "Faculty Directory — IT Department";
                     } else {
                         // "all"
                         document.body.classList.remove("ce-active");
                         if (rpDeptBadgeText) rpDeptBadgeText.textContent = "IT & CE Departments";
                         if (portalBadge) portalBadge.textContent = "All Faculty";
                         // Note: Don't overwrite local storage for 'all' tab click to preserve base page default
-                        document.title = "Faculty Directory — GMIU CE & IT Department";
+                        document.title = "Faculty Directory — CE & IT Department";
                     }
                     
                     renderFaculty(currentFilterDept, currentSearchQuery);

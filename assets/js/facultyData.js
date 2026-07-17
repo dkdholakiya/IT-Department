@@ -1,4 +1,4 @@
-// Shared Faculty Members Data Array for Gyanmanjari Innovative University IT Department
+// Shared Faculty Members Data Array for CE & IT Department
 const facultyData = [
     {
         id: "dc",

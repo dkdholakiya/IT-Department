@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="GMIU IT Department — Departmental Report Management System for academic events, Expert talks, and achievement documentation.">
-    <title>Report System — GMIU CE & IT Department</title>
+        content="Departmental Report Management System for academic events, Expert talks, and achievement documentation.">
+    <title>Report System — CE & IT Department</title>
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
@@ -44,7 +44,7 @@
         <!-- ── Page Header ── -->
         <header class="rp-header container">
             <div class="rp-header-inner">
-                <a href="index" class="back-btn">
+                <a href="./" class="back-btn">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 24 24">
                         <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -91,7 +91,7 @@
         <div class="container mb-4">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb bg-transparent p-0 m-0 rp-breadcrumb-list">
-                    <li class="breadcrumb-item"><a href="index" class="text-decoration-none text-muted">Home</a>
+                    <li class="breadcrumb-item"><a href="./" class="text-decoration-none text-muted">Home</a>
                     </li>
                 </ol>
             </nav>
@@ -317,7 +317,7 @@
                                         <!-- Spacer grid to keep layout balanced -->
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label text-light">Report is published on GMIU Website? <span class="text-danger">*</span></label>
+                                        <label class="form-label text-light">Report is published on Website? <span class="text-danger">*</span></label>
                                         <div class="d-flex gap-3 mt-2">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="publishWebsite" id="publishYes" value="Yes" required>
@@ -945,9 +945,8 @@
     <!-- ── Print Report Preview Area (Targeted by CSS @media print) ── -->
     <div id="printReportArea">
         <div class="print-header">
-            <h4 style="margin: 0; font-family: 'Playfair Display', serif; font-weight: 800; letter-spacing: 0.5px;">
-                GYANMANJARI INNOVATIVE UNIVERSITY</h4>
-            <div class="print-subtitle">DEPARTMENT OF INFORMATION TECHNOLOGY</div>
+            <h4 style="margin: 0; font-family: 'Playfair Display', serif; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;">
+                DEPARTMENT OF INFORMATION TECHNOLOGY</h4>
             <div class="print-title" id="printHeaderTitle">Activity Report Documentation</div>
         </div>
 
@@ -1222,9 +1221,9 @@
 
             // Dynamically update document title based on resolved department
             if (deptVal === "Computer Engineering") {
-                document.title = "Report System — GMIU CE Department";
+                document.title = "Report System — CE Department";
             } else {
-                document.title = "Report System — GMIU IT Department";
+                document.title = "Report System — IT Department";
             }
 
             // Sync to Section 7 Block A (Reference Faculty Email details)
@@ -2184,7 +2183,6 @@
             };
 
             table += hr;
-            table += centerAlign("GYANMANJARI INNOVATIVE UNIVERSITY");
             table += centerAlign("DEPARTMENT OF INFORMATION TECHNOLOGY");
             table += centerAlign(`${reportType.toUpperCase()} ACTIVITY REPORT`);
             table += hr;
@@ -2321,8 +2319,7 @@
             <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap" rel="stylesheet">
             <div style="font-family: 'Playfair Display', serif; line-height: 1.6; color: #333; max-width: 700px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                 <div style="background-color: #8c1d1d; color: white; padding: 25px; text-align: center; font-family: 'Playfair Display', serif;">
-                    <h2 style="margin: 0; font-size: 22px; font-weight: bold; letter-spacing: 0.5px; font-family: 'Playfair Display', serif;">GYANMANJARI INNOVATIVE UNIVERSITY</h2>
-                    <div style="font-size: 14px; opacity: 0.9; margin-top: 5px; text-transform: uppercase; font-family: 'Playfair Display', serif;">Department of CE & IT</div>
+                    <h2 style="margin: 0; font-size: 22px; font-weight: bold; letter-spacing: 0.5px; font-family: 'Playfair Display', serif; text-transform: uppercase;">Department of CE & IT</h2>
                     <div style="margin-top: 15px; display: inline-block; background-color: rgba(255, 255, 255, 0.2); padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; font-family: 'Playfair Display', serif;">
                         ${reportType} ACTIVITY DOCUMENTATION
                     </div>
@@ -2482,7 +2479,7 @@ Please review the draft details for the Departmental Report titled "${reportTitl
 ${asciiTable}
 
 Regards,
-Department of CE & IT, GMIU`;
+Department of CE & IT`;
         }
 
         // ── Validation logic ──
@@ -2928,8 +2925,7 @@ Department of CE & IT, GMIU`;
 
             let previewHtml = `
                 <div class="text-center border-bottom pb-3 mb-4">
-                    <h4 class="fw-bold mb-0 text-dark" style="font-family: 'Playfair Display', serif;">Gyanmanjari Innovative University</h4>
-                    <span class="text-muted small text-uppercase fw-bold letter-spacing-1">Department of CE & IT</span>
+                    <h4 class="fw-bold mb-0 text-dark text-uppercase" style="font-family: 'Playfair Display', serif; letter-spacing: 0.5px;">Department of CE & IT</h4>
                     <h5 class="mt-2 fw-semibold text-danger" style="font-family: 'Playfair Display', serif;">${reportTypeLabel} — Activity Documentation</h5>
                 </div>
                 

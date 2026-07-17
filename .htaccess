@@ -21,6 +21,13 @@ RedirectMatch 403 /\..*$
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # Redirect explicit requests for index or index.php to the root / (only on production, skipped on localhost)
+    RewriteCond %{HTTP_HOST} !^localhost$ [NC]
+    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1$ [NC]
+    RewriteCond %{THE_REQUEST} \s/+([^/]+/)*index(\.php)?[\s?] [NC]
+    RewriteCond %{REQUEST_URI} ^(.*?)/?index(\.php)?$ [NC]
+    RewriteRule ^ %1/ [R=302,L]
+
     # Redirect direct requests for *.php files to extensionless URLs
     # Uses THE_REQUEST to avoid infinite redirection loops with internal rewrites
     RewriteCond %{THE_REQUEST} \s/+(.+)\.php[\s?] [NC]
@@ -32,3 +39,11 @@ RedirectMatch 403 /\..*$
     RewriteCond %{REQUEST_FILENAME}.php -f
     RewriteRule ^(.*)$ $1.php [NC,L]
 </IfModule>
+
+# 4. Custom Error Documents
+ErrorDocument 400 /it/error.php
+ErrorDocument 401 /it/error.php
+ErrorDocument 403 /it/error.php
+ErrorDocument 404 /it/error.php
+ErrorDocument 500 /it/error.php
+ErrorDocument 503 /it/error.php

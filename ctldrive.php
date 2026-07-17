@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="GMIU IT Department — Google Drive Folder Scanner & Excel Reporter utility for academic event files.">
-    <title>Drive Folder Scanner — GMIU CE & IT Department</title>
+        content="Google Drive Folder Scanner & Excel Reporter utility for academic event files.">
+    <title>Drive Folder Scanner — CE & IT Department</title>
 
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
@@ -43,7 +43,7 @@
         <!-- ── Page Header ── -->
         <header class="rp-header">
             <div class="rp-header-inner">
-                <a href="index" class="back-btn">
+                <a href="./" class="back-btn">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 24 24">
                         <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -773,7 +773,7 @@
 
             // 1. Add Summary Sheet (Overall Analysis dashboard)
             const summaryRows = [];
-            summaryRows.push(["GMIU IT DEPARTMENT - GOOGLE DRIVE FOLDER SCAN REPORT"]);
+            summaryRows.push(["CE & IT DEPARTMENT - GOOGLE DRIVE FOLDER SCAN REPORT"]);
             summaryRows.push(["Report Generated At:", new Date().toLocaleString()]);
             summaryRows.push([]); // spacer row
 
@@ -1039,7 +1039,7 @@
                 const isCe = (member.initials === "DRC" || member.name.includes("Dhaval Chandarana")) 
                     ? (localStorage.getItem("portal_dept") === "CE") 
                     : (member.department === "Computer Engineering");
-                document.title = isCe ? "Drive Folder Scanner — GMIU CE Department" : "Drive Folder Scanner — GMIU IT Department";
+                document.title = isCe ? "Drive Folder Scanner — CE Department" : "Drive Folder Scanner — IT Department";
             }
 
             function clearSelection() {

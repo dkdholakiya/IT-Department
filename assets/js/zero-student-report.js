@@ -283,7 +283,7 @@ function handleAddEntry() {
                     
                     <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 24px; text-align: center;">
                         <h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">Zero Student Timetable Log</h1>
-                        <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 12px;">Gyanmanjari Innovative University &nbsp;·&nbsp; Department of ${deptAbbr}</p>
+                        <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 12px;">Department of ${deptAbbr}</p>
                     </div>
 
                     <div style="padding: 24px;">
@@ -1079,7 +1079,7 @@ async function handleBatchImport() {
                         <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);">
                             <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 24px; text-align: center;">
                                 <h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">Zero Student Timetable Log</h1>
-                                <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 12px;">Gyanmanjari Innovative University &nbsp;·&nbsp; Department of ${deptAbbr}</p>
+                                <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 12px;">Department of ${deptAbbr}</p>
                             </div>
                             <div style="padding: 24px;">
                                 <table style="width: 100%; border-collapse: collapse; font-size: 13px; color: #334155;">
@@ -1337,14 +1337,14 @@ function setDepartment(dept) {
         if (pageContainer) pageContainer.classList.add("ce-active");
         if (badgeText) badgeText.innerText = "Department of Computer Engineering";
         localStorage.setItem('portal_dept', 'CE');
-        document.title = "Zero Student Log — GMIU CE Department";
+        document.title = "Zero Student Log — CE Department";
     } else {
         if (ceBtn) ceBtn.classList.remove("active");
         if (itBtn) itBtn.classList.add("active");
         if (pageContainer) pageContainer.classList.remove("ce-active");
         if (badgeText) badgeText.innerText = "Department of Information Technology";
         localStorage.setItem('portal_dept', 'IT');
-        document.title = "Zero Student Log — GMIU IT Department";
+        document.title = "Zero Student Log — IT Department";
     }
 
     // Refresh Branch suggestions

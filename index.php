@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="GMIU Department of Information Technology — Faculty Portal for report submission and academic event management.">
-    <title>CE & IT Department — GMIU Faculty Portal</title>
+        content="Department of CE & IT — Faculty Portal for report submission and academic event management.">
+    <title>CE & IT Department — Faculty Portal</title>
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
@@ -57,11 +57,7 @@
                     <button type="button" class="segment-btn" id="dept-ce-btn" data-dept="Computer Engineering">Computer Engineering</button>
                 </div>
 
-                <!-- University Badge -->
-                <!-- <div class="badge">
-                    <span class="badge-dot"></span>
-                    Gyanmanjari Innovative University
-                </div> -->
+
 
                 <!-- Main Heading -->
                 <h1 class="home-heading">
@@ -81,14 +77,14 @@
                 <div class="home-quote" id="homeQuote">
                     <p>
                         "The best way to predict the future is to invent it — and this department is where those innovations begin."
-                        <cite>— GMIU IT Faculty, 2026</cite>
+                        <cite>— IT Faculty, 2026</cite>
                     </p>
                 </div>
 
 
                 <!-- CTA -->
                 <a href="https://gmiu.edu.in/gmiu/website/" target="_blank" class="cta-btn" id="ctaBtn">
-                    <span>GMIU Website</span>
+                    <span>Official Website</span>
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 24 24">
                         <path d="M5 12h14M12 5l7 7-7 7" />
@@ -190,7 +186,7 @@
                             <text x="165" y="186" fill="#475569">// We build futures</text>
                             <text x="165" y="200" fill="#fbbf24">launch</text>
                             <text x="198" y="200" fill="#94a3b8">(</text>
-                            <text x="204" y="200" fill="#a5b4fc">gmiu</text>
+                            <text x="204" y="200" fill="#a5b4fc">portal</text>
                             <text x="228" y="200" fill="#94a3b8">);</text>
                             <text x="165" y="214" fill="#34d399">▌</text>
                         </g>
@@ -304,7 +300,7 @@
             headingMain: "Information",
             headingAccent: "Technology.",
             tagline: `We don't just teach syntax — we <span class="love-word">foster</span> curiosity, <span class="love-word">unleash</span> innovation, and <span class="love-word">inspire</span> the next generation of engineers to code with <span class="love-word">purpose</span>.`,
-            quote: `<p>"The best way to predict the future is to invent it — and this department is where those innovations begin."<cite>— GMIU IT Faculty, 2026</cite></p>`,
+            quote: `<p>"The best way to predict the future is to invent it — and this department is where those innovations begin."<cite>— IT Faculty, 2026</cite></p>`,
             terminalTitle: "it_department.js",
             terminalBody: `
                 <div class="code-line"><span class="cmt">// Department of Information Technology</span></div>
@@ -331,7 +327,7 @@
             headingMain: "Computer",
             headingAccent: "Engineering.",
             tagline: `We don't just build software — we <span class="love-word">design</span> systems, <span class="love-word">architect</span> algorithms, and <span class="love-word">empower</span> the future of technology through scalable computing.`,
-            quote: `<p>"Computing is not about computers, it's about life and solving real-world challenges through logic."<cite>— GMIU CE Faculty, 2026</cite></p>`,
+            quote: `<p>"Computing is not about computers, it's about life and solving real-world challenges through logic."<cite>— CE Faculty, 2026</cite></p>`,
             terminalTitle: "ce_department.js",
             terminalBody: `
                 <div class="code-line"><span class="cmt">// Department of Computer Engineering</span></div>
@@ -373,12 +369,12 @@
                 itBtn.classList.remove('active');
                 ceBtn.classList.add('active');
                 localStorage.setItem('portal_dept', 'CE');
-                document.title = "CE Department — GMIU Faculty Portal";
+                document.title = "CE Department — Faculty Portal";
             } else {
                 ceBtn.classList.remove('active');
                 itBtn.classList.add('active');
                 localStorage.setItem('portal_dept', 'IT');
-                document.title = "IT Department — GMIU Faculty Portal";
+                document.title = "IT Department — Faculty Portal";
             }
         }
 
