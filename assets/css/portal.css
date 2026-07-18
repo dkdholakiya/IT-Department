@@ -3,6 +3,7 @@
    ══════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kameron:wght@400..700&display=swap');
 
 /* ── Design Tokens ── */
 :root {
@@ -945,6 +946,7 @@ html {
     white-space: nowrap;
     transition: all 0.25s ease;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+    font-family: 'Kameron', serif !important;
 }
 
 .fab-link:hover {
