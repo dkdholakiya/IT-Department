@@ -212,7 +212,7 @@ function handleAddEntry() {
             return facInitNormalized.includes(cleanName) || facInitNormalized.includes(f.initials.toUpperCase());
         });
     }
-    const deptName = matchedFaculty ? (matchedFaculty.department || currentDepartment) : currentDepartment;
+    const deptName = matchedFaculty && matchedFaculty.department !== "Both" ? (matchedFaculty.department || currentDepartment) : currentDepartment;
     const deptAbbr = (deptName === "Computer Engineering") ? "CE" : "IT";
     const facultyName = matchedFaculty ? matchedFaculty.name : "Prof. " + facultyInitials;
     const facultyEmail = matchedFaculty ? matchedFaculty.email : (deptAbbr === "CE" ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
@@ -481,7 +481,7 @@ function initFacultyAutocomplete() {
         const query = input.value.toLowerCase().replace("prof.", "").trim();
         let filtered = [];
         if (!query) {
-            filtered = facultyData.filter(member => member.department === currentDepartment);
+            filtered = facultyData.filter(member => member.department === currentDepartment || member.department === "Both");
         } else {
             filtered = facultyData.filter(member =>
                 member.name.toLowerCase().includes(query) ||
@@ -512,7 +512,7 @@ function initFacultyAutocomplete() {
             item.addEventListener("click", () => {
                 input.value = member.initials;
                 dropdown.classList.remove("show");
-                if (member.department) {
+                if (member.department && member.department !== "Both") {
                     setDepartment(member.department);
                 }
             });

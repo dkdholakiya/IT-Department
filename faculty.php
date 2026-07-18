@@ -158,7 +158,7 @@
 
                 facultyData.forEach(member => {
                     const dept = member.department || "Information Technology";
-                    if (filterDept !== "all" && dept !== filterDept) {
+                    if (filterDept !== "all" && dept !== filterDept && dept !== "Both") {
                         return; // skip if it doesn't match the active filter
                     }
 

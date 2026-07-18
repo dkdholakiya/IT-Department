@@ -4,7 +4,7 @@ const facultyData = [
         id: "dc",
         name: "Prof. Dhaval Chandarana",
         designation: "HOD",
-        department: "Information Technology",
+        department: "Both",
         empId: "#5036",
         email: "drchandarana@gmiu.edu.in",
         phone: "96015 24282",
@@ -198,28 +198,28 @@ const facultyData = [
         avatarClass: "av-sg",
         initials: "SDG"
     },
-    {
-        id: "dk",
-        name: "Mr. Dev K Dholakiya",
-        designation: "Developer",
-        department: "Information Technology",
-        empId: "#10216",
-        email: "dkdholakiya@gmiu.edu.in",
-        phone: "9328946676",
-        avatarClass: "av-dk",
-        initials: "DKD"
-    },
-    {
-        id: "Ai",
-        name: "Admin It",
-        designation: "Admin It",
-        department: "Information Technology",
-        empId: "#11111",
-        email: "adminit@gmiu.edu.in",
-        phone: "0000000000",
-        avatarClass: "av-AI",
-        initials: "AI"
-    },
+    // {
+    //     id: "dk",
+    //     name: "Mr. Dev K Dholakiya",
+    //     designation: "Developer",
+    //     department: "Information Technology",
+    //     empId: "#10216",
+    //     email: "dkdholakiya@gmiu.edu.in",
+    //     phone: "9328946676",
+    //     avatarClass: "av-dk",
+    //     initials: "DKD"
+    // },
+    // {
+    //     id: "Ai",
+    //     name: "Admin It",
+    //     designation: "Admin It",
+    //     department: "Information Technology",
+    //     empId: "#11111",
+    //     email: "adminit@gmiu.edu.in",
+    //     phone: "0000000000",
+    //     avatarClass: "av-AI",
+    //     initials: "AI"
+    // },
     {
         id: "rc",
         name: "Prof. Ritesh Chimnani",

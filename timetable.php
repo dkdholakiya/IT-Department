@@ -450,9 +450,9 @@ $jsDataExists = file_exists($jsDataFile);
                 
                 // Select first faculty in selected department
                 const faculty = mappedTimetable[selectedInitials];
-                if (!faculty || faculty.department !== dept) {
+                if (!faculty || (faculty.department !== dept && faculty.department !== "Both")) {
                     const keys = Object.keys(mappedTimetable);
-                    const match = keys.find(k => mappedTimetable[k].department === dept);
+                    const match = keys.find(k => mappedTimetable[k].department === dept || mappedTimetable[k].department === "Both");
                     if (match) {
                         loadTimetable(match);
                     }
@@ -537,7 +537,7 @@ $jsDataExists = file_exists($jsDataFile);
                 sortedKeys.forEach(initials => {
                     const data = mappedTimetable[initials];
                     // If in timetable tab, show only active department
-                    if (currentTab !== "leave" && data.department !== currentActiveDept) return;
+                    if (currentTab !== "leave" && data.department !== currentActiveDept && data.department !== "Both") return;
 
                     const option = document.createElement("div");
                     option.className = `select-option ${initials === selectedInitials ? 'selected' : ''}`;
@@ -580,7 +580,7 @@ $jsDataExists = file_exists($jsDataFile);
                 selectedFacultyText.innerText = `${faculty.name} (${initials})`;
                 facAvatar.innerText = initials;
                 facName.innerText = faculty.name;
-                facDeptBadge.innerText = `Department of ${faculty.department}`;
+                facDeptBadge.innerText = faculty.department === "Both" ? "Department of CE & IT" : `Department of ${faculty.department}`;
                 
                 const facDesignation = document.getElementById("facDesignation");
                 if (facDesignation) {
@@ -595,7 +595,7 @@ $jsDataExists = file_exists($jsDataFile);
                 if (currentTab === "leave") {
                     document.title = `Faculty Alteration Proxy (${initials}) — GMIU`;
                 } else {
-                    document.title = `Faculty Timetable (${initials}) — ${faculty.department} Department`;
+                    document.title = `Faculty Timetable (${initials}) — ${faculty.department === "Both" ? "CE & IT" : faculty.department} Department`;
                 }
 
                 // Update highlight state in options list
@@ -809,13 +809,15 @@ $jsDataExists = file_exists($jsDataFile);
                             const candShift = getFacultyShift(candidate, day);
                             const candLoad = getFacultyLoad(candidate, day);
 
-                            // Check if candidate's shift covers the slot
-                            const inShift = (times.start >= candShift.start && times.end <= candShift.end);
+                            // Determine if candidate has a free day (0 occupied lectures on this day)
+                            const candidateDayLectures = candidate.schedule.filter(s => !s.isRecess && s[day] && s[day].occupied === true).length;
+                            const isFreeDay = (candidateDayLectures === 0);
+
+                            // Check if candidate's shift covers the slot (always true if candidate has a Free Day)
+                            const inShift = isFreeDay || (times.start >= candShift.start && times.end <= candShift.end);
 
                             if (isFree && inShift) {
-                                const candidateDayLectures = candidate.schedule.filter(s => !s.isRecess && s[day] && s[day].occupied === true).length;
-                                const isFreeDay = (candidateDayLectures === 0);
-                                if (candidate.department === faculty.department) {
+                                if (candidate.department === faculty.department || candidate.department === "Both" || faculty.department === "Both") {
                                     sameDeptProxies.push({ member: candidate, isFreeDay, load: candLoad, shift: candShift });
                                 } else {
                                     otherDeptProxies.push({ member: candidate, isFreeDay, load: candLoad, shift: candShift });
@@ -842,7 +844,7 @@ $jsDataExists = file_exists($jsDataFile);
                             if (sameDeptProxies.length > 0) {
                                 proxiesHtml += `
                                     <div class="proxy-group">
-                                        <span class="proxy-group-label dept-same-label">${faculty.department} Department Candidates (${sameDeptProxies.length}):</span>
+                                        <span class="proxy-group-label dept-same-label">${faculty.department === "Both" ? currentActiveDept : faculty.department} Department Candidates (${sameDeptProxies.length}):</span>
                                         <div class="proxy-badges">
                                             ${sameDeptProxies.map(p => {
                                                 const isOverloaded = p.load >= 4;
@@ -860,7 +862,7 @@ $jsDataExists = file_exists($jsDataFile);
                                 `;
                             }
                             if (otherDeptProxies.length > 0) {
-                                const otherDeptName = faculty.department === "Information Technology" ? "Computer Engineering" : "Information Technology";
+                                const otherDeptName = (faculty.department === "Both" ? currentActiveDept : faculty.department) === "Information Technology" ? "Computer Engineering" : "Information Technology";
                                 proxiesHtml += `
                                     <div class="proxy-group" style="margin-top: 14px;">
                                         <span class="proxy-group-label dept-other-label">${otherDeptName} Department Candidates (${otherDeptProxies.length}):</span>
