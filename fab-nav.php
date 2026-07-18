@@ -1,8 +1,16 @@
 <?php
 $active_page = isset($active_page) ? $active_page : 'home';
 ?>
+<!-- Google Font: Kameron -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400..700&display=swap" rel="stylesheet">
+
+<!-- FAB Background Blur Overlay -->
+<div class="fab-overlay" id="fabOverlay"></div>
+
 <!-- ░░ FLOATING NAV BUTTON (Bottom Right) ░░ -->
-<div class="fab-nav" id="fabNav">
+<div class="fab-nav" id="fabNav" data-active-page="<?php echo $active_page; ?>">
     <div class="fab-menu" id="fabMenu">
         <a href="./" class="fab-link <?php echo ($active_page === 'home') ? 'active' : ''; ?>" id="nav-home">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -92,8 +100,25 @@ $active_page = isset($active_page) ? $active_page : 'home';
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Initialize global department theme on load
+        const fabNav = document.getElementById('fabNav');
+        const activePage = fabNav ? fabNav.getAttribute('data-active-page') : 'home';
+        
+        // Define which pages are inherently common pages
+        const isCommonPage = (activePage === 'report' || activePage === 'ctldrive' || activePage === 'ctlactivity');
+
+        if (isCommonPage) {
+            document.body.classList.remove('ce-active');
+            document.body.classList.add('common-active');
+        } else {
+            // Always default to IT theme (red) on load for non-common pages
+            document.body.classList.remove('ce-active');
+            document.body.classList.remove('common-active');
+        }
+
         const fabBtn = document.getElementById('fabBtn');
         const fabMenu = document.getElementById('fabMenu');
+        const fabOverlay = document.getElementById('fabOverlay');
         const iconMenu = fabBtn.querySelector('.fab-icon-menu');
         const iconClose = fabBtn.querySelector('.fab-icon-close');
 
@@ -102,6 +127,7 @@ $active_page = isset($active_page) ? $active_page : 'home';
                 e.stopPropagation();
                 const isOpen = fabMenu.classList.toggle('open');
                 fabBtn.classList.toggle('active', isOpen);
+                if (fabOverlay) fabOverlay.classList.toggle('open', isOpen);
                 iconMenu.style.display = isOpen ? 'none' : 'block';
                 iconClose.style.display = isOpen ? 'block' : 'none';
             });
@@ -111,10 +137,21 @@ $active_page = isset($active_page) ? $active_page : 'home';
                 if (fabNav && !fabNav.contains(e.target)) {
                     fabMenu.classList.remove('open');
                     fabBtn.classList.remove('active');
+                    if (fabOverlay) fabOverlay.classList.remove('open');
                     iconMenu.style.display = 'block';
                     iconClose.style.display = 'none';
                 }
             });
+
+            if (fabOverlay) {
+                fabOverlay.addEventListener('click', () => {
+                    fabMenu.classList.remove('open');
+                    fabBtn.classList.remove('active');
+                    fabOverlay.classList.remove('open');
+                    iconMenu.style.display = 'block';
+                    iconClose.style.display = 'none';
+                });
+            }
         }
     });
 </script>

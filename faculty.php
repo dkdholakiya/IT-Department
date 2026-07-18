@@ -257,12 +257,14 @@
                     // Toggle theme class and update header texts dynamically
                     if (currentFilterDept === "Computer Engineering") {
                         document.body.classList.add("ce-active");
+                        document.body.classList.remove("common-active");
                         if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Computer Engineering";
                         if (portalBadge) portalBadge.textContent = "CE Faculty";
                         localStorage.setItem('portal_dept', 'CE');
                         document.title = "Faculty Directory — CE Department";
                     } else if (currentFilterDept === "Information Technology") {
                         document.body.classList.remove("ce-active");
+                        document.body.classList.remove("common-active");
                         if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Information Technology";
                         if (portalBadge) portalBadge.textContent = "IT Faculty";
                         localStorage.setItem('portal_dept', 'IT');
@@ -270,6 +272,7 @@
                     } else {
                         // "all"
                         document.body.classList.remove("ce-active");
+                        document.body.classList.add("common-active");
                         if (rpDeptBadgeText) rpDeptBadgeText.textContent = "IT & CE Departments";
                         if (portalBadge) portalBadge.textContent = "All Faculty";
                         // Note: Don't overwrite local storage for 'all' tab click to preserve base page default

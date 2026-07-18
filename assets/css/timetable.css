@@ -921,6 +921,38 @@ body {
     color: #60a5fa;
 }
 
+.proxy-badge.overload-warning {
+    background: rgba(245, 158, 11, 0.08) !important;
+    border: 1px solid rgba(245, 158, 11, 0.35) !important;
+    color: #fbbf24 !important;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.05);
+}
+
+.badge-overload {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #f87171;
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-left: 4px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+}
+
+.badge-shift {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    margin-left: 4px;
+    font-family: 'Share Tech', monospace;
+}
+
 .leave-no-proxies {
     font-size: 13.5px;
     color: #ef4444;

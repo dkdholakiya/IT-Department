@@ -71,6 +71,9 @@ document.addEventListener("DOMContentLoaded", () => {
     initBranchAutocomplete();
     initDepartmentToggle();
 
+    // Always default to Information Technology on initial load
+    setDepartment("Information Technology");
+
     // Event listeners
     const addBtn = document.getElementById("add-entry-btn");
     if (addBtn) addBtn.addEventListener("click", handleAddEntry);
@@ -462,7 +465,9 @@ function initFacultyAutocomplete() {
     });
 
     input.addEventListener("input", () => {
-        dropdown.classList.add("show");
+        if (document.activeElement === input) {
+            dropdown.classList.add("show");
+        }
         filterList();
     });
 
@@ -1335,6 +1340,7 @@ function setDepartment(dept) {
         if (itBtn) itBtn.classList.remove("active");
         if (ceBtn) ceBtn.classList.add("active");
         if (pageContainer) pageContainer.classList.add("ce-active");
+        document.body.classList.add("ce-active");
         if (badgeText) badgeText.innerText = "Department of Computer Engineering";
         localStorage.setItem('portal_dept', 'CE');
         document.title = "Zero Student Log — CE Department";
@@ -1342,6 +1348,7 @@ function setDepartment(dept) {
         if (ceBtn) ceBtn.classList.remove("active");
         if (itBtn) itBtn.classList.add("active");
         if (pageContainer) pageContainer.classList.remove("ce-active");
+        document.body.classList.remove("ce-active");
         if (badgeText) badgeText.innerText = "Department of Information Technology";
         localStorage.setItem('portal_dept', 'IT');
         document.title = "Zero Student Log — IT Department";

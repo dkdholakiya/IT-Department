@@ -355,6 +355,79 @@ $jsDataExists = file_exists($jsDataFile);
                 return null;
             }
 
+            // Determine faculty shift based on their schedule on the given day (or across the week if day is free)
+            function getFacultyShift(faculty, day) {
+                let occupiedSlots = faculty.schedule.filter(slot => {
+                    return !slot.isRecess && slot[day] && slot[day].occupied === true;
+                });
+                
+                // Fallback to checking all days of the week if they have no occupied lectures on this day
+                if (occupiedSlots.length === 0) {
+                    const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+                    days.forEach(d => {
+                        const slots = faculty.schedule.filter(slot => {
+                            return !slot.isRecess && slot[d] && slot[d].occupied === true;
+                        });
+                        occupiedSlots = occupiedSlots.concat(slots);
+                    });
+                }
+                
+                let maxEnd = 0;
+                occupiedSlots.forEach(slot => {
+                    const times = getSlotMinutes(slot.time);
+                    if (times && times.end > maxEnd) {
+                        maxEnd = times.end;
+                    }
+                });
+                
+                // Shift boundaries in minutes from midnight:
+                // Shift-1: 7:30 AM to 2:45 PM (450 to 885 minutes)
+                // Shift-2: 9:30 AM to 5:15 PM (570 to 1035 minutes)
+                // Shift-3: 10:30 AM to 6:00 PM (630 to 1080 minutes)
+                if (maxEnd === 0 || maxEnd <= 885) { // 2:45 PM
+                    return {
+                        id: 1,
+                        name: "Shift-1",
+                        start: 450, // 7:30 AM
+                        end: 885,   // 2:45 PM
+                        startTimeStr: "7:30 AM",
+                        endTimeStr: "2:45 PM"
+                    };
+                } else if (maxEnd <= 1035) { // 5:15 PM
+                    return {
+                        id: 2,
+                        name: "Shift-2",
+                        start: 570, // 9:30 AM
+                        end: 1035,  // 5:15 PM
+                        startTimeStr: "9:30 AM",
+                        endTimeStr: "5:15 PM"
+                    };
+                } else { // 6:00 PM
+                    return {
+                        id: 3,
+                        name: "Shift-3",
+                        start: 630, // 10:30 AM
+                        end: 1080,  // 6:00 PM
+                        startTimeStr: "10:30 AM",
+                        endTimeStr: "6:00 PM"
+                    };
+                }
+            }
+
+            // Calculate total faculty load in hours for a given day
+            function getFacultyLoad(faculty, day) {
+                let loadMinutes = 0;
+                faculty.schedule.forEach(slot => {
+                    if (!slot.isRecess && slot[day] && slot[day].occupied === true) {
+                        const times = getSlotMinutes(slot.time);
+                        if (times) {
+                            loadMinutes += (times.end - times.start);
+                        }
+                    }
+                });
+                return loadMinutes / 60;
+            }
+
             // Sync layout themes
             function setDepartmentTheme(dept) {
                 currentActiveDept = dept;
@@ -732,19 +805,35 @@ $jsDataExists = file_exists($jsDataFile);
                                 }
                             });
 
-                            if (isFree) {
+                            // Determine candidate's shift and load
+                            const candShift = getFacultyShift(candidate, day);
+                            const candLoad = getFacultyLoad(candidate, day);
+
+                            // Check if candidate's shift covers the slot
+                            const inShift = (times.start >= candShift.start && times.end <= candShift.end);
+
+                            if (isFree && inShift) {
                                 const candidateDayLectures = candidate.schedule.filter(s => !s.isRecess && s[day] && s[day].occupied === true).length;
                                 const isFreeDay = (candidateDayLectures === 0);
                                 if (candidate.department === faculty.department) {
-                                    sameDeptProxies.push({ member: candidate, isFreeDay });
+                                    sameDeptProxies.push({ member: candidate, isFreeDay, load: candLoad, shift: candShift });
                                 } else {
-                                    otherDeptProxies.push({ member: candidate, isFreeDay });
+                                    otherDeptProxies.push({ member: candidate, isFreeDay, load: candLoad, shift: candShift });
                                 }
                             }
                         });
 
-                        sameDeptProxies.sort((a, b) => a.member.initials.localeCompare(b.member.initials));
-                        otherDeptProxies.sort((a, b) => a.member.initials.localeCompare(b.member.initials));
+                        // Sort proxies: non-overloaded (load < 4) first, then overloaded (load >= 4), then by initials
+                        const sortProxies = (a, b) => {
+                            const aOverload = a.load >= 4;
+                            const bOverload = b.load >= 4;
+                            if (aOverload !== bOverload) {
+                                return aOverload ? 1 : -1;
+                            }
+                            return a.member.initials.localeCompare(b.member.initials);
+                        };
+                        sameDeptProxies.sort(sortProxies);
+                        otherDeptProxies.sort(sortProxies);
 
                         let proxiesHtml = "";
                         if (sameDeptProxies.length === 0 && otherDeptProxies.length === 0) {
@@ -755,11 +844,17 @@ $jsDataExists = file_exists($jsDataFile);
                                     <div class="proxy-group">
                                         <span class="proxy-group-label dept-same-label">${faculty.department} Department Candidates (${sameDeptProxies.length}):</span>
                                         <div class="proxy-badges">
-                                            ${sameDeptProxies.map(p => `
-                                                <span class="proxy-badge dept-same" title="${p.member.name}">
-                                                    <b>${p.member.initials}</b> ${p.member.name}${p.isFreeDay ? " 🌟 (Free Day)" : ""}
-                                                </span>
-                                            `).join("")}
+                                            ${sameDeptProxies.map(p => {
+                                                const isOverloaded = p.load >= 4;
+                                                const overloadClass = isOverloaded ? "overload-warning" : "";
+                                                const overloadBadge = isOverloaded ? ` <span class="badge-overload">⚠️ Overload (${p.load.toFixed(1)}h)</span>` : ` (${p.load.toFixed(1)}h)`;
+                                                const shiftInfo = ` <span class="badge-shift">[${p.shift.name}]</span>`;
+                                                return `
+                                                    <span class="proxy-badge dept-same ${overloadClass}" title="${p.member.name} (${p.shift.name}, Load: ${p.load.toFixed(1)}h)">
+                                                        <b>${p.member.initials}</b> ${p.member.name}${overloadBadge}${shiftInfo}${p.isFreeDay ? " 🌟 (Free Day)" : ""}
+                                                    </span>
+                                                `;
+                                            }).join("")}
                                         </div>
                                     </div>
                                 `;
@@ -770,11 +865,17 @@ $jsDataExists = file_exists($jsDataFile);
                                     <div class="proxy-group" style="margin-top: 14px;">
                                         <span class="proxy-group-label dept-other-label">${otherDeptName} Department Candidates (${otherDeptProxies.length}):</span>
                                         <div class="proxy-badges">
-                                            ${otherDeptProxies.map(p => `
-                                                <span class="proxy-badge dept-other" title="${p.member.name}">
-                                                    <b>${p.member.initials}</b> ${p.member.name}${p.isFreeDay ? " 🌟 (Free Day)" : ""}
-                                                </span>
-                                            `).join("")}
+                                            ${otherDeptProxies.map(p => {
+                                                const isOverloaded = p.load >= 4;
+                                                const overloadClass = isOverloaded ? "overload-warning" : "";
+                                                const overloadBadge = isOverloaded ? ` <span class="badge-overload">⚠️ Overload (${p.load.toFixed(1)}h)</span>` : ` (${p.load.toFixed(1)}h)`;
+                                                const shiftInfo = ` <span class="badge-shift">[${p.shift.name}]</span>`;
+                                                return `
+                                                    <span class="proxy-badge dept-other ${overloadClass}" title="${p.member.name} (${p.shift.name}, Load: ${p.load.toFixed(1)}h)">
+                                                        <b>${p.member.initials}</b> ${p.member.name}${overloadBadge}${shiftInfo}${p.isFreeDay ? " 🌟 (Free Day)" : ""}
+                                                    </span>
+                                                `;
+                                            }).join("")}
                                         </div>
                                     </div>
                                 `;
@@ -841,9 +942,39 @@ $jsDataExists = file_exists($jsDataFile);
                     leaveTypeSelect.disabled = false;
 
                     // Find occupied lecture slots for this day
-                    let busySlots = faculty.schedule.filter(slot => {
+                    const rawBusySlots = faculty.schedule.filter(slot => {
                         return !slot.isRecess && slot[day] && slot[day].occupied === true;
                     });
+
+                    // Merge consecutive identical slots (same class and room, with no break)
+                    let busySlots = [];
+                    for (let i = 0; i < rawBusySlots.length; i++) {
+                        let currentSlot = JSON.parse(JSON.stringify(rawBusySlots[i]));
+                        let currentTimes = getSlotMinutes(currentSlot.time);
+                        if (!currentTimes) continue;
+
+                        while (i + 1 < rawBusySlots.length) {
+                            let nextSlot = rawBusySlots[i + 1];
+                            let nextTimes = getSlotMinutes(nextSlot.time);
+                            if (nextTimes && 
+                                nextTimes.start === currentTimes.end && 
+                                nextSlot[day].class === currentSlot[day].class && 
+                                nextSlot[day].room === currentSlot[day].room) {
+                                
+                                const currentParts = currentSlot.time.toLowerCase().split(/(?:to|\s|-)+/);
+                                const nextParts = nextSlot.time.toLowerCase().split(/(?:to|\s|-)+/);
+                                const startTimePart = currentParts[0].replace(/to/g, '').trim();
+                                const endTimePart = nextParts[nextParts.length - 1].replace(/to/g, '').trim();
+                                currentSlot.time = `${startTimePart} to ${endTimePart}`;
+                                
+                                currentTimes.end = nextTimes.end;
+                                i++;
+                            } else {
+                                break;
+                            }
+                        }
+                        busySlots.push(currentSlot);
+                    }
 
                     // Filter based on Leave Type (threshold 1:00 PM = 780 minutes)
                     if (leaveType === "FIRST") {

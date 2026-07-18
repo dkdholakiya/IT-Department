@@ -273,13 +273,8 @@
             itBtn.addEventListener("click", () => updateDepartmentTheme(false));
             ceBtn.addEventListener("click", () => updateDepartmentTheme(true));
 
-            // Load saved department from localStorage if available
-            const savedDept = localStorage.getItem('portal_dept');
-            if (savedDept === 'CE') {
-                updateDepartmentTheme(true);
-            } else {
-                updateDepartmentTheme(false);
-            }
+            // Always default to Information Technology on initial page load
+            updateDepartmentTheme(false);
 
             // Find events for a specific date
             function getEventsForDate(dateStr) {

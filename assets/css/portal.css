@@ -842,6 +842,26 @@ html {
     }
 }
 
+/* FAB Overlay / Backdrop Blur */
+.fab-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 998;
+    background: rgba(4, 7, 20, 0.45);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fab-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
 /* ══════════════════════════════════════
    FAB NAVIGATION (Bottom Right Corner)
 ══════════════════════════════════════ */
@@ -1638,4 +1658,46 @@ body.ce-active .terminal-card {
 .av-theme-pink {
     background: linear-gradient(145deg, #4c0519, #881337) !important;
     border-color: rgba(244, 63, 94, 0.4) !important;
+}
+
+body.ce-active .fab-btn {
+    background: linear-gradient(135deg, #3b82f6, #1e3a8a) !important;
+    box-shadow: 0 8px 26px rgba(37, 99, 235, 0.4), 0 2px 8px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.ce-active .fab-btn::before {
+    border-color: rgba(37, 99, 235, 0.4) !important;
+}
+
+body.ce-active .fab-link:hover {
+    background: rgba(37, 99, 235, 0.14) !important;
+    border-color: rgba(37, 99, 235, 0.45) !important;
+    color: #93c5fd !important;
+}
+
+body.ce-active .fab-link.active {
+    color: #93c5fd !important;
+    border-color: rgba(37, 99, 235, 0.35) !important;
+    background: rgba(37, 99, 235, 0.09) !important;
+}
+
+body.common-active .fab-btn {
+    background: linear-gradient(135deg, #8b5cf6, #5b21b6) !important;
+    box-shadow: 0 8px 26px rgba(139, 92, 246, 0.4), 0 2px 8px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.common-active .fab-btn::before {
+    border-color: rgba(139, 92, 246, 0.4) !important;
+}
+
+body.common-active .fab-link:hover {
+    background: rgba(139, 92, 246, 0.14) !important;
+    border-color: rgba(139, 92, 246, 0.45) !important;
+    color: #d8b4fe !important;
+}
+
+body.common-active .fab-link.active {
+    color: #d8b4fe !important;
+    border-color: rgba(139, 92, 246, 0.35) !important;
+    background: rgba(139, 92, 246, 0.09) !important;
 }
