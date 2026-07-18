@@ -273,7 +273,7 @@ if (!file_exists($excelFile)) {
                     break;
                 }
                 
-                // Determine if it is a recess row (either A or B contains recess/break keywords)
+                // Determine if it is a recess row (either A, B, or any day column contains recess/break keywords)
                 $isRecess = false;
                 $label = '';
                 if (stripos($valA, 'RECESS') !== false || stripos($valA, 'BREAK') !== false) {
@@ -282,6 +282,17 @@ if (!file_exists($excelFile)) {
                 } else if (stripos($valB, 'RECESS') !== false || stripos($valB, 'BREAK') !== false) {
                     $isRecess = true;
                     $label = $valB;
+                } else {
+                    // Check day columns (C to H)
+                    $dayCols = ['C', 'D', 'E', 'F', 'G', 'H'];
+                    foreach ($dayCols as $col) {
+                        $cellVal = isset($rows[$r][$col]) ? trim($rows[$r][$col]) : '';
+                        if (stripos($cellVal, 'RECESS') !== false || stripos($cellVal, 'BREAK') !== false) {
+                            $isRecess = true;
+                            $label = $cellVal;
+                            break;
+                        }
+                    }
                 }
                 
                 if ($isRecess) {
@@ -290,12 +301,16 @@ if (!file_exists($excelFile)) {
                     
                     if (strpos($labelUpper, 'MORNING SHIFT RECESS - 1') !== false || strpos($labelUpper, 'MORNING SHIFT RECESS-1') !== false) {
                         $recessTime = '09:30 to 10:00';
-                    } else if (strpos($labelUpper, 'RECESS - 2') !== false && (strpos($labelUpper, 'MORNING') !== false || strpos($labelUpper, 'MRING') !== false)) {
+                    } else if (preg_match('/RECESS\s*-\s*2(?!\d)/', $labelUpper) && (strpos($labelUpper, 'MORNING') !== false || strpos($labelUpper, 'MRING') !== false)) {
                         $recessTime = '12:00 to 12:15';
-                    } else if (strpos($labelUpper, 'RECESS - 1') !== false) {
+                    } else if (preg_match('/RECESS\s*-\s*1(?!\d)/', $labelUpper)) {
                         $recessTime = '01:00 to 01:45';
-                    } else if (strpos($labelUpper, 'RECESS - 2') !== false) {
+                    } else if (preg_match('/RECESS\s*-\s*2(?!\d)/', $labelUpper)) {
                         $recessTime = '03:45 to 04:00';
+                    }
+                    
+                    if (empty($recessTime)) {
+                        $recessTime = $valB;
                     }
                     
                     $schedule[] = [

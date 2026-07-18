@@ -142,7 +142,10 @@ $jsDataExists = file_exists($jsDataFile);
                     </div>
                     <div class="faculty-meta-right">
                         <span class="faculty-dept-badge" id="facDeptBadge">Department of Information Technology</span>
-                        <div class="faculty-semester-info" id="facSemesterInfo"></div>
+                        <div style="display: flex; gap: 10px; align-items: center; margin-top: 6px; flex-wrap: wrap; justify-content: flex-end;">
+                            <div class="faculty-semester-info" id="facSemesterInfo"></div>
+                            <button type="button" class="leave-toggle-btn" id="leaveToggleBtn">Alteration</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -166,6 +169,77 @@ $jsDataExists = file_exists($jsDataFile);
                             <!-- Populated via Javascript -->
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- Leave Arrangement Card -->
+            <div class="leave-card" id="leaveCardContainer" style="display: none;">
+                <div class="leave-card-header">
+                    <h3 class="leave-card-title">Proxy Assignment Finder</h3>
+                    <p class="leave-card-subtitle">Find available faculty members to substitute for scheduled lectures when this member has an alteration.</p>
+                </div>
+                
+                <!-- Day, Leave Type, and Time Selectors -->
+                <div class="leave-controls-row">
+                    <div class="leave-form-group">
+                        <label for="leaveDaySelect">1. Select Day:</label>
+                        <div class="select-wrap">
+                            <select id="leaveDaySelect" class="custom-form-select">
+                                <option value="">Select Day...</option>
+                                <option value="MON">Monday</option>
+                                <option value="TUE">Tuesday</option>
+                                <option value="WED">Wednesday</option>
+                                <option value="THU">Thursday</option>
+                                <option value="FRI">Friday</option>
+                                <option value="SAT">Saturday</option>
+                            </select>
+                            <span class="select-arrow">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="leave-form-group">
+                        <label for="leaveTypeSelect">2. Alteration Type:</label>
+                        <div class="select-wrap">
+                            <select id="leaveTypeSelect" class="custom-form-select" disabled>
+                                <option value="FULL">Full Day</option>
+                                <option value="FIRST">First Half</option>
+                                <option value="SECOND">Second Half</option>
+                            </select>
+                            <span class="select-arrow">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="leave-form-group">
+                        <label for="leaveTimeSelect">3. Select Time Slot:</label>
+                        <div class="select-wrap">
+                            <select id="leaveTimeSelect" class="custom-form-select" disabled>
+                                <option value="ALL">All Time Slots</option>
+                            </select>
+                            <span class="select-arrow">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="leave-results-container" id="leaveResultsContainer">
+                    <div class="leave-instructions">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-bottom: 10px; opacity: 0.6;">
+                            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        Please select a day and time slot to search available proxy candidates.
+                    </div>
                 </div>
             </div>
         <?php endif; ?>
@@ -205,6 +279,7 @@ $jsDataExists = file_exists($jsDataFile);
 
             let currentActiveDept = "Information Technology";
             let selectedInitials = "SBC";
+            let currentTab = "timetable"; // "timetable" or "leave"
 
             // Map Excel timetableData with official facultyData.js file to filter, name-match, and group by department
             const mappedTimetable = {};
@@ -227,9 +302,64 @@ $jsDataExists = file_exists($jsDataFile);
                 });
             }
 
+            // Helper to parse time string like "12:15" or "01:00 PM" into minutes from midnight
+            function parseTimeToMinutes(timeStr) {
+                if (!timeStr) return null;
+                timeStr = timeStr.trim().toLowerCase();
+                
+                let isPM = timeStr.includes('pm');
+                let isAM = timeStr.includes('am');
+                
+                let clean = timeStr.replace(/[^0-9:]/g, '');
+                let parts = clean.split(':');
+                if (parts.length < 2) return null;
+                
+                let hours = parseInt(parts[0], 10);
+                let minutes = parseInt(parts[1], 10);
+                
+                if (isPM && hours < 12) {
+                    hours += 12;
+                }
+                if (isAM && hours === 12) {
+                    hours = 0;
+                }
+                
+                // Infer afternoon/evening PM for times between 1:00 and 6:59 when AM/PM is omitted
+                if (!isPM && !isAM) {
+                    if (hours >= 1 && hours < 7) {
+                        hours += 12;
+                    }
+                }
+                
+                return hours * 60 + minutes;
+            }
+
+            // Helper to parse slot time range into start and end minutes
+            function getSlotMinutes(timeStr) {
+                if (!timeStr) return null;
+                const parts = timeStr.toLowerCase().split(/(?:to|\s|-)+/);
+                const times = [];
+                parts.forEach(p => {
+                    const clean = p.trim();
+                    if (clean.match(/\d{1,2}:\d{2}/)) {
+                        times.push(clean);
+                    }
+                });
+                if (times.length >= 2) {
+                    const startMin = parseTimeToMinutes(times[0]);
+                    const endMin = parseTimeToMinutes(times[1]);
+                    if (startMin !== null && endMin !== null) {
+                        return { start: startMin, end: endMin };
+                    }
+                }
+                return null;
+            }
+
             // Sync layout themes
             function setDepartmentTheme(dept) {
                 currentActiveDept = dept;
+                toggleLeaveMode("timetable");
+
                 if (dept === "Computer Engineering") {
                     document.body.classList.add("ce-active");
                     if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Computer Engineering";
@@ -244,11 +374,60 @@ $jsDataExists = file_exists($jsDataFile);
                     itBtn.classList.add("active");
                 }
                 populateDropdown();
+                
                 // Select first faculty in selected department
-                const keys = Object.keys(mappedTimetable);
-                const match = keys.find(k => mappedTimetable[k].department === dept);
-                if (match) {
-                    loadTimetable(match);
+                const faculty = mappedTimetable[selectedInitials];
+                if (!faculty || faculty.department !== dept) {
+                    const keys = Object.keys(mappedTimetable);
+                    const match = keys.find(k => mappedTimetable[k].department === dept);
+                    if (match) {
+                        loadTimetable(match);
+                    }
+                } else {
+                    loadTimetable(selectedInitials);
+                }
+            }
+
+            // Toggle view mode between Timetable grid and Leave proxy finder
+            function toggleLeaveMode(forceTab) {
+                const leaveCard = document.getElementById("leaveCardContainer");
+                const tableCard = document.querySelector(".table-card");
+                const leaveToggleBtn = document.getElementById("leaveToggleBtn");
+
+                if (forceTab !== undefined) {
+                    currentTab = forceTab;
+                } else {
+                    currentTab = (currentTab === "leave") ? "timetable" : "leave";
+                }
+
+                if (currentTab === "leave") {
+                    if (leaveCard) leaveCard.style.display = "flex";
+                    if (tableCard) tableCard.style.display = "none";
+                    if (leaveToggleBtn) {
+                        leaveToggleBtn.textContent = "Show Timetable";
+                        leaveToggleBtn.classList.add("active");
+                    }
+                    if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Faculty Alteration Arrangement Finder";
+                    if (portalBadge) portalBadge.textContent = "Alteration Tracker";
+                    renderLeaveArrangements(selectedInitials);
+                } else {
+                    if (leaveCard) leaveCard.style.display = "none";
+                    if (tableCard) tableCard.style.display = "block";
+                    if (leaveToggleBtn) {
+                        leaveToggleBtn.textContent = "Alteration";
+                        leaveToggleBtn.classList.remove("active");
+                    }
+                    if (currentActiveDept === "Computer Engineering") {
+                        if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Computer Engineering";
+                        if (portalBadge) portalBadge.textContent = "CE Timetable";
+                    } else {
+                        if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Information Technology";
+                        if (portalBadge) portalBadge.textContent = "IT Timetable";
+                    }
+                    const faculty = mappedTimetable[selectedInitials];
+                    if (faculty) {
+                        renderTimetableGrid(faculty);
+                    }
                 }
             }
 
@@ -284,8 +463,8 @@ $jsDataExists = file_exists($jsDataFile);
                 
                 sortedKeys.forEach(initials => {
                     const data = mappedTimetable[initials];
-                    // Show only faculty in active department selection
-                    if (data.department !== currentActiveDept) return;
+                    // If in timetable tab, show only active department
+                    if (currentTab !== "leave" && data.department !== currentActiveDept) return;
 
                     const option = document.createElement("div");
                     option.className = `select-option ${initials === selectedInitials ? 'selected' : ''}`;
@@ -340,7 +519,11 @@ $jsDataExists = file_exists($jsDataFile);
                 }
 
                 // Update document title dynamically
-                document.title = `Faculty Timetable (${initials}) — ${faculty.department} Department`;
+                if (currentTab === "leave") {
+                    document.title = `Faculty Alteration Proxy (${initials}) — GMIU`;
+                } else {
+                    document.title = `Faculty Timetable (${initials}) — ${faculty.department} Department`;
+                }
 
                 // Update highlight state in options list
                 const options = optionsListContainer.querySelectorAll(".select-option");
@@ -352,7 +535,15 @@ $jsDataExists = file_exists($jsDataFile);
                     }
                 });
 
-                // Render Table rows
+                if (currentTab === "leave") {
+                    renderLeaveArrangements(initials);
+                } else {
+                    renderTimetableGrid(faculty);
+                }
+            }
+
+            // Render standard timetable grid
+            function renderTimetableGrid(faculty) {
                 timetableBody.innerHTML = "";
                 const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
                 const rowCount = faculty.schedule.length;
@@ -376,59 +567,6 @@ $jsDataExists = file_exists($jsDataFile);
                     });
                 }
 
-                // Helper to parse time string like "12:15" or "01:00 PM" into minutes from midnight
-                function parseTimeToMinutes(timeStr) {
-                    if (!timeStr) return null;
-                    timeStr = timeStr.trim().toLowerCase();
-                    
-                    let isPM = timeStr.includes('pm');
-                    let isAM = timeStr.includes('am');
-                    
-                    let clean = timeStr.replace(/[^0-9:]/g, '');
-                    let parts = clean.split(':');
-                    if (parts.length < 2) return null;
-                    
-                    let hours = parseInt(parts[0], 10);
-                    let minutes = parseInt(parts[1], 10);
-                    
-                    if (isPM && hours < 12) {
-                        hours += 12;
-                    }
-                    if (isAM && hours === 12) {
-                        hours = 0;
-                    }
-                    
-                    // Infer afternoon/evening PM for times between 1:00 and 6:59 when AM/PM is omitted
-                    if (!isPM && !isAM) {
-                        if (hours >= 1 && hours < 7) {
-                            hours += 12;
-                        }
-                    }
-                    
-                    return hours * 60 + minutes;
-                }
-
-                // Helper to parse slot time range into start and end minutes
-                function getSlotMinutes(timeStr) {
-                    if (!timeStr) return null;
-                    const parts = timeStr.toLowerCase().split(/(?:to|\s|-)+/);
-                    const times = [];
-                    parts.forEach(p => {
-                        const clean = p.trim();
-                        if (clean.match(/\d{1,2}:\d{2}/)) {
-                            times.push(clean);
-                        }
-                    });
-                    if (times.length >= 2) {
-                        const startMin = parseTimeToMinutes(times[0]);
-                        const endMin = parseTimeToMinutes(times[1]);
-                        if (startMin !== null && endMin !== null) {
-                            return { start: startMin, end: endMin };
-                        }
-                    }
-                    return null;
-                }
-
                 // 2. Scan and merge identical consecutive slots for each day dynamically
                 for (let d = 0; d < 6; d++) {
                     let mergeStartRow = -1;
@@ -437,7 +575,6 @@ $jsDataExists = file_exists($jsDataFile);
                     for (let r = 0; r < rowCount; r++) {
                         const slot = faculty.schedule[r];
                         if (slot.isRecess) {
-                            // Recess breaks any consecutive merge
                             mergeStartRow = -1;
                             lastEndMin = -1;
                             continue;
@@ -483,7 +620,7 @@ $jsDataExists = file_exists($jsDataFile);
 
                         for (let d = 0; d < 6; d++) {
                             const cell = grid[r][d];
-                            if (cell.skip) continue; // Skip rendering merged cell
+                            if (cell.skip) continue;
 
                             const rowspanAttr = cell.rowspan > 1 ? ` rowspan="${cell.rowspan}"` : '';
 
@@ -513,18 +650,274 @@ $jsDataExists = file_exists($jsDataFile);
                 }
             }
 
+            // Render day-wise leave arrangements and find free substitutes
+            function renderLeaveArrangements(absentInitials) {
+                const leaveDaySelect = document.getElementById("leaveDaySelect");
+                const leaveTypeSelect = document.getElementById("leaveTypeSelect");
+                const leaveTimeSelect = document.getElementById("leaveTimeSelect");
+                const leaveResultsContainer = document.getElementById("leaveResultsContainer");
+
+                if (leaveDaySelect) leaveDaySelect.value = "";
+                if (leaveTypeSelect) {
+                    leaveTypeSelect.value = "FULL";
+                    leaveTypeSelect.disabled = true;
+                }
+                if (leaveTimeSelect) {
+                    leaveTimeSelect.innerHTML = '<option value="ALL">All Time Slots</option>';
+                    leaveTimeSelect.disabled = true;
+                }
+                if (leaveResultsContainer) {
+                    leaveResultsContainer.innerHTML = `
+                        <div class="leave-instructions">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-bottom: 10px; opacity: 0.6;">
+                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            Please select a day and time slot to search available proxy candidates.
+                        </div>
+                    `;
+                }
+            }
+
+            const leaveDaySelect = document.getElementById("leaveDaySelect");
+            const leaveTypeSelect = document.getElementById("leaveTypeSelect");
+            const leaveTimeSelect = document.getElementById("leaveTimeSelect");
+            const leaveResultsContainer = document.getElementById("leaveResultsContainer");
+
+            let currentFilteredSlots = [];
+
+            if (leaveDaySelect && leaveTypeSelect && leaveTimeSelect) {
+                
+                // Helper to render proxy results list
+                function renderProxyResult(day, busySlots, faculty) {
+                    if (busySlots.length === 0) {
+                        leaveResultsContainer.innerHTML = `
+                            <div class="leave-day-empty" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                                🍵 No busy lectures scheduled for this period. No proxy required!
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    leaveResultsContainer.innerHTML = "";
+
+                    const resultsStack = document.createElement("div");
+                    resultsStack.style.display = "flex";
+                    resultsStack.style.flexDirection = "column";
+                    resultsStack.style.gap = "24px";
+
+                    busySlots.forEach(slot => {
+                        const times = getSlotMinutes(slot.time);
+                        if (!times) return;
+
+                        const sameDeptProxies = [];
+                        const otherDeptProxies = [];
+
+                        Object.keys(mappedTimetable).forEach(candInitials => {
+                            // Exclude the absent faculty member themselves
+                            if (candInitials === selectedInitials) return;
+
+                            const candidate = mappedTimetable[candInitials];
+                            let isFree = true;
+
+                            // Check if candidate has an overlapping occupied lecture
+                            candidate.schedule.forEach(candSlot => {
+                                if (candSlot.isRecess) return;
+                                if (candSlot[day] && candSlot[day].occupied === true) {
+                                    const candTimes = getSlotMinutes(candSlot.time);
+                                    if (candTimes) {
+                                        if (candTimes.start < times.end && candTimes.end > times.start) {
+                                            isFree = false;
+                                        }
+                                    }
+                                }
+                            });
+
+                            if (isFree) {
+                                const candidateDayLectures = candidate.schedule.filter(s => !s.isRecess && s[day] && s[day].occupied === true).length;
+                                const isFreeDay = (candidateDayLectures === 0);
+                                if (candidate.department === faculty.department) {
+                                    sameDeptProxies.push({ member: candidate, isFreeDay });
+                                } else {
+                                    otherDeptProxies.push({ member: candidate, isFreeDay });
+                                }
+                            }
+                        });
+
+                        sameDeptProxies.sort((a, b) => a.member.initials.localeCompare(b.member.initials));
+                        otherDeptProxies.sort((a, b) => a.member.initials.localeCompare(b.member.initials));
+
+                        let proxiesHtml = "";
+                        if (sameDeptProxies.length === 0 && otherDeptProxies.length === 0) {
+                            proxiesHtml = `<div class="leave-no-proxies" style="text-align: center; padding: 20px;">⚠️ No free faculty members found at this time.</div>`;
+                        } else {
+                            if (sameDeptProxies.length > 0) {
+                                proxiesHtml += `
+                                    <div class="proxy-group">
+                                        <span class="proxy-group-label dept-same-label">${faculty.department} Department Candidates (${sameDeptProxies.length}):</span>
+                                        <div class="proxy-badges">
+                                            ${sameDeptProxies.map(p => `
+                                                <span class="proxy-badge dept-same" title="${p.member.name}">
+                                                    <b>${p.member.initials}</b> ${p.member.name}${p.isFreeDay ? " 🌟 (Free Day)" : ""}
+                                                </span>
+                                            `).join("")}
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                            if (otherDeptProxies.length > 0) {
+                                const otherDeptName = faculty.department === "Information Technology" ? "Computer Engineering" : "Information Technology";
+                                proxiesHtml += `
+                                    <div class="proxy-group" style="margin-top: 14px;">
+                                        <span class="proxy-group-label dept-other-label">${otherDeptName} Department Candidates (${otherDeptProxies.length}):</span>
+                                        <div class="proxy-badges">
+                                            ${otherDeptProxies.map(p => `
+                                                <span class="proxy-badge dept-other" title="${p.member.name}">
+                                                    <b>${p.member.initials}</b> ${p.member.name}${p.isFreeDay ? " 🌟 (Free Day)" : ""}
+                                                </span>
+                                            `).join("")}
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        }
+
+                        const slotRow = document.createElement("div");
+                        slotRow.className = "leave-slot-row";
+                        slotRow.style.borderBottom = "1px solid rgba(255, 255, 255, 0.08)";
+                        slotRow.style.paddingBottom = "24px";
+
+                        slotRow.innerHTML = `
+                            <div class="leave-slot-info" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 20px; background: rgba(var(--theme-color-rgb), 0.08); border-color: rgba(var(--theme-color-rgb), 0.2);">
+                                <div>
+                                    <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-family: 'Share Tech', monospace; letter-spacing: 1px;">Selected Lecture</div>
+                                    <div class="leave-slot-subject">${slot[day].class}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="leave-slot-time">${slot.time}</div>
+                                    <div class="leave-slot-room" style="font-weight: bold; color: var(--text-primary);">Room: ${slot[day].room || 'N/A'}</div>
+                                </div>
+                            </div>
+                            <div class="leave-slot-proxies">
+                                ${proxiesHtml}
+                            </div>
+                        `;
+                        resultsStack.appendChild(slotRow);
+                    });
+
+                    if (resultsStack.lastChild) {
+                        resultsStack.lastChild.style.borderBottom = "none";
+                        resultsStack.lastChild.style.paddingBottom = "0";
+                    }
+
+                    leaveResultsContainer.appendChild(resultsStack);
+                }
+
+                // Populate busy time slots based on Day and Leave Type
+                function populateLeaveTimeSlots() {
+                    const day = leaveDaySelect.value;
+                    const leaveType = leaveTypeSelect.value;
+                    const faculty = mappedTimetable[selectedInitials];
+
+                    // Reset time select
+                    leaveTimeSelect.innerHTML = '<option value="ALL">All Time Slots</option>';
+                    leaveTimeSelect.disabled = true;
+
+                    // Reset results container to default instructions
+                    leaveResultsContainer.innerHTML = `
+                        <div class="leave-instructions">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-bottom: 10px; opacity: 0.6;">
+                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            Please select a time slot to search available proxy candidates.
+                        </div>
+                    `;
+
+                    if (!day || !faculty) {
+                        leaveTypeSelect.disabled = true;
+                        currentFilteredSlots = [];
+                        return;
+                    }
+
+                    leaveTypeSelect.disabled = false;
+
+                    // Find occupied lecture slots for this day
+                    let busySlots = faculty.schedule.filter(slot => {
+                        return !slot.isRecess && slot[day] && slot[day].occupied === true;
+                    });
+
+                    // Filter based on Leave Type (threshold 1:00 PM = 780 minutes)
+                    if (leaveType === "FIRST") {
+                        busySlots = busySlots.filter(slot => {
+                            const times = getSlotMinutes(slot.time);
+                            return times && times.start < 780;
+                        });
+                    } else if (leaveType === "SECOND") {
+                        busySlots = busySlots.filter(slot => {
+                            const times = getSlotMinutes(slot.time);
+                            return times && times.start >= 780;
+                        });
+                    }
+
+                    currentFilteredSlots = busySlots;
+
+                    if (busySlots.length === 0) {
+                        const leaveTypeLabel = leaveType === "FIRST" ? "First Half" : (leaveType === "SECOND" ? "Second Half" : "Day");
+                        leaveResultsContainer.innerHTML = `
+                            <div class="leave-day-empty" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                                🍵 No busy lectures scheduled for ${faculty.name} on this ${leaveTypeLabel} (Free). No proxy required!
+                            </div>
+                        `;
+                    } else {
+                        // Populate time slots dropdown
+                        busySlots.forEach((slot) => {
+                            const option = document.createElement("option");
+                            option.value = JSON.stringify(slot);
+                            option.textContent = `${slot.time} (${slot[day].class})`;
+                            leaveTimeSelect.appendChild(option);
+                        });
+                        leaveTimeSelect.disabled = false;
+
+                        // Automatically render proxies for ALL slots by default!
+                        renderProxyResult(day, busySlots, faculty);
+                    }
+                }
+
+                // Day selector change listener
+                leaveDaySelect.addEventListener("change", populateLeaveTimeSlots);
+
+                // Leave type change listener
+                leaveTypeSelect.addEventListener("change", populateLeaveTimeSlots);
+
+                // Time selector change listener
+                leaveTimeSelect.addEventListener("change", () => {
+                    const timeVal = leaveTimeSelect.value;
+                    const day = leaveDaySelect.value;
+                    const faculty = mappedTimetable[selectedInitials];
+
+                    if (!day || !faculty) return;
+
+                    if (timeVal === "ALL") {
+                        renderProxyResult(day, currentFilteredSlots, faculty);
+                    } else {
+                        const slot = JSON.parse(timeVal);
+                        renderProxyResult(day, [slot], faculty);
+                    }
+                });
+            }
+
             // Department Toggles
             itBtn.addEventListener("click", () => setDepartmentTheme("Information Technology"));
             ceBtn.addEventListener("click", () => setDepartmentTheme("Computer Engineering"));
 
-            // Read starting state from local storage or default to IT
-            const startingDept = localStorage.getItem("portal_dept") === "CE" ? "Computer Engineering" : "Information Technology";
-            // Make sure the active initials matches the starting department
-            if (startingDept === "Computer Engineering") {
-                selectedInitials = "EHU"; // default CE
-            } else {
-                selectedInitials = "SBC"; // default IT
+            // Leave Toggle button inside the faculty details card
+            const leaveToggleBtn = document.getElementById("leaveToggleBtn");
+            if (leaveToggleBtn) {
+                leaveToggleBtn.addEventListener("click", () => toggleLeaveMode());
             }
+
+            // By default, always show Information Technology department on initial load
+            const startingDept = "Information Technology";
+            selectedInitials = "SBC"; // default IT
             setDepartmentTheme(startingDept);
         });
     </script>

@@ -14,13 +14,13 @@
     --radius-lg: 16px;
     --radius-md: 12px;
     --radius-sm: 8px;
-    
+
     /* IT Department Theme Colors (Default) */
     --theme-color: #c0392b;
     --theme-color-rgb: 192, 57, 43;
     --theme-bright: #ef4444;
     --theme-glow: rgba(192, 57, 43, 0.25);
-    
+
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -54,6 +54,11 @@ body {
     overflow-x: hidden;
 }
 
+/* ── Segment Control Width Override ── */
+.zs-segment-control {
+    max-width: 480px;
+}
+
 /* ── Background Orbs ── */
 .orb {
     position: absolute;
@@ -84,15 +89,18 @@ body {
     width: 10px;
     height: 10px;
 }
+
 ::-webkit-scrollbar-track {
     background: #060d1f;
 }
+
 ::-webkit-scrollbar-thumb {
     background: rgba(var(--theme-color-rgb), 0.35);
     border-radius: 50px;
     border: 2px solid #060d1f;
     transition: background 0.3s;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(var(--theme-color-rgb), 0.7);
 }
@@ -171,12 +179,13 @@ body {
     align-items: center;
     justify-content: space-between;
     transition: var(--transition);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.custom-select-trigger:hover, .custom-select-trigger.active {
+.custom-select-trigger:hover,
+.custom-select-trigger.active {
     border-color: var(--theme-color);
-    box-shadow: 0 0 12px var(--theme-glow), inset 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 0 12px var(--theme-glow), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .custom-select-options {
@@ -187,7 +196,7 @@ body {
     background: #0b1528;
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     z-index: 100;
     max-height: 350px;
     overflow-y: auto;
@@ -253,7 +262,7 @@ body {
 .option-initials {
     font-family: 'Share Tech', monospace;
     font-size: 12px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     padding: 2px 6px;
     border-radius: 4px;
     color: var(--text-primary);
@@ -276,8 +285,8 @@ body {
 }
 
 .faculty-avatar {
-    width: 72px;
-    height: 72px;
+    width: 80px;
+    height: 75px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--theme-color) 0%, rgba(var(--theme-color-rgb), 0.5) 100%);
     border: 2px solid var(--theme-color);
@@ -289,7 +298,7 @@ body {
     font-size: 26px;
     font-weight: 800;
     color: var(--white);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .faculty-meta {
@@ -340,7 +349,8 @@ body {
     min-width: 900px;
 }
 
-.timetable-table th, .timetable-table td {
+.timetable-table th,
+.timetable-table td {
     padding: 16px 12px;
     border: 1px solid var(--glass-border);
     vertical-align: middle;
@@ -400,7 +410,7 @@ body {
     font-size: 13px;
     font-weight: 700;
     color: var(--white);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .room-badge {
@@ -435,13 +445,11 @@ body {
     color: var(--text-muted);
     letter-spacing: 2px;
     text-transform: uppercase;
-    background: repeating-linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.02),
-        rgba(255, 255, 255, 0.02) 10px,
-        transparent 10px,
-        transparent 20px
-    );
+    background: repeating-linear-gradient(45deg,
+            rgba(255, 255, 255, 0.02),
+            rgba(255, 255, 255, 0.02) 10px,
+            transparent 10px,
+            transparent 20px);
 }
 
 /* ── Faculty Meta Left/Right Layout ── */
@@ -490,47 +498,90 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+.leave-toggle-btn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 5px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leave-toggle-btn:hover {
+    color: var(--white);
+    border-color: var(--theme-bright);
+    box-shadow: 0 0 12px rgba(var(--theme-color-rgb), 0.4);
+    transform: translateY(-1px);
+}
+
+.leave-toggle-btn.active {
+    color: var(--white);
+    background: var(--theme-color);
+    border-color: var(--theme-bright);
+    box-shadow: 0 0 15px rgba(var(--theme-color-rgb), 0.5);
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+}
+
 /* ── Responsive adjustments ── */
 @media (max-width: 768px) {
     .rp-header {
         padding: 12px 16px 8px !important;
     }
+
     .timetable-container {
         padding: 0 16px 40px;
     }
+
     .controls-card {
         flex-direction: column;
         align-items: stretch;
         gap: 16px;
     }
+
     .selector-group {
         max-width: 100%;
     }
+
     .faculty-info-card {
         flex-direction: column;
         text-align: center;
         gap: 16px;
     }
+
     .faculty-meta-wrapper {
         flex-direction: column;
         text-align: center;
         align-items: center;
         gap: 12px;
     }
+
     .faculty-meta-right {
         text-align: center;
         align-items: center;
     }
-    .timetable-table th, .timetable-table td {
+
+    .timetable-table th,
+    .timetable-table td {
         padding: 10px 8px;
         font-size: 12.5px;
     }
+
     .time-cell {
         font-size: 12px;
     }
+
     .class-badge {
         font-size: 11.5px;
     }
+
     .room-badge {
         font-size: 10px;
         padding: 1px 6px;
@@ -543,6 +594,7 @@ body {
         align-items: stretch;
         gap: 8px;
     }
+
     .selector-label {
         text-align: left;
     }
@@ -552,38 +604,47 @@ body {
     .timetable-container {
         gap: 16px;
     }
+
     .controls-card {
         padding: 16px 12px;
         gap: 16px;
     }
+
     .faculty-info-card {
         padding: 16px 12px;
         gap: 12px;
     }
+
     .faculty-avatar {
         width: 60px;
         height: 60px;
         font-size: 20px;
     }
+
     .faculty-name-title {
         font-size: 18px;
     }
+
     .faculty-designation-badge {
         font-size: 12px;
     }
+
     .faculty-dept-badge {
         font-size: 11px;
     }
+
     .faculty-semester-info {
         font-size: 12.5px;
         padding: 3px 10px;
     }
+
     .zs-segment-control {
         flex-direction: column;
         max-width: 100%;
         gap: 6px;
         padding: 6px;
     }
+
     .segment-btn {
         width: 100%;
         padding: 8px 12px !important;
@@ -595,13 +656,295 @@ body {
     .timetable-container {
         padding: 0 12px 30px;
     }
+
     .controls-card {
         padding: 12px 10px;
     }
+
     .faculty-info-card {
         padding: 12px 10px;
     }
+
     .faculty-name-title {
         font-size: 16px;
+    }
+}
+
+/* ── Leave Arrangement Card & Selector Sections ── */
+.leave-card {
+    background: rgba(11, 21, 48, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.leave-card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 16px;
+}
+
+.leave-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0 0 6px 0;
+    color: var(--white);
+}
+
+.leave-card-subtitle {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Selector Rows */
+.leave-controls-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: var(--radius-md);
+}
+
+.leave-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.leave-form-group label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.select-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-muted);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+}
+
+.custom-form-select:disabled~.select-arrow {
+    color: var(--text-dim);
+    opacity: 0.5;
+}
+
+.custom-form-select:focus~.select-arrow {
+    color: var(--theme-bright);
+}
+
+.custom-form-select {
+    width: 100%;
+    padding: 12px 42px 12px 16px;
+    background: rgba(6, 10, 28, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-primary);
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: all 0.25s ease;
+}
+
+.custom-form-select:focus {
+    outline: none;
+    border-color: var(--theme-color);
+    box-shadow: 0 0 0 3px rgba(var(--theme-color-rgb), 0.15);
+}
+
+.custom-form-select:disabled {
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-dim);
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.03);
+}
+
+.custom-form-select option {
+    background: #0d1b38;
+    color: var(--text-primary);
+}
+
+/* Results and instructions */
+.leave-results-container {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.leave-instructions {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.leave-day-empty {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.leave-slot-row {
+    width: 100%;
+}
+
+.leave-slot-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: rgba(6, 10, 28, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 16px;
+    border-radius: var(--radius-md);
+}
+
+.leave-slot-time {
+    font-family: 'Share Tech', monospace;
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--theme-bright);
+    letter-spacing: 0.5px;
+}
+
+.leave-slot-subject {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--white);
+}
+
+.leave-slot-room {
+    font-family: 'Share Tech', monospace;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.leave-slot-proxies {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.proxy-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.proxy-group-label {
+    font-family: 'Share Tech', monospace;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.dept-same-label {
+    color: #34d399;
+}
+
+.dept-other-label {
+    color: #60a5fa;
+}
+
+.proxy-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.proxy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.proxy-badge b {
+    font-family: 'Share Tech', monospace;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+.proxy-badge.dept-same {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
+}
+
+.proxy-badge.dept-other {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #60a5fa;
+}
+
+.leave-no-proxies {
+    font-size: 13.5px;
+    color: #ef4444;
+    font-style: italic;
+    padding: 6px 0;
+}
+
+/* ── Mobile responsive adjustments for Leave Tracker ── */
+@media (max-width: 768px) {
+    .leave-card {
+        padding: 20px;
+        gap: 16px;
+    }
+
+    .leave-controls-row {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 14px;
+    }
+
+    .leave-slot-info {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
     }
 }

@@ -56,15 +56,15 @@ const facultyData = [
         initials: "PHK"
     },
     {
-        id: "sb",
+        id: "svb",
         name: "Prof. Shivani Bhamani",
         designation: "Lecturer",
         department: "Information Technology",
         empId: "#10000",
         email: "svbhamani@gmiu.edu.in",
-        phone: "79846 21029",
-        avatarClass: "av-sb",
-        initials: "SB"
+        phone: "9978443539",
+        avatarClass: "av-svb",
+        initials: "SVB"
     },
     {
         id: "jm",
@@ -103,7 +103,7 @@ const facultyData = [
         id: "ks",
         name: "Prof. Krupali Solanki",
         designation: "Lecturer",
-        department: "Computer Engineering",
+        department: "Information Technology",
         empId: "#10373",
         email: "kbsolanki@gmiu.edu.in",
         phone: "63534 26013",
@@ -111,7 +111,7 @@ const facultyData = [
         initials: "KBS"
     },
     {
-        id: "bs",
+        id: "bss",
         name: "Prof. Bikash Sasmal",
         designation: "Teaching Assistant",
         department: "Information Technology",
@@ -155,7 +155,7 @@ const facultyData = [
         initials: "VBS"
     },
     {
-        id: "sp",
+        id: "srp",
         name: "Prof. Samuel Patel",
         designation: "Lecturer",
         department: "Information Technology",
@@ -163,7 +163,7 @@ const facultyData = [
         email: "srpatel@gmiu.edu.in",
         phone: "97144 84352",
         avatarClass: "av-sp",
-        initials: "SRA"
+        initials: "SRP"
     },
     {
         id: "pr",
@@ -463,15 +463,15 @@ const facultyData = [
         initials: "IAP"
     },
     {
-        id: "rfd",
-        name: "Prof. Remona Dennis",
+        id: "fdr",
+        name: "Prof. Frangrance Remona",
         designation: "Lecturer",
         department: "Computer Engineering",
-        empId: "#10668",
+        empId: "#10680",
         email: "fdremona@gmiu.edu.in",
-        phone: "99097 30707",
-        avatarClass: "av-rfd",
-        initials: "RFD"
+        phone: "9909730707",
+        avatarClass: "av-fdr",
+        initials: "FDR"
     },
     {
         id: "hpg",
@@ -538,29 +538,51 @@ const facultyData = [
         phone: "79846 88579",
         avatarClass: "av-hpj",
         initials: "HPJ"
-    }
-    // {
-    //     id: "apv",
-    //     name: "Prof. Aarti Vandra",
-    //     designation: "Lecturer",
-    //     department: "Information Technology",
-    //     empId: "#10675",
-    //     email: "apvandra@gmiu.edu.in",
-    //     phone: "0",
-    //     avatarClass: "av-apv",
-    //     initials: "APV"
-    // },
-    // {
-    //     id: "dyv",
-    //     name: "Prof. Dhruvik Vaghela",
-    //     designation: "Lecturer",
-    //     department: "Information Technology",
-    //     empId: "#10676",
-    //     email: "dyvaghela@gmiu.edu.in",
-    //     phone: "0",
-    //     avatarClass: "av-dyv",
-    //     initials: "DYV"
-    // },
+    },
+    {
+        id: "apv",
+        name: "Prof. Aarti Vandra",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10675",
+        email: "apvandra@gmiu.edu.in",
+        phone: "0",
+        avatarClass: "av-apv",
+        initials: "APV"
+    },
+    {
+        id: "dyv",
+        name: "Prof. Dhruvik Vaghela",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10689",
+        email: "dyvaghela@gmiu.edu.in",
+        phone: "6353951518",
+        avatarClass: "av-dyv",
+        initials: "DYV"
+    },
+    {
+        id: "pmm",
+        name: "Prof. Parvez Makwana",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10690",
+        email: "pmmakwana@gmiu.edu.in",
+        phone: "8160354232",
+        avatarClass: "av-pmm",
+        initials: "PMM"
+    },
+    {
+        id: "ygl",
+        name: "Prof. Yug Lakhani",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10691",
+        email: "yglakhani@gmiu.edu.in",
+        phone: "9825751614",
+        avatarClass: "av-ygl",
+        initials: "YGL"
+    },
     // {
     //     id: "blv",
     //     name: "Prof. B. L. Vyas",

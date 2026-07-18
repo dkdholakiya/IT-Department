@@ -9982,37 +9982,8 @@ const timetableData = {
             },
             {
                 "time": "01:00to 01:45",
-                "isRecess": false,
-                "MON": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                }
+                "isRecess": true,
+                "label": "Recess - 45 min"
             },
             {
                 "time": "01:45 to 02:45",
@@ -10084,37 +10055,8 @@ const timetableData = {
             },
             {
                 "time": "3:45 to 04.00",
-                "isRecess": false,
-                "MON": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                }
+                "isRecess": true,
+                "label": "Recess - 15 min"
             },
             {
                 "time": "04:00 to 05:00",
@@ -10998,37 +10940,8 @@ const timetableData = {
             },
             {
                 "time": "01:00to 01:45",
-                "isRecess": false,
-                "MON": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "Recess - 45 min",
-                    "room": "",
-                    "occupied": true
-                }
+                "isRecess": true,
+                "label": "Recess - 45 min"
             },
             {
                 "time": "01:45 to 02:45",
@@ -11100,37 +11013,8 @@ const timetableData = {
             },
             {
                 "time": "3:45 to 04.00",
-                "isRecess": false,
-                "MON": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "Recess - 15 min",
-                    "room": "",
-                    "occupied": true
-                }
+                "isRecess": true,
+                "label": "Recess - 15 min"
             },
             {
                 "time": "04:00 to 05:00",
@@ -14136,9 +14020,9 @@ const timetableData = {
             }
         ]
     },
-    "RDF": {
-        "name": "Prof. RDF",
-        "initials": "RDF",
+    "FDR": {
+        "name": "Prof. FDR",
+        "initials": "FDR",
         "department": "Information Technology",
         "semesterInfo": "Semester :",
         "schedule": [
