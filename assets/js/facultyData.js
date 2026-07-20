@@ -121,17 +121,17 @@ const facultyData = [
         avatarClass: "av-bs",
         initials: "BSS"
     },
-    {
-        id: "hb",
-        name: "Prof. Hirenkumar Bhatt",
-        designation: "Assistant Professor",
-        department: "Information Technology",
-        empId: "#10474",
-        email: "hhbhatt@gmiu.edu.in",
-        phone: "84607 77343",
-        avatarClass: "av-hb",
-        initials: "HHB"
-    },
+    // {
+    //     id: "hb",
+    //     name: "Prof. Hirenkumar Bhatt",
+    //     designation: "Assistant Professor",
+    //     department: "Information Technology",
+    //     empId: "#10474",
+    //     email: "hhbhatt@gmiu.edu.in",
+    //     phone: "84607 77343",
+    //     avatarClass: "av-hb",
+    //     initials: "HHB"
+    // },
     {
         id: "sc",
         name: "Prof. Sunil Chavda",
@@ -198,17 +198,17 @@ const facultyData = [
         avatarClass: "av-sg",
         initials: "SDG"
     },
-    // {
-    //     id: "dk",
-    //     name: "Mr. Dev K Dholakiya",
-    //     designation: "Developer",
-    //     department: "Information Technology",
-    //     empId: "#10216",
-    //     email: "dkdholakiya@gmiu.edu.in",
-    //     phone: "9328946676",
-    //     avatarClass: "av-dk",
-    //     initials: "DKD"
-    // },
+    {
+        id: "dk",
+        name: "Mr. Dev K Dholakiya",
+        designation: "Developer",
+        department: "Information Technology",
+        empId: "#10216",
+        email: "dkdholakiya@gmiu.edu.in",
+        phone: "9328946676",
+        avatarClass: "av-dk",
+        initials: "DKD"
+    },
     // {
     //     id: "Ai",
     //     name: "Admin It",

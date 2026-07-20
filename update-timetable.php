@@ -3,7 +3,7 @@
  * Faculty Timetable Auto-Updater from Excel
  */
 
-$excelFile = __DIR__ . '/assets/uploads/Personal Time Table CE_CSE _ IT _ ICT.xlsx';
+$excelFile = __DIR__ . '/uploads/timetable/Personal Time Table CE_CSE _ IT _ ICT.xlsx';
 $tempZip = __DIR__ . '/scratch/temp_timetable.zip';
 $unzipDir = __DIR__ . '/scratch/unzipped_timetable';
 
@@ -12,7 +12,7 @@ $message = "";
 $facultyCount = 0;
 
 if (!file_exists($excelFile)) {
-    $message = "Excel file not found at: assets/uploads/Personal Time Table CE_CSE _ IT _ ICT.xlsx";
+    $message = "Excel file not found at: uploads/timetable/Personal Time Table CE_CSE _ IT _ ICT.xlsx";
 } else {
     // Clean up old unzip dir
     if (is_dir($unzipDir)) {

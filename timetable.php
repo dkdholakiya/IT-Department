@@ -1,5 +1,5 @@
 <?php
-$excelFile = __DIR__ . '/assets/uploads/Personal Time Table CE_CSE _ IT _ ICT.xlsx';
+$excelFile = __DIR__ . '/uploads/timetable/Personal Time Table CE_CSE _ IT _ ICT.xlsx';
 $excelExists = file_exists($excelFile);
 $jsDataFile = __DIR__ . '/assets/js/timetableData.js';
 $jsDataExists = file_exists($jsDataFile);
@@ -79,7 +79,7 @@ $jsDataExists = file_exists($jsDataFile);
                 <div style="font-size: 54px;">📅</div>
                 <h2 style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 800; color: #f87171; margin: 0;">No Timetable Loaded</h2>
                 <p style="color: #94a3b8; font-size: 14.5px; max-width: 500px; line-height: 1.6; margin: 0;">
-                    The schedule Excel file is missing from the uploads folder. Please place the timetable Excel sheet inside the <code>assets/uploads/</code> directory.
+                    The schedule Excel file is missing from the uploads folder. Please place the timetable Excel sheet inside the <code>uploads/timetable/</code> directory.
                 </p>
                 <div style="margin-top: 10px;">
                     <a href="update-timetable" class="back-btn" style="text-decoration: none;">

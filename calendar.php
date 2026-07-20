@@ -199,8 +199,11 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // State variables
-            let currentDate = new Date(2026, 6, 18); // Default state starts around local context: July 18, 2026
-            let selectedDateStr = "2026-07-18"; // Selected date tracks formatted YYYY-MM-DD
+            const today = new Date();
+            let currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            let selectedDateStr = `${today.getFullYear()}-${mm}-${dd}`;
             let currentFilterPublic = true;
             let currentFilterReserved = true;
             let currentFilterCustom = true;

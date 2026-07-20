@@ -11,8 +11,7 @@ html {
 }
 
 body {
-    overflow-y: visible !important;
-    overflow-x: hidden !important;
+    overflow: visible !important;
     height: auto !important;
     width: 100% !important;
 }
@@ -1010,34 +1009,42 @@ body.ce-active .avatar-glow {
     background: linear-gradient(145deg, #3b1b22, #7f1d1d) !important;
     border-color: rgba(239, 68, 68, 0.4) !important;
 }
+
 .av-theme-blue {
     background: linear-gradient(145deg, #18285c, #2563eb) !important;
     border-color: rgba(37, 99, 235, 0.4) !important;
 }
+
 .av-theme-purple {
     background: linear-gradient(145deg, #351c4a, #6b21a8) !important;
     border-color: rgba(124, 58, 237, 0.4) !important;
 }
+
 .av-theme-teal {
     background: linear-gradient(145deg, #12374d, #0891b2) !important;
     border-color: rgba(6, 182, 212, 0.4) !important;
 }
+
 .av-theme-green {
     background: linear-gradient(145deg, #0c3829, #059669) !important;
     border-color: rgba(16, 185, 129, 0.4) !important;
 }
+
 .av-theme-orange {
     background: linear-gradient(145deg, #78350f, #92400e) !important;
     border-color: rgba(245, 158, 11, 0.4) !important;
 }
+
 .av-theme-indigo {
     background: linear-gradient(145deg, #1e1b4b, #312e81) !important;
     border-color: rgba(99, 102, 241, 0.4) !important;
 }
+
 .av-theme-cyan {
     background: linear-gradient(145deg, #0f2c3d, #0e7490) !important;
     border-color: rgba(6, 182, 212, 0.4) !important;
 }
+
 .av-theme-pink {
     background: linear-gradient(145deg, #4c0519, #881337) !important;
     border-color: rgba(244, 63, 94, 0.4) !important;
@@ -1049,7 +1056,8 @@ body.ce-active .avatar-glow {
     justify-content: center;
     width: 100%;
     margin-bottom: 20px;
-    margin-top: -10px; /* pull closer to segment toggle */
+    margin-top: -10px;
+    /* pull closer to segment toggle */
     padding: 0 20px;
     position: relative;
     z-index: 10;
