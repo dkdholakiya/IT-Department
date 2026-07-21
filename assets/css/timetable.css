@@ -685,15 +685,20 @@ body {
 }
 
 .leave-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding-bottom: 16px;
+    padding-bottom: 20px;
 }
 
 .leave-card-title {
     font-family: 'Playfair Display', serif;
     font-size: 22px;
     font-weight: 800;
-    margin: 0 0 6px 0;
+    margin: 0 0 4px 0;
     color: var(--white);
 }
 
@@ -702,6 +707,151 @@ body {
     color: var(--text-muted);
     margin: 0;
     line-height: 1.5;
+}
+
+/* ── Faculty Workload Badge (shown in Proxy Finder header) ── */
+.load-badge {
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, rgba(var(--theme-color-rgb), 0.10) 0%, rgba(8, 15, 30, 0.85) 100%);
+    border: 1px solid rgba(var(--theme-color-rgb), 0.30);
+    border-radius: var(--radius-md);
+    padding: 12px 20px 12px 16px;
+    min-width: 180px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+    animation: badge-fade-in 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+@keyframes badge-fade-in {
+    from {
+        opacity: 0;
+        transform: translateX(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Left accent bar */
+.load-badge::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: linear-gradient(180deg, var(--theme-bright), var(--theme-color));
+    box-shadow: 0 0 10px rgba(var(--theme-color-rgb), 0.5);
+}
+
+/* Subtle radial glow behind the number */
+.load-badge::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--theme-color-rgb), 0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* Pulsing status dot — top right corner */
+.load-badge-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--theme-bright);
+    box-shadow: 0 0 6px rgba(var(--theme-color-rgb), 0.8);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.4;
+        transform: scale(0.6);
+    }
+}
+
+/* Left text column — label + value stacked */
+.load-badge-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.load-badge-label {
+    font-family: 'Share Tech', monospace;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: var(--text-dim);
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.load-badge-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--theme-bright);
+    line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    position: relative;
+    z-index: 1;
+}
+
+.load-badge-unit {
+    font-family: 'Share Tech', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* ── Overloaded state (≥ 4 hrs) ── */
+.load-badge.overloaded {
+    border-color: rgba(251, 191, 36, 0.35);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.10) 0%, rgba(8, 15, 30, 0.85) 100%);
+}
+
+.load-badge.overloaded::before {
+    background: linear-gradient(180deg, #fbbf24, #f59e0b);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+.load-badge.overloaded::after {
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
+}
+
+.load-badge.overloaded .load-badge-value {
+    color: #fbbf24;
+}
+
+.load-badge.overloaded .load-badge-dot {
+    background: #fbbf24;
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.8);
 }
 
 /* Selector Rows */

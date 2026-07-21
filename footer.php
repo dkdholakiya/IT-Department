@@ -8,7 +8,7 @@ $footer_class = isset($footer_class) ? $footer_class : 'rp-footer text-center';
         &copy; 2026 Department of CE & IT 
         <span class="footer-sep">&nbsp;·&nbsp;</span> 
         Designed with <span class="footer-heart">♥</span> by 
-        <a href="https://github.com/dkdholakiya" target="_blank" class="designer-link">Dev Dholakiya</a>
+        <a href="https://devdholakiya.netlify.app/" target="_blank" class="designer-link">Dev Dholakiya</a>
     </p>
 </footer>
 

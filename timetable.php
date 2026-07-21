@@ -26,7 +26,7 @@ $jsDataExists = file_exists($jsDataFile);
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/portal.css?v=3">
     <link rel="stylesheet" href="assets/css/faculty.css?v=3">
-    <link rel="stylesheet" href="assets/css/timetable.css?v=1">
+    <link rel="stylesheet" href="assets/css/timetable.css?v=4">
 </head>
 
 <body>
@@ -175,8 +175,20 @@ $jsDataExists = file_exists($jsDataFile);
             <!-- Leave Arrangement Card -->
             <div class="leave-card" id="leaveCardContainer" style="display: none;">
                 <div class="leave-card-header">
-                    <h3 class="leave-card-title">Proxy Assignment Finder</h3>
-                    <p class="leave-card-subtitle">Find available faculty members to substitute for scheduled lectures when this member has an alteration.</p>
+                    <div>
+                        <h3 class="leave-card-title">Proxy Assignment Finder</h3>
+                        <p class="leave-card-subtitle">Find available faculty members to substitute for scheduled lectures when this member has an alteration.</p>
+                    </div>
+                    <div class="load-badge" id="selectedFacultyLoadBadge">
+                        <span class="load-badge-dot" aria-hidden="true"></span>
+                        <div class="load-badge-content">
+                            <span class="load-badge-label" id="loadBadgeDayLabel">Monday Workload</span>
+                            <div class="load-badge-value">
+                                <span id="loadBadgeNum">0.0</span>
+                                <span class="load-badge-unit">Hrs</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Day, Leave Type, and Time Selectors -->
@@ -310,8 +322,8 @@ $jsDataExists = file_exists($jsDataFile);
                 let isPM = timeStr.includes('pm');
                 let isAM = timeStr.includes('am');
                 
-                let clean = timeStr.replace(/[^0-9:]/g, '');
-                let parts = clean.split(':');
+                let clean = timeStr.replace(/[^0-9:.]/g, '');
+                let parts = clean.split(/[:.]/);
                 if (parts.length < 2) return null;
                 
                 let hours = parseInt(parts[0], 10);
@@ -334,20 +346,25 @@ $jsDataExists = file_exists($jsDataFile);
                 return hours * 60 + minutes;
             }
 
+            // Extract start and end time strings from a range like "12:00 to 01:00 PM" or "02:45 03:45"
+            function parseTimeRangeStrings(timeStr) {
+                if (!timeStr) return null;
+                const matches = timeStr.match(/\d{1,2}\s*[:.]\s*\d{2}(?:\s*(?:am|pm))?/gi);
+                if (matches && matches.length >= 2) {
+                    return {
+                        startStr: matches[0].trim(),
+                        endStr: matches[matches.length - 1].trim()
+                    };
+                }
+                return null;
+            }
+
             // Helper to parse slot time range into start and end minutes
             function getSlotMinutes(timeStr) {
-                if (!timeStr) return null;
-                const parts = timeStr.toLowerCase().split(/(?:to|\s|-)+/);
-                const times = [];
-                parts.forEach(p => {
-                    const clean = p.trim();
-                    if (clean.match(/\d{1,2}:\d{2}/)) {
-                        times.push(clean);
-                    }
-                });
-                if (times.length >= 2) {
-                    const startMin = parseTimeToMinutes(times[0]);
-                    const endMin = parseTimeToMinutes(times[1]);
+                const range = parseTimeRangeStrings(timeStr);
+                if (range) {
+                    const startMin = parseTimeToMinutes(range.startStr);
+                    const endMin = parseTimeToMinutes(range.endStr);
                     if (startMin !== null && endMin !== null) {
                         return { start: startMin, end: endMin };
                     }
@@ -372,11 +389,17 @@ $jsDataExists = file_exists($jsDataFile);
                     });
                 }
                 
+                let minStart = 1440; // 24 hours in minutes
                 let maxEnd = 0;
                 occupiedSlots.forEach(slot => {
                     const times = getSlotMinutes(slot.time);
-                    if (times && times.end > maxEnd) {
-                        maxEnd = times.end;
+                    if (times) {
+                        if (times.start < minStart) {
+                            minStart = times.start;
+                        }
+                        if (times.end > maxEnd) {
+                            maxEnd = times.end;
+                        }
                     }
                 });
                 
@@ -384,7 +407,7 @@ $jsDataExists = file_exists($jsDataFile);
                 // Shift-1: 7:30 AM to 2:45 PM (450 to 885 minutes)
                 // Shift-2: 9:30 AM to 5:15 PM (570 to 1035 minutes)
                 // Shift-3: 10:30 AM to 6:00 PM (630 to 1080 minutes)
-                if (maxEnd === 0 || maxEnd <= 885) { // 2:45 PM
+                if (maxEnd === 0) {
                     return {
                         id: 1,
                         name: "Shift-1",
@@ -393,7 +416,18 @@ $jsDataExists = file_exists($jsDataFile);
                         startTimeStr: "7:30 AM",
                         endTimeStr: "2:45 PM"
                     };
-                } else if (maxEnd <= 1035) { // 5:15 PM
+                }
+
+                if (maxEnd > 1035 || minStart >= 660) { // First lecture at/after 11:00 AM OR last lecture ends after 5:15 PM
+                    return {
+                        id: 3,
+                        name: "Shift-3",
+                        start: 630, // 10:30 AM
+                        end: 1080,  // 6:00 PM
+                        startTimeStr: "10:30 AM",
+                        endTimeStr: "6:00 PM"
+                    };
+                } else if (maxEnd > 885 || minStart >= 600) { // First lecture at 10:00 AM OR last lecture ends after 2:45 PM
                     return {
                         id: 2,
                         name: "Shift-2",
@@ -402,14 +436,14 @@ $jsDataExists = file_exists($jsDataFile);
                         startTimeStr: "9:30 AM",
                         endTimeStr: "5:15 PM"
                     };
-                } else { // 6:00 PM
+                } else {
                     return {
-                        id: 3,
-                        name: "Shift-3",
-                        start: 630, // 10:30 AM
-                        end: 1080,  // 6:00 PM
-                        startTimeStr: "10:30 AM",
-                        endTimeStr: "6:00 PM"
+                        id: 1,
+                        name: "Shift-1",
+                        start: 450, // 7:30 AM
+                        end: 885,   // 2:45 PM
+                        startTimeStr: "7:30 AM",
+                        endTimeStr: "2:45 PM"
                     };
                 }
             }
@@ -426,6 +460,47 @@ $jsDataExists = file_exists($jsDataFile);
                     }
                 });
                 return loadMinutes / 60;
+            }
+
+            // Update the badge displaying the selected faculty's total workload for the chosen day
+            function updateSelectedFacultyLoadBadge() {
+                const daySelect = document.getElementById("leaveDaySelect");
+                const badge = document.getElementById("selectedFacultyLoadBadge");
+                if (!daySelect || !badge) return;
+
+                const day = daySelect.value;
+                const faculty = mappedTimetable[selectedInitials];
+
+                if (!day || !faculty) {
+                    badge.style.display = "none";
+                    return;
+                }
+
+                const load = getFacultyLoad(faculty, day);
+                const dayNames = {
+                    'MON': 'Monday',
+                    'TUE': 'Tuesday',
+                    'WED': 'Wednesday',
+                    'THU': 'Thursday',
+                    'FRI': 'Friday',
+                    'SAT': 'Saturday'
+                };
+                const dayName = dayNames[day] || '';
+
+                const dayLabel = document.getElementById("loadBadgeDayLabel");
+                const numSpan = document.getElementById("loadBadgeNum");
+
+                if (dayLabel) dayLabel.textContent = `${dayName} Workload`;
+                if (numSpan) numSpan.textContent = load.toFixed(1);
+
+                // Toggle overloaded state (>= 4 hours)
+                badge.classList.toggle("overloaded", load >= 4);
+                badge.style.display = "flex";
+
+                // Re-trigger the fade-in animation
+                badge.style.animation = "none";
+                badge.offsetHeight; // force reflow
+                badge.style.animation = "";
             }
 
             // Sync layout themes
@@ -483,9 +558,12 @@ $jsDataExists = file_exists($jsDataFile);
                     if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Faculty Alteration Arrangement Finder";
                     if (portalBadge) portalBadge.textContent = "Alteration Tracker";
                     renderLeaveArrangements(selectedInitials);
+                    updateSelectedFacultyLoadBadge();
                 } else {
                     if (leaveCard) leaveCard.style.display = "none";
                     if (tableCard) tableCard.style.display = "block";
+                    const badge = document.getElementById("selectedFacultyLoadBadge");
+                    if (badge) { badge.style.display = "none"; badge.classList.remove("overloaded"); }
                     if (leaveToggleBtn) {
                         leaveToggleBtn.textContent = "Alteration";
                         leaveToggleBtn.classList.remove("active");
@@ -610,6 +688,7 @@ $jsDataExists = file_exists($jsDataFile);
 
                 if (currentTab === "leave") {
                     renderLeaveArrangements(initials);
+                    updateSelectedFacultyLoadBadge();
                 } else {
                     renderTimetableGrid(faculty);
                 }
@@ -814,7 +893,9 @@ $jsDataExists = file_exists($jsDataFile);
                             const isFreeDay = (candidateDayLectures === 0);
 
                             // Check if candidate's shift covers the slot (always true if candidate has a Free Day)
-                            const inShift = isFreeDay || (times.start >= candShift.start && times.end <= candShift.end);
+                            // Allow Shift-2 candidates (id === 2) to cover slots up to 6:00 PM (1080 minutes)
+                            const allowedShiftEnd = (candShift.id === 2) ? 1080 : candShift.end;
+                            const inShift = isFreeDay || (times.start >= candShift.start && times.end <= allowedShiftEnd);
 
                             if (isFree && inShift) {
                                 if (candidate.department === faculty.department || candidate.department === "Both" || faculty.department === "Both") {
@@ -921,6 +1002,9 @@ $jsDataExists = file_exists($jsDataFile);
                     const leaveType = leaveTypeSelect.value;
                     const faculty = mappedTimetable[selectedInitials];
 
+                    // Update selected faculty load badge
+                    updateSelectedFacultyLoadBadge();
+
                     // Reset time select
                     leaveTimeSelect.innerHTML = '<option value="ALL">All Time Slots</option>';
                     leaveTimeSelect.disabled = true;
@@ -963,11 +1047,11 @@ $jsDataExists = file_exists($jsDataFile);
                                 nextSlot[day].class === currentSlot[day].class && 
                                 nextSlot[day].room === currentSlot[day].room) {
                                 
-                                const currentParts = currentSlot.time.toLowerCase().split(/(?:to|\s|-)+/);
-                                const nextParts = nextSlot.time.toLowerCase().split(/(?:to|\s|-)+/);
-                                const startTimePart = currentParts[0].replace(/to/g, '').trim();
-                                const endTimePart = nextParts[nextParts.length - 1].replace(/to/g, '').trim();
-                                currentSlot.time = `${startTimePart} to ${endTimePart}`;
+                                const currentRange = parseTimeRangeStrings(currentSlot.time);
+                                const nextRange = parseTimeRangeStrings(nextSlot.time);
+                                if (currentRange && nextRange) {
+                                    currentSlot.time = `${currentRange.startStr} to ${nextRange.endStr}`;
+                                }
                                 
                                 currentTimes.end = nextTimes.end;
                                 i++;
