@@ -530,146 +530,6 @@ body {
     text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
 }
 
-/* ── Responsive adjustments ── */
-@media (max-width: 768px) {
-    .rp-header {
-        padding: 12px 16px 8px !important;
-    }
-
-    .timetable-container {
-        padding: 0 16px 40px;
-    }
-
-    .controls-card {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
-    }
-
-    .selector-group {
-        max-width: 100%;
-    }
-
-    .faculty-info-card {
-        flex-direction: column;
-        text-align: center;
-        gap: 16px;
-    }
-
-    .faculty-meta-wrapper {
-        flex-direction: column;
-        text-align: center;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .faculty-meta-right {
-        text-align: center;
-        align-items: center;
-    }
-
-    .timetable-table th,
-    .timetable-table td {
-        padding: 10px 8px;
-        font-size: 12.5px;
-    }
-
-    .time-cell {
-        font-size: 12px;
-    }
-
-    .class-badge {
-        font-size: 11.5px;
-    }
-
-    .room-badge {
-        font-size: 10px;
-        padding: 1px 6px;
-    }
-}
-
-@media (max-width: 540px) {
-    .selector-group {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-    }
-
-    .selector-label {
-        text-align: left;
-    }
-}
-
-@media (max-width: 480px) {
-    .timetable-container {
-        gap: 16px;
-    }
-
-    .controls-card {
-        padding: 16px 12px;
-        gap: 16px;
-    }
-
-    .faculty-info-card {
-        padding: 16px 12px;
-        gap: 12px;
-    }
-
-    .faculty-avatar {
-        width: 60px;
-        height: 60px;
-        font-size: 20px;
-    }
-
-    .faculty-name-title {
-        font-size: 18px;
-    }
-
-    .faculty-designation-badge {
-        font-size: 12px;
-    }
-
-    .faculty-dept-badge {
-        font-size: 11px;
-    }
-
-    .faculty-semester-info {
-        font-size: 12.5px;
-        padding: 3px 10px;
-    }
-
-    .zs-segment-control {
-        flex-direction: column;
-        max-width: 100%;
-        gap: 6px;
-        padding: 6px;
-    }
-
-    .segment-btn {
-        width: 100%;
-        padding: 8px 12px !important;
-        text-align: center;
-    }
-}
-
-@media (max-width: 360px) {
-    .timetable-container {
-        padding: 0 12px 30px;
-    }
-
-    .controls-card {
-        padding: 12px 10px;
-    }
-
-    .faculty-info-card {
-        padding: 12px 10px;
-    }
-
-    .faculty-name-title {
-        font-size: 16px;
-    }
-}
-
 /* ── Leave Arrangement Card & Selector Sections ── */
 .leave-card {
     background: rgba(11, 21, 48, 0.65);
@@ -715,17 +575,17 @@ body {
     flex-direction: row;
     align-items: center;
     gap: 14px;
-    background: linear-gradient(135deg, rgba(var(--theme-color-rgb), 0.10) 0%, rgba(8, 15, 30, 0.85) 100%);
-    border: 1px solid rgba(var(--theme-color-rgb), 0.30);
+    background: linear-gradient(135deg, rgba(var(--theme-color-rgb), 0.12) 0%, rgba(8, 15, 30, 0.9) 100%);
+    border: 1px solid rgba(var(--theme-color-rgb), 0.35);
     border-radius: var(--radius-md);
-    padding: 12px 20px 12px 16px;
-    min-width: 180px;
+    padding: 14px 22px 14px 18px;
+    min-width: 190px;
     position: relative;
     overflow: hidden;
     transition: var(--transition);
     animation: badge-fade-in 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 @keyframes badge-fade-in {
@@ -733,6 +593,7 @@ body {
         opacity: 0;
         transform: translateX(12px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -746,10 +607,10 @@ body {
     top: 6px;
     bottom: 6px;
     left: 0;
-    width: 3px;
+    width: 3.5px;
     border-radius: 0 3px 3px 0;
     background: linear-gradient(180deg, var(--theme-bright), var(--theme-color));
-    box-shadow: 0 0 10px rgba(var(--theme-color-rgb), 0.5);
+    box-shadow: 0 0 10px rgba(var(--theme-color-rgb), 0.6);
 }
 
 /* Subtle radial glow behind the number */
@@ -762,28 +623,31 @@ body {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(var(--theme-color-rgb), 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(var(--theme-color-rgb), 0.15) 0%, transparent 70%);
     pointer-events: none;
 }
 
 /* Pulsing status dot — top right corner */
 .load-badge-dot {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 5px;
-    height: 5px;
+    top: 10px;
+    right: 10px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--theme-bright);
-    box-shadow: 0 0 6px rgba(var(--theme-color-rgb), 0.8);
+    box-shadow: 0 0 8px rgba(var(--theme-color-rgb), 0.9);
     animation: pulse-dot 2s ease-in-out infinite;
 }
 
 @keyframes pulse-dot {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
         transform: scale(1);
     }
+
     50% {
         opacity: 0.4;
         transform: scale(0.6);
@@ -794,39 +658,39 @@ body {
 .load-badge-content {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 6px;
 }
 
 .load-badge-label {
     font-family: 'Share Tech', monospace;
-    font-size: 9.5px;
+    font-size: 10.5px;
     text-transform: uppercase;
     letter-spacing: 1.8px;
-    color: var(--text-dim);
+    color: var(--text-muted);
     font-weight: 600;
-    line-height: 1;
+    line-height: 1.2;
     white-space: nowrap;
 }
 
 .load-badge-value {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
+    font-family: 'Outfit', 'Share Tech', sans-serif;
+    font-size: 26px;
     font-weight: 800;
     color: var(--theme-bright);
     line-height: 1;
     display: flex;
     align-items: baseline;
-    gap: 5px;
+    gap: 6px;
     position: relative;
     z-index: 1;
 }
 
 .load-badge-unit {
     font-family: 'Share Tech', monospace;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600;
     color: var(--text-muted);
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
     text-transform: uppercase;
 }
 
@@ -1048,6 +912,9 @@ body {
     border-radius: 6px;
     font-weight: 500;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .proxy-badge b {
@@ -1057,6 +924,8 @@ body {
     background: rgba(255, 255, 255, 0.1);
     padding: 1px 6px;
     border-radius: 4px;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
 }
 
 .proxy-badge.dept-same {
@@ -1090,6 +959,8 @@ body {
     text-transform: uppercase;
     display: inline-flex;
     align-items: center;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
 }
 
 .badge-shift {
@@ -1101,6 +972,8 @@ body {
     border-radius: 4px;
     margin-left: 4px;
     font-family: 'Share Tech', monospace;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
 }
 
 .leave-no-proxies {
@@ -1110,11 +983,155 @@ body {
     padding: 6px 0;
 }
 
-/* ── Mobile responsive adjustments for Leave Tracker ── */
-@media (max-width: 768px) {
-    .leave-card {
+/* ══════════════════════════════════════════════════════════
+   MASTER CONSOLIDATED MEDIA QUERIES (RESPONSIVE OVERRIDES)
+   ══════════════════════════════════════════════════════════ */
+
+/* ── 1200px Breakpoint (Laptops & Small Desktops) ── */
+@media (max-width: 1200px) {
+    .timetable-container {
+        max-width: 100%;
+        padding: 0 20px 50px;
+    }
+
+    .timetable-table {
+        min-width: 850px;
+    }
+}
+
+/* ── 992px Breakpoint (Tablets Landscape & Small Laptops) ── */
+@media (max-width: 992px) {
+    .controls-card {
         padding: 20px;
         gap: 16px;
+    }
+
+    .selector-group {
+        max-width: 100%;
+    }
+
+    .faculty-info-card {
+        padding: 20px;
+    }
+
+    .timetable-table th,
+    .timetable-table td {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+
+    .time-cell {
+        font-size: 12.5px;
+    }
+
+    .timetable-table th.time-col-header {
+        width: 130px;
+    }
+}
+
+/* ── 768px Breakpoint (Tablets Portrait & Mobile Large) ── */
+@media (max-width: 768px) {
+    .rp-header {
+        padding: 16px 16px 10px !important;
+    }
+
+    .timetable-container {
+        padding: 0 16px 40px;
+        gap: 20px;
+    }
+
+    .controls-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+        padding: 18px 16px;
+    }
+
+    .selector-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        max-width: 100%;
+    }
+
+    .selector-label {
+        font-size: 12.5px;
+    }
+
+    .faculty-info-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+        padding: 20px 16px;
+    }
+
+    .faculty-avatar {
+        width: 70px;
+        height: 66px;
+        font-size: 22px;
+    }
+
+    .faculty-meta-wrapper {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .faculty-meta-left {
+        align-items: center;
+    }
+
+    .faculty-meta-right {
+        text-align: center;
+        align-items: center;
+    }
+
+    .faculty-meta-right>div {
+        justify-content: center !important;
+    }
+
+    .faculty-name-title {
+        font-size: 20px;
+    }
+
+    .timetable-table th,
+    .timetable-table td {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+
+    .time-cell {
+        font-size: 11.5px;
+    }
+
+    .class-badge {
+        font-size: 11.5px;
+    }
+
+    .room-badge {
+        font-size: 10px;
+        padding: 1px 6px;
+    }
+
+    .leave-card {
+        padding: 20px 16px;
+        gap: 18px;
+    }
+
+    .leave-card-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 16px;
+    }
+
+    .load-badge {
+        align-self: center;
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+        box-sizing: border-box;
     }
 
     .leave-controls-row {
@@ -1124,9 +1141,148 @@ body {
     }
 
     .leave-slot-info {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px;
+        text-align: left;
+    }
+
+    .leave-slot-info>div:last-child {
+        text-align: left !important;
+    }
+
+    .proxy-badges {
+        gap: 6px;
+    }
+
+    .proxy-badge {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+}
+
+/* ── 576px Breakpoint (Mobile Phones) ── */
+@media (max-width: 576px) {
+    .timetable-container {
+        padding: 0 12px 30px;
+        gap: 16px;
+    }
+
+    .controls-card,
+    .faculty-info-card,
+    .table-card,
+    .leave-card {
+        border-radius: var(--radius-md);
+    }
+
+    .controls-card {
+        padding: 16px 12px;
+    }
+
+    .custom-select-trigger {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .custom-select-options {
+        max-height: 280px;
+    }
+
+    .faculty-info-card {
+        padding: 16px 12px;
+    }
+
+    .faculty-avatar {
+        width: 60px;
+        height: 56px;
+        font-size: 19px;
+    }
+
+    .faculty-name-title {
+        font-size: 18px;
+    }
+
+    .faculty-dept-badge {
+        font-size: 11px;
+    }
+
+    .faculty-semester-info {
+        font-size: 12.5px;
+        padding: 3px 10px;
+    }
+
+    .leave-toggle-btn {
+        font-size: 12.5px;
+        padding: 4px 12px;
+    }
+
+    .zs-segment-control {
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px;
+    }
+
+    .segment-btn {
+        width: 100%;
+        padding: 8px 10px !important;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .leave-card-title {
+        font-size: 19px;
+    }
+
+    .leave-card-subtitle {
+        font-size: 12.5px;
+    }
+
+    .leave-results-container {
+        padding: 16px 12px;
+    }
+
+    .leave-slot-subject {
+        font-size: 16px;
+    }
+
+    .proxy-badge {
+        font-size: 11.5px;
+        padding: 4px 8px;
+    }
+
+    .proxy-badge b {
+        font-size: 12px;
+    }
+}
+
+/* ── 380px Breakpoint (Small Mobile Phones) ── */
+@media (max-width: 380px) {
+    .timetable-container {
+        padding: 0 10px 24px;
+    }
+
+    .faculty-name-title {
+        font-size: 16.5px;
+    }
+
+    .faculty-avatar {
+        width: 52px;
+        height: 50px;
+        font-size: 17px;
+    }
+
+    .custom-select-trigger {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+
+    .proxy-group-label {
+        font-size: 11px;
+    }
+
+    .badge-overload,
+    .badge-shift {
+        font-size: 9px;
+        padding: 1px 4px;
     }
 }

@@ -180,7 +180,7 @@
 
                     <div class="form-group">
                         <label for="entry-remarks">Remarks</label>
-                        <input type="text" id="entry-remarks" value="NO STUDENT">
+                        <input type="text" id="entry-remarks" value="NO STUDENTS">
                     </div>
 
                     <button type="button" class="submit-btn" id="add-entry-btn">
