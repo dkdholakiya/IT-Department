@@ -107,12 +107,25 @@ if ($module === 'zero') {
 
 $dept = $input['dept'] ?? '';
 
-// Default to IT SMTP credentials and From Name
+// If dept not explicitly provided, auto-detect from recipient email
+if (empty($dept)) {
+    $first_to = '';
+    if (!empty($emails) && is_array($emails)) {
+        $first_to = $emails[0]['to'] ?? '';
+    } else {
+        $first_to = $input['to'] ?? '';
+    }
+    if (!empty($first_to) && (stripos($first_to, 'admincecse') !== false || stripos($first_to, 'ce') !== false)) {
+        $dept = 'CE';
+    }
+}
+
+// Default to IT SMTP credentials and From Name (adminit@gmiu.edu.in)
 $email = $config['smtp_email'] ?? '';
 $appPassword = $config['smtp_password'] ?? '';
 $from_name = 'IT Department';
 
-// If target department is Computer Engineering, use CE credentials
+// If target department is Computer Engineering, use CE credentials (admincecse@gmiu.edu.in)
 if (strtoupper($dept) === 'CE') {
     $email = $config['smtp_email_ce'] ?? $email;
     $appPassword = $config['smtp_password_ce'] ?? $appPassword;

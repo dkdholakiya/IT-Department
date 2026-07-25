@@ -324,9 +324,11 @@
             });
 
             function filterFaculty() {
-                const query = facultySearch.value.toLowerCase().replace("prof.", "").trim();
+                const query = facultySearch.value.toLowerCase().replace("prof.", "").replace("mr.", "").replace("dr.", "").trim();
                 const filtered = facultyData.filter(member =>
                     member.name.toLowerCase().includes(query) ||
+                    member.initials.toLowerCase().includes(query) ||
+                    member.email.toLowerCase().includes(query) ||
                     member.designation.toLowerCase().includes(query) ||
                     member.empId.toLowerCase().includes(query)
                 );
@@ -346,8 +348,8 @@
                     item.innerHTML = `
                         <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
                         <div class="item-info">
-                            <div class="item-name">${member.name}</div>
-                            <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.department || "Information Technology"} &nbsp;·&nbsp; ${member.empId}</div>
+                            <div class="item-name">${member.name} <span style="opacity: 0.75; font-weight: normal; font-size: 0.9em;">(${member.initials})</span></div>
+                            <div class="item-desg">${member.email} &nbsp;·&nbsp; ${member.designation} &nbsp;·&nbsp; ${member.department || "Information Technology"}</div>
                         </div>
                     `;
                     item.addEventListener("click", function () {
@@ -374,7 +376,7 @@
                 const isCe = (member.initials === "DRC" || member.name.includes("Dhaval Chandarana")) 
                     ? (localStorage.getItem("portal_dept") === "CE") 
                     : (member.department === "Computer Engineering");
-                document.title = isCe ? "CTL Activity Dashboard — CE Department" : "CTL Activity Dashboard — IT Department";
+                document.title = isCe ? "CTL Activity — CE Department" : "CTL Activity — IT Department";
             }
 
             function clearSelection() {
@@ -391,11 +393,20 @@
                     return;
                 }
 
-                const match = facultyData.find(m => m.name.toLowerCase() === val.toLowerCase());
+                const valLower = val.toLowerCase();
+                const match = facultyData.find(m => 
+                    m.name.toLowerCase() === valLower || 
+                    m.initials.toLowerCase() === valLower || 
+                    m.email.toLowerCase() === valLower
+                );
                 if (match) {
                     selectFaculty(match);
                 } else {
-                    const partialMatches = facultyData.filter(m => m.name.toLowerCase().includes(val.toLowerCase()));
+                    const partialMatches = facultyData.filter(m => 
+                        m.name.toLowerCase().includes(valLower) || 
+                        m.initials.toLowerCase().includes(valLower) || 
+                        m.email.toLowerCase().includes(valLower)
+                    );
                     if (partialMatches.length === 1) {
                         selectFaculty(partialMatches[0]);
                     } else {
@@ -454,14 +465,15 @@
             });
 
             function filterCCEmails() {
-                const query = ccSearch.value.toLowerCase().trim();
+                const query = ccSearch.value.toLowerCase().replace("prof.", "").replace("mr.", "").replace("dr.", "").trim();
                 // Filter out already selected emails
                 const available = facultyData.filter(member => !selectedCCEmails.includes(member.email));
 
-                // Match by email or name
+                // Match by email, name, or initials
                 const filtered = available.filter(member =>
                     member.email.toLowerCase().includes(query) ||
-                    member.name.toLowerCase().includes(query)
+                    member.name.toLowerCase().includes(query) ||
+                    member.initials.toLowerCase().includes(query)
                 );
 
                 renderCCDropdown(filtered);
@@ -481,7 +493,7 @@
                         <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
                         <div class="item-info">
                             <div class="item-name">${member.email}</div>
-                            <div class="item-desg">${member.name}</div>
+                            <div class="item-desg">${member.name} <span style="opacity: 0.75;">(${member.initials})</span> &nbsp;·&nbsp; ${member.department || "Information Technology"}</div>
                         </div>
                     `;
                     item.addEventListener("click", function (e) {
@@ -838,7 +850,7 @@
                         cc: selectedCCEmails,
                         subject: emailSubject,
                         html: emailHtml,
-                        dept: (selectedFaculty && selectedFaculty.department === "Computer Engineering") ? "CE" : "IT"
+                        dept: isCe ? "CE" : "IT"
                     })
                 })
                     .then(response => {

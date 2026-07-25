@@ -291,6 +291,7 @@
 
         let reportData = []; // Array to store report objects
         let scannedFoldersData = []; // Array to store detailed folders and files
+        let scannedRootFolderName = ''; // Array/String to store scanned root folder name
 
         document.getElementById('auth-btn').style.display = 'none';
 
@@ -376,6 +377,7 @@
 
             reportData = [];
             scannedFoldersData = [];
+            scannedRootFolderName = '';
         }
 
         function extractFolderId(input) {
@@ -577,6 +579,7 @@
                     fields: 'name'
                 });
                 rootName = rootMeta.result.name || "Root";
+                scannedRootFolderName = rootName;
 
                 // Dynamically adjust target class depth based on root folder name
                 const rootNameLower = rootName.toLowerCase();
@@ -989,9 +992,11 @@
             });
 
             function filterFaculty() {
-                const query = facultySearch.value.toLowerCase().replace("prof.", "").trim();
+                const query = facultySearch.value.toLowerCase().replace("prof.", "").replace("mr.", "").replace("dr.", "").trim();
                 const filtered = facultyData.filter(member =>
                     member.name.toLowerCase().includes(query) ||
+                    member.initials.toLowerCase().includes(query) ||
+                    member.email.toLowerCase().includes(query) ||
                     member.designation.toLowerCase().includes(query) ||
                     member.empId.toLowerCase().includes(query)
                 );
@@ -1011,8 +1016,8 @@
                     item.innerHTML = `
                         <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
                         <div class="item-info">
-                            <div class="item-name">${member.name}</div>
-                            <div class="item-desg">${member.designation} &nbsp;·&nbsp; ${member.department || "Information Technology"} &nbsp;·&nbsp; ${member.empId}</div>
+                            <div class="item-name">${member.name} <span style="opacity: 0.75; font-weight: normal; font-size: 0.9em;">(${member.initials})</span></div>
+                            <div class="item-desg">${member.email} &nbsp;·&nbsp; ${member.designation} &nbsp;·&nbsp; ${member.department || "Information Technology"}</div>
                         </div>
                     `;
                     item.addEventListener("click", function () {
@@ -1056,11 +1061,20 @@
                     return;
                 }
 
-                const match = facultyData.find(m => m.name.toLowerCase() === val.toLowerCase());
+                const valLower = val.toLowerCase();
+                const match = facultyData.find(m => 
+                    m.name.toLowerCase() === valLower || 
+                    m.initials.toLowerCase() === valLower || 
+                    m.email.toLowerCase() === valLower
+                );
                 if (match) {
                     selectFaculty(match);
                 } else {
-                    const partialMatches = facultyData.filter(m => m.name.toLowerCase().includes(val.toLowerCase()));
+                    const partialMatches = facultyData.filter(m => 
+                        m.name.toLowerCase().includes(valLower) || 
+                        m.initials.toLowerCase().includes(valLower) || 
+                        m.email.toLowerCase().includes(valLower)
+                    );
                     if (partialMatches.length === 1) {
                         selectFaculty(partialMatches[0]);
                     } else {
@@ -1116,14 +1130,15 @@
             });
 
             function filterCCEmails() {
-                const query = ccSearch.value.toLowerCase().trim();
+                const query = ccSearch.value.toLowerCase().replace("prof.", "").replace("mr.", "").replace("dr.", "").trim();
                 // Filter out already selected emails
                 const available = facultyData.filter(member => !selectedCCEmails.includes(member.email));
 
-                // Match by email or name
+                // Match by email, name, or initials
                 const filtered = available.filter(member =>
                     member.email.toLowerCase().includes(query) ||
-                    member.name.toLowerCase().includes(query)
+                    member.name.toLowerCase().includes(query) ||
+                    member.initials.toLowerCase().includes(query)
                 );
 
                 renderCCDropdown(filtered);
@@ -1143,7 +1158,7 @@
                         <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
                         <div class="item-info">
                             <div class="item-name">${member.email}</div>
-                            <div class="item-desg">${member.name}</div>
+                            <div class="item-desg">${member.name} <span style="opacity: 0.75;">(${member.initials})</span> &nbsp;·&nbsp; ${member.department || "Information Technology"}</div>
                         </div>
                     `;
                     item.addEventListener("click", function (e) {
@@ -1190,6 +1205,35 @@
         }
 
         // ── Email Send Submission ──
+        function getMemberDepartment() {
+            let member = selectedFaculty;
+            if (!member && typeof facultyData !== 'undefined') {
+                const facEmailVal = (document.getElementById("facultyEmail") ? document.getElementById("facultyEmail").value : "").toLowerCase().trim();
+                const preparedByVal = (document.getElementById("preparedBy") ? document.getElementById("preparedBy").value : "").toLowerCase().trim();
+                const facSearchVal = (document.getElementById("facultySearch") ? document.getElementById("facultySearch").value : "").toLowerCase().trim();
+
+                member = facultyData.find(m => 
+                    (facEmailVal && m.email.toLowerCase() === facEmailVal) ||
+                    (preparedByVal && m.name.toLowerCase() === preparedByVal) ||
+                    (facSearchVal && m.name.toLowerCase().includes(facSearchVal))
+                );
+            }
+
+            if (member) {
+                if (member.initials === "DRC" || member.name.includes("Dhaval Chandarana") || member.department === "Both") {
+                    return (localStorage.getItem("portal_dept") === "CE") ? "CE" : "IT";
+                }
+                if (member.department === "Computer Engineering") {
+                    return "CE";
+                }
+                if (member.department === "Information Technology") {
+                    return "IT";
+                }
+            }
+
+            return (localStorage.getItem("portal_dept") === "CE") ? "CE" : "IT";
+        }
+
         function initEmailSend() {
             const sendBtn = document.getElementById("sendBtn");
             if (!sendBtn) return;
@@ -1218,7 +1262,8 @@
                     <span>Sending...</span>
                 `;
 
-                const isCe = (selectedFaculty && (selectedFaculty.initials === "DRC" || selectedFaculty.name.includes("Dhaval Chandarana")) ? (localStorage.getItem("portal_dept") === "CE") : (selectedFaculty && selectedFaculty.department === "Computer Engineering"));
+                const activeDept = getMemberDepartment();
+                const isCe = (activeDept === "CE");
 
                 // Build HTML table for email showing one row per activity folder
                 let tableRowsHtml = "";
@@ -1268,8 +1313,16 @@
                     });
                 });
 
-                const recipientEmail = document.getElementById("facultyEmail").value || (localStorage.getItem("portal_dept") === "CE" ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
-                const emailSubject = `Google Drive Folder Scan Analysis Report`;
+                const recipientEmail = document.getElementById("facultyEmail").value || (isCe ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
+
+                const rawGreeting = selectedFaculty ? selectedFaculty.name : preparedBy;
+                let formattedGreeting = rawGreeting ? rawGreeting.trim() : "Faculty Member";
+                if (!/^(Prof\.|Dr\.|Mr\.|Ms\.|Mrs\.)/i.test(formattedGreeting)) {
+                    formattedGreeting = "Prof. " + formattedGreeting;
+                }
+
+                const folderMentionText = scannedRootFolderName ? ` for <strong>${scannedRootFolderName}</strong>` : ``;
+                const emailSubject = `Google Drive Folder Scan Report` + (scannedRootFolderName ? ` - ${scannedRootFolderName}` : ``);
 
                 const emailHtml = `
                     <!DOCTYPE html>
@@ -1350,11 +1403,12 @@
                         <div class="email-container">
                             <div class="header-banner">
                                 <h1>Google Drive Folder Scan Report</h1>
+                                ${scannedRootFolderName ? `<div style="font-size: 14px; margin-top: 6px; opacity: 0.85; font-weight: 500;">Scanned Directory: ${scannedRootFolderName}</div>` : ''}
                             </div>
                             <div class="content-body">
-                                <div class="greeting">Dear ${preparedBy},</div>
+                                <div class="greeting">Dear ${formattedGreeting},</div>
                                 <div class="message">
-                                    Please find the details of the latest <strong>Google Drive Folder Scan Report</strong> below, prepared by <strong>Mr. Dev K Dholakiya</strong>.<br><br>
+                                    Please find the details of the latest <strong>Google Drive Folder Scan Report</strong>${folderMentionText} below, prepared by <strong>Mr. Dev K Dholakiya</strong>.<br><br>
                                     Please upload the pending documents to the Google Drive as soon as possible.
                                 </div>
                                 
@@ -1416,7 +1470,7 @@
                         cc: selectedCCEmails,
                         subject: emailSubject,
                         html: emailHtml,
-                        dept: (selectedFaculty && (selectedFaculty.initials === "DRC" || selectedFaculty.name.includes("Dhaval Chandarana")) ? (localStorage.getItem("portal_dept") === "CE" ? "CE" : "IT") : ((selectedFaculty && selectedFaculty.department === "Computer Engineering") ? "CE" : "IT"))
+                        dept: activeDept
                     })
                 })
                     .then(response => response.json().then(data => {
