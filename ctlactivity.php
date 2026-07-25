@@ -826,20 +826,7 @@
 
                 const recipientEmail = document.getElementById("facultyEmail").value || (localStorage.getItem("portal_dept") === "CE" ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
 
-                // Generate subject line dynamically based on active filters, excluding faculty name
-                const statusVal = document.getElementById("statusFilter").value;
-                const submissionVal = document.getElementById("submissionFilter").value;
-                const searchVal = document.getElementById("search").value.trim();
-
-                let subjectFilters = [];
-                if (statusVal) subjectFilters.push(statusVal);
-                if (submissionVal) subjectFilters.push(submissionVal);
-                if (searchVal) subjectFilters.push(`"${searchVal}"`);
-
-                let emailSubject = " ERP CTL Activity";
-                if (subjectFilters.length > 0) {
-                    emailSubject += ` (${subjectFilters.join(" - ")})`;
-                }
+                let emailSubject = "CTL Activity Report In Website ERP Upload Documents";
 
                 // Trigger POST request to the local PHP email service
                 fetch('send-email', {
