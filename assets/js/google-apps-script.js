@@ -31,7 +31,8 @@ const HEADERS = [
   "Press Note",
   "Placement Activity Type",
   "Activity Details",
-  "Status"
+  "Status",
+  "Deadline"
 ];
 
 /**
@@ -62,8 +63,8 @@ function initializeSheet() {
 
   // 1. Title Row (Row 1)
   sheet.getRange("A1").setValue("Gyanmanjari Innovative University");
-  sheet.getRange("A1:X1").merge();
-  const titleRange = sheet.getRange("A1:X1");
+  sheet.getRange("A1:Y1").merge();
+  const titleRange = sheet.getRange("A1:Y1");
   titleRange.setFontWeight("bold");
   titleRange.setFontSize(14);
   titleRange.setHorizontalAlignment("center");
@@ -72,8 +73,8 @@ function initializeSheet() {
 
   // 2. Subtitle Row (Row 2)
   sheet.getRange("A2").setValue("Department Of Information Technology");
-  sheet.getRange("A2:X2").merge();
-  const subtitleRange = sheet.getRange("A2:X2");
+  sheet.getRange("A2:Y2").merge();
+  const subtitleRange = sheet.getRange("A2:Y2");
   subtitleRange.setFontWeight("bold");
   subtitleRange.setFontSize(12);
   subtitleRange.setHorizontalAlignment("center");
@@ -135,6 +136,9 @@ function initializeSheet() {
 
   sheet.setConditionalFormatRules(condRules);
 
+  // Set format for Deadline Column (Column Y / 25)
+  sheet.getRange("Y6:Y").setNumberFormat("dd/MM/yyyy hh:mm AM/PM");
+
   // Auto-resize all columns
   sheet.autoResizeColumns(1, HEADERS.length);
 }
@@ -194,7 +198,8 @@ function doPost(e) {
       data.pressNote || "-",                // U: Press Note
       data.placementActType || "-",                // V: Placement Activity Type
       data.activityDetails || "-",                // W: Activity Details
-      "Pending"                                    // X: Status
+      "Pending",                                   // X: Status
+      data.deadline || "-"                         // Y: Deadline
     ];
 
     // Write the new row
@@ -216,8 +221,11 @@ function doPost(e) {
     // Highlight the Sr. No. column
     sheet.getRange(targetRow, 1).setFontWeight("bold").setHorizontalAlignment("center");
 
+    // Set format for Deadline cell (Column 25 / Y)
+    sheet.getRange(targetRow, 25).setNumberFormat("dd/MM/yyyy hh:mm AM/PM");
+
     // ── Status Column Dropdown (Preserving colors by copying validation from R8 or row above) ──
-    const statusCell = sheet.getRange(targetRow, HEADERS.length);
+    const statusCell = sheet.getRange(targetRow, 24);
     let templateRow = 8; // Row 8 has the user's custom colored dropdown validation
 
     // Check if the cell above is valid to use as template

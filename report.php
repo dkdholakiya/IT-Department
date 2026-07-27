@@ -840,6 +840,22 @@
                                                 <textarea class="form-control" id="refMessage" rows="12" required
                                                     style="font-family: monospace;"></textarea>
                                             </div>
+                                            <div class="col-12 mt-3 mb-2">
+                                                <div class="form-check d-flex align-items-center gap-2 flex-wrap">
+                                                    <input class="form-check-input" type="checkbox" id="enableDeadline">
+                                                    <label class="form-check-label text-warning fw-bold" for="enableDeadline" style="cursor: pointer; font-size: 15px; text-shadow: 0 0 10px rgba(245, 158, 11, 0.2);">
+                                                        Set Submission Deadline <span class="text-danger">*</span>
+                                                    </label>
+                                                    <span class="text-light small ms-1">(Specify a target deadline for report review)</span>
+                                                    <span id="deadlineDisplay" class="badge bg-danger ms-2 d-none" style="font-size: 13px; font-weight: 700;"></span>
+                                                </div>
+                                                <div class="text-danger d-none small mt-1 fw-bold" id="deadlineFormError">Submission deadline is required to submit the report.</div>
+                                                <div class="mt-2 d-none" id="deadlinePickerWrap" style="max-width: 320px;">
+                                                    <label class="form-label text-warning small" for="deadlineVal">Select Deadline Date & Time <span class="text-danger">*</span></label>
+                                                    <input type="datetime-local" class="form-control form-control-dark-input" id="deadlineVal">
+                                                    <div class="invalid-feedback">Deadline date and time is required.</div>
+                                                </div>
+                                            </div>
                                             <div class="col-12 text-end d-flex flex-wrap gap-2 justify-content-end">
                                                 <button type="button" class="btn btn-gmiu-secondary btn-sm"
                                                     onclick="saveDraft()">
@@ -1022,6 +1038,10 @@
                 <th>Brief Objective</th>
                 <td colspan="3" id="pBriefObjective">-</td>
             </tr>
+            <tr>
+                <th>Submission Deadline</th>
+                <td colspan="3" id="pDeadline">-</td>
+            </tr>
         </table>
 
         <div class="print-section-title" id="pDynamicSecHeader">3. Activity-Specific Details</div>
@@ -1098,6 +1118,63 @@
                 radio.addEventListener("change", togglePhotoMethod);
             });
             togglePhotoMethod();
+
+            // Toggle deadline listener
+            const enableDeadline = document.getElementById("enableDeadline");
+            const deadlineVal = document.getElementById("deadlineVal");
+            const deadlinePickerWrap = document.getElementById("deadlinePickerWrap");
+            const deadlineDisplay = document.getElementById("deadlineDisplay");
+
+            if (enableDeadline && deadlineVal && deadlinePickerWrap && deadlineDisplay) {
+                enableDeadline.addEventListener("change", function () {
+                    if (this.checked) {
+                        deadlinePickerWrap.classList.remove("d-none");
+                        deadlineVal.setAttribute("required", "true");
+                        updateDeadlineDisplay();
+                    } else {
+                        deadlinePickerWrap.classList.add("d-none");
+                        deadlineVal.removeAttribute("required");
+                        deadlineVal.value = "";
+                        deadlineVal.classList.remove("is-invalid");
+                        deadlineDisplay.classList.add("d-none");
+                        deadlineDisplay.innerText = "";
+                    }
+                    syncEmailPreview();
+                });
+
+                deadlineVal.addEventListener("input", function () {
+                    updateDeadlineDisplay();
+                    syncEmailPreview();
+                });
+
+                function updateDeadlineDisplay() {
+                    const val = deadlineVal.value;
+                    if (val) {
+                        const dateObj = new Date(val);
+                        if (!isNaN(dateObj)) {
+                            const dd = String(dateObj.getDate()).padStart(2, '0');
+                            const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                            const yyyy = dateObj.getFullYear();
+                            let hours = dateObj.getHours();
+                            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                            hours = hours % 12;
+                            hours = hours ? hours : 12;
+                            const hh = String(hours).padStart(2, '0');
+                            
+                            const formatted = `Deadline: ${dd}/${mm}/${yyyy} ${hh}:${minutes} ${ampm}`;
+                            deadlineDisplay.innerText = formatted;
+                            deadlineDisplay.classList.remove("d-none");
+                            return;
+                        }
+                    }
+                    deadlineDisplay.classList.add("d-none");
+                    deadlineDisplay.innerText = "";
+                }
+                
+                // Expose helper to script
+                window.syncDeadlineUi = updateDeadlineDisplay;
+            }
 
             // Initialize Character Counters
             initCharacterCounters();
@@ -2266,11 +2343,30 @@
             const rawDriveLink = document.getElementById("driveLink").value || "Not Provided";
             const driveLink = rawDriveLink.toUpperCase();
 
-            // New core fields
             const batch = (document.getElementById("batch").value || "-").toUpperCase();
             const studentCoordinator = (document.getElementById("studentCoordinator").value || "-").toUpperCase();
             const publishWebsite = (document.querySelector('input[name="publishWebsite"]:checked')?.value || "-").toUpperCase();
             const pressNote = (document.querySelector('input[name="pressNote"]:checked')?.value || "-").toUpperCase();
+
+            // Extract deadline
+            const enableDeadline = document.getElementById("enableDeadline")?.checked;
+            const deadlineVal = document.getElementById("deadlineVal")?.value;
+            let deadline = "-";
+            if (enableDeadline && deadlineVal) {
+                const dateObj = new Date(deadlineVal);
+                if (!isNaN(dateObj)) {
+                    const dd = String(dateObj.getDate()).padStart(2, '0');
+                    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const yyyy = dateObj.getFullYear();
+                    let hours = dateObj.getHours();
+                    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12;
+                    const hh = String(hours).padStart(2, '0');
+                    deadline = `${dd}/${mm}/${yyyy} ${hh}:${minutes} ${ampm}`;
+                }
+            }
 
             let specificHtml = "";
             const activeSec = document.querySelector(`.dynamic-report-section:not(.d-none)`);
@@ -2438,6 +2534,10 @@
                                 ${rawDriveLink.toLowerCase() !== "not provided" ? `<a href="${rawDriveLink}" target="_blank" style="color: #8c1d1d; text-decoration: underline; font-family: 'Playfair Display', serif;">OPEN GOOGLE DRIVE FOLDER</a>` : "NOT PROVIDED"}
                             </td>
                         </tr>
+                        <tr style="background-color: #fff5f5;">
+                            <td style="padding: 10px; border: 1px solid #feb2b2; font-weight: bold; color: #c53030; font-family: 'Playfair Display', serif;">SUBMISSION DEADLINE</td>
+                            <td style="padding: 10px; border: 1px solid #feb2b2; font-family: 'Playfair Display', serif; font-weight: bold; color: #e53e3e; font-size: 14px; text-shadow: 0 0 8px rgba(229, 62, 62, 0.1);">${deadline}</td>
+                        </tr>
                     </table>
 
                     ${specificHtml ? `
@@ -2520,6 +2620,26 @@ Department of CE & IT`;
                 return false;
             }
 
+            // Check Deadline validation (MANDATORY)
+            const enableDeadline = document.getElementById("enableDeadline");
+            const deadlineVal = document.getElementById("deadlineVal");
+            const deadlineFormError = document.getElementById("deadlineFormError");
+            if (enableDeadline && deadlineVal) {
+                if (!enableDeadline.checked || !deadlineVal.value) {
+                    enableDeadline.classList.add("is-invalid");
+                    deadlineVal.classList.add("is-invalid");
+                    if (deadlineFormError) deadlineFormError.classList.remove("d-none");
+                    isValid = false;
+                    showToast("ERROR: Submission Deadline is mandatory. Please check Set Deadline and select a date/time.");
+                    jumpToSection(4);
+                    return false;
+                } else {
+                    enableDeadline.classList.remove("is-invalid");
+                    deadlineVal.classList.remove("is-invalid");
+                    if (deadlineFormError) deadlineFormError.classList.add("d-none");
+                }
+            }
+
             // Check coordinators multiselect validation
             const coordTrigger = document.getElementById("coordEmailsTrigger");
             if (coordTrigger) {
@@ -2581,6 +2701,8 @@ Department of CE & IT`;
                         briefObjective: document.getElementById("briefObjective").value,
                         driveLink: document.getElementById("driveLink").value,
                         photoMethod: document.querySelector('input[name="photoMethod"]:checked')?.value || "zip",
+                        enableDeadline: document.getElementById("enableDeadline")?.checked,
+                        deadlineVal: document.getElementById("deadlineVal")?.value,
 
                         // New fields
                         batch: document.getElementById("batch").value,
@@ -2738,6 +2860,32 @@ Department of CE & IT`;
                         toggleIntCollaborationCustomType();
                         toggleCentralCustomCategory();
 
+                        // Restore Deadline settings
+                        if (draft.enableDeadline !== undefined) {
+                            const chk = document.getElementById("enableDeadline");
+                            if (chk) {
+                                chk.checked = draft.enableDeadline;
+                                const wrap = document.getElementById("deadlinePickerWrap");
+                                const valInput = document.getElementById("deadlineVal");
+                                if (chk.checked) {
+                                    if (wrap) wrap.classList.remove("d-none");
+                                    if (valInput) {
+                                        valInput.setAttribute("required", "true");
+                                        valInput.value = draft.deadlineVal || "";
+                                    }
+                                } else {
+                                    if (wrap) wrap.classList.add("d-none");
+                                    if (valInput) {
+                                        valInput.removeAttribute("required");
+                                        valInput.value = "";
+                                    }
+                                }
+                                if (typeof window.syncDeadlineUi === "function") {
+                                    window.syncDeadlineUi();
+                                }
+                            }
+                        }
+
                         // Populate Emails
                         document.getElementById("refName").value = draft.facultySearch || "";
                         document.getElementById("refEmail").value = draft.facultyEmail || "";
@@ -2842,6 +2990,26 @@ Department of CE & IT`;
             const coordinators = document.getElementById("coordinators").value;
             const briefObjective = document.getElementById("briefObjective").value;
 
+            // Extract deadline
+            const enableDeadline = document.getElementById("enableDeadline")?.checked;
+            const deadlineVal = document.getElementById("deadlineVal")?.value;
+            let deadline = "-";
+            if (enableDeadline && deadlineVal) {
+                const dateObj = new Date(deadlineVal);
+                if (!isNaN(dateObj)) {
+                    const dd = String(dateObj.getDate()).padStart(2, '0');
+                    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const yyyy = dateObj.getFullYear();
+                    let hours = dateObj.getHours();
+                    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12;
+                    const hh = String(hours).padStart(2, '0');
+                    deadline = `${dd}/${mm}/${yyyy} ${hh}:${minutes} ${ampm}`;
+                }
+            }
+
             // New core fields
             const batch = document.getElementById("batch").value || "-";
             const studentCoordinator = document.getElementById("studentCoordinator").value || "-";
@@ -2918,6 +3086,7 @@ Department of CE & IT`;
             document.getElementById("pPressNote").innerText = pressNote;
             document.getElementById("pCoordinators").innerText = coordinators;
             document.getElementById("pBriefObjective").innerText = briefObjective;
+            document.getElementById("pDeadline").innerText = deadline;
 
             // Sync dynamic specific fields to Print Area
             const printDynamicTable = document.getElementById("pDynamicMetaTable");
@@ -2978,6 +3147,9 @@ Department of CE & IT`;
                     </tr>
                     <tr>
                         <th class="table-light">Objective</th><td colspan="3" class="small">${briefObjective}</td>
+                    </tr>
+                    <tr class="table-danger">
+                        <th class="text-danger fw-bold">Submission Deadline</th><td colspan="3" class="fw-bold text-danger" style="font-size: 15px;">${deadline}</td>
                     </tr>
                 </table>
 
@@ -3057,6 +3229,26 @@ Department of CE & IT`;
                 const ccSelect = document.getElementById("ccEmails");
                 const selectedCcEmails = ccSelect ? Array.from(ccSelect.selectedOptions).map(option => option.value) : [];
 
+                // Extract formatted deadline to append to subject
+                const enableDeadline = document.getElementById("enableDeadline")?.checked;
+                const deadlineVal = document.getElementById("deadlineVal")?.value;
+                let subjectDeadlineSuffix = "";
+                if (enableDeadline && deadlineVal) {
+                    const dateObj = new Date(deadlineVal);
+                    if (!isNaN(dateObj)) {
+                        const dd = String(dateObj.getDate()).padStart(2, '0');
+                        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                        const yyyy = dateObj.getFullYear();
+                        let hours = dateObj.getHours();
+                        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        hours = hours % 12;
+                        hours = hours ? hours : 12;
+                        const hh = String(hours).padStart(2, '0');
+                        subjectDeadlineSuffix = ` [Deadline: ${dd}/${mm}/${yyyy} ${hh}:${minutes} ${ampm}]`;
+                    }
+                }
+
                 return fetch("send-email", {
                     method: "POST",
                     headers: {
@@ -3067,13 +3259,13 @@ Department of CE & IT`;
                             {
                                 to: facultyEmail,
                                 cc: selectedCcEmails,
-                                subject: `Submitted Report Copy: ${reportTitle}`,
+                                subject: `Submitted Report Copy: ${reportTitle}${subjectDeadlineSuffix}`,
                                 html: htmlMessageFaculty
                             },
                             {
                                 to: adminEmail,
                                 cc: selectedCcEmails,
-                                subject: `Make New Report : ${reportTitle} (Faculty Copy)`,
+                                subject: `Make New Report : ${reportTitle} (Faculty Copy)${subjectDeadlineSuffix}`,
                                 html: htmlMessageAdmin
                             }
                         ],
@@ -3228,6 +3420,25 @@ Department of CE & IT`;
             const zipRadio = document.getElementById("photoMethodZip");
             if (zipRadio) zipRadio.checked = true;
             togglePhotoMethod();
+
+            // Reset Deadline check and picker
+            const enableDeadlineChk = document.getElementById("enableDeadline");
+            if (enableDeadlineChk) {
+                enableDeadlineChk.checked = false;
+                const wrap = document.getElementById("deadlinePickerWrap");
+                const valInput = document.getElementById("deadlineVal");
+                if (wrap) wrap.classList.add("d-none");
+                if (valInput) {
+                    valInput.removeAttribute("required");
+                    valInput.value = "";
+                    valInput.classList.remove("is-invalid");
+                }
+                const display = document.getElementById("deadlineDisplay");
+                if (display) {
+                    display.classList.add("d-none");
+                    display.innerText = "";
+                }
+            }
 
             // Lock and hide sections 2, 3, and 4
             const secTwo = document.getElementById("secItemTwo");
@@ -3390,6 +3601,25 @@ Department of CE & IT`;
                 }
             }
 
+            const enableDeadline = document.getElementById("enableDeadline")?.checked;
+            const deadlineVal = document.getElementById("deadlineVal")?.value;
+            let deadline = "-";
+            if (enableDeadline && deadlineVal) {
+                const dateObj = new Date(deadlineVal);
+                if (!isNaN(dateObj)) {
+                    const dd = String(dateObj.getDate()).padStart(2, '0');
+                    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const yyyy = dateObj.getFullYear();
+                    let hours = dateObj.getHours();
+                    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12;
+                    const hh = String(hours).padStart(2, '0');
+                    deadline = `${dd}/${mm}/${yyyy} ${hh}:${minutes} ${ampm}`;
+                }
+            }
+
             const payload = {
                 facultyName,
                 empId,
@@ -3413,7 +3643,8 @@ Department of CE & IT`;
                 publishWebsite,
                 pressNote,
                 placementActType,
-                activityDetails
+                activityDetails,
+                deadline
             };
 
             // ── POST to Backend Sheets Proxy ──

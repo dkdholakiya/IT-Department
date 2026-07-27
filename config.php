@@ -23,7 +23,7 @@ return [
     'zero_mail_enabled' => 0, // Toggle: 1 to enable email for zero student report, 0 to disable
 
     // Google Sheets Apps Script Web App URLs
-    'sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbzAZyhE8DkK_DnrDhxj4fCx75TlDFRufpUyD7cgI6TXg39HC2hTgXXNGPaw_pg9m2UIiQ/exec',
+    'sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbzgEUHcbbF7k5gp8RyEJxwzPiUeTeu6wLIZOPbNn-ALnsGPPzyNEKVx9q5ZnHKESHEUxA/exec',
     'zero_sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbw1zMUC-u2HP1S1ld58Dc4HtIEqWTrcR8h1G0wNfc6bod2KW3rX9knynzW99c2z0oWf/exec',
 
     // Password configuration
