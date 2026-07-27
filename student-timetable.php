@@ -1,5 +1,11 @@
 <?php 
-include 'auth-check.php'; 
+// Public access: session start and security headers without auth check redirection
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+header("X-Frame-Options: SAMEORIGIN");
+header("X-Content-Type-Options: nosniff");
+header("X-XSS-Protection: 1; mode=block");
 
 $studentUploadDir = __DIR__ . '/uploads/student_timetable/';
 if (!is_dir($studentUploadDir)) {
@@ -989,22 +995,18 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
                     <table>
                         <!-- Header Rows -->
                         <tr>
-                            <td rowspan="4" colspan="2" class="logo-cell">
-                                <img src="assets/images/logo.png?v=3" alt="GMIU Logo" onerror="this.onerror=null; this.src='assets/images/favicon.ico';">
-                                <div class="logo-fallback" id="logoFallback" style="display: none;">GMIU</div>
-                            </td>
-                            <td colspan="6" class="university-header">GYANMANJARI INNOVATIVE UNIVERSITY (GMIU)</td>
+                            <td colspan="8" class="university-header">GYANMANJARI INNOVATIVE UNIVERSITY (GMIU)</td>
                         </tr>
                         <tr>
-                            <td colspan="6" class="institute-header">Gyanmanjari Institute of Technology</td>
+                            <td colspan="8" class="institute-header">Gyanmanjari Institute of Technology</td>
                         </tr>
                         <tr>
-                            <td colspan="6" class="title-header" id="stTitleHeader">Time Table</td>
+                            <td colspan="8" class="title-header" id="stTitleHeader">Time Table</td>
                         </tr>
                         <tr class="header-info-row bold">
-                            <td colspan="2" id="stSemesterVal">Semester : -</td>
+                            <td colspan="3" id="stSemesterVal">Semester : -</td>
                             <td colspan="2" id="stClassroomVal">Class Room : -</td>
-                            <td colspan="2" id="stWefVal">W.E.F.: -</td>
+                            <td colspan="3" id="stWefVal">W.E.F.: -</td>
                         </tr>
 
                         <!-- Days and Columns -->
@@ -1083,7 +1085,7 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
 
     <!-- Data & Excel Parsing Libraries -->
     <?php if ($excelExists): ?>
-    <script src="assets/vendor/xlsx/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="assets/js/facultyData.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -1225,7 +1227,13 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
                     if (!row || row.length === 0) continue;
                     const rowStr = row.join(" ").trim();
                     if (!rowStr) continue;
-                    if (rowStr.toLowerCase().includes("total load") || rowStr.toLowerCase().includes("co-ordinator")) {
+                    const lowerRowStr = rowStr.toLowerCase();
+                    if (lowerRowStr.includes("total load") || 
+                        lowerRowStr.includes("co-ordinator") || 
+                        lowerRowStr.includes("subject") || 
+                        lowerRowStr.includes("faculty") || 
+                        lowerRowStr.includes("location") ||
+                        lowerRowStr.includes("load distribution")) {
                         break;
                     }
                     scheduleRowIndices.push(i);
