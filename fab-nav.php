@@ -47,6 +47,13 @@ $active_page = isset($active_page) ? $active_page : 'home';
             </svg>
             Personal Timetable
         </a>
+        <a href="student-timetable" class="fab-link <?php echo ($active_page === 'student-timetable') ? 'active' : ''; ?>" id="nav-student-timetable">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+                <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+            </svg>
+            Student Timetable
+        </a>
         <a href="calendar" class="fab-link <?php echo ($active_page === 'calendar') ? 'active' : ''; ?>" id="nav-calendar">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />

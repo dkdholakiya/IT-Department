@@ -300,7 +300,7 @@ body::before {
     text-transform: uppercase;
     padding: 8px 18px;
     border-radius: 50px;
-    margin-bottom: 10px;
+    margin-bottom: 18px;
 }
 
 .rp-badge-dot {
@@ -695,7 +695,7 @@ textarea {
         font-size: 11px !important;
         padding: 6px 14px !important;
         letter-spacing: 1.2px !important;
-        margin-bottom: 4px !important;
+        margin-bottom: 15px !important;
     }
 
     .rp-section {
