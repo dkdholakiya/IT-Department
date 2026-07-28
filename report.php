@@ -226,22 +226,37 @@
                                     <div class="col-md-4">
                                         <label class="form-label" for="activityDate">Activity Date <span
                                                 class="text-danger">*</span></label>
-                                        <input type="date" class="form-control form-control-dark-input"
-                                            id="activityDate" required>
+                                        <div class="input-group date-input-group">
+                                            <input type="text" class="form-control form-control-dark-input date-picker-input" id="activityDate"
+                                                placeholder="YYYY-MM-DD" onclick="openDatePicker('activityDate')" readonly required>
+                                            <button class="btn date-picker-btn" type="button" onclick="openDatePicker('activityDate')" title="Select Date">
+                                                <i class="bi bi-calendar-event-fill"></i>
+                                            </button>
+                                        </div>
                                         <div class="invalid-feedback">Activity Date is required.</div>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label" for="startTime">Start Time <span
                                                 class="text-danger">*</span></label>
-                                        <input type="time" class="form-control form-control-dark-input" id="startTime"
-                                            required>
+                                        <div class="input-group clock-input-group">
+                                            <input type="text" class="form-control form-control-dark-input clock-picker-input" id="startTime"
+                                                placeholder="11:05 PM" onclick="openClockPicker('startTime')" readonly required>
+                                            <button class="btn clock-picker-btn" type="button" onclick="openClockPicker('startTime')" title="Select Start Time">
+                                                <i class="bi bi-clock-fill"></i>
+                                            </button>
+                                        </div>
                                         <div class="invalid-feedback">Start Time is required.</div>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label" for="endTime">End Time <span
                                                 class="text-danger">*</span></label>
-                                        <input type="time" class="form-control form-control-dark-input" id="endTime"
-                                            required>
+                                        <div class="input-group clock-input-group">
+                                            <input type="text" class="form-control form-control-dark-input clock-picker-input" id="endTime"
+                                                placeholder="12:05 PM" onclick="openClockPicker('endTime')" readonly required>
+                                            <button class="btn clock-picker-btn" type="button" onclick="openClockPicker('endTime')" title="Select End Time">
+                                                <i class="bi bi-clock-fill"></i>
+                                            </button>
+                                        </div>
                                         <div class="invalid-feedback">End Time is required.</div>
                                     </div>
                                     <div class="col-md-6">
@@ -253,12 +268,18 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Programme <span class="text-danger">*</span></label>
-                                        <div class="d-flex gap-3 mt-2">
+                                        <div class="d-flex flex-wrap gap-3 mt-2">
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="Diploma" id="progDiploma">
                                                 <label class="form-check-label text-light"
                                                     for="progDiploma">Diploma</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input prog-checkbox" type="checkbox"
+                                                    value="Diploma Premium" id="progDiplomaPremium">
+                                                <label class="form-check-label text-light"
+                                                    for="progDiplomaPremium">Diploma Premium</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
@@ -268,9 +289,21 @@
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
+                                                    value="B.Tech Premium" id="progBTechPremium">
+                                                <label class="form-check-label text-light"
+                                                    for="progBTechPremium">B.Tech Premium</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="M.Tech" id="progMTech">
                                                 <label class="form-check-label text-light"
                                                     for="progMTech">M.Tech</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input prog-checkbox" type="checkbox"
+                                                    value="M.Tech Premium" id="progMTechPremium">
+                                                <label class="form-check-label text-light"
+                                                    for="progMTechPremium">M.Tech Premium</label>
                                             </div>
                                         </div>
                                         <div class="text-danger d-none rp-error-text" id="progError">Select at least one
@@ -279,10 +312,18 @@
                                     <div class="col-md-4">
                                         <label class="form-label" for="semester">Semester <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="semester"
-                                            placeholder="e.g., 4, 6..." 
-                                            oninput="this.value = this.value.replace(/[^0-9,\s-]/g, '')" required>
-                                        <div class="invalid-feedback">Semester is required (numbers only).</div>
+                                        <select class="form-select" id="semester" required>
+                                            <option value="" disabled selected>Select Semester...</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select a semester.</div>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label" for="divisionClass">Division/Class <span
@@ -850,10 +891,31 @@
                                                     <span id="deadlineDisplay" class="badge bg-danger ms-2 d-none" style="font-size: 13px; font-weight: 700;"></span>
                                                 </div>
                                                 <div class="text-danger d-none small mt-1 fw-bold" id="deadlineFormError">Submission deadline is required to submit the report.</div>
-                                                <div class="mt-2 d-none" id="deadlinePickerWrap" style="max-width: 320px;">
-                                                    <label class="form-label text-warning small" for="deadlineVal">Select Deadline Date & Time <span class="text-danger">*</span></label>
-                                                    <input type="datetime-local" class="form-control form-control-dark-input" id="deadlineVal">
-                                                    <div class="invalid-feedback">Deadline date and time is required.</div>
+                                                <div class="mt-2 d-none" id="deadlinePickerWrap" style="max-width: 520px;">
+                                                    <label class="form-label text-warning small mb-2">Select Deadline Date & Time <span class="text-danger">*</span></label>
+                                                    <div class="row g-2">
+                                                        <div class="col-sm-6">
+                                                            <label class="form-label text-muted small me-1 mb-1">Deadline Date</label>
+                                                            <div class="input-group date-input-group">
+                                                                <input type="text" class="form-control form-control-dark-input date-picker-input" id="deadlineDate"
+                                                                    placeholder="YYYY-MM-DD" onclick="openDatePicker('deadlineDate')" readonly>
+                                                                <button class="btn date-picker-btn" type="button" onclick="openDatePicker('deadlineDate')" title="Select Deadline Date">
+                                                                    <i class="bi bi-calendar-event-fill"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label class="form-label text-muted small me-1 mb-1">Deadline Time</label>
+                                                            <div class="input-group clock-input-group">
+                                                                <input type="text" class="form-control form-control-dark-input clock-picker-input" id="deadlineTime"
+                                                                    placeholder="05:00 PM" onclick="openClockPicker('deadlineTime')" readonly>
+                                                                <button class="btn clock-picker-btn" type="button" onclick="openClockPicker('deadlineTime')" title="Select Deadline Time">
+                                                                    <i class="bi bi-clock-fill"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" id="deadlineVal" name="deadlineVal">
                                                 </div>
                                             </div>
                                             <div class="col-12 text-end d-flex flex-wrap gap-2 justify-content-end">
@@ -1122,26 +1184,78 @@
             // Toggle deadline listener
             const enableDeadline = document.getElementById("enableDeadline");
             const deadlineVal = document.getElementById("deadlineVal");
+            const deadlineDate = document.getElementById("deadlineDate");
+            const deadlineTime = document.getElementById("deadlineTime");
             const deadlinePickerWrap = document.getElementById("deadlinePickerWrap");
             const deadlineDisplay = document.getElementById("deadlineDisplay");
+
+            function syncDeadlineValue() {
+                if (!deadlineDate || !deadlineTime || !deadlineVal) return;
+                const dStr = deadlineDate.value.trim();
+                const tStr = deadlineTime.value.trim();
+
+                if (dStr && tStr) {
+                    const match = tStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+                    if (match) {
+                        let h = parseInt(match[1], 10);
+                        const m = match[2];
+                        const ampm = match[3].toUpperCase();
+                        if (ampm === 'PM' && h < 12) h += 12;
+                        if (ampm === 'AM' && h === 12) h = 0;
+                        const hh = String(h).padStart(2, '0');
+                        deadlineVal.value = `${dStr}T${hh}:${m}`;
+                    } else {
+                        deadlineVal.value = `${dStr}T17:00`;
+                    }
+                    deadlineDate.classList.remove("is-invalid");
+                    deadlineTime.classList.remove("is-invalid");
+                    deadlineVal.classList.remove("is-invalid");
+                    const deadlineFormError = document.getElementById("deadlineFormError");
+                    if (deadlineFormError) deadlineFormError.classList.add("d-none");
+                } else {
+                    deadlineVal.value = "";
+                }
+
+                updateDeadlineDisplay();
+                syncEmailPreview();
+            }
 
             if (enableDeadline && deadlineVal && deadlinePickerWrap && deadlineDisplay) {
                 enableDeadline.addEventListener("change", function () {
                     if (this.checked) {
                         deadlinePickerWrap.classList.remove("d-none");
                         deadlineVal.setAttribute("required", "true");
-                        updateDeadlineDisplay();
+
+                        if (deadlineDate && !deadlineDate.value) {
+                            deadlineDate.value = getTodayDateString();
+                        }
+                        if (deadlineTime && !deadlineTime.value) {
+                            deadlineTime.value = "05:00 PM";
+                        }
+                        syncDeadlineValue();
                     } else {
                         deadlinePickerWrap.classList.add("d-none");
                         deadlineVal.removeAttribute("required");
                         deadlineVal.value = "";
+                        if (deadlineDate) deadlineDate.value = "";
+                        if (deadlineTime) deadlineTime.value = "";
                         deadlineVal.classList.remove("is-invalid");
+                        if (deadlineDate) deadlineDate.classList.remove("is-invalid");
+                        if (deadlineTime) deadlineTime.classList.remove("is-invalid");
                         deadlineDisplay.classList.add("d-none");
                         deadlineDisplay.innerText = "";
                     }
                     syncEmailPreview();
                 });
 
+                if (deadlineDate) {
+                    deadlineDate.addEventListener("input", syncDeadlineValue);
+                    deadlineDate.addEventListener("change", syncDeadlineValue);
+                }
+                if (deadlineTime) {
+                    deadlineTime.addEventListener("input", syncDeadlineValue);
+                    deadlineTime.addEventListener("change", syncDeadlineValue);
+                }
                 deadlineVal.addEventListener("input", function () {
                     updateDeadlineDisplay();
                     syncEmailPreview();
@@ -1184,6 +1298,15 @@
 
             // Auto load draft if exists
             loadSavedDraft();
+
+            // Set default today's date for activityDate if not already set (by draft or otherwise)
+            const activityDateInput = document.getElementById("activityDate");
+            if (activityDateInput && !activityDateInput.value) {
+                activityDateInput.value = getTodayDateString();
+                if (typeof syncEmailPreview === "function") {
+                    syncEmailPreview();
+                }
+            }
 
             // Track Stepper nodes states when accordions collapse/expand
             setupAccordionStateTracker();
@@ -2623,11 +2746,15 @@ Department of CE & IT`;
             // Check Deadline validation (MANDATORY)
             const enableDeadline = document.getElementById("enableDeadline");
             const deadlineVal = document.getElementById("deadlineVal");
+            const deadlineDate = document.getElementById("deadlineDate");
+            const deadlineTime = document.getElementById("deadlineTime");
             const deadlineFormError = document.getElementById("deadlineFormError");
             if (enableDeadline && deadlineVal) {
                 if (!enableDeadline.checked || !deadlineVal.value) {
                     enableDeadline.classList.add("is-invalid");
                     deadlineVal.classList.add("is-invalid");
+                    if (deadlineDate) deadlineDate.classList.add("is-invalid");
+                    if (deadlineTime) deadlineTime.classList.add("is-invalid");
                     if (deadlineFormError) deadlineFormError.classList.remove("d-none");
                     isValid = false;
                     showToast("ERROR: Submission Deadline is mandatory. Please check Set Deadline and select a date/time.");
@@ -2636,6 +2763,8 @@ Department of CE & IT`;
                 } else {
                     enableDeadline.classList.remove("is-invalid");
                     deadlineVal.classList.remove("is-invalid");
+                    if (deadlineDate) deadlineDate.classList.remove("is-invalid");
+                    if (deadlineTime) deadlineTime.classList.remove("is-invalid");
                     if (deadlineFormError) deadlineFormError.classList.add("d-none");
                 }
             }
@@ -2694,6 +2823,7 @@ Department of CE & IT`;
                         startTime: document.getElementById("startTime").value,
                         endTime: document.getElementById("endTime").value,
                         venue: document.getElementById("venue").value,
+                        programmes: Array.from(document.querySelectorAll('.prog-checkbox:checked')).map(cb => cb.id),
                         semester: document.getElementById("semester").value,
                         divisionClass: document.getElementById("divisionClass").value,
                         participantsCount: document.getElementById("participantsCount").value,
@@ -2779,7 +2909,7 @@ Department of CE & IT`;
                         document.getElementById("reportType").value = draftReportType;
                         document.getElementById("customReportType").value = draft.customReportType || "";
                         document.getElementById("reportTitle").value = draft.reportTitle || "";
-                        document.getElementById("activityDate").value = draft.activityDate || "";
+                        document.getElementById("activityDate").value = draft.activityDate || getTodayDateString();
                         document.getElementById("startTime").value = draft.startTime || "";
                         document.getElementById("endTime").value = draft.endTime || "";
                         document.getElementById("venue").value = draft.venue || "";
@@ -2788,6 +2918,12 @@ Department of CE & IT`;
                         document.getElementById("participantsCount").value = draft.participantsCount || "";
                         document.getElementById("briefObjective").value = draft.briefObjective || "";
                         document.getElementById("driveLink").value = draft.driveLink || "";
+
+                        if (draft.programmes) {
+                            document.querySelectorAll(".prog-checkbox").forEach(cb => {
+                                cb.checked = draft.programmes.includes(cb.id);
+                            });
+                        }
 
                         // Populate new basic fields
                         document.getElementById("batch").value = draft.batch || "";
@@ -3303,6 +3439,12 @@ Department of CE & IT`;
             document.getElementById("reportForm").reset();
             document.getElementById("reportForm").classList.remove("was-validated");
 
+            // Set default today's date for activityDate
+            const activityDateInput = document.getElementById("activityDate");
+            if (activityDateInput) {
+                activityDateInput.value = getTodayDateString();
+            }
+
             // Clear CC emails selection
             const ccSelect = document.getElementById("ccEmails");
             if (ccSelect) {
@@ -3681,8 +3823,592 @@ Department of CE & IT`;
             }, 3000);
         }
 
+        // Helper to get today's date in YYYY-MM-DD format
+        function getTodayDateString() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
         // Redundant FAB toggle logic removed
     </script>
+
+    <!-- ══════════════════════════════════════════════════════════
+         INTERACTIVE VISUAL CLOCK TIME PICKER MODAL
+         ══════════════════════════════════════════════════════════ -->
+    <div class="modal fade clock-picker-modal" id="clockPickerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content clock-modal-content">
+                
+                <!-- Modal Header / Selected Time Banner -->
+                <div class="clock-modal-header">
+                    <div class="clock-display-wrap">
+                        <div class="clock-time-display">
+                            <span class="clock-num-box active" id="clockHourBox" onclick="switchClockMode('hour')" title="Click to select hour">11</span>
+                            <span class="clock-colon">:</span>
+                            <span class="clock-num-box" id="clockMinBox" onclick="switchClockMode('minute')" title="Click to select minute">05</span>
+                        </div>
+                        <div class="clock-ampm-wrap">
+                            <button type="button" class="clock-ampm-btn active" id="clockAmBtn" onclick="setClockAmPm('AM')">AM</button>
+                            <button type="button" class="clock-ampm-btn" id="clockPmBtn" onclick="setClockAmPm('PM')">PM</button>
+                        </div>
+                    </div>
+                    <div class="clock-mode-indicator" id="clockModeTitle">SELECT HOUR</div>
+                </div>
+
+                <!-- Modal Body (Interactive Circular Clock Dial) -->
+                <div class="clock-modal-body text-center">
+                    <div class="clock-dial-container" id="clockDialContainer">
+                        <div class="clock-center-pin"></div>
+                        <div class="clock-hand" id="clockHand">
+                            <div class="clock-hand-head"></div>
+                        </div>
+                        <div class="clock-face-numbers" id="clockFaceNumbers">
+                            <!-- Dynamically generated dial numbers -->
+                        </div>
+                    </div>
+
+                    <!-- Quick Preset Pills -->
+                    <div class="clock-presets-bar mt-3">
+                        <span class="text-muted small me-1" style="font-family:'Share Tech', monospace; font-size:11px;">QUICK:</span>
+                        <button type="button" class="btn clock-preset-btn" onclick="applyClockPreset('09:00 AM')">09:00 AM</button>
+                        <button type="button" class="btn clock-preset-btn" onclick="applyClockPreset('10:30 AM')">10:30 AM</button>
+                        <button type="button" class="btn clock-preset-btn" onclick="applyClockPreset('11:05 PM')">11:05 PM</button>
+                        <button type="button" class="btn clock-preset-btn" onclick="applyClockPreset('02:00 PM')">02:00 PM</button>
+                        <button type="button" class="btn clock-preset-btn" onclick="applyClockPreset('04:30 PM')">04:30 PM</button>
+                    </div>
+                </div>
+
+                <!-- Modal Footer Actions -->
+                <div class="clock-modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm px-4 rounded-pill text-light border-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger btn-sm px-4 rounded-pill shadow-sm" onclick="confirmClockSelection()">Set Time <i class="bi bi-check2 ms-1"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         INTERACTIVE VISUAL CLOCK TIME PICKER SCRIPT
+         ══════════════════════════════════════════════════════════ -->
+    <script>
+        let clockState = {
+            targetInputId: null,
+            hour: 11,
+            minute: 5,
+            ampm: 'PM',
+            mode: 'hour', // 'hour' or 'minute'
+            isDragging: false,
+            bsModal: null
+        };
+
+        function openClockPicker(inputId) {
+            clockState.targetInputId = inputId;
+            const inputEl = document.getElementById(inputId);
+            const existingVal = inputEl ? inputEl.value.trim() : '';
+
+            if (existingVal) {
+                const match = existingVal.match(/^(\d{1,2}):(\d{2})(?:\s*(AM|PM))?/i);
+                if (match) {
+                    let parsedH = parseInt(match[1], 10);
+                    let parsedM = parseInt(match[2], 10);
+                    let parsedAmPm = match[3] ? match[3].toUpperCase() : null;
+
+                    if (!parsedAmPm) {
+                        if (parsedH >= 12) {
+                            parsedAmPm = 'PM';
+                            if (parsedH > 12) parsedH -= 12;
+                        } else {
+                            parsedAmPm = 'AM';
+                            if (parsedH === 0) parsedH = 12;
+                        }
+                    }
+                    clockState.hour = parsedH >= 1 && parsedH <= 12 ? parsedH : 11;
+                    clockState.minute = parsedM >= 0 && parsedM <= 59 ? parsedM : 5;
+                    clockState.ampm = parsedAmPm || 'PM';
+                }
+            } else {
+                clockState.hour = 11;
+                clockState.minute = 5;
+                clockState.ampm = 'PM';
+            }
+
+            clockState.mode = 'hour';
+
+            const modalEl = document.getElementById('clockPickerModal');
+            if (!clockState.bsModal) {
+                clockState.bsModal = new bootstrap.Modal(modalEl);
+                initClockDialEvents();
+
+                if (modalEl) {
+                    modalEl.addEventListener('shown.bs.modal', () => {
+                        renderClockFace();
+                    });
+                    window.addEventListener('resize', () => {
+                        if (modalEl.classList.contains('show')) {
+                            renderClockFace();
+                        }
+                    });
+                }
+            }
+            clockState.bsModal.show();
+            renderClockFace();
+            setTimeout(renderClockFace, 60);
+            setTimeout(renderClockFace, 200);
+        }
+
+        function switchClockMode(mode) {
+            clockState.mode = mode;
+            renderClockFace();
+        }
+
+        function setClockAmPm(ampm) {
+            clockState.ampm = ampm;
+            renderClockFace();
+        }
+
+        function renderClockFace() {
+            const hourBox = document.getElementById('clockHourBox');
+            const minBox = document.getElementById('clockMinBox');
+            const amBtn = document.getElementById('clockAmBtn');
+            const pmBtn = document.getElementById('clockPmBtn');
+            const modeTitle = document.getElementById('clockModeTitle');
+            const faceNumbers = document.getElementById('clockFaceNumbers');
+            const hand = document.getElementById('clockHand');
+            const container = document.getElementById('clockDialContainer');
+
+            if (!hourBox || !minBox) return;
+
+            hourBox.innerText = String(clockState.hour).padStart(2, '0');
+            minBox.innerText = String(clockState.minute).padStart(2, '0');
+
+            if (clockState.mode === 'hour') {
+                hourBox.classList.add('active');
+                minBox.classList.remove('active');
+                modeTitle.innerText = 'SELECT HOUR';
+            } else {
+                minBox.classList.add('active');
+                hourBox.classList.remove('active');
+                modeTitle.innerText = 'SELECT MINUTE';
+            }
+
+            if (clockState.ampm === 'AM') {
+                amBtn.classList.add('active');
+                pmBtn.classList.remove('active');
+            } else {
+                pmBtn.classList.add('active');
+                amBtn.classList.remove('active');
+            }
+
+            faceNumbers.innerHTML = '';
+
+            let containerW = 250;
+            let containerH = 250;
+            if (container) {
+                const rect = container.getBoundingClientRect();
+                if (rect.width > 0 && rect.height > 0) {
+                    containerW = rect.width;
+                    containerH = rect.height;
+                } else if (container.clientWidth > 0 && container.clientHeight > 0) {
+                    containerW = container.clientWidth;
+                    containerH = container.clientHeight;
+                }
+            }
+
+            const centerX = containerW / 2;
+            const centerY = containerH / 2;
+            const radius = Math.min(centerX, centerY) - 30;
+
+            if (clockState.mode === 'hour') {
+                for (let h = 1; h <= 12; h++) {
+                    const numEl = document.createElement('div');
+                    numEl.className = 'clock-number' + (h === clockState.hour ? ' active' : '');
+                    numEl.innerText = h;
+
+                    const angleDeg = (h % 12) * 30;
+                    const angleRad = (angleDeg - 90) * (Math.PI / 180);
+                    const x = centerX + radius * Math.cos(angleRad);
+                    const y = centerY + radius * Math.sin(angleRad);
+
+                    numEl.style.left = `${x}px`;
+                    numEl.style.top = `${y}px`;
+
+                    numEl.onclick = (e) => {
+                        e.stopPropagation();
+                        clockState.hour = h;
+                        renderClockFace();
+                        setTimeout(() => switchClockMode('minute'), 200);
+                    };
+
+                    faceNumbers.appendChild(numEl);
+                }
+
+                const handAngle = (clockState.hour % 12) * 30;
+                hand.style.transform = `rotate(${handAngle}deg)`;
+            } else {
+                for (let m = 0; m < 60; m += 5) {
+                    const numEl = document.createElement('div');
+                    const isClosest = Math.round(clockState.minute / 5) * 5 % 60 === m;
+                    numEl.className = 'clock-number' + (isClosest ? ' active' : '');
+                    numEl.innerText = String(m).padStart(2, '0');
+
+                    const angleDeg = m * 6;
+                    const angleRad = (angleDeg - 90) * (Math.PI / 180);
+                    const x = centerX + radius * Math.cos(angleRad);
+                    const y = centerY + radius * Math.sin(angleRad);
+
+                    numEl.style.left = `${x}px`;
+                    numEl.style.top = `${y}px`;
+
+                    numEl.onclick = (e) => {
+                        e.stopPropagation();
+                        clockState.minute = m;
+                        renderClockFace();
+                    };
+
+                    faceNumbers.appendChild(numEl);
+                }
+
+                const handAngle = clockState.minute * 6;
+                hand.style.transform = `rotate(${handAngle}deg)`;
+            }
+        }
+
+        function initClockDialEvents() {
+            const container = document.getElementById('clockDialContainer');
+            if (!container) return;
+
+            const handlePointer = (e) => {
+                const rect = container.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+
+                const dx = clientX - cx;
+                const dy = clientY - cy;
+
+                let angleRad = Math.atan2(dy, dx) + Math.PI / 2;
+                if (angleRad < 0) angleRad += 2 * Math.PI;
+
+                let deg = angleRad * (180 / Math.PI);
+
+                if (clockState.mode === 'hour') {
+                    let h = Math.round(deg / 30);
+                    if (h === 0) h = 12;
+                    clockState.hour = h;
+                } else {
+                    let m = Math.round(deg / 6) % 60;
+                    clockState.minute = m;
+                }
+                renderClockFace();
+            };
+
+            container.addEventListener('pointerdown', (e) => {
+                clockState.isDragging = true;
+                handlePointer(e);
+            });
+
+            window.addEventListener('pointermove', (e) => {
+                if (clockState.isDragging) {
+                    handlePointer(e);
+                }
+            });
+
+            window.addEventListener('pointerup', () => {
+                if (clockState.isDragging) {
+                    clockState.isDragging = false;
+                    if (clockState.mode === 'hour') {
+                        setTimeout(() => switchClockMode('minute'), 200);
+                    }
+                }
+            });
+        }
+
+        function applyClockPreset(presetStr) {
+            const match = presetStr.match(/^(\d{2}):(\d{2})\s*(AM|PM)$/i);
+            if (match) {
+                clockState.hour = parseInt(match[1], 10);
+                clockState.minute = parseInt(match[2], 10);
+                clockState.ampm = match[3].toUpperCase();
+                renderClockFace();
+            }
+        }
+
+        function confirmClockSelection() {
+            if (!clockState.targetInputId) return;
+
+            const formattedH = String(clockState.hour).padStart(2, '0');
+            const formattedM = String(clockState.minute).padStart(2, '0');
+            const resultStr = `${formattedH}:${formattedM} ${clockState.ampm}`;
+
+            const inputEl = document.getElementById(clockState.targetInputId);
+            if (inputEl) {
+                inputEl.value = resultStr;
+                inputEl.classList.remove('is-invalid');
+                inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+                inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            if (clockState.bsModal) {
+                clockState.bsModal.hide();
+            }
+        }
+    </script>
+
+    <!-- ══════════════════════════════════════════════════════════
+         INTERACTIVE VISUAL DATE PICKER MODAL
+         ══════════════════════════════════════════════════════════ -->
+    <div class="modal fade date-picker-modal" id="datePickerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content date-modal-content">
+                
+                <!-- Header Banner -->
+                <div class="date-modal-header">
+                    <div class="date-year-badge" id="dateHeaderYear">2026</div>
+                    <div class="date-selected-title" id="dateHeaderFull">Tue, 28 Jul</div>
+                </div>
+
+                <!-- Month/Year Navigation -->
+                <div class="date-nav-bar">
+                    <button type="button" class="date-nav-btn" onclick="navMonth(-1)" title="Previous Month">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <div class="date-month-title" id="dateMonthTitle">July 2026</div>
+                    <button type="button" class="date-nav-btn" onclick="navMonth(1)" title="Next Month">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Body Grid -->
+                <div class="date-modal-body">
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Day headers & dates rendered via JS -->
+                    </div>
+
+                    <!-- Presets -->
+                    <div class="date-presets-bar">
+                        <span class="text-muted small me-1" style="font-family:'Share Tech', monospace; font-size:11px;">QUICK:</span>
+                        <button type="button" class="btn date-preset-btn" onclick="applyDatePreset('today')">Today</button>
+                        <button type="button" class="btn date-preset-btn" onclick="applyDatePreset('tomorrow')">Tomorrow</button>
+                        <button type="button" class="btn date-preset-btn" onclick="applyDatePreset('next_monday')">Next Monday</button>
+                    </div>
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="date-modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm px-4 rounded-pill text-light border-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger btn-sm px-4 rounded-pill shadow-sm" onclick="confirmDateSelection()">Set Date <i class="bi bi-check2 ms-1"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         INTERACTIVE VISUAL DATE PICKER SCRIPT
+         ══════════════════════════════════════════════════════════ -->
+    <script>
+        let dateState = {
+            targetInputId: null,
+            viewYear: 2026,
+            viewMonth: 6,
+            selectedYear: 2026,
+            selectedMonth: 6,
+            selectedDay: 28,
+            bsModal: null
+        };
+
+        const MONTH_NAMES = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        function openDatePicker(inputId) {
+            dateState.targetInputId = inputId;
+            const inputEl = document.getElementById(inputId);
+            const existingVal = inputEl ? inputEl.value.trim() : '';
+
+            let d = new Date();
+            if (existingVal) {
+                let match = existingVal.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+                if (match) {
+                    d = new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+                } else {
+                    match = existingVal.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+                    if (match) {
+                        d = new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
+                    }
+                }
+            }
+
+            if (isNaN(d.getTime())) d = new Date();
+
+            dateState.selectedYear = d.getFullYear();
+            dateState.selectedMonth = d.getMonth();
+            dateState.selectedDay = d.getDate();
+
+            dateState.viewYear = dateState.selectedYear;
+            dateState.viewMonth = dateState.selectedMonth;
+
+            renderCalendar();
+
+            const modalEl = document.getElementById('datePickerModal');
+            if (!dateState.bsModal) {
+                dateState.bsModal = new bootstrap.Modal(modalEl);
+            }
+            dateState.bsModal.show();
+        }
+
+        function navMonth(delta) {
+            dateState.viewMonth += delta;
+            if (dateState.viewMonth > 11) {
+                dateState.viewMonth = 0;
+                dateState.viewYear++;
+            } else if (dateState.viewMonth < 0) {
+                dateState.viewMonth = 11;
+                dateState.viewYear--;
+            }
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const headerYear = document.getElementById('dateHeaderYear');
+            const headerFull = document.getElementById('dateHeaderFull');
+            const monthTitle = document.getElementById('dateMonthTitle');
+            const calendarGrid = document.getElementById('calendarGrid');
+
+            if (!calendarGrid) return;
+
+            const selDateObj = new Date(dateState.selectedYear, dateState.selectedMonth, dateState.selectedDay);
+            const dayName = DAY_NAMES[selDateObj.getDay()];
+            const monthShort = MONTH_NAMES[dateState.selectedMonth].slice(0, 3);
+            
+            headerYear.innerText = dateState.selectedYear;
+            headerFull.innerText = `${dayName}, ${dateState.selectedDay} ${monthShort}`;
+            monthTitle.innerText = `${MONTH_NAMES[dateState.viewMonth]} ${dateState.viewYear}`;
+
+            calendarGrid.innerHTML = '';
+
+            const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+            weekdays.forEach(w => {
+                const wEl = document.createElement('div');
+                wEl.className = 'calendar-weekday';
+                wEl.innerText = w;
+                calendarGrid.appendChild(wEl);
+            });
+
+            const firstDayIndex = new Date(dateState.viewYear, dateState.viewMonth, 1).getDay();
+            const daysInMonth = new Date(dateState.viewYear, dateState.viewMonth + 1, 0).getDate();
+            const daysInPrevMonth = new Date(dateState.viewYear, dateState.viewMonth, 0).getDate();
+
+            const today = new Date();
+
+            for (let i = firstDayIndex - 1; i >= 0; i--) {
+                const prevDay = daysInPrevMonth - i;
+                const cell = document.createElement('div');
+                cell.className = 'calendar-day-cell other-month';
+                cell.innerText = prevDay;
+                cell.onclick = () => {
+                    navMonth(-1);
+                    selectDate(dateState.viewYear, dateState.viewMonth, prevDay);
+                };
+                calendarGrid.appendChild(cell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                let classes = 'calendar-day-cell';
+
+                if (dateState.viewYear === today.getFullYear() &&
+                    dateState.viewMonth === today.getMonth() &&
+                    day === today.getDate()) {
+                    classes += ' today';
+                }
+
+                if (dateState.viewYear === dateState.selectedYear &&
+                    dateState.viewMonth === dateState.selectedMonth &&
+                    day === dateState.selectedDay) {
+                    classes += ' active';
+                }
+
+                cell.className = classes;
+                cell.innerText = day;
+                cell.onclick = () => {
+                    selectDate(dateState.viewYear, dateState.viewMonth, day);
+                };
+
+                calendarGrid.appendChild(cell);
+            }
+
+            const totalCells = firstDayIndex + daysInMonth;
+            const remainingCells = (totalCells > 35 ? 42 : 35) - totalCells;
+            for (let day = 1; day <= remainingCells; day++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-day-cell other-month';
+                cell.innerText = day;
+                cell.onclick = () => {
+                    navMonth(1);
+                    selectDate(dateState.viewYear, dateState.viewMonth, day);
+                };
+                calendarGrid.appendChild(cell);
+            }
+        }
+
+        function selectDate(y, m, d) {
+            dateState.selectedYear = y;
+            dateState.selectedMonth = m;
+            dateState.selectedDay = d;
+            renderCalendar();
+        }
+
+        function applyDatePreset(preset) {
+            const now = new Date();
+            if (preset === 'today') {
+                selectDate(now.getFullYear(), now.getMonth(), now.getDate());
+            } else if (preset === 'tomorrow') {
+                const tom = new Date(now);
+                tom.setDate(now.getDate() + 1);
+                selectDate(tom.getFullYear(), tom.getMonth(), tom.getDate());
+            } else if (preset === 'next_monday') {
+                const nextMon = new Date(now);
+                const dayOfWeek = nextMon.getDay();
+                const daysUntilMon = (8 - dayOfWeek) % 7 || 7;
+                nextMon.setDate(now.getDate() + daysUntilMon);
+                selectDate(nextMon.getFullYear(), nextMon.getMonth(), nextMon.getDate());
+            }
+            dateState.viewYear = dateState.selectedYear;
+            dateState.viewMonth = dateState.selectedMonth;
+            renderCalendar();
+        }
+
+        function confirmDateSelection() {
+            if (!dateState.targetInputId) return;
+
+            const yyyy = dateState.selectedYear;
+            const mm = String(dateState.selectedMonth + 1).padStart(2, '0');
+            const dd = String(dateState.selectedDay).padStart(2, '0');
+            const resultStr = `${yyyy}-${mm}-${dd}`;
+
+            const inputEl = document.getElementById(dateState.targetInputId);
+            if (inputEl) {
+                inputEl.value = resultStr;
+                inputEl.classList.remove('is-invalid');
+                inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+                inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            if (dateState.bsModal) {
+                dateState.bsModal.hide();
+            }
+        }
+    </script>
+</body>
+
+</html>cript>
 </body>
 
 </html>
