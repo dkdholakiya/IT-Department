@@ -305,6 +305,12 @@
                                                 <label class="form-check-label text-light"
                                                     for="progMTechPremium">M.Tech Premium</label>
                                             </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input prog-checkbox" type="checkbox"
+                                                    value="DLM" id="progDLM">
+                                                <label class="form-check-label text-light"
+                                                    for="progDLM">DLM</label>
+                                            </div>
                                         </div>
                                         <div class="text-danger d-none rp-error-text" id="progError">Select at least one
                                             programme.</div>
@@ -1426,6 +1432,11 @@
                 document.title = "Report System — IT Department";
             }
 
+            // Sync default CC emails based on department
+            if (typeof window.setDefaultCcEmails === "function") {
+                window.setDefaultCcEmails(deptVal);
+            }
+
             // Sync to Section 7 Block A (Reference Faculty Email details)
             document.getElementById("refName").value = member.name;
             document.getElementById("refEmail").value = member.email;
@@ -1444,7 +1455,6 @@
         }
 
         // Populate CC emails multi-select list dynamically and initialize custom multiselect
-        // Populate CC emails multi-select list dynamically and initialize custom multiselect
         function populateCcEmails() {
             const ccSearch = document.getElementById("ccSearch");
             const ccDropdownList = document.getElementById("ccDropdownList");
@@ -1455,6 +1465,60 @@
 
             let selectedCCEmails = [];
 
+            function getRequestedFacultyEmail() {
+                const fEmail = document.getElementById("facultyEmail")?.value || document.getElementById("refEmail")?.value || "";
+                return fEmail.toLowerCase().trim();
+            }
+
+            function getDefaultCcEmails(dept) {
+                const currentDept = dept || document.getElementById("facultyDept")?.value || "Information Technology";
+                const isCe = currentDept.toUpperCase().includes("COMPUTER") || currentDept.toUpperCase().includes("CE");
+                const reqEmail = getRequestedFacultyEmail();
+
+                // 1. HOD Email (Prof. Dhaval Chandarana)
+                const hodMember = facultyData.find(m => m.designation === "HOD" || (m.designation && m.designation.toLowerCase() === "hod"));
+                const hodEmail = hodMember ? hodMember.email : "drchandarana@gmiu.edu.in";
+
+                // 2. Department Incharge HOD Email (Prof. Shwetaba Chauhan for IT / Prof. Ekta Unagar for CE)
+                let inchargeMember;
+                if (isCe) {
+                    inchargeMember = facultyData.find(m => m.designation && m.designation.toLowerCase().includes("incharge hod ce"));
+                } else {
+                    inchargeMember = facultyData.find(m => m.designation && m.designation.toLowerCase().includes("incharge hod it"));
+                }
+                const inchargeEmail = inchargeMember ? inchargeMember.email : (isCe ? "ehunagar@gmiu.edu.in" : "sbchauhan@gmiu.edu.in");
+
+                const defaults = [];
+                if (hodEmail && hodEmail.toLowerCase() !== reqEmail) {
+                    defaults.push(hodEmail);
+                }
+                if (inchargeEmail && inchargeEmail.toLowerCase() !== reqEmail && !defaults.includes(inchargeEmail)) {
+                    defaults.push(inchargeEmail);
+                }
+                return defaults;
+            }
+
+            window.setDefaultCcEmails = function(dept) {
+                const currentDept = dept || document.getElementById("facultyDept")?.value || "Information Technology";
+                const isCe = currentDept.toUpperCase().includes("COMPUTER") || currentDept.toUpperCase().includes("CE");
+                const oppositeInchargeEmail = isCe ? "sbchauhan@gmiu.edu.in" : "ehunagar@gmiu.edu.in";
+                const reqEmail = getRequestedFacultyEmail();
+
+                // Remove opposing department's incharge email AND requested faculty email if present
+                selectedCCEmails = selectedCCEmails.filter(e => 
+                    e.toLowerCase() !== oppositeInchargeEmail.toLowerCase() &&
+                    e.toLowerCase() !== reqEmail
+                );
+
+                const defaults = getDefaultCcEmails(currentDept);
+                defaults.forEach(email => {
+                    if (!selectedCCEmails.includes(email)) {
+                        selectedCCEmails.push(email);
+                    }
+                });
+                updateCCTagsUI();
+            };
+
             const ccSelectWrap = ccSearch.closest(".cc-select-wrap");
 
             // Focus search input when clicking the wrapper container
@@ -1464,8 +1528,8 @@
                 }
             });
 
-            // Populate all emails initially
-            renderCCDropdown(facultyData);
+            // Set initial defaults (HOD + Department Incharge HOD)
+            selectedCCEmails = getDefaultCcEmails();
 
             ccSearch.addEventListener("focus", function () {
                 ccDropdownList.classList.add("show");
@@ -1494,8 +1558,13 @@
 
             function filterCCEmails() {
                 const query = ccSearch.value.toLowerCase().trim();
-                // Filter out already selected emails
-                const available = facultyData.filter(member => !selectedCCEmails.includes(member.email));
+                const reqEmail = getRequestedFacultyEmail();
+
+                // Filter out already selected emails AND requested faculty member's email
+                const available = facultyData.filter(member => 
+                    !selectedCCEmails.includes(member.email) &&
+                    member.email.toLowerCase() !== reqEmail
+                );
 
                 // Match by email or name
                 const filtered = available.filter(member =>
@@ -1541,7 +1610,20 @@
                 filterCCEmails();
             }
 
+            function isRequestedByDev() {
+                const reqEmail = getRequestedFacultyEmail();
+                const reqSearch = (document.getElementById("facultySearch")?.value || "").toLowerCase();
+                return reqEmail.includes("dkdholakiya") || reqSearch.includes("dev");
+            }
+
             function removeCCTag(email) {
+                if (!isRequestedByDev()) {
+                    const defaultEmails = getDefaultCcEmails().map(e => e.toLowerCase());
+                    if (defaultEmails.includes(email.toLowerCase())) {
+                        showToast("Default HOD / Incharge HOD CC email cannot be removed.");
+                        return;
+                    }
+                }
                 selectedCCEmails = selectedCCEmails.filter(e => e !== email);
                 updateCCTagsUI();
                 ccSearch.focus();
@@ -1554,17 +1636,31 @@
                 // Clear and update the hidden select options
                 ccSelect.innerHTML = "";
                 
+                const defaultEmails = getDefaultCcEmails().map(e => e.toLowerCase());
+                const isDev = isRequestedByDev();
+
                 selectedCCEmails.forEach(email => {
+                    const isDefault = defaultEmails.includes(email.toLowerCase());
+                    const isLocked = isDefault && !isDev;
+                    
                     const tag = document.createElement("div");
-                    tag.className = "cc-tag";
-                    tag.innerHTML = `
-                        <span>${email}</span>
-                        <button type="button" class="cc-tag-remove">&times;</button>
-                    `;
-                    tag.querySelector(".cc-tag-remove").addEventListener("click", function (e) {
-                        e.stopPropagation();
-                        removeCCTag(email);
-                    });
+                    tag.className = "cc-tag" + (isLocked ? " cc-tag-default" : "");
+                    
+                    if (isLocked) {
+                        tag.innerHTML = `
+                            <span>${email}</span>
+                            <span class="badge bg-secondary ms-1" style="font-size: 10px; opacity: 0.75; pointer-events: none;" title="Required Default CC"><i class="bi bi-lock-fill"></i></span>
+                        `;
+                    } else {
+                        tag.innerHTML = `
+                            <span>${email}</span>
+                            <button type="button" class="cc-tag-remove">&times;</button>
+                        `;
+                        tag.querySelector(".cc-tag-remove").addEventListener("click", function (e) {
+                            e.stopPropagation();
+                            removeCCTag(email);
+                        });
+                    }
                     ccTagsContainer.appendChild(tag);
                     
                     const opt = document.createElement("option");
@@ -1576,6 +1672,12 @@
                 // Trigger change event to update previews or form state
                 ccSelect.dispatchEvent(new Event('change', { bubbles: true }));
             }
+
+            // Render initial default CC tags in UI
+            updateCCTagsUI();
+
+            // Populate all emails initially in dropdown
+            renderCCDropdown(facultyData);
 
             // Make updates globally accessible so loadDraft, reset etc. can trigger synchronization
             window.syncCcEmailsUi = function() {
@@ -3452,12 +3554,16 @@ Department of CE & IT`;
                 activityDateInput.value = getTodayDateString();
             }
 
-            // Clear CC emails selection
-            const ccSelect = document.getElementById("ccEmails");
-            if (ccSelect) {
-                Array.from(ccSelect.options).forEach(option => option.selected = false);
-                if (typeof window.syncCcEmailsUi === "function") {
-                    window.syncCcEmailsUi();
+            // Reset CC emails selection to defaults (HOD + Department Incharge HOD)
+            if (typeof window.setDefaultCcEmails === "function") {
+                window.setDefaultCcEmails();
+            } else {
+                const ccSelect = document.getElementById("ccEmails");
+                if (ccSelect) {
+                    Array.from(ccSelect.options).forEach(option => option.selected = false);
+                    if (typeof window.syncCcEmailsUi === "function") {
+                        window.syncCcEmailsUi();
+                    }
                 }
             }
 
