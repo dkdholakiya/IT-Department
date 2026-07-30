@@ -2556,6 +2556,10 @@
                         THIS INFORMATION IS FOR YOUR <strong>REVIEW</strong>. PLEASE CHECK IF THERE IS ANY <strong>MISSING OR INCORRECT DETAIL</strong>. IF ANY <strong>CHANGES OR UPDATES</strong> ARE REQUIRED, PLEASE <strong>REPORT AND SUBMIT</strong> THEM TO <strong>Mr. DEV DHOLAKIYA</strong>.
                     </p>
                     ` : ''}
+                    <div style="margin-top: 15px; padding: 12px 15px; background-color: #fff8e6; border-left: 4px solid #f59e0b; border-radius: 4px; font-size: 13px; color: #854d0e; font-family: 'Playfair Display', serif;">
+                        <strong>Please Note:</strong><br>
+                        The report will be ready within a minimum of 48 hours.
+                    </div>
                     
                     <h3 style="color: #8c1d1d; border-bottom: 2px solid #8c1d1d; padding-bottom: 5px; font-size: 16px; margin-top: 25px; font-family: 'Playfair Display', serif;">1. FACULTY REQUEST PROFILE</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; font-family: 'Playfair Display', serif;">
@@ -2700,6 +2704,9 @@
 Please review the draft details for the Departmental Report titled "${reportTitle}" prepared under your requested activity.
 
 ${asciiTable}
+
+Please Note:
+The report will be ready within a minimum of 48 hours.
 
 Regards,
 Department of CE & IT`;
