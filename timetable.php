@@ -462,6 +462,11 @@ $jsDataExists = file_exists($jsDataFile);
                 return loadMinutes / 60;
             }
 
+            // Helper to format workload hours
+            function formatWorkload(load) {
+                return load % 1 === 0 ? load.toFixed(0) + " Hrs" : load.toFixed(1) + " Hrs";
+            }
+
             // Update the badge displaying the selected faculty's total workload for the chosen day
             function updateSelectedFacultyLoadBadge() {
                 const daySelect = document.getElementById("leaveDaySelect");
@@ -491,7 +496,7 @@ $jsDataExists = file_exists($jsDataFile);
                 const numSpan = document.getElementById("loadBadgeNum");
 
                 if (dayLabel) dayLabel.textContent = `${dayName} Workload`;
-                if (numSpan) numSpan.textContent = load.toFixed(1);
+                if (numSpan) numSpan.textContent = load % 1 === 0 ? load.toFixed(0) : load.toFixed(1);
 
                 // Toggle overloaded state (>= 4 hours)
                 badge.classList.toggle("overloaded", load >= 4);
@@ -930,10 +935,10 @@ $jsDataExists = file_exists($jsDataFile);
                                             ${sameDeptProxies.map(p => {
                                                 const isOverloaded = p.load >= 4;
                                                 const overloadClass = isOverloaded ? "overload-warning" : "";
-                                                const overloadBadge = isOverloaded ? ` <span class="badge-overload">⚠️ Overload (${p.load.toFixed(1)}h)</span>` : ` (${p.load.toFixed(1)}h)`;
+                                                const overloadBadge = isOverloaded ? ` <span class="badge-overload">⚠️ Overload (${formatWorkload(p.load)})</span>` : ` (${formatWorkload(p.load)})`;
                                                 const shiftInfo = ` <span class="badge-shift">[${p.shift.name}]</span>`;
                                                 return `
-                                                    <span class="proxy-badge dept-same ${overloadClass}" title="${p.member.name} (${p.shift.name}, Load: ${p.load.toFixed(1)}h)">
+                                                    <span class="proxy-badge dept-same ${overloadClass}" title="${p.member.name} (${p.shift.name}, Load: ${formatWorkload(p.load)})">
                                                         <b>${p.member.initials}</b> ${p.member.name}${overloadBadge}${shiftInfo}${p.isFreeDay ? " 🌟 (Free Day)" : ""}
                                                     </span>
                                                 `;
@@ -951,10 +956,10 @@ $jsDataExists = file_exists($jsDataFile);
                                             ${otherDeptProxies.map(p => {
                                                 const isOverloaded = p.load >= 4;
                                                 const overloadClass = isOverloaded ? "overload-warning" : "";
-                                                const overloadBadge = isOverloaded ? ` <span class="badge-overload">⚠️ Overload (${p.load.toFixed(1)}h)</span>` : ` (${p.load.toFixed(1)}h)`;
+                                                const overloadBadge = isOverloaded ? ` <span class="badge-overload">⚠️ Overload (${formatWorkload(p.load)})</span>` : ` (${formatWorkload(p.load)})`;
                                                 const shiftInfo = ` <span class="badge-shift">[${p.shift.name}]</span>`;
                                                 return `
-                                                    <span class="proxy-badge dept-other ${overloadClass}" title="${p.member.name} (${p.shift.name}, Load: ${p.load.toFixed(1)}h)">
+                                                    <span class="proxy-badge dept-other ${overloadClass}" title="${p.member.name} (${p.shift.name}, Load: ${formatWorkload(p.load)})">
                                                         <b>${p.member.initials}</b> ${p.member.name}${overloadBadge}${shiftInfo}${p.isFreeDay ? " 🌟 (Free Day)" : ""}
                                                     </span>
                                                 `;
