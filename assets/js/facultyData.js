@@ -45,6 +45,17 @@ const facultyData = [
         initials: "TMV"
     },
     {
+        id: "sc",
+        name: "Prof. Sunil Chavda",
+        designation: "Assistant Professor",
+        department: "Information Technology",
+        empId: "#5037",
+        email: "shchavda@gmiu.edu.in",
+        phone: "78789 09816",
+        avatarClass: "av-sc",
+        initials: "SHC"
+    },
+    {
         id: "pk",
         name: "Prof. Pragnesh Kanejiya",
         designation: "Sub Incharge HOD CE",
@@ -132,17 +143,7 @@ const facultyData = [
     //     avatarClass: "av-hb",
     //     initials: "HHB"
     // },
-    {
-        id: "sc",
-        name: "Prof. Sunil Chavda",
-        designation: "Assistant Professor",
-        department: "Information Technology",
-        empId: "#5037",
-        email: "shchavda@gmiu.edu.in",
-        phone: "78789 09816",
-        avatarClass: "av-sc",
-        initials: "SHC"
-    },
+
     {
         id: "vs",
         name: "Prof. Vishakha Savani",
@@ -202,7 +203,7 @@ const facultyData = [
         id: "dk",
         name: "Mr. Dev K Dholakiya",
         designation: "Developer",
-        department: "Information Technology",
+        department: "Both",
         empId: "#10216",
         email: "dkdholakiya@gmiu.edu.in",
         phone: "9328946676",
@@ -538,6 +539,39 @@ const facultyData = [
         phone: "79846 88579",
         avatarClass: "av-hpj",
         initials: "HPJ"
+    },
+    {
+        id: "aps",
+        name: "Prof. Aditya P Suthar",
+        designation: "Lecturer",
+        department: "Information Technology",
+        empId: "",
+        email: "apsuthar@gmiu.edu.in",
+        phone: "8154007309",
+        avatarClass: "av-aps",
+        initials: "APS"
+    },
+    {
+        id: "hpd",
+        name: "Prof. Himali Dodiya",
+        designation: "Lecturer",
+        department: "Information Technology",
+        empId: "#10716",
+        email: "hpdodiya@gmiu.edu.in",
+        phone: "6352258691",
+        avatarClass: "av-hpd",
+        initials: "HPD"
+    },
+    {
+        id: "ami",
+        name: "Prof. Ansh M Italiya",
+        designation: "Lecturer",
+        department: "Information Technology",
+        empId: "#10717",
+        email: "amitaliya@gmiu.edu.in",
+        phone: "7265939927",
+        avatarClass: "av-ami",
+        initials: "AMI"
     },
     {
         id: "apv",

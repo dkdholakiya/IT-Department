@@ -23,7 +23,15 @@
 
     <!-- Theme Stylesheets -->
     <link rel="stylesheet" href="assets/css/portal.css">
-    <link rel="stylesheet" href="assets/css/ctlactivity.css?v=2">
+    <link rel="stylesheet" href="assets/css/ctlactivity.css?v=5">
+    <style>
+        html, body {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            height: auto !important;
+            width: 100% !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -167,10 +175,19 @@
             </div>
 
             <!-- KPI Cards Grid -->
+            <!-- KPI Cards Grid -->
             <div class="cards">
                 <div class="card">
                     <h2 id="total">0</h2>
                     <p>Total Activities</p>
+                </div>
+                <div class="card submitted-card">
+                    <h2 id="submittedCount">0</h2>
+                    <p>Submitted</p>
+                </div>
+                <div class="card not-submitted-card">
+                    <h2 id="notSubmittedCount">0</h2>
+                    <p>Not Submitted</p>
                 </div>
                 <div class="card approved-card">
                     <h2 id="approved">0</h2>
@@ -182,7 +199,7 @@
                 </div>
                 <div class="card missing-card">
                     <h2 id="rejected">0</h2>
-                    <p>Rejected</p>
+                    <p>Reject</p>
                 </div>
             </div>
 
@@ -194,7 +211,7 @@
                         <option value="">All Statuses</option>
                         <option value="Pending">Pending</option>
                         <option value="Approved">Approved</option>
-                        <option value="Rejected">Rejected</option>
+                        <option value="Rejected">Reject</option>
                     </select>
                 </div>
 
@@ -204,8 +221,9 @@
                         <option value="">All Conditions</option>
                         <option value="Submitted">Submitted (Any)</option>
                         <option value="Not Submitted">Not Submitted</option>
-                        <option value="Delayed">Delayed</option>
                         <option value="On Time">On Time</option>
+                        <option value="Delayed">Delayed</option>
+                        <option value="Over Grace Period">Over Grace Period</option>
                     </select>
                 </div>
 
@@ -568,28 +586,25 @@
 
                 // Helpers to generate inline-styled pills for emails
                 function getApprovalPillHtmlForEmail(text) {
-                    const lower = text.toLowerCase();
-                    let bg = '#f1f5f9';
-                    let fg = '#475569';
-                    let label = text || '-';
+                    let cleanVal = (text || '').replace(/^[•\s]+/, '').trim();
+                    const lower = cleanVal.toLowerCase();
+                    let bg = '#fef3c7';
+                    let fg = '#92400e';
+                    let label = 'Pending';
+
                     if (lower.includes('approved')) {
                         bg = '#d1fae5'; fg = '#065f46'; label = 'Approved';
-                    } else if (lower.includes('pending')) {
-                        bg = '#fef3c7'; fg = '#92400e'; label = 'Pending';
                     } else if (lower.includes('rejected') || lower.includes('reject')) {
-                        bg = '#fee2e2'; fg = '#991b1b'; label = 'Rejected';
+                        bg = '#fee2e2'; fg = '#991b1b'; label = 'Reject';
                     }
+
                     return `<span style="display: inline-block; padding: 4px 10px; font-size: 10px; font-weight: 700; border-radius: 9999px; background-color: ${bg}; color: ${fg}; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">${label}</span>`;
                 }
 
                 function getSubmissionPillsHtmlForEmail(text) {
-                    if (!text) return `<span style="display: inline-block; padding: 4px 10px; font-size: 10px; font-weight: 700; border-radius: 9999px; background-color: #f1f5f9; color: #475569; font-family: 'Playfair Display', Georgia, serif;">-</span>`;
+                    const parts = extractSubmissionTokens(text);
 
-                    const parts = text.split(/[•,\n]+/)
-                        .map(p => p.trim())
-                        .filter(p => p.length > 0);
-
-                    if (parts.length === 0) {
+                    if (!parts || parts.length === 0) {
                         return `<span style="display: inline-block; padding: 4px 10px; font-size: 10px; font-weight: 700; border-radius: 9999px; background-color: #f1f5f9; color: #475569; font-family: 'Playfair Display', Georgia, serif;">-</span>`;
                     }
 
@@ -600,12 +615,12 @@
 
                         if (lower.includes('not submitted') || lower.includes('not submited')) {
                             bg = '#fee2e2'; fg = '#991b1b';
-                        } else if (lower.includes('on time') || lower.includes('submitted') || lower.includes('submited')) {
-                            bg = '#dbeafe'; fg = '#1e40af';
                         } else if (lower.includes('over grace period')) {
                             bg = '#fca5a5'; fg = '#7f1d1d';
-                        } else if (lower.includes('delayed')) {
+                        } else if (lower.includes('past planning date') || lower.includes('delayed')) {
                             bg = '#ffedd5'; fg = '#9a3412';
+                        } else if (lower.includes('on time') || lower.includes('submitted') || lower.includes('submited')) {
+                            bg = '#dbeafe'; fg = '#1e40af';
                         }
 
                         return `<div style="margin: 4px 0;"><span style="display: inline-block; padding: 4px 8px; font-size: 9px; font-weight: 700; border-radius: 9999px; background-color: ${bg}; color: ${fg}; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; font-family: 'Playfair Display', Georgia, serif;">${part}</span></div>`;
@@ -614,9 +629,20 @@
 
                 // Compute overall metrics dynamically from allData (overall stats, unaffected by filters)
                 const activeTotal = allData.length;
-                const activeApproved = allData.filter(x => x.approvalStatus.toLowerCase().includes('approved')).length;
-                const activePending = allData.filter(x => x.approvalStatus.toLowerCase().includes('pending')).length;
-                const activeRejected = allData.filter(x => x.approvalStatus.toLowerCase().includes('rejected') || x.approvalStatus.toLowerCase().includes('reject')).length;
+                const activeSubmitted = allData.filter(x => {
+                    const sub = (x.submissionFlags || '').toLowerCase();
+                    return (sub.includes('submitted') || sub.includes('submited') || sub.includes('on time') || sub.includes('delayed')) && !sub.includes('not submitted') && !sub.includes('not submited');
+                }).length;
+                const activeNotSubmitted = allData.filter(x => {
+                    const sub = (x.submissionFlags || '').toLowerCase();
+                    return sub.includes('not submitted') || sub.includes('not submited');
+                }).length;
+                const activeApproved = allData.filter(x => (x.approvalStatus || '').toLowerCase().includes('approved')).length;
+                const activePending = allData.filter(x => {
+                    const app = (x.approvalStatus || '').toLowerCase();
+                    return app.includes('pending') || (!app && !app.includes('approved') && !app.includes('reject') && !app.includes('rejected'));
+                }).length;
+                const activeRejected = allData.filter(x => (x.approvalStatus || '').toLowerCase().includes('rejected') || (x.approvalStatus || '').toLowerCase().includes('reject')).length;
 
                 // Build HTML table for the email report (using activeData)
                 let tableRowsHtml = "";
@@ -763,27 +789,37 @@
                                 <div class="section-container" style="margin: 32px 24px 0 24px;">
                                     <h2 style="margin: 0 0 16px 0; font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 700; color: #0f172a; border-left: 4px solid #c29a5b; padding-left: 10px; line-height: 1.2;">Summary Metrics</h2>
                                     
-                                    <table class="metrics-table" style="width: 100%; border-collapse: separate; border-spacing: 12px 0; margin: 0 -12px; font-family: 'Playfair Display', Georgia, serif;">
+                                    <table class="metrics-table" style="width: 100%; border-collapse: separate; border-spacing: 8px 0; margin: 0 -8px; font-family: 'Playfair Display', Georgia, serif;">
                                         <tr>
                                             <!-- Card 1: Total -->
-                                            <td class="metrics-card" style="width: 25%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #3b82f6; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
-                                                <div style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Total</div>
-                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: #1e293b; margin-top: 6px;">${activeTotal}</div>
+                                            <td class="metrics-card" style="width: 16.66%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #64748b; border-radius: 8px; padding: 12px 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 9px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Total</div>
+                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; font-weight: 700; color: #1e293b; margin-top: 4px;">${activeTotal}</div>
                                             </td>
-                                            <!-- Card 2: Approved -->
-                                            <td class="metrics-card" style="width: 25%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #10b981; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
-                                                <div style="font-size: 10px; color: #10b981; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Approved</div>
-                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: #065f46; margin-top: 6px;">${activeApproved}</div>
+                                            <!-- Card 2: Submitted -->
+                                            <td class="metrics-card" style="width: 16.66%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #3b82f6; border-radius: 8px; padding: 12px 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 9px; color: #3b82f6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Submitted</div>
+                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; font-weight: 700; color: #1e40af; margin-top: 4px;">${activeSubmitted}</div>
                                             </td>
-                                            <!-- Card 3: Pending -->
-                                            <td class="metrics-card" style="width: 25%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #fbbf24; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
-                                                <div style="font-size: 10px; color: #fbbf24; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Pending</div>
-                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: #92400e; margin-top: 6px;">${activePending}</div>
+                                            <!-- Card 3: Not Submitted -->
+                                            <td class="metrics-card" style="width: 16.66%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #ef4444; border-radius: 8px; padding: 12px 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 9px; color: #ef4444; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Not Submitted</div>
+                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; font-weight: 700; color: #991b1b; margin-top: 4px;">${activeNotSubmitted}</div>
                                             </td>
-                                            <!-- Card 4: Rejected -->
-                                            <td class="metrics-card" style="width: 25%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #ef4444; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
-                                                <div style="font-size: 10px; color: #ef4444; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Rejected</div>
-                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: #991b1b; margin-top: 6px;">${activeRejected}</div>
+                                            <!-- Card 4: Approved -->
+                                            <td class="metrics-card" style="width: 16.66%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #10b981; border-radius: 8px; padding: 12px 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 8px; color: #10b981; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Approved</div>
+                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; font-weight: 700; color: #065f46; margin-top: 4px;">${activeApproved}</div>
+                                            </td>
+                                            <!-- Card 5: Pending -->
+                                            <td class="metrics-card" style="width: 16.66%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #fbbf24; border-radius: 8px; padding: 12px 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 8px; color: #fbbf24; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Pending</div>
+                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; font-weight: 700; color: #92400e; margin-top: 4px;">${activePending}</div>
+                                            </td>
+                                            <!-- Card 6: Rejected -->
+                                            <td class="metrics-card" style="width: 16.66%; background-color: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #991b1b; border-radius: 8px; padding: 12px 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Playfair Display', Georgia, serif;">
+                                                <div style="font-size: 8px; color: #991b1b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif;">Reject</div>
+                                                <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; font-weight: 700; color: #991b1b; margin-top: 4px;">${activeRejected}</div>
                                             </td>
                                         </tr>
                                     </table>
@@ -934,6 +970,44 @@
         document.getElementById('submissionFilter').addEventListener('change', filterData);
         document.getElementById('search').addEventListener('keyup', filterData);
 
+        // Token extraction helper for Submission Flags (handles bullets, commas, and concatenated space strings like "Submitted Delayed Over Grace Period 30 Days")
+        function extractSubmissionTokens(text) {
+            if (!text) return [];
+            let str = String(text).trim();
+            if (!str) return [];
+
+            let parts = str.split(/[•,\n\r|;]+/).map(p => p.replace(/^[•\s]+/, '').trim()).filter(p => p.length > 0);
+
+            let result = [];
+            parts.forEach(part => {
+                const lower = part.toLowerCase();
+                if (
+                    (lower.includes('submitted') || lower.includes('submited') || lower.includes('grace period') || lower.includes('past planning')) &&
+                    !part.includes('•') && !part.includes(',') && !part.includes(';')
+                ) {
+                    const tokenRegex = /(not submited|not submitted|submitted|submited|on time|over grace period|past planning date \d+ days?|past planning date|\d+ days?|delayed)/gi;
+                    const matches = part.match(tokenRegex);
+                    if (matches && matches.length > 0) {
+                        let seen = new Set();
+                        matches.forEach(m => {
+                            let cleanM = m.trim();
+                            let key = cleanM.toLowerCase().replace('submited', 'submitted');
+                            if (!seen.has(key)) {
+                                seen.add(key);
+                                if (cleanM.toLowerCase() === 'not submited') cleanM = 'Not Submitted';
+                                if (cleanM.toLowerCase() === 'submited') cleanM = 'Submitted';
+                                result.push(cleanM);
+                            }
+                        });
+                        return;
+                    }
+                }
+                result.push(part);
+            });
+
+            return result;
+        }
+
         // Cleaner function to clean newlines and trim text
         function cleanText(str) {
             if (str === undefined || str === null || str === "") return "";
@@ -945,9 +1019,10 @@
             if (cell === undefined || cell === null || cell === "") return "";
 
             if (cell instanceof Date) {
-                const d = String(cell.getDate()).padStart(2, '0');
-                const m = String(cell.getMonth() + 1).padStart(2, '0');
-                const y = cell.getFullYear();
+                // SheetJS parses date values as UTC by default. Using UTC getters avoids timezone shift.
+                const d = String(cell.getUTCDate()).padStart(2, '0');
+                const m = String(cell.getUTCMonth() + 1).padStart(2, '0');
+                const y = cell.getUTCFullYear();
                 return `${d}-${m}-${y}`;
             }
 
@@ -1009,7 +1084,7 @@
                     row.forEach(cell => {
                         const str = String(cell).trim().toLowerCase();
                         if (str === 'name') hasName = true;
-                        if (str.includes('submission flag') || str.includes('submission flags')) hasSub = true;
+                        if (str.includes('submission flag') || str.includes('submission flags') || str.includes('submission')) hasSub = true;
                     });
 
                     if (hasName && hasSub) {
@@ -1036,22 +1111,27 @@
                             else if (str === 'modified date') colIndices.modifiedDate = idx;
                             else if (str === 'marks') colIndices.marks = idx;
                             else if (str === 'flags') colIndices.flags = idx;
-                            else if (str.includes('submission flag') || str.includes('submission flags')) colIndices.submissionFlags = idx;
-                            else if (str.includes('approval status') || str === 'approval') colIndices.approvalStatus = idx;
+                            else if (str.includes('submission flag') || str.includes('submission flags') || str.includes('submission')) colIndices.submissionFlags = idx;
+                            else if (str.includes('approval status') || str === 'approval' || str.includes('approval')) colIndices.approvalStatus = idx;
                         });
                         break;
                     }
                 }
 
                 // Parse data rows starting after headerRowIndex
+                let autoSrNo = 1;
                 for (let i = headerRowIndex + 1; i < rows.length; i++) {
                     const row = rows[i];
 
                     // Skip empty rows or rows missing Name
                     if (!row || colIndices.name === -1 || !row[colIndices.name]) continue;
 
+                    let rawSr = colIndices.srNo !== -1 && row[colIndices.srNo] !== undefined ? cleanText(row[colIndices.srNo]) : "";
+                    let finalSr = rawSr ? rawSr : autoSrNo;
+                    autoSrNo++;
+
                     allData.push({
-                        srNo: colIndices.srNo !== -1 && row[colIndices.srNo] !== undefined ? cleanText(row[colIndices.srNo]) : "",
+                        srNo: finalSr,
                         name: cleanText(row[colIndices.name]),
                         planDate: colIndices.planDate !== -1 && row[colIndices.planDate] !== undefined ? formatExcelDate(row[colIndices.planDate]) : "",
                         actualDate: colIndices.actualDate !== -1 && row[colIndices.actualDate] !== undefined ? formatExcelDate(row[colIndices.actualDate]) : "",
@@ -1061,6 +1141,34 @@
                         submissionFlags: colIndices.submissionFlags !== -1 && row[colIndices.submissionFlags] !== undefined ? cleanText(row[colIndices.submissionFlags]) : "",
                         approvalStatus: colIndices.approvalStatus !== -1 && row[colIndices.approvalStatus] !== undefined ? cleanText(row[colIndices.approvalStatus]) : ""
                     });
+                }
+
+                // Dynamically populate submissionFilter dropdown with any unique tags found in Column H
+                const subFilterSelect = document.getElementById('submissionFilter');
+                if (subFilterSelect) {
+                    const defaultOptions = ['Submitted', 'Not Submitted', 'On Time', 'Delayed', 'Over Grace Period'];
+                    let foundTags = new Set();
+                    allData.forEach(item => {
+                        if (item.submissionFlags) {
+                            const parts = item.submissionFlags.split(/[•,\n\r|;]+/).map(p => p.replace(/^[•\s]+/, '').trim()).filter(p => p.length > 0);
+                            parts.forEach(p => foundTags.add(p));
+                        }
+                    });
+
+                    let optionsHtml = `<option value="">All Conditions</option>
+                        <option value="Submitted">Submitted (Any)</option>
+                        <option value="Not Submitted">Not Submitted</option>
+                        <option value="On Time">On Time</option>
+                        <option value="Delayed">Delayed</option>
+                        <option value="Over Grace Period">Over Grace Period</option>`;
+
+                    foundTags.forEach(tag => {
+                        const exists = defaultOptions.some(opt => opt.toLowerCase() === tag.toLowerCase());
+                        if (!exists) {
+                            optionsHtml += `<option value="${tag}">${tag}</option>`;
+                        }
+                    });
+                    subFilterSelect.innerHTML = optionsHtml;
                 }
 
                 updateCards(allData);
@@ -1074,29 +1182,35 @@
         function updateCards(data) {
             document.getElementById('total').innerText = data.length;
 
-            document.getElementById('approved').innerText = data.filter(x =>
-                x.approvalStatus.toLowerCase().includes('approved')
-            ).length;
+            const submittedCount = data.filter(x => {
+                const sub = (x.submissionFlags || '').toLowerCase();
+                return (sub.includes('submitted') || sub.includes('submited') || sub.includes('on time') || sub.includes('delayed')) && !sub.includes('not submitted') && !sub.includes('not submited');
+            }).length;
 
-            document.getElementById('pending').innerText = data.filter(x =>
-                x.approvalStatus.toLowerCase().includes('pending')
-            ).length;
+            const notSubmittedCount = data.filter(x => {
+                const sub = (x.submissionFlags || '').toLowerCase();
+                return sub.includes('not submitted') || sub.includes('not submited');
+            }).length;
 
-            document.getElementById('rejected').innerText = data.filter(x =>
-                x.approvalStatus.toLowerCase().includes('rejected') || x.approvalStatus.toLowerCase().includes('reject')
-            ).length;
+            const approvedCount = data.filter(x => (x.approvalStatus || '').toLowerCase().includes('approved')).length;
+            const pendingCount = data.filter(x => {
+                const app = (x.approvalStatus || '').toLowerCase();
+                return app.includes('pending') || (!app && !app.includes('approved') && !app.includes('reject') && !app.includes('rejected'));
+            }).length;
+            const rejectedCount = data.filter(x => (x.approvalStatus || '').toLowerCase().includes('rejected') || (x.approvalStatus || '').toLowerCase().includes('reject')).length;
+
+            if (document.getElementById('submittedCount')) document.getElementById('submittedCount').innerText = submittedCount;
+            if (document.getElementById('notSubmittedCount')) document.getElementById('notSubmittedCount').innerText = notSubmittedCount;
+            if (document.getElementById('approved')) document.getElementById('approved').innerText = approvedCount;
+            if (document.getElementById('pending')) document.getElementById('pending').innerText = pendingCount;
+            if (document.getElementById('rejected')) document.getElementById('rejected').innerText = rejectedCount;
         }
 
-        // Helper to apply beautiful CSS pills based on keywords
+        // Helper to apply beautiful CSS pills based on keywords in Submission Flags (Column H)
         function getSubmissionPills(text) {
-            if (!text) return `<span class="status-pill pill-default">-</span>`;
+            const parts = extractSubmissionTokens(text);
 
-            // Split by bullet point (•), comma, or newline, and filter out empty items
-            const parts = text.split(/[•,\n]+/)
-                .map(p => p.trim())
-                .filter(p => p.length > 0);
-
-            if (parts.length === 0) {
+            if (!parts || parts.length === 0) {
                 return `<span class="status-pill pill-default">-</span>`;
             }
 
@@ -1104,15 +1218,13 @@
                 const lower = part.toLowerCase();
                 let className = 'pill-default';
 
-                if (lower.includes('not submitted')) {
+                if (lower.includes('not submitted') || lower.includes('not submited')) {
                     className = 'pill-missing';
-                } else if (lower.includes('on time')) {
-                    className = 'pill-submitted';
                 } else if (lower.includes('over grace period')) {
                     className = 'pill-rejected';
-                } else if (lower.includes('delayed')) {
+                } else if (lower.includes('past planning date') || lower.includes('delayed')) {
                     className = 'pill-delayed';
-                } else if (lower.includes('submitted')) {
+                } else if (lower.includes('on time') || lower.includes('submitted') || lower.includes('submited')) {
                     className = 'pill-submitted';
                 }
 
@@ -1121,11 +1233,13 @@
         }
 
         function getApprovalPill(text) {
-            const lower = text.toLowerCase();
+            let cleanVal = (text || '').replace(/^[•\s]+/, '').trim();
+            const lower = cleanVal.toLowerCase();
+            
             if (lower.includes('approved')) return `<span class="status-pill pill-approved">Approved</span>`;
-            if (lower.includes('pending')) return `<span class="status-pill pill-approved" style="background:rgba(251,191,36,0.1) !important; color:#fbbf24 !important; border-color:rgba(251,191,36,0.2) !important;">Pending</span>`;
-            if (lower.includes('rejected') || lower.includes('reject')) return `<span class="status-pill pill-rejected">Rejected</span>`;
-            return `<span class="status-pill pill-default">${text || '-'}</span>`;
+            if (lower.includes('rejected') || lower.includes('reject')) return `<span class="status-pill pill-rejected">Reject</span>`;
+            
+            return `<span class="status-pill pill-pending">Pending</span>`;
         }
 
         function renderTable(data) {
@@ -1156,29 +1270,43 @@
         }
 
         function filterData() {
-            const status = document.getElementById('statusFilter').value.toLowerCase();
-            const submission = document.getElementById('submissionFilter').value.toLowerCase();
-            const search = document.getElementById('search').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value.toLowerCase().trim();
+            const submission = document.getElementById('submissionFilter').value.toLowerCase().trim();
+            const search = document.getElementById('search').value.toLowerCase().trim();
 
             const filtered = allData.filter(item => {
-                const itemApproval = item.approvalStatus.toLowerCase();
-                const itemSub = item.submissionFlags.toLowerCase();
-                const itemAct = item.name.toLowerCase();
+                const itemApproval = (item.approvalStatus || '').toLowerCase();
+                const itemSubRaw = (item.submissionFlags || '').toLowerCase();
+                const itemAct = (item.name || '').toLowerCase();
+                const tokens = extractSubmissionTokens(item.submissionFlags).map(t => t.toLowerCase());
 
-                // Status Match Logic
-                let statusMatch = !status ||
-                    (status.includes('reject') ? (itemApproval.includes('reject') || itemApproval.includes('rejected')) : itemApproval.includes(status));
+                const isNotSubmitted = itemSubRaw.includes('not submitted') || itemSubRaw.includes('not submited') || tokens.some(t => t.includes('not submitted') || t.includes('not submited'));
 
-                // Submission Match Logic
+                // Status Match Logic (Approval Status)
+                let statusMatch = true;
+                if (status) {
+                    if (status.includes('reject')) {
+                        statusMatch = itemApproval.includes('reject') || itemApproval.includes('rejected');
+                    } else if (status.includes('approved')) {
+                        statusMatch = itemApproval.includes('approved');
+                    } else if (status.includes('pending')) {
+                        statusMatch = itemApproval.includes('pending') || (!itemApproval.includes('approved') && !(itemApproval.includes('reject') || itemApproval.includes('rejected')));
+                    } else {
+                        statusMatch = itemApproval.includes(status);
+                    }
+                }
+
+                // Submission Match Logic (Submission Condition Column H)
                 let submissionMatch = true;
                 if (submission) {
-                    if (submission === 'not submitted') {
-                        submissionMatch = itemSub.includes('not submitted');
-                    } else if (submission === 'submitted') {
-                        // If looking for 'submitted', ensure it's NOT 'not submitted'
-                        submissionMatch = itemSub.includes('submitted') && !itemSub.includes('not submitted');
+                    if (submission === 'not submitted' || submission === 'not submited') {
+                        submissionMatch = isNotSubmitted;
+                    } else if (submission === 'submitted' || submission === 'submited') {
+                        submissionMatch = !isNotSubmitted && (itemSubRaw.includes('submitted') || itemSubRaw.includes('submited') || itemSubRaw.includes('on time') || itemSubRaw.includes('delayed') || tokens.some(t => t.includes('submitted') || t.includes('on time') || t.includes('delayed')));
+                    } else if (submission === 'on time') {
+                        submissionMatch = itemSubRaw.includes('on time') || itemSubRaw.includes('ontime') || itemSubRaw.includes('on-time') || tokens.some(t => t.includes('on time') || t.includes('ontime'));
                     } else {
-                        submissionMatch = itemSub.includes(submission);
+                        submissionMatch = itemSubRaw.includes(submission) || tokens.some(t => t.includes(submission) || submission.includes(t));
                     }
                 }
 

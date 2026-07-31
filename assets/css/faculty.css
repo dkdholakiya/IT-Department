@@ -961,6 +961,43 @@ html {
     }
 }
 
+/* ── Department Count Badge ── */
+.dept-count {
+    display: inline-block;
+    padding: 2px 7px;
+    font-size: 10.5px;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 50px;
+    margin-left: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.segment-btn:hover .dept-count {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.segment-btn.active .dept-count {
+    background: rgba(192, 57, 43, 0.25);
+    color: #fca5a5;
+    box-shadow: 0 0 10px rgba(192, 57, 43, 0.2);
+}
+
+body.ce-active .segment-btn.active .dept-count {
+    background: rgba(37, 99, 235, 0.25) !important;
+    color: #93c5fd !important;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.2) !important;
+}
+
+body.common-active .segment-btn.active .dept-count {
+    background: rgba(139, 92, 246, 0.25) !important;
+    color: #d8b4fe !important;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2) !important;
+}
+
 /* ── CE Active Theme Overrides for Faculty Directory ── */
 body.ce-active .rp-dept-badge {
     background: rgba(37, 99, 235, 0.1) !important;

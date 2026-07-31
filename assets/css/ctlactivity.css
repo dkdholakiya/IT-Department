@@ -11,7 +11,8 @@ html {
 }
 
 body {
-    overflow: visible !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
     height: auto !important;
     width: 100% !important;
 }
@@ -323,6 +324,14 @@ body::before {
     border-color: rgba(255, 255, 255, 0.18);
 }
 
+.card.submitted-card {
+    border-left-color: #3b82f6;
+}
+
+.card.not-submitted-card {
+    border-left-color: #ef4444;
+}
+
 .card.approved-card {
     border-left-color: var(--green);
 }
@@ -421,8 +430,6 @@ select option {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior: contain;
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     box-shadow: 0 40px 80px rgba(0, 0, 0, 0.45);
@@ -1247,4 +1254,64 @@ input[readonly] {
 .av-theme-pink {
     background: linear-gradient(145deg, #4c0519, #881337) !important;
     border-color: rgba(244, 63, 94, 0.4) !important;
+}
+
+/* ── Mobile responsiveness additions ── */
+@media (max-width: 768px) {
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+    .card {
+        min-width: 0 !important;
+        padding: 16px 14px !important;
+    }
+    .card h2 {
+        font-size: 28px !important;
+    }
+}
+@media (max-width: 480px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+    .card {
+        padding: 12px 10px !important;
+    }
+    .card h2 {
+        font-size: 24px !important;
+    }
+    .card p {
+        font-size: 9px !important;
+        letter-spacing: 0.5px !important;
+    }
+}
+@media (max-width: 600px) {
+    .filters {
+        gap: 12px !important;
+        padding: 20px 16px !important;
+    }
+    .filter-group {
+        min-width: 100% !important;
+    }
+}
+@media (max-width: 500px) {
+    .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+    }
+}
+@media (max-width: 599px) {
+    .top-panel {
+        padding: 16px 16px !important;
+        border-radius: var(--radius-md) !important;
+    }
+    .table-wrapper {
+        border-radius: var(--radius-md) !important;
+        margin-bottom: 20px !important;
+    }
+    .filters {
+        border-radius: var(--radius-md) !important;
+    }
 }

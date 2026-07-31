@@ -131,6 +131,26 @@
             let currentFilterDept = "all";
             let currentSearchQuery = "";
 
+            // Calculate faculty counts dynamically
+            const allCount = facultyData.length;
+            const itCount = facultyData.filter(m => {
+                const dept = m.department || "Information Technology";
+                return dept === "Information Technology" || dept === "Both";
+            }).length;
+            const ceCount = facultyData.filter(m => {
+                const dept = m.department || "Computer Engineering";
+                return dept === "Both" || dept === "Computer Engineering";
+            }).length;
+
+            // Update button texts to show counts with styled badge
+            const allBtn = document.getElementById("filter-all-btn");
+            const itBtn = document.getElementById("filter-it-btn");
+            const ceBtn = document.getElementById("filter-ce-btn");
+
+            if (allBtn) allBtn.innerHTML = `All Departments <span class="dept-count">${allCount}</span>`;
+            if (itBtn) itBtn.innerHTML = `Information Technology <span class="dept-count">${itCount}</span>`;
+            if (ceBtn) ceBtn.innerHTML = `Computer Engineering <span class="dept-count">${ceCount}</span>`;
+
             // Render function with optional department and search filtering
             function renderFaculty(filterDept = "all", searchQuery = "") {
                 let cardsHtml = "";
@@ -302,7 +322,6 @@
             }
 
             // Default to all departments on initial page load
-            const allBtn = document.getElementById("filter-all-btn");
             if (allBtn) {
                 allBtn.click();
             } else {
