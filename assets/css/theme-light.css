@@ -553,6 +553,21 @@ html[data-theme="light"] body.ce-active .cc-tag-remove:hover {
     color: #1d4ed8 !important;
 }
 
+/* Light Mode Export Excel Button */
+html[data-theme="light"] .export-excel-btn {
+    background: #ecfdf5 !important;
+    border: 1px solid #a7f3d0 !important;
+    color: #047857 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-theme="light"] .export-excel-btn:hover {
+    background: #d1fae5 !important;
+    border-color: #6ee7b7 !important;
+    color: #065f46 !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
+}
+
 /* Explicitly force inner tag search input to be transparent without borders or box-shadows */
 html[data-theme="light"] .cc-select-wrap input[type="text"],
 html[data-theme="light"] .cc-select-wrap #coordSearch,
