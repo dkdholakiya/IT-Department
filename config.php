@@ -27,6 +27,6 @@ return [
     'zero_sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbw1zMUC-u2HP1S1ld58Dc4HtIEqWTrcR8h1G0wNfc6bod2KW3rX9knynzW99c2z0oWf/exec',
 
     // Password configuration
-    'password_required' => 0, // Toggle: 1 to require password, 0 to bypass (matches verify-password.php current state)
+    'password_required' => 1, // Toggle: 1 to require password, 0 to bypass (matches verify-password.php current state)
     'correct_password' => '$2y$10$bU1WzHy8QBFzpbkR7hkT2O3q3XB0OTxlEX7DzLeBix0yaPpMPZ6uS', // Bcrypt hash of 'itce@2026'
 ];

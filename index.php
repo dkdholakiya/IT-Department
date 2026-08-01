@@ -1,3 +1,4 @@
+<?php require_once 'auto-cache-bust.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,8 +18,8 @@
         href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="assets/css/portal.css?v=3">
-    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/portal.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme-light.css'); ?>">
 </head>
 
 <body>

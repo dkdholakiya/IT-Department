@@ -1,4 +1,5 @@
 <?php include 'auth-check.php'; ?>
+<?php require_once 'auto-cache-bust.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,10 +21,11 @@
         rel="stylesheet">
 
     <!-- Theme Stylesheet -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/style.css'); ?>">
 
     <!-- Scoped Utility Stylesheet -->
-    <link rel="stylesheet" href="assets/css/ctldrive.css">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/ctldrive.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme-light.css'); ?>">
     <link rel="stylesheet" href="assets/css/theme-light.css">
 </head>
 
@@ -245,7 +247,7 @@
     <script src="assets/vendor/xlsx/xlsx.full.min.js"></script>
 
     <!-- Faculty Data -->
-    <script src="assets/js/facultyData.js"></script>
+    <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
 
     <!-- Google APIs -->
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>

@@ -1,3 +1,4 @@
+<?php require_once 'auto-cache-bust.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,7 +23,8 @@
     <link rel="stylesheet" href="assets/vendor/bootstrap-icons/bootstrap-icons.min.css">
 
     <!-- Theme Stylesheet -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme-light.css'); ?>">
     <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
 
     <!-- Custom Dark Glassmorphic & Print Styling imported from style.css -->
@@ -1133,7 +1135,7 @@
 
     <!-- Shared Faculty Database -->
     <!-- Google Sheets configuration loaded securely from backend proxy -->
-    <script src="assets/js/facultyData.js" defer></script>
+    <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>" defer></script>
 
     <!-- Department Report System logic -->
     <script>

@@ -1,4 +1,5 @@
 <?php include 'auth-check.php'; ?>
+<?php require_once 'auto-cache-bust.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,9 +23,9 @@
     <script src="assets/vendor/xlsx/xlsx.full.min.js"></script>
 
     <!-- Theme Stylesheets -->
-    <link rel="stylesheet" href="assets/css/portal.css">
-    <link rel="stylesheet" href="assets/css/ctlactivity.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/portal.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/ctlactivity.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme-light.css'); ?>">
     <style>
         html, body {
             overflow-y: auto !important;
@@ -277,7 +278,7 @@
     ?>
 
     <!-- Script Logic -->
-    <script src="assets/js/facultyData.js"></script>
+    <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
     <script>
         // Clear the session on load so that refresh triggers password re-prompt
         window.addEventListener('load', () => {

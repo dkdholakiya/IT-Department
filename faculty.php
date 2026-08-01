@@ -1,3 +1,4 @@
+<?php require_once 'auto-cache-bust.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,9 +21,9 @@
     <!-- Bootstrap 5 CDN CSS -->
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="assets/css/portal.css">
-    <link rel="stylesheet" href="assets/css/faculty.css">
-    <link rel="stylesheet" href="assets/css/theme-light.css">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/portal.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/faculty.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme-light.css'); ?>">
 </head>
 
 <body>
@@ -135,7 +136,7 @@
     <script src="assets/vendor/xlsx/xlsx.full.min.js"></script>
 
     <!-- Load Shared Faculty Data -->
-    <script src="assets/js/facultyData.js"></script>
+    <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
 
     <!-- Rendering & Export Logic Script -->
     <script>
