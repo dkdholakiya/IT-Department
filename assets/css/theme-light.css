@@ -1748,6 +1748,57 @@ html[data-theme="light"] .recess-cell {
     border: 1px solid #cbd5e1 !important;
 }
 
+html[data-theme="light"] .timetable-table tfoot {
+    border-top: 2px solid #94a3b8 !important;
+}
+
+html[data-theme="light"] .load-summary-row {
+    background: #f1f5f9 !important;
+}
+
+html[data-theme="light"] .load-summary-time-cell {
+    background: #e2e8f0 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html[data-theme="light"] .load-summary-title {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+}
+
+html[data-theme="light"] .load-summary-total-val {
+    color: #c0392b !important;
+    font-weight: 800 !important;
+}
+
+html[data-theme="light"] body.ce-active .load-summary-total-val {
+    color: #1d4ed8 !important;
+}
+
+html[data-theme="light"] .load-summary-day-cell {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html[data-theme="light"] .load-summary-day-val {
+    color: #0f172a !important;
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    font-weight: 800 !important;
+}
+
+html[data-theme="light"] .load-summary-day-cell.has-load .load-summary-day-val {
+    background: rgba(192, 57, 43, 0.08) !important;
+    border-color: rgba(192, 57, 43, 0.4) !important;
+    color: #c0392b !important;
+}
+
+html[data-theme="light"] body.ce-active .load-summary-day-cell.has-load .load-summary-day-val {
+    background: rgba(37, 99, 235, 0.08) !important;
+    border-color: rgba(37, 99, 235, 0.4) !important;
+    color: #1d4ed8 !important;
+}
+
 html[data-theme="light"] .slot-free {
     color: #64748b !important;
     background: rgba(241, 245, 249, 0.7) !important;

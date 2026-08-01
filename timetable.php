@@ -169,6 +169,9 @@ $jsDataExists = file_exists($jsDataFile);
                         <tbody id="timetableBody">
                             <!-- Populated via Javascript -->
                         </tbody>
+                        <tfoot id="timetableFooter">
+                            <!-- Populated via Javascript -->
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -805,6 +808,39 @@ $jsDataExists = file_exists($jsDataFile);
                         tr.innerHTML = slotsHtml;
                     }
                     timetableBody.appendChild(tr);
+                }
+
+                // 4. Render footer summary row for Total Load and Day-wise Workload
+                const tfoot = document.getElementById("timetableFooter");
+                if (tfoot) {
+                    let totalWeekLoad = 0;
+                    let footerHtml = `
+                        <tr class="load-summary-row">
+                            <td class="load-summary-time-cell">
+                                <div class="load-summary-title">Total Load</div>
+                                <div class="load-summary-total-val" id="totalWeekLoadVal">0 Hrs</div>
+                            </td>
+                    `;
+                    
+                    days.forEach(day => {
+                        const dayLoad = getFacultyLoad(faculty, day);
+                        totalWeekLoad += dayLoad;
+                        const loadStr = dayLoad === 0 ? '-' : (dayLoad % 1 === 0 ? dayLoad.toFixed(0) : dayLoad.toFixed(1));
+                        const hasLoadClass = dayLoad > 0 ? 'has-load' : '';
+                        footerHtml += `
+                            <td class="load-summary-day-cell ${hasLoadClass}">
+                                <div class="load-summary-day-val">${loadStr}</div>
+                            </td>
+                        `;
+                    });
+                    
+                    footerHtml += `</tr>`;
+                    tfoot.innerHTML = footerHtml;
+                    
+                    const totalValElem = document.getElementById("totalWeekLoadVal");
+                    if (totalValElem) {
+                        totalValElem.textContent = totalWeekLoad % 1 === 0 ? `${totalWeekLoad} Hrs` : `${totalWeekLoad.toFixed(1)} Hrs`;
+                    }
                 }
             }
 
