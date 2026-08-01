@@ -89,17 +89,6 @@ const facultyData = [
         initials: "JMM"
     },
     {
-        id: "pp",
-        name: "Prof. Paridhee Patel",
-        designation: "Teaching Assistant",
-        department: "Information Technology",
-        empId: "#10238",
-        email: "pvpatel@gmiu.edu.in",
-        phone: "94260 02530",
-        avatarClass: "av-pp",
-        initials: "PVP"
-    },
-    {
         id: "db",
         name: "Prof. Devang Bhatt",
         designation: "Teaching Assistant",
@@ -166,17 +155,17 @@ const facultyData = [
         avatarClass: "av-sp",
         initials: "SRP"
     },
-    {
-        id: "pr",
-        name: "Dr. Pruthviraj Parmar",
-        designation: "HR Director",
-        department: "Information Technology",
-        empId: "#88888",
-        email: "pvparmar@gmiu.edu.in",
-        phone: "90339 08112",
-        avatarClass: "av-pr",
-        initials: "PVP"
-    },
+    // {
+    //     id: "pr",
+    //     name: "Dr. Pruthviraj Parmar",
+    //     designation: "HR Director",
+    //     department: "Information Technology",
+    //     empId: "#88888",
+    //     email: "pvparmar@gmiu.edu.in",
+    //     phone: "90339 08112",
+    //     avatarClass: "av-pr",
+    //     initials: "PVP"
+    // },
     {
         id: "sv",
         name: "Prof. Sahil Vasaya",
@@ -533,7 +522,7 @@ const facultyData = [
         id: "hpj",
         name: "Prof. Hansaniba Jadeja",
         designation: "Lecturer",
-        department: "Information Technology",
+        department: "Computer Engineering",
         empId: "#10674",
         email: "hpjadeja@gmiu.edu.in",
         phone: "79846 88579",
