@@ -356,6 +356,7 @@ if (!file_exists($excelFile)) {
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Share+Tech&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/portal.css?v=3">
     <link rel="stylesheet" href="assets/css/faculty.css?v=3">
+    <link rel="stylesheet" href="assets/css/theme-light.css">
     <style>
         body {
             background-color: #060d1f;
@@ -433,5 +434,6 @@ if (!file_exists($excelFile)) {
             Back to Timetable
         </a>
     </div>
+    <?php include_once 'theme-toggle.php'; ?>
 </body>
 </html>

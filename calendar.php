@@ -23,7 +23,8 @@
     <!-- Theme and Custom CSS -->
     <link rel="stylesheet" href="assets/css/portal.css?v=3">
     <link rel="stylesheet" href="assets/css/faculty.css?v=3">
-    <link rel="stylesheet" href="assets/css/calendar.css">
+    <link rel="stylesheet" href="assets/css/calendar.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
 </head>
 
 <body>

@@ -1,10 +1,11 @@
 <?php
 $active_page = isset($active_page) ? $active_page : 'home';
 ?>
-<!-- Google Font: Kameron -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400..700&display=swap" rel="stylesheet">
+<!-- Light Theme Stylesheet -->
+<link rel="stylesheet" href="assets/css/theme-light.css">
+
+<!-- Theme Toggle Widget (Bottom Left Corner) -->
+<?php include_once 'theme-toggle.php'; ?>
 
 <!-- FAB Background Blur Overlay -->
 <div class="fab-overlay" id="fabOverlay"></div>

@@ -49,6 +49,7 @@ $base_dir = ($base_dir === '//') ? '/' : $base_dir;
 
     <!-- Theme Stylesheet -->
     <link rel="stylesheet" href="assets/css/portal.css">
+    <link rel="stylesheet" href="assets/css/theme-light.css">
 
     <style>
         body {
@@ -245,5 +246,6 @@ $base_dir = ($base_dir === '//') ? '/' : $base_dir;
             document.body.classList.remove('ce-active');
         }
     </script>
+    <?php include_once 'theme-toggle.php'; ?>
 </body>
 </html>

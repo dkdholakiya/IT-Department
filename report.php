@@ -23,6 +23,7 @@
 
     <!-- Theme Stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
 
     <!-- Custom Dark Glassmorphic & Print Styling imported from style.css -->
 </head>
@@ -914,7 +915,7 @@
                                                             <label class="form-label text-muted small me-1 mb-1">Deadline Time</label>
                                                             <div class="input-group clock-input-group">
                                                                 <input type="text" class="form-control form-control-dark-input clock-picker-input" id="deadlineTime"
-                                                                    placeholder="05:00 PM" onclick="openClockPicker('deadlineTime')" readonly>
+                                                                    placeholder="06:00 PM" onclick="openClockPicker('deadlineTime')" readonly>
                                                                 <button class="btn clock-picker-btn" type="button" onclick="openClockPicker('deadlineTime')" title="Select Deadline Time">
                                                                     <i class="bi bi-clock-fill"></i>
                                                                 </button>
@@ -1211,7 +1212,7 @@
                         const hh = String(h).padStart(2, '0');
                         deadlineVal.value = `${dStr}T${hh}:${m}`;
                     } else {
-                        deadlineVal.value = `${dStr}T17:00`;
+                        deadlineVal.value = `${dStr}T18:00`;
                     }
                     deadlineDate.classList.remove("is-invalid");
                     deadlineTime.classList.remove("is-invalid");
@@ -1233,10 +1234,10 @@
                         deadlineVal.setAttribute("required", "true");
 
                         if (deadlineDate && !deadlineDate.value) {
-                            deadlineDate.value = getTodayDateString();
+                            deadlineDate.value = (typeof getFutureDateString === "function") ? getFutureDateString(2) : getTodayDateString();
                         }
                         if (deadlineTime && !deadlineTime.value) {
-                            deadlineTime.value = "05:00 PM";
+                            deadlineTime.value = "06:00 PM";
                         }
                         syncDeadlineValue();
                     } else {
@@ -3927,14 +3928,29 @@ Department of CE & IT`;
         }
 
         // ── Custom Toast Helper ──
-        function showToast(message) {
+        function showToast(message, type = null) {
             const toast = document.getElementById("gmiuToast");
-            document.getElementById("toastMessage").innerText = message;
+            const toastMsg = document.getElementById("toastMessage");
+            if (!toast || !toastMsg) return;
+
+            toastMsg.innerText = message;
+            const icon = toast.querySelector("i");
+            const isError = type === 'error' || (typeof message === 'string' && message.toUpperCase().startsWith("ERROR"));
+
+            if (isError) {
+                toast.classList.add("toast-error");
+                toast.classList.remove("toast-success");
+                if (icon) icon.className = "bi bi-exclamation-triangle-fill text-danger fs-5";
+            } else {
+                toast.classList.add("toast-success");
+                toast.classList.remove("toast-error");
+                if (icon) icon.className = "bi bi-check-circle-fill text-success fs-5";
+            }
 
             toast.classList.add("show");
             setTimeout(() => {
                 toast.classList.remove("show");
-            }, 3000);
+            }, 3800);
         }
 
         // Helper to get today's date in YYYY-MM-DD format
@@ -3943,6 +3959,16 @@ Department of CE & IT`;
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
             const dd = String(today.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        // Helper to get future date (+2 days default) in YYYY-MM-DD format for deadlines
+        function getFutureDateString(daysAhead = 2) {
+            const future = new Date();
+            future.setDate(future.getDate() + daysAhead);
+            const yyyy = future.getFullYear();
+            const mm = String(future.getMonth() + 1).padStart(2, '0');
+            const dd = String(future.getDate()).padStart(2, '0');
             return `${yyyy}-${mm}-${dd}`;
         }
 

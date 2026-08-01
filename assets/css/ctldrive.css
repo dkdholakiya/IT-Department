@@ -200,9 +200,47 @@ body {
 
 /* ── Results Scrolling Container ── */
 .results-scroll-container {
-    max-height: 600px;
+    max-height: 750px;
     overflow-y: auto;
-    padding-right: 10px;
+    padding-right: 8px;
+}
+
+.activity-tree-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 10px;
+}
+
+.activity-item {
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-family: 'Merriweather Sans', sans-serif;
+    font-size: 13.5px;
+    line-height: 1.5;
+}
+
+.activity-name {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.activity-status {
+    color: var(--text-muted);
+    font-size: 12.5px;
+}
+
+.activity-file-list {
+    list-style-type: circle;
+    padding-left: 24px;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #60a5fa;
+}
+
+.activity-file-item {
+    margin-bottom: 4px;
+    color: #93c5fd;
+    font-family: 'Share Tech', monospace;
 }
 
 .section-title h2 {
@@ -436,13 +474,13 @@ body {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
+    gap: 4px 6px;
+    padding: 6px 10px;
     background: rgba(6, 10, 28, 0.7);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     transition: var(--transition);
-    min-height: 46px;
+    min-height: 40px;
     cursor: text;
     width: 100%;
     position: relative;
@@ -457,21 +495,23 @@ body {
 .cc-tags-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 4px 6px;
+    align-items: center;
 }
 
 .cc-tag {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
+    gap: 4px;
+    padding: 3px 8px;
     background: rgba(192, 57, 43, 0.15);
     border: 1px solid rgba(192, 57, 43, 0.3);
     color: #fca5a5;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
-    border-radius: 50px;
+    border-radius: 6px;
     transition: var(--transition);
+    line-height: 1.3;
 }
 
 .cc-tag:hover {
@@ -480,7 +520,7 @@ body {
 
 .cc-tag-remove {
     cursor: pointer;
-    color: #fca5a5;
+    color: inherit;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -488,11 +528,14 @@ body {
     border: none;
     background: none;
     padding: 0;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1;
+    margin-left: 2px;
+    opacity: 0.75;
 }
 
 .cc-tag-remove:hover {
+    opacity: 1;
     color: #f87171;
 }
 

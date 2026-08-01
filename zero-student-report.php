@@ -30,7 +30,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <!-- Scoped Page Stylesheet -->
-    <link rel="stylesheet" href="assets/css/zero-student-report.css">
+    <link rel="stylesheet" href="assets/css/zero-student-report.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
 </head>
 
 <body>

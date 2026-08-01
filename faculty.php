@@ -20,9 +20,9 @@
     <!-- Bootstrap 5 CDN CSS -->
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Theme and Faculty CSS -->
     <link rel="stylesheet" href="assets/css/portal.css">
     <link rel="stylesheet" href="assets/css/faculty.css">
+    <link rel="stylesheet" href="assets/css/theme-light.css">
 </head>
 
 <body>

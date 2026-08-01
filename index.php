@@ -18,6 +18,7 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/portal.css?v=3">
+    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
 </head>
 
 <body>

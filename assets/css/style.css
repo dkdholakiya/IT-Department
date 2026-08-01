@@ -48,6 +48,7 @@ body {
     font-family: 'Merriweather Sans', 'Segoe UI', sans-serif;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.4s ease, color 0.4s ease;
     overflow-x: hidden !important;
     width: 100% !important;
 }
@@ -1452,15 +1453,35 @@ textarea {
     cursor: not-allowed;
 }
 
-/* Form checkboxes style */
+/* Form checkboxes & radio buttons style */
 .form-check-input {
-    background-color: rgba(6, 10, 28, 0.65) !important;
-    border: 1px solid var(--border) !important;
+    cursor: pointer;
+    background-color: rgba(6, 10, 28, 0.75) !important;
+    border: 2px solid rgba(255, 255, 255, 0.25) !important;
+    transition: all 0.2s ease !important;
 }
 
-.form-check-input:checked {
+.form-check-input:focus {
+    border-color: var(--red-bright) !important;
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.25) !important;
+    outline: none !important;
+}
+
+.form-check-input:checked[type="checkbox"] {
     background-color: var(--red-bright) !important;
     border-color: var(--red-bright) !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") !important;
+}
+
+.form-check-input:checked[type="radio"] {
+    background-color: var(--red-bright) !important;
+    border-color: var(--red-bright) !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23ffffff'/%3e%3c/svg%3e") !important;
+}
+
+body.ce-active .form-check-input:checked {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
 }
 
 /* Character Counter styling */

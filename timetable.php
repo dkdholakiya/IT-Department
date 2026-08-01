@@ -27,6 +27,7 @@ $jsDataExists = file_exists($jsDataFile);
     <link rel="stylesheet" href="assets/css/portal.css?v=3">
     <link rel="stylesheet" href="assets/css/faculty.css?v=3">
     <link rel="stylesheet" href="assets/css/timetable.css?v=8">
+    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
 </head>
 
 <body>

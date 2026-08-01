@@ -24,6 +24,7 @@
 
     <!-- Scoped Utility Stylesheet -->
     <link rel="stylesheet" href="assets/css/ctldrive.css">
+    <link rel="stylesheet" href="assets/css/theme-light.css">
 </head>
 
 <body>
@@ -320,8 +321,26 @@
 
         function maybeEnableButtons() {
             if (gapiInited && gisInited) {
-                document.getElementById('auth-btn').style.display = 'inline-block';
-                document.getElementById('status').innerText = 'Ready to Authorize.';
+                const savedToken = localStorage.getItem('gmiu_drive_token');
+                const expiresAt = parseInt(localStorage.getItem('gmiu_token_expires_at') || '0', 10);
+
+                if (savedToken && Date.now() < expiresAt) {
+                    // Restore existing Google Drive session across page refreshes
+                    gapi.client.setToken({ access_token: savedToken });
+                    document.getElementById('auth-btn').style.display = 'none';
+                    document.getElementById('signout-btn').style.display = 'inline-block';
+                    document.getElementById('scan-container').style.display = 'flex';
+                    document.getElementById('status').innerText = 'Connected to Google Drive (Active session). Ready to scan.';
+                } else {
+                    if (savedToken) {
+                        localStorage.removeItem('gmiu_drive_token');
+                        localStorage.removeItem('gmiu_token_expires_at');
+                    }
+                    document.getElementById('auth-btn').style.display = 'inline-block';
+                    document.getElementById('signout-btn').style.display = 'none';
+                    document.getElementById('scan-container').style.display = 'none';
+                    document.getElementById('status').innerText = 'Ready to Authorize.';
+                }
             }
         }
 
@@ -330,10 +349,17 @@
                 if (resp.error !== undefined) {
                     throw (resp);
                 }
+
+                // Save token to localStorage with 24-hour automatic logout timer
+                const hours24InMs = 24 * 60 * 60 * 1000;
+                localStorage.setItem('gmiu_drive_token', resp.access_token);
+                localStorage.setItem('gmiu_token_expires_at', (Date.now() + hours24InMs).toString());
+
+                gapi.client.setToken({ access_token: resp.access_token });
                 document.getElementById('auth-btn').style.display = 'none';
                 document.getElementById('signout-btn').style.display = 'inline-block';
                 document.getElementById('scan-container').style.display = 'flex';
-                document.getElementById('status').innerText = 'Authorization successful. Ready to scan.';
+                document.getElementById('status').innerText = 'Authorization successful (Session active for 24h). Ready to scan.';
             };
 
             if (gapi.client.getToken() === null) {
@@ -345,16 +371,26 @@
 
         function handleSignoutClick() {
             const token = gapi.client.getToken();
-            if (token !== null) {
-                google.accounts.oauth2.revoke(token.access_token);
-                gapi.client.setToken(null);
-                document.getElementById('auth-btn').style.display = 'inline-block';
-                document.getElementById('signout-btn').style.display = 'none';
-                document.getElementById('scan-container').style.display = 'none';
-                document.getElementById('download-btn').style.display = 'none';
-                document.getElementById('status').innerText = 'Signed out.';
-                clearResults();
+            const savedToken = localStorage.getItem('gmiu_drive_token') || (token ? token.access_token : null);
+
+            if (savedToken) {
+                try {
+                    google.accounts.oauth2.revoke(savedToken);
+                } catch (e) {
+                    console.warn("Token revoke error:", e);
+                }
             }
+
+            gapi.client.setToken(null);
+            localStorage.removeItem('gmiu_drive_token');
+            localStorage.removeItem('gmiu_token_expires_at');
+
+            document.getElementById('auth-btn').style.display = 'inline-block';
+            document.getElementById('signout-btn').style.display = 'none';
+            document.getElementById('scan-container').style.display = 'none';
+            document.getElementById('download-btn').style.display = 'none';
+            document.getElementById('status').innerText = 'Signed out successfully.';
+            clearResults();
         }
 
         function clearResults() {
@@ -367,11 +403,11 @@
             document.getElementById('non-empty-folders-val').innerText = '0';
             document.getElementById('empty-folders-val').innerText = '0';
 
-            // Hide email form and clear CC selections
+            // Hide email form and reset CC selections back to defaults
             document.getElementById('email-section').style.display = 'none';
-            selectedCCEmails = [];
-            const ccTags = document.getElementById('ccTagsContainer');
-            if (ccTags) ccTags.innerHTML = '';
+            if (typeof resetCCEmailsToDefault === 'function') {
+                resetCCEmailsToDefault();
+            }
             const ccInput = document.getElementById('ccSearch');
             if (ccInput) ccInput.value = '';
 
@@ -462,9 +498,10 @@
             document.getElementById('scan-btn').disabled = true;
 
             let totalDocs = 0;
-            let emptyCount = 0;
-            let nonEmptyCount = 0;
-            let folderCount = 0;
+            let totalActivityFolders = 0;
+            let totalNonEmptyActivityFolders = 0;
+            let totalEmptyActivityFolders = 0;
+            let classFolderCount = 0;
             let classFolders = [];
 
             // 1. Determine Class Level target depth based on root parent folder name
@@ -615,19 +652,17 @@
 
                     await scanClassContents(classFolder.id, "", classData);
 
-                    // Compute metrics
+                    // Compute metrics for subfolders / activities
                     const totalAct = classData.activities.length;
                     const emptyAct = classData.activities.filter(a => a.files.length === 0).length;
                     const filledAct = totalAct - emptyAct;
                     const docsCount = classData.activities.reduce((acc, a) => acc + a.files.length, 0);
 
                     totalDocs += docsCount;
-                    folderCount++;
-                    if (filledAct === 0) {
-                        emptyCount++;
-                    } else {
-                        nonEmptyCount++;
-                    }
+                    totalActivityFolders += totalAct;
+                    totalNonEmptyActivityFolders += filledAct;
+                    totalEmptyActivityFolders += emptyAct;
+                    classFolderCount++;
 
                     // Render in the HTML UI
                     renderClassResult(classFolder.name, classData.activities);
@@ -648,11 +683,11 @@
                     });
                 }
 
-                // Show summary metrics in HTML UI
-                document.getElementById('total-folders-val').innerText = folderCount;
+                // Show summary metrics in HTML UI (Subfolders / Activities total metrics)
+                document.getElementById('total-folders-val').innerText = totalActivityFolders;
                 document.getElementById('total-docs-val').innerText = totalDocs;
-                document.getElementById('non-empty-folders-val').innerText = nonEmptyCount;
-                document.getElementById('empty-folders-val').innerText = emptyCount;
+                document.getElementById('non-empty-folders-val').innerText = totalNonEmptyActivityFolders;
+                document.getElementById('empty-folders-val').innerText = totalEmptyActivityFolders;
                 document.getElementById('summary-card').style.display = 'grid';
 
                 // Append summary data directly to the end of reportData for Excel sheet
@@ -669,9 +704,15 @@
                     "File Names": ""
                 });
                 reportData.push({
-                    "Folder Name": "Total Folders Scanned",
+                    "Folder Name": "Total Classes Scanned",
                     "Status": "",
-                    "File Count": folderCount,
+                    "File Count": classFolderCount,
+                    "File Names": ""
+                });
+                reportData.push({
+                    "Folder Name": "Total Activity Subfolders Scanned",
+                    "Status": "",
+                    "File Count": totalActivityFolders,
                     "File Names": ""
                 });
                 reportData.push({
@@ -681,27 +722,40 @@
                     "File Names": ""
                 });
                 reportData.push({
-                    "Folder Name": "Non-Empty Folders",
+                    "Folder Name": "Non-Empty Activity Subfolders",
                     "Status": "",
-                    "File Count": nonEmptyCount,
+                    "File Count": totalNonEmptyActivityFolders,
                     "File Names": ""
                 });
                 reportData.push({
-                    "Folder Name": "Empty Folders",
+                    "Folder Name": "Empty Activity Subfolders",
                     "Status": "",
-                    "File Count": emptyCount,
+                    "File Count": totalEmptyActivityFolders,
                     "File Names": ""
                 });
 
-                // Show email section
+                // Show email section & render default CC tags
                 document.getElementById('email-section').style.display = 'block';
+                if (typeof resetCCEmailsToDefault === 'function') {
+                    resetCCEmailsToDefault();
+                }
 
                 document.getElementById('status').innerText = 'Scan Complete! You can now download the Excel report or send it via email.';
                 document.getElementById('download-btn').style.display = 'inline-block';
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('status').innerText = 'Error processing request. Check console log or API Permissions.';
+                if (err.status === 401 || (err.result && err.result.error && err.result.error.code === 401)) {
+                    localStorage.removeItem('gmiu_drive_token');
+                    localStorage.removeItem('gmiu_token_expires_at');
+                    gapi.client.setToken(null);
+                    document.getElementById('auth-btn').style.display = 'inline-block';
+                    document.getElementById('signout-btn').style.display = 'none';
+                    document.getElementById('scan-container').style.display = 'none';
+                    document.getElementById('status').innerText = 'Session expired. Please click Authorize & Connect to reconnect.';
+                } else {
+                    document.getElementById('status').innerText = 'Error processing request. Check console log or API Permissions.';
+                }
             }
 
             document.getElementById('scan-btn').disabled = false;
@@ -718,19 +772,19 @@
             const emptyActCount = activities.filter(a => a.files.length === 0).length;
             const filledCount = total - emptyActCount;
 
-            let activitiesHtml = '<ul class="file-list" style="list-style-type: none; padding-left: 0; margin-top: 10px;">';
+            let activitiesHtml = '<ul class="activity-tree-list" style="list-style-type: none; padding-left: 0; margin-top: 10px;">';
             activities.forEach(activity => {
                 const isActEmpty = activity.files.length === 0;
                 const bullet = isActEmpty ? '🔴' : '🟢';
                 const statusText = isActEmpty ? '(Empty)' : `(${activity.files.length} documents)`;
                 
-                activitiesHtml += `<li style="margin-bottom: 8px; color: #cbd5e1; font-family: 'Merriweather Sans', sans-serif;">`;
-                activitiesHtml += `${bullet} <strong>${activity.name}</strong> ${statusText}`;
+                activitiesHtml += `<li class="activity-item" style="margin-bottom: 8px; font-family: 'Merriweather Sans', sans-serif;">`;
+                activitiesHtml += `${bullet} <strong class="activity-name">${activity.name}</strong> <span class="activity-status">${statusText}</span>`;
                 
                 if (activity.files.length > 0) {
-                    activitiesHtml += '<ul style="list-style-type: circle; padding-left: 20px; margin-top: 4px; font-size: 12.5px; color: #b4c6ef;">';
+                    activitiesHtml += '<ul class="activity-file-list" style="list-style-type: circle; padding-left: 20px; margin-top: 4px; font-size: 12.5px;">';
                     activity.files.forEach(file => {
-                        activitiesHtml += `<li>${file.name}</li>`;
+                        activitiesHtml += `<li class="activity-file-item">${file.name}</li>`;
                     });
                     activitiesHtml += '</ul>';
                 }
@@ -781,28 +835,29 @@
             summaryRows.push([]); // spacer row
 
             // Extract metrics counts
-            const totalFolders = scannedFoldersData.length;
+            const totalClassFolders = scannedFoldersData.length;
+            let totalActivityFolders = 0;
+            let totalNonEmptyActivityFolders = 0;
+            let totalEmptyActivityFolders = 0;
             let totalDocs = 0;
-            let emptyCount = 0;
-            let nonEmptyCount = 0;
+
             scannedFoldersData.forEach(classFolder => {
                 const totalAct = classFolder.activities.length;
                 const emptyAct = classFolder.activities.filter(a => a.files.length === 0).length;
                 const filledAct = totalAct - emptyAct;
                 totalDocs += classFolder.activities.reduce((acc, a) => acc + a.files.length, 0);
-                if (filledAct === 0) {
-                    emptyCount++;
-                } else {
-                    nonEmptyCount++;
-                }
+                totalActivityFolders += totalAct;
+                totalNonEmptyActivityFolders += filledAct;
+                totalEmptyActivityFolders += emptyAct;
             });
 
             summaryRows.push(["METRICS SUMMARY"]);
-            summaryRows.push(["Total Classes Scanned", totalFolders]);
+            summaryRows.push(["Total Classes Scanned", totalClassFolders]);
+            summaryRows.push(["Total Subfolders Scanned", totalActivityFolders]);
             summaryRows.push(["Total Scanned Documents", totalDocs]);
-            summaryRows.push(["Filled Classes", nonEmptyCount]);
-            summaryRows.push(["Empty Classes (Action Required)", emptyCount]);
-            summaryRows.push(["Overall Completion Rate", drawProgressBar(nonEmptyCount, totalFolders)]);
+            summaryRows.push(["Non-Empty Subfolders", totalNonEmptyActivityFolders]);
+            summaryRows.push(["Empty Subfolders (Action Required)", totalEmptyActivityFolders]);
+            summaryRows.push(["Overall Completion Rate", drawProgressBar(totalNonEmptyActivityFolders, totalActivityFolders)]);
             summaryRows.push([]); // spacer row
 
             summaryRows.push(["CLASS-WISE OVERALL STATUS LIST"]);
@@ -1086,7 +1141,76 @@
         }
 
         // ── CC Emails Multi-Select Dropdown Logic ──
-        let selectedCCEmails = [];
+        const defaultCCEmails = [
+            "drchandarana@gmiu.edu.in", // HOD (Prof. Dhaval Chandarana)
+            "sbchauhan@gmiu.edu.in",    // Incharge HOD IT (Prof. Shwetaba Chauhan)
+            "ehunagar@gmiu.edu.in",     // Incharge HOD CE (Prof. Ekta Unagar)
+            "tmvyas@gmiu.edu.in",       // Sub Incharge HOD IT (Prof. Tarjanee Vyas)
+            "phkaneijya@gmiu.edu.in"    // Sub Incharge HOD CE (Prof. Pragnesh Kanejiya)
+        ];
+        let selectedCCEmails = [...defaultCCEmails];
+
+        function getCompactDesignation(desg) {
+            if (!desg) return "";
+            const lower = desg.toLowerCase();
+            if (lower === "hod" || lower.includes("both")) return "HOD";
+            if (lower.includes("incharge hod it")) return "HOD IT";
+            if (lower.includes("incharge hod ce")) return "HOD CE";
+            if (lower.includes("sub incharge hod it")) return "Sub HOD IT";
+            if (lower.includes("sub incharge hod ce")) return "Sub HOD CE";
+            if (lower.includes("assistant professor")) return "Asst. Prof";
+            if (lower.includes("associate professor")) return "Assoc. Prof";
+            if (lower.includes("teaching assistant")) return "TA";
+            if (lower.includes("lecturer")) return "Lecturer";
+            return desg;
+        }
+
+        function updateCCTagsUI() {
+            const ccTagsContainer = document.getElementById("ccTagsContainer");
+            if (!ccTagsContainer) return;
+
+            ccTagsContainer.innerHTML = "";
+            selectedCCEmails.forEach(email => {
+                const member = (typeof facultyData !== "undefined") ? facultyData.find(m => m.email.toLowerCase() === email.toLowerCase()) : null;
+                let displayName = email;
+                let tooltipText = email;
+                if (member) {
+                    const shortDesg = getCompactDesignation(member.designation);
+                    displayName = shortDesg ? `${member.name} (${shortDesg})` : member.name;
+                    tooltipText = `${member.name} — ${member.designation || ''} (${email})`;
+                }
+
+                const tag = document.createElement("div");
+                tag.className = "cc-tag";
+                tag.title = tooltipText;
+                tag.innerHTML = `
+                    <span>${displayName}</span>
+                    <button type="button" class="cc-tag-remove" title="Remove">&times;</button>
+                `;
+                tag.querySelector(".cc-tag-remove").addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    removeCCTag(email);
+                });
+                ccTagsContainer.appendChild(tag);
+            });
+        }
+
+        function removeCCTag(email) {
+            selectedCCEmails = selectedCCEmails.filter(e => e !== email);
+            updateCCTagsUI();
+            const ccSearch = document.getElementById("ccSearch");
+            if (ccSearch) {
+                ccSearch.focus();
+                if (typeof filterCCEmails === "function") filterCCEmails();
+            }
+        }
+
+        function resetCCEmailsToDefault() {
+            selectedCCEmails = [...defaultCCEmails];
+            updateCCTagsUI();
+        }
+
+        let filterCCEmails = null;
 
         function initCCEmailsSearch() {
             const ccSearch = document.getElementById("ccSearch");
@@ -1100,6 +1224,9 @@
                     ccSearch.focus();
                 }
             });
+
+            // Set initial default CC tags UI
+            updateCCTagsUI();
 
             // Populate all emails initially
             renderCCDropdown(facultyData);
@@ -1129,7 +1256,7 @@
                 }
             });
 
-            function filterCCEmails() {
+            filterCCEmails = function() {
                 const query = ccSearch.value.toLowerCase().replace("prof.", "").replace("mr.", "").replace("dr.", "").trim();
                 // Filter out already selected emails
                 const available = facultyData.filter(member => !selectedCCEmails.includes(member.email));
@@ -1142,7 +1269,7 @@
                 );
 
                 renderCCDropdown(filtered);
-            }
+            };
 
             function renderCCDropdown(list) {
                 ccDropdownList.innerHTML = "";
@@ -1177,30 +1304,6 @@
                 ccSearch.value = "";
                 ccSearch.focus();
                 filterCCEmails();
-            }
-
-            function removeCCTag(email) {
-                selectedCCEmails = selectedCCEmails.filter(e => e !== email);
-                updateCCTagsUI();
-                ccSearch.focus();
-                filterCCEmails();
-            }
-
-            function updateCCTagsUI() {
-                ccTagsContainer.innerHTML = "";
-                selectedCCEmails.forEach(email => {
-                    const tag = document.createElement("div");
-                    tag.className = "cc-tag";
-                    tag.innerHTML = `
-                        <span>${email}</span>
-                        <button type="button" class="cc-tag-remove">&times;</button>
-                    `;
-                    tag.querySelector(".cc-tag-remove").addEventListener("click", function (e) {
-                        e.stopPropagation();
-                        removeCCTag(email);
-                    });
-                    ccTagsContainer.appendChild(tag);
-                });
             }
         }
 

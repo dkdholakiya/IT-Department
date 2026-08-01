@@ -23,7 +23,8 @@
 
     <!-- Theme Stylesheets -->
     <link rel="stylesheet" href="assets/css/portal.css">
-    <link rel="stylesheet" href="assets/css/ctlactivity.css?v=5">
+    <link rel="stylesheet" href="assets/css/ctlactivity.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
     <style>
         html, body {
             overflow-y: auto !important;
@@ -439,7 +440,76 @@
         initFacultySearch();
 
         // ── CC Emails Multi-Select Dropdown Logic ──
-        let selectedCCEmails = [];
+        const defaultCCEmails = [
+            "drchandarana@gmiu.edu.in", // HOD (Prof. Dhaval Chandarana)
+            "sbchauhan@gmiu.edu.in",    // Incharge HOD IT (Prof. Shwetaba Chauhan)
+            "ehunagar@gmiu.edu.in",     // Incharge HOD CE (Prof. Ekta Unagar)
+            "tmvyas@gmiu.edu.in",       // Sub Incharge HOD IT (Prof. Tarjanee Vyas)
+            "phkaneijya@gmiu.edu.in"    // Sub Incharge HOD CE (Prof. Pragnesh Kanejiya)
+        ];
+        let selectedCCEmails = [...defaultCCEmails];
+
+        function getCompactDesignation(desg) {
+            if (!desg) return "";
+            const lower = desg.toLowerCase();
+            if (lower === "hod" || lower.includes("both")) return "HOD";
+            if (lower.includes("incharge hod it")) return "HOD IT";
+            if (lower.includes("incharge hod ce")) return "HOD CE";
+            if (lower.includes("sub incharge hod it")) return "Sub HOD IT";
+            if (lower.includes("sub incharge hod ce")) return "Sub HOD CE";
+            if (lower.includes("assistant professor")) return "Asst. Prof";
+            if (lower.includes("associate professor")) return "Assoc. Prof";
+            if (lower.includes("teaching assistant")) return "TA";
+            if (lower.includes("lecturer")) return "Lecturer";
+            return desg;
+        }
+
+        function updateCCTagsUI() {
+            const ccTagsContainer = document.getElementById("ccTagsContainer");
+            if (!ccTagsContainer) return;
+
+            ccTagsContainer.innerHTML = "";
+            selectedCCEmails.forEach(email => {
+                const member = (typeof facultyData !== "undefined") ? facultyData.find(m => m.email.toLowerCase() === email.toLowerCase()) : null;
+                let displayName = email;
+                let tooltipText = email;
+                if (member) {
+                    const shortDesg = getCompactDesignation(member.designation);
+                    displayName = shortDesg ? `${member.name} (${shortDesg})` : member.name;
+                    tooltipText = `${member.name} — ${member.designation || ''} (${email})`;
+                }
+
+                const tag = document.createElement("div");
+                tag.className = "cc-tag";
+                tag.title = tooltipText;
+                tag.innerHTML = `
+                    <span>${displayName}</span>
+                    <button type="button" class="cc-tag-remove" title="Remove">&times;</button>
+                `;
+                tag.querySelector(".cc-tag-remove").addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    removeCCTag(email);
+                });
+                ccTagsContainer.appendChild(tag);
+            });
+        }
+
+        function removeCCTag(email) {
+            selectedCCEmails = selectedCCEmails.filter(e => e !== email);
+            updateCCTagsUI();
+            const ccSearch = document.getElementById("ccSearch");
+            if (ccSearch) {
+                ccSearch.focus();
+                if (typeof filterCCEmails === "function") filterCCEmails();
+            }
+        }
+
+        function resetCCEmailsToDefault() {
+            selectedCCEmails = [...defaultCCEmails];
+            updateCCTagsUI();
+        }
+
+        let filterCCEmails = null;
 
         function initCCEmailsSearch() {
             const ccSearch = document.getElementById("ccSearch");
@@ -453,6 +523,9 @@
                     ccSearch.focus();
                 }
             });
+
+            // Set initial default CC tags UI
+            updateCCTagsUI();
 
             // Populate all emails initially
             renderCCDropdown(facultyData);
@@ -482,7 +555,7 @@
                 }
             });
 
-            function filterCCEmails() {
+            filterCCEmails = function() {
                 const query = ccSearch.value.toLowerCase().replace("prof.", "").replace("mr.", "").replace("dr.", "").trim();
                 // Filter out already selected emails
                 const available = facultyData.filter(member => !selectedCCEmails.includes(member.email));
@@ -495,7 +568,7 @@
                 );
 
                 renderCCDropdown(filtered);
-            }
+            };
 
             function renderCCDropdown(list) {
                 ccDropdownList.innerHTML = "";
@@ -530,30 +603,6 @@
                 ccSearch.value = "";
                 ccSearch.focus();
                 filterCCEmails();
-            }
-
-            function removeCCTag(email) {
-                selectedCCEmails = selectedCCEmails.filter(e => e !== email);
-                updateCCTagsUI();
-                ccSearch.focus();
-                filterCCEmails();
-            }
-
-            function updateCCTagsUI() {
-                ccTagsContainer.innerHTML = "";
-                selectedCCEmails.forEach(email => {
-                    const tag = document.createElement("div");
-                    tag.className = "cc-tag";
-                    tag.innerHTML = `
-                        <span>${email}</span>
-                        <button type="button" class="cc-tag-remove">&times;</button>
-                    `;
-                    tag.querySelector(".cc-tag-remove").addEventListener("click", function (e) {
-                        e.stopPropagation();
-                        removeCCTag(email);
-                    });
-                    ccTagsContainer.appendChild(tag);
-                });
             }
         }
 

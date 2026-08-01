@@ -66,6 +66,7 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
     <link rel="stylesheet" href="assets/css/portal.css?v=3">
     <link rel="stylesheet" href="assets/css/faculty.css?v=3">
     <link rel="stylesheet" href="assets/css/timetable.css?v=8">
+    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
 
     <style>
         /* Modern Dark Glassmorphic Theme (Matches Website Aesthetic) */
@@ -91,7 +92,7 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
             width: 100%;
             border-collapse: collapse;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             background-color: rgba(11, 21, 48, 0.45);
             color: #f8fafc;
             border-radius: 12px;
@@ -101,7 +102,7 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
 
         .student-tt-card th, 
         .student-tt-card td {
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             padding: 14px 16px;
             vertical-align: middle;
             font-size: 14px;
