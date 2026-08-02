@@ -10,12 +10,13 @@ html[data-theme="light"] {
     --navy-card: rgba(255, 255, 255, 0.92);
     --navy-input: #ffffff;
     --bg-dark: #f8fafc;
-    
+
     --text-primary: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
-    --white: #ffffff; /* Keep --white as pure white for dark badges/avatars/buttons */
-    
+    --white: #ffffff;
+    /* Keep --white as pure white for dark badges/avatars/buttons */
+
     --glass: rgba(255, 255, 255, 0.88);
     --glass-strong: rgba(255, 255, 255, 0.95);
     --glass-border: rgba(0, 0, 0, 0.09);
@@ -173,11 +174,11 @@ html[data-theme="light"] .segment-btn {
     color: #475569 !important;
     font-weight: 700 !important;
     transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 html[data-theme="light"] .segment-btn:hover {
@@ -1531,37 +1532,44 @@ html[data-theme="light"] .terminal-body {
 
 /* Syntax Highlighting for Light Mode (VS Code Light / One Light style) */
 html[data-theme="light"] .kw {
-    color: #c026d3 !important; /* Vibrant Purple */
+    color: #c026d3 !important;
+    /* Vibrant Purple */
     font-weight: 700 !important;
 }
 
 html[data-theme="light"] .var {
-    color: #1d4ed8 !important; /* Deep Blue */
+    color: #1d4ed8 !important;
+    /* Deep Blue */
     font-weight: 600 !important;
 }
 
 html[data-theme="light"] .str {
-    color: #047857 !important; /* Deep Emerald Green */
+    color: #047857 !important;
+    /* Deep Emerald Green */
     font-weight: 500 !important;
 }
 
 html[data-theme="light"] .fn {
-    color: #d97706 !important; /* Dark Amber */
+    color: #d97706 !important;
+    /* Dark Amber */
     font-weight: 700 !important;
 }
 
 html[data-theme="light"] .key {
-    color: #6b21a8 !important; /* Deep Violet */
+    color: #6b21a8 !important;
+    /* Deep Violet */
     font-weight: 600 !important;
 }
 
 html[data-theme="light"] .bool {
-    color: #ea580c !important; /* Deep Orange */
+    color: #ea580c !important;
+    /* Deep Orange */
     font-weight: 700 !important;
 }
 
 html[data-theme="light"] .cmt {
-    color: #64748b !important; /* Medium Slate */
+    color: #64748b !important;
+    /* Medium Slate */
     font-style: italic !important;
 }
 
@@ -1973,12 +1981,14 @@ html[data-theme="light"] .leave-slot-room {
 }
 
 html[data-theme="light"] .dept-same-label {
-    color: #047857 !important; /* Deep emerald green */
+    color: #047857 !important;
+    /* Deep emerald green */
     font-weight: 800 !important;
 }
 
 html[data-theme="light"] .dept-other-label {
-    color: #1d4ed8 !important; /* Deep sapphire blue */
+    color: #1d4ed8 !important;
+    /* Deep sapphire blue */
     font-weight: 800 !important;
 }
 
@@ -2169,4 +2179,240 @@ html[data-theme="light"] .auth-input {
     background: #ffffff !important;
     border-color: rgba(203, 213, 225, 0.9) !important;
     color: #0f172a !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   Workload Summary Demo & Timetable Light Mode Overrides
+   ══════════════════════════════════════════════════════════ */
+
+html[data-theme="light"] {
+    --card-bg: rgba(255, 255, 255, 0.94);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --text-color: #0f172a;
+    --text-muted: #64748b;
+}
+
+html[data-theme="light"] .summary-container {
+    color: #0f172a !important;
+}
+
+/* Stat Cards in Light Mode */
+html[data-theme="light"] .stat-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: blur(16px) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+html[data-theme="light"] .stat-card:hover {
+    border-color: rgba(192, 57, 43, 0.4) !important;
+    box-shadow: 0 10px 25px rgba(192, 57, 43, 0.08) !important;
+}
+
+html[data-theme="light"] .stat-icon {
+    background: rgba(192, 57, 43, 0.1) !important;
+    color: #c0392b !important;
+}
+
+html[data-theme="light"] .stat-info .stat-value {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .stat-info .stat-label {
+    color: #64748b !important;
+}
+
+/* Controls Bar */
+html[data-theme="light"] .summary-controls {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: blur(16px) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .summary-search input {
+    background: #f8fafc !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .summary-search input::placeholder {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="light"] .summary-search input:focus {
+    border-color: #c0392b !important;
+    background: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15) !important;
+}
+
+html[data-theme="light"] .summary-search svg {
+    color: #64748b !important;
+}
+
+/* Filter Buttons */
+html[data-theme="light"] .filter-btn {
+    background: #f1f5f9 !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    color: #475569 !important;
+}
+
+html[data-theme="light"] .filter-btn:hover {
+    color: #0f172a !important;
+    border-color: rgba(192, 57, 43, 0.3) !important;
+    background: #e2e8f0 !important;
+}
+
+html[data-theme="light"] .filter-btn.active {
+    background: #c0392b !important;
+    border-color: #c0392b !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(192, 57, 43, 0.3) !important;
+}
+
+/* Sort Select */
+html[data-theme="light"] .sort-select {
+    background: #f8fafc !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .sort-select option {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* Print Button */
+html[data-theme="light"] .print-btn {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    color: #047857 !important;
+}
+
+html[data-theme="light"] .print-btn:hover {
+    background: #059669 !important;
+    color: #ffffff !important;
+}
+
+/* Table Card in Light Mode */
+html[data-theme="light"] .summary-table-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .summary-table-header {
+    background: #f8fafc !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme="light"] .summary-table-title {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .summary-table th {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme="light"] .summary-table td {
+    color: #1e293b !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+html[data-theme="light"] .summary-table tbody tr:hover {
+    background-color: rgba(192, 57, 43, 0.03) !important;
+}
+
+html[data-theme="light"] .fac-name-text {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .fac-sub-text {
+    color: #64748b !important;
+}
+
+/* Department Badges */
+html[data-theme="light"] .dept-tag.it {
+    background: rgba(192, 57, 43, 0.08) !important;
+    color: #b91c1c !important;
+    border: 1px solid rgba(192, 57, 43, 0.25) !important;
+}
+
+html[data-theme="light"] .dept-tag.ce {
+    background: rgba(37, 99, 235, 0.08) !important;
+    color: #1d4ed8 !important;
+    border: 1px solid rgba(37, 99, 235, 0.25) !important;
+}
+
+html[data-theme="light"] .dept-tag.both {
+    background: rgba(147, 51, 234, 0.08) !important;
+    color: #7e22ce !important;
+    border: 1px solid rgba(147, 51, 234, 0.25) !important;
+}
+
+/* Day Pills */
+html[data-theme="light"] .day-pill {
+    background: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .day-pill.active {
+    background: rgba(16, 185, 129, 0.12) !important;
+    color: #047857 !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Load Badges */
+html[data-theme="light"] .load-badge-main {
+    background: rgba(192, 57, 43, 0.1) !important;
+    color: #b91c1c !important;
+    border: 1px solid rgba(192, 57, 43, 0.25) !important;
+}
+
+html[data-theme="light"] .load-badge-main.high {
+    background: rgba(239, 68, 68, 0.12) !important;
+    color: #dc2626 !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+html[data-theme="light"] .load-badge-main.normal {
+    background: rgba(37, 99, 235, 0.1) !important;
+    color: #1d4ed8 !important;
+    border-color: rgba(37, 99, 235, 0.25) !important;
+}
+
+html[data-theme="light"] .load-badge-main.low {
+    background: rgba(217, 119, 6, 0.1) !important;
+    color: #b45309 !important;
+    border-color: rgba(217, 119, 6, 0.25) !important;
+}
+
+/* Action Button */
+html[data-theme="light"] .view-btn {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color: #0f172a !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-theme="light"] .view-btn:hover {
+    background: #c0392b !important;
+    border-color: #c0392b !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(192, 57, 43, 0.25) !important;
+}
+
+/* Computer Engineering Active Theme for Light Mode Summary */
+html[data-theme="light"] body.ce-active .stat-icon {
+    background: rgba(37, 99, 235, 0.1) !important;
+    color: #1d4ed8 !important;
+}
+
+html[data-theme="light"] body.ce-active .filter-btn.active {
+    background: #1d4ed8 !important;
+    border-color: #1d4ed8 !important;
+    box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3) !important;
 }

@@ -3,7 +3,11 @@
  * Faculty Timetable Auto-Updater from Excel
  */
 
-$excelFile = __DIR__ . '/uploads/timetable/Personal Time Table CE_CSE _ IT _ ICT.xlsx';
+$excelFile = __DIR__ . '/uploads/timetable/timetable.xlsx';
+if (!file_exists($excelFile)) {
+    $glob = glob(__DIR__ . '/uploads/timetable/*.xlsx');
+    if (!empty($glob)) $excelFile = $glob[0];
+}
 $tempZip = __DIR__ . '/scratch/temp_timetable.zip';
 $unzipDir = __DIR__ . '/scratch/unzipped_timetable';
 
@@ -12,7 +16,7 @@ $message = "";
 $facultyCount = 0;
 
 if (!file_exists($excelFile)) {
-    $message = "Excel file not found at: uploads/timetable/Personal Time Table CE_CSE _ IT _ ICT.xlsx";
+    $message = "Excel file not found inside uploads/timetable/ directory.";
 } else {
     // Clean up old unzip dir
     if (is_dir($unzipDir)) {
@@ -42,8 +46,10 @@ if (!file_exists($excelFile)) {
     }
 
     if (!$unzipped) {
-        // Fallback to PowerShell
-        $cmd = 'powershell -Command "Expand-Archive -Force -Path \'' . $tempZip . '\' -DestinationPath \'' . $unzipDir . '\'"';
+        // Fallback to PowerShell with properly escaped double quotes for cmd.exe
+        $winZip = str_replace('/', '\\', $tempZip);
+        $winUnzipDir = str_replace('/', '\\', $unzipDir);
+        $cmd = 'powershell -Command "Expand-Archive -Force -Path \"' . $winZip . '\" -DestinationPath \"' . $winUnzipDir . '\""';
         exec($cmd, $output, $return_var);
         if ($return_var === 0) {
             $unzipped = true;
@@ -92,9 +98,16 @@ if (!file_exists($excelFile)) {
         $sheets = [];
         if ($xmlWorkbook) {
             foreach ($xmlWorkbook->sheets->sheet as $s) {
+                $sheetName = trim((string)$s['name']);
+
+                // Skip duplicate/copy sheets (e.g. "Copy of AMI")
+                if (preg_match('/^copy\s+of/i', $sheetName) || preg_match('/^sheet\d+$/i', $sheetName)) {
+                    continue;
+                }
+
                 $rId = (string)$s->attributes('r', true)->id;
                 $targetFile = $rels[$rId] ?? '';
-                $sheets[(string)$s['name']] = 'xl/' . $targetFile;
+                $sheets[$sheetName] = 'xl/' . $targetFile;
             }
         }
 

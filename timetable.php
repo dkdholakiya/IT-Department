@@ -1,5 +1,9 @@
 <?php
-$excelFile = __DIR__ . '/uploads/timetable/Personal Time Table CE_CSE _ IT _ ICT.xlsx';
+$excelFile = __DIR__ . '/uploads/timetable/timetable.xlsx';
+if (!file_exists($excelFile)) {
+    $glob = glob(__DIR__ . '/uploads/timetable/*.xlsx');
+    if (!empty($glob)) $excelFile = $glob[0];
+}
 $excelExists = file_exists($excelFile);
 $jsDataFile = __DIR__ . '/assets/js/timetableData.js';
 $jsDataExists = file_exists($jsDataFile);
@@ -127,9 +131,15 @@ $jsDataExists = file_exists($jsDataFile);
                     </div>
                 </div>
                 
-                <div class="zs-segment-control" style="margin-top: 0;">
+                <div class="zs-segment-control" style="margin-top: 0; max-width: 520px; width: 100%; display: flex;">
                     <button type="button" class="segment-btn active" id="dept-it-btn" data-dept="Information Technology">Information Technology</button>
                     <button type="button" class="segment-btn" id="dept-ce-btn" data-dept="Computer Engineering">Computer Engineering</button>
+                    <a href="workload-summary" class="segment-btn workload-summary-seg-btn" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M18 20V10M12 20V4M6 20v-6" />
+                        </svg>
+                        Workload Summary
+                    </a>
                 </div>
             </div>
 
@@ -1174,10 +1184,21 @@ $jsDataExists = file_exists($jsDataFile);
                 leaveToggleBtn.addEventListener("click", () => toggleLeaveMode());
             }
 
-            // By default, always show Information Technology department on initial load
-            const startingDept = "Information Technology";
-            selectedInitials = "SBC"; // default IT
-            setDepartmentTheme(startingDept);
+            // Check URL parameters for direct faculty initials navigation
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramInitials = urlParams.get("initials") || urlParams.get("faculty");
+            
+            if (paramInitials && mappedTimetable[paramInitials.toUpperCase()]) {
+                selectedInitials = paramInitials.toUpperCase();
+                const matchedDept = mappedTimetable[selectedInitials].department || "Information Technology";
+                setDepartmentTheme(matchedDept === "Both" ? "Information Technology" : matchedDept);
+                loadTimetable(selectedInitials);
+            } else {
+                // By default, show Information Technology department on initial load
+                const startingDept = "Information Technology";
+                selectedInitials = "SBC"; // default IT
+                setDepartmentTheme(startingDept);
+            }
         });
     </script>
 

@@ -1295,6 +1295,7 @@ body {
         flex-direction: column;
         gap: 4px;
         padding: 4px;
+        max-width: 100% !important;
     }
 
     .segment-btn {
@@ -1302,6 +1303,16 @@ body {
         padding: 8px 10px !important;
         font-size: 12px;
         text-align: center;
+    }
+
+    .workload-summary-seg-btn {
+        border-left: none !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: var(--radius-xs) !important;
+    }
+
+    html[data-theme="light"] .workload-summary-seg-btn {
+        border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
     }
 
     .leave-card-title {
@@ -1360,4 +1371,38 @@ body {
         font-size: 9px;
         padding: 1px 4px;
     }
+}
+
+/* ── Workload Summary Seg Btn ── */
+.workload-summary-seg-btn {
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 0 6px 6px 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+html[data-theme="light"] .workload-summary-seg-btn {
+    border-left: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.workload-summary-seg-btn:hover {
+    background: rgba(192, 57, 43, 0.15) !important;
+    color: #fca5a5 !important;
+}
+
+body.ce-active .workload-summary-seg-btn:hover {
+    background: rgba(37, 99, 235, 0.15) !important;
+    color: #93c5fd !important;
+}
+
+html[data-theme="light"] .workload-summary-seg-btn:hover {
+    background: rgba(192, 57, 43, 0.08) !important;
+    color: #b91c1c !important;
+}
+
+html[data-theme="light"] body.ce-active .workload-summary-seg-btn:hover {
+    background: rgba(37, 99, 235, 0.08) !important;
+    color: #1d4ed8 !important;
 }

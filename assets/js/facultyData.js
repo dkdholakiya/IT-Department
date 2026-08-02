@@ -453,15 +453,15 @@ const facultyData = [
         initials: "IAP"
     },
     {
-        id: "fdr",
-        name: "Prof. Frangrance Remona",
+        id: "rfd",
+        name: "Prof. Remona Frangrance Denny",
         designation: "Lecturer",
         department: "Computer Engineering",
         empId: "#10680",
         email: "fdremona@gmiu.edu.in",
         phone: "9909730707",
-        avatarClass: "av-fdr",
-        initials: "FDR"
+        avatarClass: "av-rfd",
+        initials: "RDF"
     },
     {
         id: "hpg",
@@ -503,7 +503,7 @@ const facultyData = [
         department: "Information Technology",
         empId: "#10672",
         email: "hagohil@gmiu.edu.in",
-        phone: "81571 31430",
+        phone: "9157131430",
         avatarClass: "av-hag",
         initials: "HAG"
     },
@@ -562,17 +562,17 @@ const facultyData = [
         avatarClass: "av-ami",
         initials: "AMI"
     },
-    {
-        id: "apv",
-        name: "Prof. Aarti Vandra",
-        designation: "Lecturer",
-        department: "Computer Engineering",
-        empId: "#10675",
-        email: "apvandra@gmiu.edu.in",
-        phone: "0",
-        avatarClass: "av-apv",
-        initials: "APV"
-    },
+    // {
+    //     id: "apv",
+    //     name: "Prof. Aarti Vandra",
+    //     designation: "Lecturer",
+    //     department: "Computer Engineering",
+    //     empId: "#10675",
+    //     email: "apvandra@gmiu.edu.in",
+    //     phone: "0",
+    //     avatarClass: "av-apv",
+    //     initials: "APV"
+    // },
     {
         id: "dyv",
         name: "Prof. Dhruvik Vaghela",

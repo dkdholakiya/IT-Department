@@ -127,9 +127,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "7th B.Tech-A ML",
+                    "room": "TF-29",
+                    "occupied": true
                 },
                 "THU": {
                     "class": "",
@@ -156,14 +156,14 @@ const timetableData = {
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "7th B.Tech-B ML",
-                    "room": "TF-32",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
-                    "class": "7th B.Tech-A ML",
-                    "room": "TF-29",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
                     "class": "",
@@ -229,8 +229,8 @@ const timetableData = {
                 "time": "01:45to 02:45",
                 "isRecess": false,
                 "MON": {
-                    "class": "7th B.Tech-B ML LAB",
-                    "room": "TF-32",
+                    "class": "5th B.Tech- X2 SELAB",
+                    "room": "FF-24",
                     "occupied": true
                 },
                 "TUE": {
@@ -263,8 +263,8 @@ const timetableData = {
                 "time": "02:45 03:45",
                 "isRecess": false,
                 "MON": {
-                    "class": "7th B.Tech-B ML LAB",
-                    "room": "TF-32",
+                    "class": "5th B.Tech- X2 SELAB",
+                    "room": "FF-24",
                     "occupied": true
                 },
                 "TUE": {
@@ -302,19 +302,19 @@ const timetableData = {
                 "time": "04:00 to 05:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "7th B.Tech-B ML",
-                    "room": "TF-32",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "TUE": {
-                    "class": "7th B.Tech-B ML",
-                    "room": "TF-32",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
-                    "class": "7th B.Tech-B ML",
-                    "room": "TF-32",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
                     "class": "",
@@ -374,113 +374,6 @@ const timetableData = {
         "department": "Information Technology",
         "semesterInfo": "Semester : 7TH",
         "schedule": [
-            {
-                "time": "7:30 to 8:30",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "8:30to 9:30",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "09:30 to 10:00",
-                "isRecess": true,
-                "label": "Morning Shift RECESS - 1 (30 Minutes)"
-            },
-            {
-                "time": "10:00 to 11:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
             {
                 "time": "11:00to 12:00",
                 "isRecess": false,
@@ -550,45 +443,6 @@ const timetableData = {
                 }
             },
             {
-                "time": "12:00 to 12:15",
-                "isRecess": true,
-                "label": "Mring Shift:-RECESS - 2 (15 Minutes)  Morning"
-            },
-            {
-                "time": "12:15to 01:15",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
                 "time": "01:00 to 01:45",
                 "isRecess": true,
                 "label": "RECESS - 1 (45 Minutes)  Afternoon"
@@ -675,7 +529,7 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "7th B.Tech-B ML LAB",
+                    "class": "7th B.Tech-C ML LAB",
                     "room": "GF-26",
                     "occupied": true
                 },
@@ -709,7 +563,7 @@ const timetableData = {
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "7th B.Tech-B ML LAB",
+                    "class": "7th B.Tech-C ML LAB",
                     "room": "GF-26",
                     "occupied": true
                 },
@@ -1212,9 +1066,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "B.Tech Sem 5\u1d57\u02b0 AMAD",
+                    "room": "TF-22A",
+                    "occupied": true
                 }
             },
             {
@@ -1246,9 +1100,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "B.Tech Sem 5\u1d57\u02b0 AMAD",
+                    "room": "TF-22A",
+                    "occupied": true
                 }
             },
             {
@@ -1265,9 +1119,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "B.Tech Sem 5\u1d57\u02b0 AMAD",
-                    "room": "TF-22A",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
                     "class": "",
@@ -1299,9 +1153,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "B.Tech Sem 5\u1d57\u02b0 AMAD",
-                    "room": "TF-22A",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
                     "class": "",
@@ -2145,7 +1999,7 @@ const timetableData = {
                 "time": "10:00 to 11:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "5th Diploma Class - A IOT []",
+                    "class": "5th Diploma - A IOT []",
                     "room": "TF-05",
                     "occupied": true
                 },
@@ -2179,12 +2033,12 @@ const timetableData = {
                 "time": "11:00to 12:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "7th B.Tech. Class - C IOT []",
+                    "class": "7th B.Tech-IT IOT []",
                     "room": "TF-20",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "7th B.Tech. Class - C IOT []",
+                    "class": "7th B.Tech-IT IOT []",
                     "room": "TF-20",
                     "occupied": true
                 },
@@ -2257,7 +2111,7 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "5th Diploma Class - A IOT []",
+                    "class": "5th Diploma-A IOT []",
                     "room": "FF-22",
                     "occupied": true
                 },
@@ -2277,7 +2131,7 @@ const timetableData = {
                     "occupied": false
                 },
                 "SAT": {
-                    "class": "5th Diploma Class - A IOT []",
+                    "class": "5th Diploma - A IOT []",
                     "room": "TF-32",
                     "occupied": true
                 }
@@ -2291,7 +2145,7 @@ const timetableData = {
                 "time": "01:45to 02:45",
                 "isRecess": false,
                 "MON": {
-                    "class": "7th B.TECH. Batch - C IOT []",
+                    "class": "7th B.TECH-IT IOT []",
                     "room": "GF-24",
                     "occupied": true
                 },
@@ -2301,7 +2155,7 @@ const timetableData = {
                     "occupied": false
                 },
                 "WED": {
-                    "class": "7th B.Tech. Class - C IOT []",
+                    "class": "7th B.Tech-IT IOT []",
                     "room": "TF-20",
                     "occupied": true
                 },
@@ -2325,7 +2179,7 @@ const timetableData = {
                 "time": "02:45 03:45",
                 "isRecess": false,
                 "MON": {
-                    "class": "7th B.TECH. Batch - C IOT []",
+                    "class": "7th B.TECH-IT IOT []",
                     "room": "GF-24",
                     "occupied": true
                 },
@@ -2374,7 +2228,7 @@ const timetableData = {
                     "occupied": false
                 },
                 "WED": {
-                    "class": "7th B.Tech. Class - C IOT []",
+                    "class": "7th B.Tech-IT IOT []",
                     "room": "TF-20",
                     "occupied": true
                 },
@@ -3267,9 +3121,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "WED": {
-                    "class": "3rd Diploma Class-A A11-IDEA-I",
-                    "room": "FF-29",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
                     "class": "3rd Diploma Class-B B22-IDEA-I",
@@ -3301,9 +3155,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "WED": {
-                    "class": "3rd Diploma Class-A A11-IDEA-I",
-                    "room": "FF-29",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
                     "class": "3rd Diploma Class-B B22-IDEA-I",
@@ -3486,9 +3340,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "Y1-Y22 RWMD",
+                    "room": "GF-24",
+                    "occupied": true
                 },
                 "THU": {
                     "class": "",
@@ -3520,9 +3374,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "Y1-Y22 RWMD",
+                    "room": "GF-24",
+                    "occupied": true
                 },
                 "THU": {
                     "class": "",
@@ -3781,9 +3635,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "WED": {
-                    "class": "5th Btech Class-Y2 Y22-RWMD",
-                    "room": "FF-25",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
                     "class": "5th Btech Class-X1 X11-RWMD",
@@ -3815,9 +3669,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "WED": {
-                    "class": "5th Btech Class-Y2 Y22-RWMD",
-                    "room": "FF-25",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
                     "class": "5th Btech Class-X1 X11-RWMD",
@@ -3854,9 +3708,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "5th Btech Class-Y2 Y11-RWMD",
+                    "room": "GF-26",
+                    "occupied": true
                 },
                 "THU": {
                     "class": "5th Btech Class-X1 X11-RWMD",
@@ -3888,9 +3742,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "5th Btech Class-Y2 Y11-RWMD",
+                    "room": "GF-26",
+                    "occupied": true
                 },
                 "THU": {
                     "class": "5th Btech Class-X1 X11-RWMD",
@@ -5131,9 +4985,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "DPAI",
+                    "room": "TF-32",
+                    "occupied": true
                 },
                 "WED": {
                     "class": "",
@@ -5165,9 +5019,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "DPAI",
+                    "room": "TF-32",
+                    "occupied": true
                 },
                 "WED": {
                     "class": "",
@@ -5199,9 +5053,9 @@ const timetableData = {
                 "time": "04:00 to 05:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "DPAI",
+                    "room": "TF-32",
+                    "occupied": true
                 },
                 "TUE": {
                     "class": "",
@@ -5233,9 +5087,9 @@ const timetableData = {
                 "time": "05:00 to 06:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "DPAI",
+                    "room": "TF-32",
+                    "occupied": true
                 },
                 "TUE": {
                     "class": "",
@@ -5983,17 +5837,17 @@ const timetableData = {
                 },
                 "WED": {
                     "class": "DS 3BTech",
-                    "room": "X4",
+                    "room": "X2",
                     "occupied": true
                 },
                 "THU": {
-                    "class": "DS 3BTech",
-                    "room": "X4",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "FRI": {
                     "class": "DS 3BTech",
-                    "room": "X4",
+                    "room": "X2",
                     "occupied": true
                 },
                 "SAT": {
@@ -6017,17 +5871,17 @@ const timetableData = {
                 },
                 "WED": {
                     "class": "DS 3BTech",
-                    "room": "X4",
+                    "room": "X2",
                     "occupied": true
                 },
                 "THU": {
-                    "class": "DS 3BTech",
-                    "room": "X4",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "FRI": {
                     "class": "DS 3BTech",
-                    "room": "X4",
+                    "room": "X2",
                     "occupied": true
                 },
                 "SAT": {
@@ -6172,9 +6026,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "DS 3BTech",
+                    "room": "X2",
+                    "occupied": true
                 },
                 "FRI": {
                     "class": "",
@@ -6206,9 +6060,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "DS 3BTech",
+                    "room": "X2",
+                    "occupied": true
                 },
                 "FRI": {
                     "class": "",
@@ -6355,14 +6209,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "",
+                    "class": "1ST B.TECH X1 PLM JAVA",
                     "room": "",
-                    "occupied": false
+                    "occupied": true
                 },
                 "FRI": {
-                    "class": "",
+                    "class": "1ST B.TECH X1 PLM JAVA",
                     "room": "",
-                    "occupied": false
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -6389,14 +6243,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "",
+                    "class": "1ST B.TECH X1 PLM JAVA",
                     "room": "",
-                    "occupied": false
+                    "occupied": true
                 },
                 "FRI": {
-                    "class": "",
+                    "class": "1ST B.TECH X1 PLM JAVA",
                     "room": "",
-                    "occupied": false
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -6423,9 +6277,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "WED": {
-                    "class": "",
+                    "class": "1ST B.TECH X1 PLM JAVA",
                     "room": "",
-                    "occupied": false
+                    "occupied": true
                 },
                 "THU": {
                     "class": "ADA 5 B.Tech - X (A",
@@ -6457,9 +6311,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "WED": {
-                    "class": "",
+                    "class": "1ST B.TECH X1 PLM JAVA",
                     "room": "",
-                    "occupied": false
+                    "occupied": true
                 },
                 "THU": {
                     "class": "ADA 5 B.Tech - X (A",
@@ -6796,14 +6650,14 @@ const timetableData = {
                     "occupied": true
                 },
                 "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "X1-X22 RWMD",
+                    "room": "GF-24",
+                    "occupied": true
                 },
                 "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "X2-X22 RWMD",
+                    "room": "FF-29",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -6830,14 +6684,14 @@ const timetableData = {
                     "occupied": true
                 },
                 "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "X1-X22 RWMD",
+                    "room": "GF-24",
+                    "occupied": true
                 },
                 "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "X2-X22 RWMD",
+                    "room": "FF-29",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -6869,9 +6723,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "X2-X22 RWMD",
+                    "room": "FF-28",
+                    "occupied": true
                 },
                 "FRI": {
                     "class": "",
@@ -6903,9 +6757,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "X2-X22 RWMD",
+                    "room": "FF-28",
+                    "occupied": true
                 },
                 "FRI": {
                     "class": "",
@@ -8802,742 +8656,6 @@ const timetableData = {
             }
         ]
     },
-    "DPZ": {
-        "name": "Prof. DPZ",
-        "initials": "DPZ",
-        "department": "Computer Engineering",
-        "semesterInfo": "Semester :  1st & 3rd B.Tech.",
-        "schedule": [
-            {
-                "time": "7:30 to 8:30",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "8:30to 9:30",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "01:00 to 01:45",
-                "isRecess": true,
-                "label": "RECESS - 1 (30 Minutes) Morning"
-            },
-            {
-                "time": "10:00 to 11:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "11:00to 12:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "D2D-X2 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "D2D-X1 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "D2D-X2 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "D2D-X1 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "D2D-X2 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "12:00 to 01:00 PM",
-                "isRecess": false,
-                "MON": {
-                    "class": "D2D-X2 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "D2D-X1 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "D2D-X2 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "D2D-X1 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "D2D-X2 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "12:00 to 12:15",
-                "isRecess": true,
-                "label": "RECESS - 2 (15 Minutes)  Morning"
-            },
-            {
-                "time": "12:15to 01:15",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "01:00 to 01:45",
-                "isRecess": true,
-                "label": "RECESS - 1 (45 Minutes)  Afternoon"
-            },
-            {
-                "time": "01:45to 02:45",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "02:45 03:45",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "03:45 to 04:00",
-                "isRecess": true,
-                "label": "RECESS - 2 (15 Minutes)  Afternoon"
-            },
-            {
-                "time": "04:00 to 05:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "D2D-X1 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "05:00 to 06:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "D2D-X1 DBMS",
-                    "room": "DPZ",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            }
-        ]
-    },
-    "HHB": {
-        "name": "Prof. HHB",
-        "initials": "HHB",
-        "department": "Information Technology",
-        "semesterInfo": "Semester :",
-        "schedule": [
-            {
-                "time": "7:30 to 8:30",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "8:30to 9:30",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "01:00 to 01:45",
-                "isRecess": true,
-                "label": "RECESS - 1 (30 Minutes) Morning"
-            },
-            {
-                "time": "10:00 to 11:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "SE",
-                    "room": "HHB",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "SE",
-                    "room": "HHB",
-                    "occupied": true
-                }
-            },
-            {
-                "time": "11:00to 12:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "SE",
-                    "room": "HHB",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "SE",
-                    "room": "HHB",
-                    "occupied": true
-                }
-            },
-            {
-                "time": "12:00 to 01:00 PM",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "12:00 to 12:15",
-                "isRecess": true,
-                "label": "RECESS - 2 (15 Minutes)  Morning"
-            },
-            {
-                "time": "12:15to 01:15",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "01:00 to 01:45",
-                "isRecess": true,
-                "label": "RECESS - 1 (45 Minutes)  Afternoon"
-            },
-            {
-                "time": "01:45to 02:45",
-                "isRecess": false,
-                "MON": {
-                    "class": "COA",
-                    "room": "HHB",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "CC",
-                    "room": "HHB",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "X1-X22 RWMD",
-                    "room": "GF-24",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "X2-X22 RWMD",
-                    "room": "FF-29",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "02:45 03:45",
-                "isRecess": false,
-                "MON": {
-                    "class": "COA",
-                    "room": "HHB",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "CC",
-                    "room": "HHB",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "X1-X22 RWMD",
-                    "room": "GF-24",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "X2-X22 RWMD",
-                    "room": "FF-29",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "03:45 to 04:00",
-                "isRecess": true,
-                "label": "RECESS - 2 (15 Minutes)  Afternoon"
-            },
-            {
-                "time": "04:00 to 05:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "CC",
-                    "room": "HHB",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "Y1-Y22 RWMD",
-                    "room": "GF-24",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "X2-X22 RWMD",
-                    "room": "FF-28",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "COA",
-                    "room": "HHB",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "05:00 to 06:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "Y1-Y22 RWMD",
-                    "room": "GF-24",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "X2-X22 RWMD",
-                    "room": "FF-28",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "COA",
-                    "room": "HHB",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            }
-        ]
-    },
     "DDC": {
         "name": "Prof. DDC",
         "initials": "DDC",
@@ -9906,228 +9024,6 @@ const timetableData = {
             }
         ]
     },
-    "APV": {
-        "name": "Prof. APV",
-        "initials": "APV",
-        "department": "Information Technology",
-        "semesterInfo": "Semester :  5th              Sub :  AI",
-        "schedule": [
-            {
-                "time": "11:00 to 12:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "B.Tech - 5 - Y2",
-                    "room": "GF-21",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "B.Tech - 5 - Z",
-                    "room": "TF-14",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "B.Tech - 5 - Y2",
-                    "room": "FF-29",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "12:00 to 01:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "B.Tech - 5 - Z",
-                    "room": "TF-14",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "B.Tech - 5 - Z",
-                    "room": "TF-14",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "B.Tech - 5 - Y2",
-                    "room": "GF-26",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "B.Tech - 5 - Y2",
-                    "room": "FF-29",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "01:00to 01:45",
-                "isRecess": true,
-                "label": "Recess - 45 min"
-            },
-            {
-                "time": "01:45 to 02:45",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "B.Tech - 5 - Y2",
-                    "room": "GF-24",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "B.Tech - 5 - Y1",
-                    "room": "GF-20A",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "B.Tech - 5 - Y3",
-                    "room": "FF-22",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "B.Tech - 5 - Z",
-                    "room": "TF-14",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "02:45 to 03:45",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "B.Tech - 5 - Y1",
-                    "room": "GF-20A",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "B.Tech - 5 - Y3",
-                    "room": "FF-22",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "B.Tech - 5 - Y2",
-                    "room": "GF-21",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "3:45 to 04.00",
-                "isRecess": true,
-                "label": "Recess - 15 min"
-            },
-            {
-                "time": "04:00 to 05:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "B.Tech - 5 - Y2 - Y11",
-                    "room": "FF-24",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "B.Tech - 5 - Y2 - Y22",
-                    "room": "FF-24",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "B.Tech - 5 - Z2",
-                    "room": "FF-24",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "05:00 to 06:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "B.Tech - 5 - Y2 - Y11",
-                    "room": "FF-24",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "B.Tech - 5 - Y2 - Y22",
-                    "room": "FF-24",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "B.Tech - 5 - Z2",
-                    "room": "FF-24",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            }
-        ]
-    },
     "PPR": {
         "name": "Prof. PPR",
         "initials": "PPR",
@@ -10246,12 +9142,12 @@ const timetableData = {
                 "isRecess": false,
                 "MON": {
                     "class": "PYT 3BTech",
-                    "room": "X3",
+                    "room": "Y2",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "PYT 3BTech",
-                    "room": "X3",
+                    "class": "DS 3 B. TECH CLASS-X",
+                    "room": "GF-26",
                     "occupied": true
                 },
                 "WED": {
@@ -10260,14 +9156,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "PYT 3BTech",
-                    "room": "X5",
-                    "occupied": true
-                },
-                "FRI": {
                     "class": "",
                     "room": "",
                     "occupied": false
+                },
+                "FRI": {
+                    "class": "DS 3 B. TECH CLASS-X",
+                    "room": "TF-20",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -10280,13 +9176,13 @@ const timetableData = {
                 "isRecess": false,
                 "MON": {
                     "class": "PYT 3BTech",
-                    "room": "X3",
+                    "room": "Y2",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "PYT 3BTech",
-                    "room": "X3",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
                     "class": "",
@@ -10294,8 +9190,8 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "PYT 3BTech",
-                    "room": "X5",
+                    "class": "DS 3 B. TECH CLASS-X",
+                    "room": "GF-26",
                     "occupied": true
                 },
                 "FRI": {
@@ -10362,9 +9258,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "PYT 3BTech",
+                    "room": "Y2",
+                    "occupied": true
                 },
                 "WED": {
                     "class": "5th B.tech (A",
@@ -10373,7 +9269,7 @@ const timetableData = {
                 },
                 "THU": {
                     "class": "PYT 3BTech",
-                    "room": "X3",
+                    "room": "Y2",
                     "occupied": true
                 },
                 "FRI": {
@@ -10382,9 +9278,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "5th B.tech (A",
+                    "room": "TF-23",
+                    "occupied": true
                 }
             },
             {
@@ -10396,9 +9292,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "PYT 3BTech",
+                    "room": "Y2",
+                    "occupied": true
                 },
                 "WED": {
                     "class": "5th B.tech (A",
@@ -10407,7 +9303,7 @@ const timetableData = {
                 },
                 "THU": {
                     "class": "PYT 3BTech",
-                    "room": "X3",
+                    "room": "Y2",
                     "occupied": true
                 },
                 "FRI": {
@@ -10416,9 +9312,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "5th B.tech (A",
+                    "room": "TF-23",
+                    "occupied": true
                 }
             },
             {
@@ -10430,18 +9326,18 @@ const timetableData = {
                 "time": "04:00 to 05:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "PYT 3BTech",
-                    "room": "X5",
+                    "class": "DS 3 B.TECH-X1",
+                    "room": "GF-20A",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "5th B.tech (A",
-                    "room": "TF-23",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
-                    "class": "PYT 3BTech",
-                    "room": "X5",
+                    "class": "DS 3 B.TECH -X3",
+                    "room": "GF-20A",
                     "occupied": true
                 },
                 "THU": {
@@ -10450,9 +9346,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "DS 3 B. TECH CLASS-X",
+                    "room": "GF-26",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -10464,18 +9360,18 @@ const timetableData = {
                 "time": "05:00 to 06:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "PYT 3BTech",
-                    "room": "X5",
+                    "class": "DS 3 B.TECH-X1",
+                    "room": "GF-20A",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "5th B.tech (A",
-                    "room": "TF-23",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
-                    "class": "PYT 3BTech",
-                    "room": "X5",
+                    "class": "DS 3 B.TECH -X3",
+                    "room": "GF-20A",
                     "occupied": true
                 },
                 "THU": {
@@ -10589,9 +9485,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "3rd Diploma Class-A A11-IDEA-I",
+                    "room": "FF-29",
+                    "occupied": true
                 },
                 "THU": {
                     "class": "C22-MAD",
@@ -10623,8 +9519,8 @@ const timetableData = {
                     "occupied": false
                 },
                 "WED": {
-                    "class": "CD",
-                    "room": "BDM",
+                    "class": "3rd Diploma Class-A A11-IDEA-I",
+                    "room": "FF-29",
                     "occupied": true
                 },
                 "THU": {
@@ -10647,9 +9543,9 @@ const timetableData = {
                 "time": "12:00 to 01:00 PM",
                 "isRecess": false,
                 "MON": {
-                    "class": "CD",
-                    "room": "BDM",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "TUE": {
                     "class": "CD",
@@ -10657,9 +9553,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "CD",
+                    "room": "BDM",
+                    "occupied": true
                 },
                 "THU": {
                     "class": "",
@@ -10735,9 +9631,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "WED": {
-                    "class": "B-CD",
-                    "room": "TF-32",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
                     "class": "",
@@ -10764,14 +9660,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "CD",
-                    "room": "BDM",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
-                    "class": "B-CD",
-                    "room": "TF-32",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
                     "class": "",
@@ -10837,14 +9733,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "CD",
-                    "room": "BDM",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
-                    "class": "CD",
-                    "room": "BDM",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
                     "class": "",
@@ -12061,7 +10957,7 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "AMAD 5 B.Tech - Z",
+                    "class": "AMAD 5 B.Tech - X",
                     "room": "XF-02",
                     "occupied": true
                 },
@@ -12095,7 +10991,7 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "AMAD 5 B.Tech - Z",
+                    "class": "AMAD 5 B.Tech - X",
                     "room": "XF-02",
                     "occupied": true
                 },
@@ -12553,6 +11449,374 @@ const timetableData = {
             }
         ]
     },
+    "DPZ": {
+        "name": "Prof. DPZ",
+        "initials": "DPZ",
+        "department": "Computer Engineering",
+        "semesterInfo": "Semester :  1st & 3rd B.Tech.",
+        "schedule": [
+            {
+                "time": "7:30 to 8:30",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "8:30to 9:30",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "01:00 to 01:45",
+                "isRecess": true,
+                "label": "RECESS - 1 (30 Minutes) Morning"
+            },
+            {
+                "time": "10:00 to 11:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "11:00to 12:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "D2D-Y1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "D2D-X1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "D2D-X1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "D2D-Y1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "12:00 to 01:00 PM",
+                "isRecess": false,
+                "MON": {
+                    "class": "D2D-Y1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "D2D-X1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "D2D-X1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "D2D-Y1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "12:00 to 12:15",
+                "isRecess": true,
+                "label": "RECESS - 2 (15 Minutes)  Morning"
+            },
+            {
+                "time": "12:15to 01:15",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "01:00 to 01:45",
+                "isRecess": true,
+                "label": "RECESS - 1 (45 Minutes)  Afternoon"
+            },
+            {
+                "time": "01:45to 02:45",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "1_X2-PLM WD",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "D2D-Y1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "1_X1-PLM WD",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "02:45 03:45",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "1_X2-PLM WD",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "D2D-Y1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "1_X1-PLM WD",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "03:45 to 04:00",
+                "isRecess": true,
+                "label": "RECESS - 2 (15 Minutes)  Afternoon"
+            },
+            {
+                "time": "04:00 to 05:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "1_X2-PLM WD",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "1_X1-PLM WD",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "D2D-X1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "05:00 to 06:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "1_X2-PLM WD",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "1_X1-PLM WD",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "D2D-X1 DBMS",
+                    "room": "DPZ",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            }
+        ]
+    },
     "RPJ": {
         "name": "Prof. RPJ",
         "initials": "RPJ",
@@ -12676,7 +11940,7 @@ const timetableData = {
                 },
                 "TUE": {
                     "class": "CS 3BTech",
-                    "room": "X2",
+                    "room": "Y1",
                     "occupied": true
                 },
                 "WED": {
@@ -12710,7 +11974,7 @@ const timetableData = {
                 },
                 "TUE": {
                     "class": "CS 3BTech",
-                    "room": "X2",
+                    "room": "Y1",
                     "occupied": true
                 },
                 "WED": {
@@ -12856,7 +12120,7 @@ const timetableData = {
                 "isRecess": false,
                 "MON": {
                     "class": "CS 3BTech",
-                    "room": "X2",
+                    "room": "Y1",
                     "occupied": true
                 },
                 "TUE": {
@@ -12890,7 +12154,7 @@ const timetableData = {
                 "isRecess": false,
                 "MON": {
                     "class": "CS 3BTech",
-                    "room": "X2",
+                    "room": "Y1",
                     "occupied": true
                 },
                 "TUE": {
@@ -12907,374 +12171,6 @@ const timetableData = {
                     "class": "X11-GD 3rd BET CE\/CSE",
                     "room": "FF-22",
                     "occupied": true
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            }
-        ]
-    },
-    "PKG": {
-        "name": "Prof. PKG",
-        "initials": "PKG",
-        "department": "Information Technology",
-        "semesterInfo": "Semester :",
-        "schedule": [
-            {
-                "time": "7:30 to 8:30",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "8:30to 9:30",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "01:00 to 01:45",
-                "isRecess": true,
-                "label": "RECESS - 1 (30 Minutes) Morning"
-            },
-            {
-                "time": "10:00 to 11:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "11:00to 12:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "SE 5 B.TECH -X2-X11",
-                    "room": "FF-28",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "DS 3 B. TECH CLASS-X",
-                    "room": "GF-26",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "DS 3 B. TECH CLASS-X",
-                    "room": "TF-20",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "12:00 to 01:00 PM",
-                "isRecess": false,
-                "MON": {
-                    "class": "SE 5 B.TECH -X2-X11",
-                    "room": "FF-28",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "DS 3 B. TECH CLASS-X",
-                    "room": "GF-26",
-                    "occupied": true
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "12:00 to 12:15",
-                "isRecess": true,
-                "label": "RECESS - 2 (15 Minutes)  Morning"
-            },
-            {
-                "time": "12:15to 01:15",
-                "isRecess": false,
-                "MON": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "WED": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "01:00 to 01:45",
-                "isRecess": true,
-                "label": "RECESS - 1 (45 Minutes)  Afternoon"
-            },
-            {
-                "time": "01:45to 02:45",
-                "isRecess": false,
-                "MON": {
-                    "class": "SE 5 B.TECH-X2-X22",
-                    "room": "FF-24",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "SE 5 B.TECH CLASS-Z-Z11",
-                    "room": "GF-20B",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "SE 5 B. TECH CLASS-Z-Z22",
-                    "room": "FF-22",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "SE 5 B. TECH CLASS-X1-X11",
-                    "room": "FF-24",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "02:45 03:45",
-                "isRecess": false,
-                "MON": {
-                    "class": "SE 5 B.TECH-X2-X22",
-                    "room": "FF-24",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "SE 5 B.TECH CLASS-Z-Z11",
-                    "room": "GF-20B",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "SE 5 B. TECH CLASS-Z-Z22",
-                    "room": "FF-22",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "SE 5 B. TECH CLASS-X1-X11",
-                    "room": "FF-24",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "03:45 to 04:00",
-                "isRecess": true,
-                "label": "RECESS - 2 (15 Minutes)  Afternoon"
-            },
-            {
-                "time": "04:00 to 05:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "DS 3 B.TECH-X1",
-                    "room": "GF-20A",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "DS 3 B.TECH -X2",
-                    "room": "GF-20A",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "DS 3 B.TECH -X3",
-                    "room": "GF-20A",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                },
-                "FRI": {
-                    "class": "DS 3 B. TECH CLASS-X",
-                    "room": "GF-26",
-                    "occupied": true
-                },
-                "SAT": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
-                }
-            },
-            {
-                "time": "05:00 to 06:00",
-                "isRecess": false,
-                "MON": {
-                    "class": "DS 3 B.TECH-X1",
-                    "room": "GF-20A",
-                    "occupied": true
-                },
-                "TUE": {
-                    "class": "DS 3 B.TECH -X2",
-                    "room": "GF-20A",
-                    "occupied": true
-                },
-                "WED": {
-                    "class": "DS 3 B.TECH -X3",
-                    "room": "GF-20A",
-                    "occupied": true
-                },
-                "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
                 },
                 "FRI": {
                     "class": "",
@@ -13353,9 +12249,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "IE Civil",
+                    "room": "GF-14",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -14020,9 +12916,9 @@ const timetableData = {
             }
         ]
     },
-    "FDR": {
-        "name": "Prof. FDR",
-        "initials": "FDR",
+    "RDF": {
+        "name": "Prof. RDF",
+        "initials": "RDF",
         "department": "Information Technology",
         "semesterInfo": "Semester :",
         "schedule": [
@@ -14137,14 +13033,14 @@ const timetableData = {
                 "time": "11:00to 12:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "X5-DS D2D",
-                    "room": "RFD",
-                    "occupied": true
-                },
-                "TUE": {
                     "class": "",
                     "room": "",
                     "occupied": false
+                },
+                "TUE": {
+                    "class": "Y2-DS D2D",
+                    "room": "RDF",
+                    "occupied": true
                 },
                 "WED": {
                     "class": "",
@@ -14152,14 +13048,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "X3-DS D2D",
-                    "room": "RFD",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "FRI": {
-                    "class": "X3-DS D2D",
-                    "room": "RFD",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "SAT": {
                     "class": "",
@@ -14171,14 +13067,14 @@ const timetableData = {
                 "time": "12:00 to 01:00 PM",
                 "isRecess": false,
                 "MON": {
-                    "class": "X5-DS D2D",
-                    "room": "RFD",
-                    "occupied": true
-                },
-                "TUE": {
                     "class": "",
                     "room": "",
                     "occupied": false
+                },
+                "TUE": {
+                    "class": "Y2-DS D2D",
+                    "room": "RDF",
+                    "occupied": true
                 },
                 "WED": {
                     "class": "",
@@ -14186,14 +13082,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "X3-DS D2D",
-                    "room": "RFD",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "FRI": {
-                    "class": "X3-DS D2D",
-                    "room": "RFD",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "SAT": {
                     "class": "",
@@ -14254,24 +13150,24 @@ const timetableData = {
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "X3-DS D2D",
-                    "room": "RFD",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
-                    "class": "X5-DS D2D",
-                    "room": "RFD",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "Y1-DS D2D",
+                    "room": "RDF",
+                    "occupied": true
                 },
                 "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "Y2-DS D2D",
+                    "room": "RFD",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -14288,24 +13184,24 @@ const timetableData = {
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "X3-DS D2D",
-                    "room": "RFD",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
-                    "class": "X5-DS D2D",
-                    "room": "RFD",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "Y1-DS D2D",
+                    "room": "RDF",
+                    "occupied": true
                 },
                 "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "Y2-DS D2D",
+                    "room": "RFD",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -14327,23 +13223,23 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "X2-DS D2D",
-                    "room": "RFD",
+                    "class": "DS 3 B.TECH -X2",
+                    "room": "GF-20A",
                     "occupied": true
                 },
                 "WED": {
-                    "class": "X2-DS D2D",
-                    "room": "RFD",
+                    "class": "Y1-DS D2D",
+                    "room": "RDF",
                     "occupied": true
                 },
                 "THU": {
-                    "class": "X2-DS D2D",
+                    "class": "Y2-DS D2D",
                     "room": "RFD",
                     "occupied": true
                 },
                 "FRI": {
-                    "class": "X5-DS D2D",
-                    "room": "RFD",
+                    "class": "Y1-DS D2D",
+                    "room": "RDF",
                     "occupied": true
                 },
                 "SAT": {
@@ -14361,23 +13257,23 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "X2-DS D2D",
-                    "room": "RFD",
+                    "class": "DS 3 B.TECH -X2",
+                    "room": "GF-20A",
                     "occupied": true
                 },
                 "WED": {
-                    "class": "X2-DS D2D",
-                    "room": "RFD",
+                    "class": "Y1-DS D2D",
+                    "room": "RDF",
                     "occupied": true
                 },
                 "THU": {
-                    "class": "X2-DS D2D",
+                    "class": "Y2-DS D2D",
                     "room": "RFD",
                     "occupied": true
                 },
                 "FRI": {
-                    "class": "X5-DS D2D",
-                    "room": "RFD",
+                    "class": "Y1-DS D2D",
+                    "room": "RDF",
                     "occupied": true
                 },
                 "SAT": {
@@ -14398,9 +13294,9 @@ const timetableData = {
                 "time": "7:30 to 8:30",
                 "isRecess": false,
                 "MON": {
-                    "class": "RECEIVED NO TIMETABLE YET FOR ANY SUBJECTS",
+                    "class": "",
                     "room": "",
-                    "occupied": true
+                    "occupied": false
                 },
                 "TUE": {
                     "class": "",
@@ -14505,29 +13401,29 @@ const timetableData = {
                 "time": "11:00to 12:00",
                 "isRecess": false,
                 "MON": {
+                    "class": "1st B.A. PLM",
+                    "room": "",
+                    "occupied": true
+                },
+                "TUE": {
                     "class": "",
                     "room": "",
                     "occupied": false
                 },
-                "TUE": {
-                    "class": "X4-CS",
-                    "room": "IAP",
-                    "occupied": true
-                },
                 "WED": {
-                    "class": "X3-CS",
+                    "class": "Y2-CS",
                     "room": "IAP",
                     "occupied": true
                 },
                 "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "ID&PS",
+                    "room": "Honours",
+                    "occupied": true
                 },
                 "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "ID&PS",
+                    "room": "Lab",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -14539,29 +13435,29 @@ const timetableData = {
                 "time": "12:00 to 01:00 PM",
                 "isRecess": false,
                 "MON": {
+                    "class": "1st B.A. PLM",
+                    "room": "",
+                    "occupied": true
+                },
+                "TUE": {
                     "class": "",
                     "room": "",
                     "occupied": false
                 },
-                "TUE": {
-                    "class": "X4-CS",
-                    "room": "IAP",
-                    "occupied": true
-                },
                 "WED": {
-                    "class": "X3-CS",
+                    "class": "Y2-CS",
                     "room": "IAP",
                     "occupied": true
                 },
                 "THU": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "ID&PS",
+                    "room": "Honours",
+                    "occupied": true
                 },
                 "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "ID&PS",
+                    "room": "Lab",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -14617,14 +13513,14 @@ const timetableData = {
                 "time": "01:45to 02:45",
                 "isRecess": false,
                 "MON": {
-                    "class": "1st B.A. PLM 7th B.Tech 3rd B.Tech",
+                    "class": "",
                     "room": "",
-                    "occupied": true
+                    "occupied": false
                 },
                 "TUE": {
-                    "class": "1st B.A. PLM 7th B.Tech 3rd B.Tech",
+                    "class": "",
                     "room": "",
-                    "occupied": true
+                    "occupied": false
                 },
                 "WED": {
                     "class": "",
@@ -14632,14 +13528,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "",
+                    "class": "1st B.A. PLM",
                     "room": "",
-                    "occupied": false
+                    "occupied": true
                 },
                 "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "ID&PS",
+                    "room": "Honours",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -14651,14 +13547,14 @@ const timetableData = {
                 "time": "02:45 03:45",
                 "isRecess": false,
                 "MON": {
-                    "class": "1st B.A. PLM 7th B.Tech 3rd B.Tech",
+                    "class": "",
                     "room": "",
-                    "occupied": true
+                    "occupied": false
                 },
                 "TUE": {
-                    "class": "1st B.A. PLM 7th B.Tech 3rd B.Tech",
+                    "class": "",
                     "room": "",
-                    "occupied": true
+                    "occupied": false
                 },
                 "WED": {
                     "class": "",
@@ -14666,14 +13562,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "",
+                    "class": "1st B.A. PLM",
                     "room": "",
-                    "occupied": false
+                    "occupied": true
                 },
                 "FRI": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "ID&PS",
+                    "room": "Honours",
+                    "occupied": true
                 },
                 "SAT": {
                     "class": "",
@@ -14690,17 +13586,17 @@ const timetableData = {
                 "time": "04:00 to 05:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "1st B.A. PLM 7th B.Tech 3rd B.Tech",
-                    "room": "",
+                    "class": "X2-CS",
+                    "room": "IAP",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "X3-CS",
+                    "class": "Y2-CS",
                     "room": "IAP",
                     "occupied": true
                 },
                 "WED": {
-                    "class": "X4-CS",
+                    "class": "X2-CS",
                     "room": "IAP",
                     "occupied": true
                 },
@@ -14710,9 +13606,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "FRI": {
-                    "class": "1st B.A. PLM 7th B.Tech 3rd B.Tech",
+                    "class": "",
                     "room": "",
-                    "occupied": true
+                    "occupied": false
                 },
                 "SAT": {
                     "class": "",
@@ -14724,17 +13620,17 @@ const timetableData = {
                 "time": "05:00 to 06:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "1st B.A. PLM 7th B.Tech 3rd B.Tech",
-                    "room": "",
+                    "class": "X2-CS",
+                    "room": "IAP",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "X3-CS",
+                    "class": "Y2-CS",
                     "room": "IAP",
                     "occupied": true
                 },
                 "WED": {
-                    "class": "X4-CS",
+                    "class": "X2-CS",
                     "room": "IAP",
                     "occupied": true
                 },
@@ -14744,9 +13640,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "FRI": {
-                    "class": "1st B.A. PLM 7th B.Tech 3rd B.Tech",
+                    "class": "",
                     "room": "",
-                    "occupied": true
+                    "occupied": false
                 },
                 "SAT": {
                     "class": "",
@@ -14873,7 +13769,7 @@ const timetableData = {
                 "time": "11:00to 12:00",
                 "isRecess": false,
                 "MON": {
-                    "class": "D2D-X4 PYT",
+                    "class": "D2D-X2 PYT",
                     "room": "DBV",
                     "occupied": true
                 },
@@ -14888,7 +13784,7 @@ const timetableData = {
                     "occupied": true
                 },
                 "THU": {
-                    "class": "D2D-X2 PYT",
+                    "class": "D2D-Y1 PYT",
                     "room": "DBV",
                     "occupied": true
                 },
@@ -14907,7 +13803,7 @@ const timetableData = {
                 "time": "12:00 to 01:00 PM",
                 "isRecess": false,
                 "MON": {
-                    "class": "D2D-X4 PYT",
+                    "class": "D2D-X2 PYT",
                     "room": "DBV",
                     "occupied": true
                 },
@@ -14922,7 +13818,7 @@ const timetableData = {
                     "occupied": true
                 },
                 "THU": {
-                    "class": "D2D-X2 PYT",
+                    "class": "D2D-Y1 PYT",
                     "room": "DBV",
                     "occupied": true
                 },
@@ -14985,17 +13881,17 @@ const timetableData = {
                 "time": "01:45to 02:45",
                 "isRecess": false,
                 "MON": {
-                    "class": "D2D-X2 PYT",
+                    "class": "D2D-Y1 PYT",
                     "room": "DBV",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "D2D-X4 PYT",
+                    "class": "D2D-X2 PYT",
                     "room": "DBV",
                     "occupied": true
                 },
                 "WED": {
-                    "class": "D2D-X4 PYT",
+                    "class": "D2D-X2 PYT",
                     "room": "DBV",
                     "occupied": true
                 },
@@ -15019,17 +13915,17 @@ const timetableData = {
                 "time": "02:45 03:45",
                 "isRecess": false,
                 "MON": {
-                    "class": "D2D-X2 PYT",
+                    "class": "D2D-Y1 PYT",
                     "room": "DBV",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "D2D-X4 PYT",
+                    "class": "D2D-X2 PYT",
                     "room": "DBV",
                     "occupied": true
                 },
                 "WED": {
-                    "class": "D2D-X4 PYT",
+                    "class": "D2D-X2 PYT",
                     "room": "DBV",
                     "occupied": true
                 },
@@ -15063,9 +13959,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "D2D-Y1 PYT",
+                    "room": "DBV",
+                    "occupied": true
                 },
                 "WED": {
                     "class": "",
@@ -15078,9 +13974,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "FRI": {
-                    "class": "D2D-X2 PYT",
-                    "room": "DBV",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "SAT": {
                     "class": "",
@@ -15097,9 +13993,9 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "",
-                    "room": "",
-                    "occupied": false
+                    "class": "D2D-Y1 PYT",
+                    "room": "DBV",
+                    "occupied": true
                 },
                 "WED": {
                     "class": "",
@@ -15112,9 +14008,9 @@ const timetableData = {
                     "occupied": true
                 },
                 "FRI": {
-                    "class": "D2D-X2 PYT",
-                    "room": "DBV",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "SAT": {
                     "class": "",
@@ -15246,14 +14142,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
+                    "class": "D2D-X2 DBMS",
+                    "room": "YGL",
+                    "occupied": true
+                },
+                "WED": {
                     "class": "",
                     "room": "",
                     "occupied": false
-                },
-                "WED": {
-                    "class": "D2D-X5 DBMS",
-                    "room": "YGL",
-                    "occupied": true
                 },
                 "THU": {
                     "class": "",
@@ -15280,14 +14176,14 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
+                    "class": "D2D-X2 DBMS",
+                    "room": "YGL",
+                    "occupied": true
+                },
+                "WED": {
                     "class": "",
                     "room": "",
                     "occupied": false
-                },
-                "WED": {
-                    "class": "D2D-X5 DBMS",
-                    "room": "YGL",
-                    "occupied": true
                 },
                 "THU": {
                     "class": "",
@@ -15353,27 +14249,27 @@ const timetableData = {
                 "time": "01:45to 02:45",
                 "isRecess": false,
                 "MON": {
-                    "class": "D2D-X3 DBMS",
+                    "class": "D2D-Y2 DBMS",
                     "room": "YGL",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "D2D-X5 DBMS",
-                    "room": "YGL",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
-                    "class": "D2D-X3 DBMS",
+                    "class": "D2D-Y2 DBMS",
                     "room": "YGL",
                     "occupied": true
                 },
                 "THU": {
-                    "class": "D2D-X5 DBMS",
-                    "room": "YGL",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "FRI": {
-                    "class": "D2D-X4 DBMS",
+                    "class": "D2D-X2 DBMS",
                     "room": "YGL",
                     "occupied": true
                 },
@@ -15387,27 +14283,27 @@ const timetableData = {
                 "time": "02:45 03:45",
                 "isRecess": false,
                 "MON": {
-                    "class": "D2D-X3 DBMS",
+                    "class": "D2D-Y2 DBMS",
                     "room": "YGL",
                     "occupied": true
                 },
                 "TUE": {
-                    "class": "D2D-X5 DBMS",
-                    "room": "YGL",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "WED": {
-                    "class": "D2D-X3 DBMS",
+                    "class": "D2D-Y2 DBMS",
                     "room": "YGL",
                     "occupied": true
                 },
                 "THU": {
-                    "class": "D2D-X5 DBMS",
-                    "room": "YGL",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "FRI": {
-                    "class": "D2D-X4 DBMS",
+                    "class": "D2D-X2 DBMS",
                     "room": "YGL",
                     "occupied": true
                 },
@@ -15431,7 +14327,7 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "D2D-X4 DBMS",
+                    "class": "D2D-X2 DBMS",
                     "room": "YGL",
                     "occupied": true
                 },
@@ -15441,12 +14337,12 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "D2D-X4 DBMS",
-                    "room": "YGL",
-                    "occupied": true
+                    "class": "",
+                    "room": "",
+                    "occupied": false
                 },
                 "FRI": {
-                    "class": "D2D-X3 DBMS",
+                    "class": "D2D-Y2 DBMS",
                     "room": "YGL",
                     "occupied": true
                 },
@@ -15465,7 +14361,7 @@ const timetableData = {
                     "occupied": false
                 },
                 "TUE": {
-                    "class": "D2D-X4 DBMS",
+                    "class": "D2D-X2 DBMS",
                     "room": "YGL",
                     "occupied": true
                 },
@@ -15475,13 +14371,1485 @@ const timetableData = {
                     "occupied": false
                 },
                 "THU": {
-                    "class": "D2D-X4 DBMS",
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "D2D-Y2 DBMS",
                     "room": "YGL",
                     "occupied": true
                 },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            }
+        ]
+    },
+    "APS": {
+        "name": "Prof. APS",
+        "initials": "APS",
+        "department": "Information Technology",
+        "semesterInfo": "Semester :",
+        "schedule": [
+            {
+                "time": "7:30 to 8:30",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
                 "FRI": {
-                    "class": "D2D-X3 DBMS",
-                    "room": "YGL",
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "8:30to 9:30",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "01:00 to 01:45",
+                "isRecess": true,
+                "label": "RECESS - 1 (30 Minutes) Morning"
+            },
+            {
+                "time": "10:00 to 11:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "11:00to 12:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "12:00 to 01:00 PM",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "12:00 to 12:15",
+                "isRecess": true,
+                "label": "RECESS - 2 (15 Minutes)  Morning"
+            },
+            {
+                "time": "12:15to 01:15",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "01:00 to 01:45",
+                "isRecess": true,
+                "label": "RECESS - 1 (45 Minutes)  Afternoon"
+            },
+            {
+                "time": "01:45to 02:45",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "D2D-X1 CS",
+                    "room": "APS",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "BCT",
+                    "room": "Honours",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "02:45 03:45",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "D2D-X1 CS",
+                    "room": "APS",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "BCT",
+                    "room": "Honours",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "03:45 to 04:00",
+                "isRecess": true,
+                "label": "RECESS - 2 (15 Minutes)  Afternoon"
+            },
+            {
+                "time": "04:00 to 05:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "D2D-X1 CS",
+                    "room": "APS",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "B.Tech - 5 - Y2 - Y11",
+                    "room": "FF-24",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "B.Tech - 5 - Y2 - Y22",
+                    "room": "FF-24",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "BCT",
+                    "room": "Honours",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "BCT",
+                    "room": "Lab",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "05:00 to 06:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "D2D-X1 CS",
+                    "room": "APS",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "B.Tech - 5 - Y2 - Y11",
+                    "room": "FF-24",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "B.Tech - 5 - Y2 - Y22",
+                    "room": "FF-24",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "BCT",
+                    "room": "Honours",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "BCT",
+                    "room": "Lab",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            }
+        ]
+    },
+    "HHB": {
+        "name": "Prof. HHB",
+        "initials": "HHB",
+        "department": "Information Technology",
+        "semesterInfo": "Semester :",
+        "schedule": [
+            {
+                "time": "7:30 to 8:30",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "8:30to 9:30",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "01:00 to 01:45",
+                "isRecess": true,
+                "label": "RECESS - 1 (30 Minutes) Morning"
+            },
+            {
+                "time": "10:00 to 11:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "11:00to 12:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "12:00 to 01:00 PM",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "12:00 to 12:15",
+                "isRecess": true,
+                "label": "RECESS - 2 (15 Minutes)  Morning"
+            },
+            {
+                "time": "12:15to 01:15",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "01:00 to 01:45",
+                "isRecess": true,
+                "label": "RECESS - 1 (45 Minutes)  Afternoon"
+            },
+            {
+                "time": "01:45to 02:45",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "CC",
+                    "room": "HHB",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "02:45 03:45",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "CC",
+                    "room": "HHB",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "03:45 to 04:00",
+                "isRecess": true,
+                "label": "RECESS - 2 (15 Minutes)  Afternoon"
+            },
+            {
+                "time": "04:00 to 05:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "CC",
+                    "room": "HHB",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "05:00 to 06:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            }
+        ]
+    },
+    "HPD": {
+        "name": "Prof. HPD",
+        "initials": "HPD",
+        "department": "Information Technology",
+        "semesterInfo": "Semester :",
+        "schedule": [
+            {
+                "time": "7:30 to 8:30",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "8:30to 9:30",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "01:00 to 01:45",
+                "isRecess": true,
+                "label": "RECESS - 1 (30 Minutes) Morning"
+            },
+            {
+                "time": "10:00 to 11:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "11:00to 12:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "B.Tech - 5 - Y2",
+                    "room": "GF-21",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "B.Tech - 5 - Z",
+                    "room": "TF-14",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "B.Tech - 5 - Y1 Y2-AI",
+                    "room": "FF-29",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "12:00 to 01:00 PM",
+                "isRecess": false,
+                "MON": {
+                    "class": "B.Tech - 5 - Z",
+                    "room": "TF-14",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "B.Tech - 5 - Z",
+                    "room": "TF-14",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "B.Tech - 5 - Y2",
+                    "room": "GF-26",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "B.Tech - 5 - Y1 Y2-AI",
+                    "room": "FF-29",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "12:00 to 12:15",
+                "isRecess": true,
+                "label": "RECESS - 2 (15 Minutes)  Morning"
+            },
+            {
+                "time": "12:15to 01:15",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "01:00 to 01:45",
+                "isRecess": true,
+                "label": "RECESS - 1 (45 Minutes)  Afternoon"
+            },
+            {
+                "time": "01:45to 02:45",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "B.Tech - 5 - Y2",
+                    "room": "GF-24",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "B.Tech - 5 - Y1 Y1-AI",
+                    "room": "GF-20A",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "B.Tech - 5 - Y1 Y3-AI",
+                    "room": "FF-22",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "B.Tech - 5 - Z",
+                    "room": "TF-14",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "02:45 03:45",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "B.Tech - 5 - Y1 Y1-AI",
+                    "room": "GF-20A",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "B.Tech - 5 - Y1 Y3-AI",
+                    "room": "FF-22",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "B.Tech - 5 - Y2",
+                    "room": "GF-21",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "03:45 to 04:00",
+                "isRecess": true,
+                "label": "RECESS - 2 (15 Minutes)  Afternoon"
+            },
+            {
+                "time": "04:00 to 05:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "Z11 RWMD",
+                    "room": "FF-22",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "B.Tech - 5 - Z2",
+                    "room": "FF-24",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "05:00 to 06:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "Z11 RWMD",
+                    "room": "FF-22",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "B.Tech - 5 - Z2",
+                    "room": "FF-24",
+                    "occupied": true
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            }
+        ]
+    },
+    "AMI": {
+        "name": "Prof. AMI",
+        "initials": "AMI",
+        "department": "Information Technology",
+        "semesterInfo": "Semester :",
+        "schedule": [
+            {
+                "time": "7:30 to 8:30",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "8:30to 9:30",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "01:00 to 01:45",
+                "isRecess": true,
+                "label": "RECESS - 1 (30 Minutes) Morning"
+            },
+            {
+                "time": "10:00 to 11:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "SE",
+                    "room": "AMI",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "SE",
+                    "room": "AMI",
+                    "occupied": true
+                }
+            },
+            {
+                "time": "11:00to 12:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "SE 5 B.TECH -X2-X11",
+                    "room": "FF-28",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "SE",
+                    "room": "AMI",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "SE",
+                    "room": "AMI",
+                    "occupied": true
+                }
+            },
+            {
+                "time": "12:00 to 01:00 PM",
+                "isRecess": false,
+                "MON": {
+                    "class": "SE 5 B.TECH -X2-X11",
+                    "room": "FF-28",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "12:00 to 12:15",
+                "isRecess": true,
+                "label": "RECESS - 2 (15 Minutes)  Morning"
+            },
+            {
+                "time": "12:15to 01:15",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "01:00 to 01:45",
+                "isRecess": true,
+                "label": "RECESS - 1 (45 Minutes)  Afternoon"
+            },
+            {
+                "time": "01:45to 02:45",
+                "isRecess": false,
+                "MON": {
+                    "class": "COA",
+                    "room": "AMI",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "SE 5 B.TECH CLASS-Z-Z11",
+                    "room": "GF-20B",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "SE 5 B. TECH CLASS-Z-Z22",
+                    "room": "FF-22",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "SE 5 B. TECH CLASS-X1-X11",
+                    "room": "FF-24",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "02:45 03:45",
+                "isRecess": false,
+                "MON": {
+                    "class": "COA",
+                    "room": "AMI",
+                    "occupied": true
+                },
+                "TUE": {
+                    "class": "SE 5 B.TECH CLASS-Z-Z11",
+                    "room": "GF-20B",
+                    "occupied": true
+                },
+                "WED": {
+                    "class": "SE 5 B. TECH CLASS-Z-Z22",
+                    "room": "FF-22",
+                    "occupied": true
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "SE 5 B. TECH CLASS-X1-X11",
+                    "room": "FF-24",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "03:45 to 04:00",
+                "isRecess": true,
+                "label": "RECESS - 2 (15 Minutes)  Afternoon"
+            },
+            {
+                "time": "04:00 to 05:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "COA",
+                    "room": "AMI",
+                    "occupied": true
+                },
+                "SAT": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                }
+            },
+            {
+                "time": "05:00 to 06:00",
+                "isRecess": false,
+                "MON": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "TUE": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "WED": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "THU": {
+                    "class": "",
+                    "room": "",
+                    "occupied": false
+                },
+                "FRI": {
+                    "class": "COA",
+                    "room": "AMI",
                     "occupied": true
                 },
                 "SAT": {
