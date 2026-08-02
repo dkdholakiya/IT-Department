@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme-light.css'); ?>">
 </head>
 
-<body>
+<body class="home-page">
 
     <!-- ░░ Particles ░░ -->
     <div class="particles" aria-hidden="true">
@@ -84,14 +84,23 @@
                 </div>
 
 
-                <!-- CTA -->
-                <a href="https://gmiu.edu.in/gmiu/website/" target="_blank" class="cta-btn" id="ctaBtn">
-                    <span>Official Website</span>
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                </a>
+                <!-- CTA Action Group -->
+                <div class="cta-group">
+                    <a href="https://gmiu.edu.in/gmiu/website/" target="_blank" class="cta-btn cta-btn-website" id="ctaBtn">
+                        <span>Official Website</span>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="https://erp.gmiu.edu.in/" target="_blank" class="cta-btn cta-btn-erp" id="erpBtn">
+                        <span>ERP Portal</span>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
 
             </div>
 

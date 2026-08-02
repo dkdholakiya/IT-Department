@@ -4,6 +4,32 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kameron:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,500&family=Roboto+Slab:wght@100..900&display=swap');
+
+/* ── All Modules Lora Font (Excludes Index Page) ── */
+body:not(.home-page) {
+    font-family: "Lora", serif !important;
+}
+
+body:not(.home-page) input,
+body:not(.home-page) button,
+body:not(.home-page) select,
+body:not(.home-page) textarea,
+body:not(.home-page) table,
+body:not(.home-page) th,
+body:not(.home-page) td,
+body:not(.home-page) p,
+body:not(.home-page) span,
+body:not(.home-page) div,
+body:not(.home-page) a,
+body:not(.home-page) h1,
+body:not(.home-page) h2,
+body:not(.home-page) h3,
+body:not(.home-page) h4,
+body:not(.home-page) h5,
+body:not(.home-page) h6 {
+    font-family: "Lora", serif !important;
+}
 
 /* ── Design Tokens ── */
 :root {
@@ -522,12 +548,19 @@ html {
     background: var(--glass-border);
 }
 
-/* CTA Button */
+/* CTA Button Group */
+.cta-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: slide-in 0.7s ease 0.4s both;
+}
+
 .cta-btn {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    background: linear-gradient(135deg, var(--red-bright) 0%, var(--red) 60%, #7f1d1d 100%);
     color: white;
     text-decoration: none;
     padding: 15px 34px;
@@ -537,11 +570,30 @@ html {
     font-size: 15px;
     letter-spacing: 0.3px;
     transition: var(--transition);
-    box-shadow: 0 6px 28px var(--red-glow), 0 2px 8px rgba(0, 0, 0, 0.35);
     position: relative;
     overflow: hidden;
     width: fit-content;
-    animation: slide-in 0.7s ease 0.4s both;
+}
+
+/* IT Mode (Default): Official Website = Red/Orange, ERP Portal = Blue */
+.cta-btn-website {
+    background: linear-gradient(135deg, var(--red-bright) 0%, var(--red) 60%, #7f1d1d 100%) !important;
+    box-shadow: 0 6px 28px var(--red-glow), 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+}
+
+.cta-btn-website:hover {
+    box-shadow: 0 14px 42px var(--red-glow), 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+}
+
+.cta-btn-erp {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 60%, #1e3a8a 100%) !important;
+    box-shadow: 0 6px 28px rgba(37, 99, 235, 0.4), 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+    color: #ffffff !important;
+}
+
+.cta-btn-erp:hover {
+    box-shadow: 0 14px 42px rgba(37, 99, 235, 0.6), 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+    color: #ffffff !important;
 }
 
 .cta-btn::after {
@@ -1610,13 +1662,27 @@ body.ce-active .love-word {
     text-decoration-color: rgba(147, 197, 253, 0.35) !important;
 }
 
-body.ce-active .cta-btn {
+/* CE Mode: Official Website = Blue, ERP Portal = Red/Orange (Swapped!) */
+body.ce-active .cta-btn-website {
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 60%, #1e3a8a 100%) !important;
     box-shadow: 0 6px 28px rgba(37, 99, 235, 0.4), 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+    color: #ffffff !important;
 }
 
-body.ce-active .cta-btn:hover {
+body.ce-active .cta-btn-website:hover {
     box-shadow: 0 14px 42px rgba(37, 99, 235, 0.6), 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+    color: #ffffff !important;
+}
+
+body.ce-active .cta-btn-erp {
+    background: linear-gradient(135deg, var(--red-bright) 0%, var(--red) 60%, #7f1d1d 100%) !important;
+    box-shadow: 0 6px 28px var(--red-glow), 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+    color: #ffffff !important;
+}
+
+body.ce-active .cta-btn-erp:hover {
+    box-shadow: 0 14px 42px var(--red-glow), 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+    color: #ffffff !important;
 }
 
 body.ce-active .terminal-header .tdot.red {
