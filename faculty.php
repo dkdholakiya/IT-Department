@@ -11,12 +11,12 @@
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link class="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts & Preconnect Optimization -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Kameron:wght@400..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,700..900;1,700..900&family=Share+Tech&display=swap" rel="stylesheet">
 
     <!-- Bootstrap 5 CDN CSS -->
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -130,10 +130,7 @@
     ?>
 
     <!-- Bootstrap 5 CDN JS Bundle -->
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- SheetJS Excel Export Library -->
-    <script src="assets/vendor/xlsx/xlsx.full.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
 
     <!-- Load Shared Faculty Data -->
     <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
@@ -339,69 +336,75 @@
                 });
             }
 
-            // Export Filtered Faculty Data to Excel
+            // Export Filtered Faculty Data to Excel (Lazy-loads SheetJS library for super fast initial page load)
             exportFacultyExcel = function() {
+                const runExport = () => {
+                    const query = currentSearchQuery.toLowerCase().trim();
+                    const listToExport = facultyData.filter(member => {
+                        const dept = member.department || "Information Technology";
+                        if (currentFilterDept !== "all" && dept !== currentFilterDept && dept !== "Both") {
+                            return false;
+                        }
+                        if (query !== "") {
+                            const nameMatches = (member.name || "").toLowerCase().includes(query);
+                            const initialsMatches = (member.initials || "").toLowerCase().includes(query);
+                            if (!nameMatches && !initialsMatches) return false;
+                        }
+                        return true;
+                    });
+
+                    if (!listToExport || listToExport.length === 0) {
+                        alert("No faculty records found for the current selection.");
+                        return;
+                    }
+
+                    // Format row data for Excel export
+                    const excelRows = listToExport.map((member, index) => ({
+                        "Sr. No.": index + 1,
+                        "Faculty Name": member.name || "",
+                        "Designation": member.designation || "",
+                        "Department": member.department || "Information Technology",
+                        "Employee ID": member.empId ? member.empId.replace('#', '') : "",
+                        "Email Address": member.email || "",
+                        "Mobile Number": member.phone ? `+91 ${member.phone}` : ""
+                    }));
+
+                    // Build worksheet and set column widths
+                    const worksheet = XLSX.utils.json_to_sheet(excelRows);
+                    worksheet['!cols'] = [
+                        { wch: 8 },   // Sr. No.
+                        { wch: 28 },  // Faculty Name
+                        { wch: 24 },  // Designation
+                        { wch: 26 },  // Department
+                        { wch: 14 },  // Employee ID
+                        { wch: 32 },  // Email Address
+                        { wch: 18 }   // Mobile Number
+                    ];
+
+                    // Build workbook
+                    const workbook = XLSX.utils.book_new();
+                    let sheetLabel = "All Faculty";
+                    if (currentFilterDept === "Information Technology") sheetLabel = "IT Faculty";
+                    if (currentFilterDept === "Computer Engineering") sheetLabel = "CE Faculty";
+
+                    XLSX.utils.book_append_sheet(workbook, worksheet, sheetLabel);
+
+                    // Generate filename
+                    const dateStr = new Date().toISOString().split('T')[0];
+                    const fileName = `Faculty_Directory_${sheetLabel.replace(/\s+/g, '_')}_${dateStr}.xlsx`;
+
+                    // Export file
+                    XLSX.writeFile(workbook, fileName);
+                };
+
                 if (typeof XLSX === "undefined") {
-                    alert("Excel export library failed to load. Please refresh the page.");
-                    return;
+                    const script = document.createElement("script");
+                    script.src = "assets/vendor/xlsx/xlsx.full.min.js";
+                    script.onload = runExport;
+                    document.body.appendChild(script);
+                } else {
+                    runExport();
                 }
-
-                const query = currentSearchQuery.toLowerCase().trim();
-                const listToExport = facultyData.filter(member => {
-                    const dept = member.department || "Information Technology";
-                    if (currentFilterDept !== "all" && dept !== currentFilterDept && dept !== "Both") {
-                        return false;
-                    }
-                    if (query !== "") {
-                        const nameMatches = (member.name || "").toLowerCase().includes(query);
-                        const initialsMatches = (member.initials || "").toLowerCase().includes(query);
-                        if (!nameMatches && !initialsMatches) return false;
-                    }
-                    return true;
-                });
-
-                if (!listToExport || listToExport.length === 0) {
-                    alert("No faculty records found for the current selection.");
-                    return;
-                }
-
-                // Format row data for Excel export
-                const excelRows = listToExport.map((member, index) => ({
-                    "Sr. No.": index + 1,
-                    "Faculty Name": member.name || "",
-                    "Designation": member.designation || "",
-                    "Department": member.department || "Information Technology",
-                    "Employee ID": member.empId ? member.empId.replace('#', '') : "",
-                    "Email Address": member.email || "",
-                    "Mobile Number": member.phone ? `+91 ${member.phone}` : ""
-                }));
-
-                // Build worksheet and set column widths
-                const worksheet = XLSX.utils.json_to_sheet(excelRows);
-                worksheet['!cols'] = [
-                    { wch: 8 },   // Sr. No.
-                    { wch: 28 },  // Faculty Name
-                    { wch: 24 },  // Designation
-                    { wch: 26 },  // Department
-                    { wch: 14 },  // Employee ID
-                    { wch: 32 },  // Email Address
-                    { wch: 18 }   // Mobile Number
-                ];
-
-                // Build workbook
-                const workbook = XLSX.utils.book_new();
-                let sheetLabel = "All Faculty";
-                if (currentFilterDept === "Information Technology") sheetLabel = "IT Faculty";
-                if (currentFilterDept === "Computer Engineering") sheetLabel = "CE Faculty";
-
-                XLSX.utils.book_append_sheet(workbook, worksheet, sheetLabel);
-
-                // Generate filename
-                const dateStr = new Date().toISOString().split('T')[0];
-                const fileName = `Faculty_Directory_${sheetLabel.replace(/\s+/g, '_')}_${dateStr}.xlsx`;
-
-                // Export file
-                XLSX.writeFile(workbook, fileName);
             };
 
             // Default to all departments on initial page load
