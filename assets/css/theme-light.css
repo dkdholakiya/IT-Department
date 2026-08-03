@@ -2416,3 +2416,83 @@ html[data-theme="light"] body.ce-active .filter-btn.active {
     border-color: #1d4ed8 !important;
     box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3) !important;
 }
+
+/* ── ZIP File Size Notice Box & Warning Modal (Light Theme) ── */
+html[data-theme="light"] .zip-warning-notice {
+    background: #fffbeb !important;
+    border: 1px solid #fde68a !important;
+    color: #92400e !important;
+}
+html[data-theme="light"] .zip-warning-notice i {
+    color: #d97706 !important;
+}
+
+html[data-theme="light"] .zip-size-modal-content {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color: #0f172a !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18) !important;
+}
+html[data-theme="light"] .zip-modal-icon {
+    color: #d97706 !important;
+}
+html[data-theme="light"] .zip-modal-title {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+html[data-theme="light"] .zip-modal-text {
+    color: #334155 !important;
+}
+html[data-theme="light"] .zip-modal-btn {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35) !important;
+}
+html[data-theme="light"] .zip-modal-btn:hover {
+    background: linear-gradient(135deg, #b45309 0%, #78350f 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(217, 119, 6, 0.45) !important;
+}
+
+/* ── Section 5 Report Preview Modal (Light Theme) ── */
+html[data-theme="light"] #previewModal .modal-content {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18) !important;
+}
+
+html[data-theme="light"] #previewModal .modal-header {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] #previewModal .modal-title {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+html[data-theme="light"] #previewModal .btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(0) !important;
+    opacity: 0.75 !important;
+}
+
+html[data-theme="light"] #previewModal .btn-close-white:hover {
+    opacity: 1 !important;
+}
+
+html[data-theme="light"] #previewModal .modal-footer {
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] #previewModal .modal-footer .btn-secondary {
+    background: #e2e8f0 !important;
+    color: #334155 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html[data-theme="light"] #previewModal .modal-footer .btn-secondary:hover {
+    background: #cbd5e1 !important;
+    color: #0f172a !important;
+}

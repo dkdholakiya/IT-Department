@@ -1903,23 +1903,42 @@ body.ce-active .form-check-input:checked {
     margin-top: 60px;
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
 }
 
 .sig-block {
     text-align: center;
-    width: 30%;
-    font-size: 13px;
+    width: 38%;
 }
 
 .sig-line {
-    border-top: 1px solid #000000;
-    margin-top: 40px;
-    padding-top: 8px;
+    border-top: 1.5px solid #000000;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.sig-name {
     font-weight: 700;
+    font-size: 13px;
+    color: #000000;
+    margin-bottom: 2px;
+    font-family: 'Lora', Georgia, serif;
+}
+
+.sig-title {
+    font-weight: 400;
+    font-size: 12px;
+    color: #222222;
+    font-family: 'Lora', Georgia, serif;
 }
 
 /* Print media query overrides */
 @media print {
+    @page {
+        size: A4 portrait;
+        margin: 10mm;
+    }
+
     body * {
         visibility: hidden;
     }
@@ -3486,4 +3505,55 @@ body.common-active .fab-link.active {
     .date-modal-body {
         padding: 8px 14px !important;
     }
+}
+
+/* ── ZIP File Size Notice Box & Warning Modal (Dark Theme Default) ── */
+.zip-warning-notice {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: #fde68a;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+.zip-warning-notice i {
+    color: #f59e0b;
+}
+
+.zip-size-modal-content {
+    background: #111b33 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #f1f5f9 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
+}
+.zip-modal-icon {
+    color: #f59e0b;
+    font-size: 3.2rem;
+    line-height: 1;
+}
+.zip-modal-title {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 1.25rem !important;
+}
+.zip-modal-text {
+    color: #cbd5e1 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.65 !important;
+}
+.zip-modal-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35) !important;
+    transition: all 0.25s ease !important;
+}
+.zip-modal-btn:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(245, 158, 11, 0.5) !important;
+    transform: translateY(-1px);
 }

@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
 
     <!-- Custom Dark Glassmorphic & Print Styling imported from style.css -->
+    <!-- html2pdf Library for Client-side Automatic Email PDF Attachment -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
@@ -396,7 +398,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label" for="coordSearch">Faculty Coordinator(s) <span
-                                                class="text-danger">*</span></label>
+                                                class="text-danger"></span></label>
                                         <div class="cc-select-wrap">
                                             <input type="hidden" id="coordinators" name="coordinators" required>
                                             <div class="cc-tags-container" id="coordTagsContainer"></div>
@@ -415,27 +417,44 @@
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label text-light">Photo Submission Method <span class="text-danger">*</span></label>
-                                        <div class="d-flex gap-3 mt-1 mb-3">
+                                        <div class="d-flex flex-wrap gap-3 mt-1 mb-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="photoMethod" id="photoMethodZip" value="zip" checked required>
-                                                <label class="form-check-label text-light" for="photoMethodZip">Upload ZIP File</label>
+                                                <input class="form-check-input" type="radio" name="photoMethod" id="photoMethodDrive" value="drive" checked required>
+                                                <label class="form-check-label text-light" for="photoMethodDrive">Google Drive Link</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="photoMethod" id="photoMethodDrive" value="drive" required>
-                                                <label class="form-check-label text-light" for="photoMethodDrive">Google Drive Link</label>
+                                                <input class="form-check-input" type="radio" name="photoMethod" id="photoMethodZip" value="zip" required>
+                                                <label class="form-check-label text-light" for="photoMethodZip">Upload ZIP File (Max 5 MB)</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="photoMethod" id="photoMethodEmail" value="email" required>
+                                                <label class="form-check-label text-light" for="photoMethodEmail">ZIP > 5 MB (Attach via Email Reply)</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12" id="activityPhotosWrap">
+                                    <div class="col-md-12 d-none" id="activityPhotosWrap">
                                         <label class="form-label" for="activityPhotos">Upload Activity Photos (ZIP format only) <span class="text-danger">*</span></label>
                                         <input type="file" class="form-control" id="activityPhotos" accept=".zip">
+                                        <div class="form-text zip-warning-notice mt-2 small d-flex align-items-start gap-2">
+                                            <i class="bi bi-info-circle-fill fs-6 mt-1 flex-shrink-0"></i>
+                                            <span>Do not upload ZIP files larger than 5 MB in the form. Submit the report first and attach the ZIP file in the email reply you receive.</span>
+                                        </div>
                                         <div class="selected-files-list" id="activityPhotosList"></div>
                                         <div class="invalid-feedback">Please upload a ZIP file containing the photos.</div>
                                     </div>
-                                    <div class="col-md-12 d-none" id="driveLinkWrap">
+                                    <div class="col-md-12" id="driveLinkWrap">
                                         <label class="form-label" for="driveLink">Google Drive Link <span class="text-danger">*</span></label>
                                         <input type="url" class="form-control" id="driveLink" placeholder="https://drive.google.com/..." oninput="syncEmailPreview()">
                                         <div class="invalid-feedback">Please enter a valid Google Drive link.</div>
+                                    </div>
+                                    <div class="col-md-12 d-none" id="emailReplyNoticeWrap">
+                                        <div class="form-check p-3 rounded" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3);">
+                                            <input class="form-check-input ms-0 me-2" type="checkbox" id="largeZipCheckbox">
+                                            <label class="form-check-label text-light fw-bold ms-1" for="largeZipCheckbox">
+                                                My ZIP file is larger than 5 MB. I will submit the report first and attach the ZIP file in the email reply I receive. <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="invalid-feedback text-danger mt-1">Please check this box to confirm you will send the ZIP file via email reply.</div>
+                                        </div>
                                     </div>
                                     <div class="col-md-12 d-flex justify-content-between mt-4">
                                         <button type="button" class="btn btn-outline-light px-4"
@@ -1018,6 +1037,29 @@
         </div>
     </div>
 
+    <!-- ZIP File Size Warning Modal -->
+    <div class="modal fade" id="zipSizeModal" tabindex="-1" aria-labelledby="zipSizeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content zip-size-modal-content p-4">
+                <div class="modal-header border-0 pb-0 justify-content-center flex-column text-center">
+                    <div class="zip-modal-icon mb-2">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <h5 class="modal-title zip-modal-title" id="zipSizeModalLabel">ZIP File Size Exceeds 5 MB</h5>
+                </div>
+                <div class="modal-body text-center pt-3 pb-3">
+                    <p class="zip-modal-text mb-0">
+                        Your ZIP file size is larger than 5 MB. Please do not upload the ZIP file here. Submit the report first. You will receive an email on your registered email ID. Reply to that email and attach the ZIP file with your photos.
+                    </p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center gap-2 pt-2">
+                    <button type="button" class="btn btn-outline-secondary px-3 rounded-pill text-light" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn zip-modal-btn px-4 rounded-pill" data-bs-dismiss="modal" onclick="switchToEmailReplyMethod()">Switch to Email Reply Method</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Global Floating Toast Notification -->
     <div class="gmiu-toast" id="gmiuToast">
         <i class="bi bi-check-circle-fill text-success fs-5"></i>
@@ -1032,9 +1074,9 @@
     <!-- ── Print Report Preview Area (Targeted by CSS @media print) ── -->
     <div id="printReportArea">
         <div class="print-header">
-            <h4 style="margin: 0; font-family: 'Playfair Display', serif; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;">
+            <h4 id="printDeptHeader" style="margin: 0; font-family: 'Playfair Display', serif; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;">
                 DEPARTMENT OF INFORMATION TECHNOLOGY</h4>
-            <div class="print-title" id="printHeaderTitle">Activity Report Documentation</div>
+            <div class="print-title" id="printHeaderTitle">Activity Documentation</div>
         </div>
 
         <div class="print-section-title">1. Faculty Profile (Requested By)</div>
@@ -1110,6 +1152,16 @@
                 <td colspan="3" id="pBriefObjective">-</td>
             </tr>
             <tr>
+                <th>Photo Method</th>
+                <td id="pPhotoMethod">-</td>
+                <th>Photos ZIP File</th>
+                <td id="pPhotoZip">-</td>
+            </tr>
+            <tr>
+                <th>Google Drive Link</th>
+                <td colspan="3" id="pDriveLink">-</td>
+            </tr>
+            <tr>
                 <th>Submission Deadline</th>
                 <td colspan="3" id="pDeadline">-</td>
             </tr>
@@ -1122,10 +1174,14 @@
 
         <div class="print-signatures">
             <div class="sig-block">
-                <div class="sig-line" id="sigRequestedBy">Requested By (Faculty Name)</div>
+                <div class="sig-line"></div>
+                <div class="sig-name" id="sigRequestedByName">Mr. Dev K Dholakiya</div>
+                <div class="sig-title" id="sigRequestedByTitle">Requested By (Faculty)</div>
             </div>
             <div class="sig-block">
-                <div class="sig-line">Head of Department (IT)</div>
+                <div class="sig-line"></div>
+                <div class="sig-name" id="sigHodName">Prof. Dhaval Chandarana</div>
+                <div class="sig-title" id="sigHodTitle">Head of Department (CE & IT)</div>
             </div>
         </div>
     </div>
@@ -1139,6 +1195,26 @@
 
     <!-- Department Report System logic -->
     <script>
+        // ── Helper Functions for Dynamic Department Title & Clean Activity Documentation Header ──
+        function getDepartmentTitle(deptInput) {
+            const dept = (deptInput || "Information Technology").toUpperCase().trim();
+            if (dept.includes("BOTH") || (dept.includes("CE") && dept.includes("IT")) || (dept.includes("COMPUTER") && dept.includes("INFORMATION"))) {
+                return "DEPARTMENT OF CE & IT";
+            } else if (dept.includes("COMPUTER") || dept.includes("CE")) {
+                return "DEPARTMENT OF COMPUTER ENGINEERING";
+            } else if (dept.includes("INFORMATION") || dept.includes("IT")) {
+                return "DEPARTMENT OF INFORMATION TECHNOLOGY";
+            } else {
+                return `DEPARTMENT OF ${dept}`;
+            }
+        }
+
+        function getCleanActivityTitle(reportTypeLabel) {
+            let cleanLabel = reportTypeLabel || "Activity";
+            cleanLabel = cleanLabel.replace(/\s*activity\s*/gi, " ").replace(/\s*report\s*/gi, " ").trim();
+            return `${cleanLabel} Activity Documentation`;
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
             // Wait for facultyData to be available
             if (typeof facultyData === 'undefined') {
@@ -1175,6 +1251,7 @@
             // Dynamic validation of Photos ZIP and Drive Link
             const photosInput = document.getElementById("activityPhotos");
             const driveInput = document.getElementById("driveLink");
+            const largeZipChk = document.getElementById("largeZipCheckbox");
             const clearPhotoDriveValidation = () => {
                 if (photosInput.files.length > 0 || driveInput.value.trim() !== "") {
                     photosInput.classList.remove("is-invalid");
@@ -1183,6 +1260,11 @@
             };
             photosInput.addEventListener("change", clearPhotoDriveValidation);
             driveInput.addEventListener("input", clearPhotoDriveValidation);
+            if (largeZipChk) {
+                largeZipChk.addEventListener("change", () => {
+                    if (largeZipChk.checked) largeZipChk.classList.remove("is-invalid");
+                });
+            }
 
             // Toggle submission method listeners
             document.querySelectorAll('input[name="photoMethod"]').forEach(radio => {
@@ -1336,18 +1418,38 @@
 
         // ── Visual Toggle for Photo Submission Method ──
         function togglePhotoMethod() {
-            const method = document.querySelector('input[name="photoMethod"]:checked')?.value || "zip";
+            const method = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
             const zipWrap = document.getElementById("activityPhotosWrap");
             const driveWrap = document.getElementById("driveLinkWrap");
+            const emailWrap = document.getElementById("emailReplyNoticeWrap");
 
             if (zipWrap && driveWrap) {
                 if (method === "zip") {
                     zipWrap.classList.remove("d-none");
                     driveWrap.classList.add("d-none");
-                } else {
+                    if (emailWrap) emailWrap.classList.add("d-none");
+                } else if (method === "drive") {
                     zipWrap.classList.add("d-none");
                     driveWrap.classList.remove("d-none");
+                    if (emailWrap) emailWrap.classList.add("d-none");
+                } else if (method === "email") {
+                    zipWrap.classList.add("d-none");
+                    driveWrap.classList.add("d-none");
+                    if (emailWrap) emailWrap.classList.remove("d-none");
                 }
+            }
+        }
+
+        function switchToEmailReplyMethod() {
+            const emailRadio = document.getElementById("photoMethodEmail");
+            if (emailRadio) {
+                emailRadio.checked = true;
+                togglePhotoMethod();
+            }
+            const largeZipChk = document.getElementById("largeZipCheckbox");
+            if (largeZipChk) {
+                largeZipChk.checked = true;
+                largeZipChk.classList.remove("is-invalid");
             }
         }
 
@@ -2116,6 +2218,28 @@
                     listContainer.innerHTML = "";
                     if (this.files.length === 0) return;
 
+                    const maxSizeBytes = 5 * 1024 * 1024; // 5 MB
+                    let oversized = false;
+
+                    Array.from(this.files).forEach((file) => {
+                        if (file.size > maxSizeBytes) {
+                            oversized = true;
+                        }
+                    });
+
+                    if (oversized) {
+                        this.value = "";
+                        listContainer.innerHTML = "";
+                        const zipModalEl = document.getElementById("zipSizeModal");
+                        if (zipModalEl) {
+                            const zipModal = bootstrap.Modal.getOrCreateInstance(zipModalEl);
+                            zipModal.show();
+                        } else {
+                            alert("Your ZIP file size is larger than 5 MB. Please do not upload the ZIP file here. Submit the report first. You will receive an email on your registered email ID. Reply to that email and attach the ZIP file.");
+                        }
+                        return;
+                    }
+
                     Array.from(this.files).forEach((file) => {
                         const badge = document.createElement("span");
                         badge.className = "file-badge";
@@ -2287,14 +2411,43 @@
                     progError.classList.add("d-none");
                 }
 
-                // Check ZIP or Drive validation
+                // Check ZIP, Drive or Email validation
+                const photoMethod = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
                 const photosInput = document.getElementById("activityPhotos");
                 const driveInput = document.getElementById("driveLink");
-                if (photosInput.files.length === 0 && !driveInput.value.trim()) {
-                    photosInput.classList.add("is-invalid");
-                    driveInput.classList.add("is-invalid");
-                    photosInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    return;
+                const largeZipChk = document.getElementById("largeZipCheckbox");
+
+                if (photoMethod === "zip") {
+                    if (photosInput.files.length === 0) {
+                        photosInput.classList.add("is-invalid");
+                        photosInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        return;
+                    } else if (photosInput.files[0].size > 5 * 1024 * 1024) {
+                        photosInput.value = "";
+                        const listContainer = document.getElementById("activityPhotosList");
+                        if (listContainer) listContainer.innerHTML = "";
+                        photosInput.classList.add("is-invalid");
+                        const zipModalEl = document.getElementById("zipSizeModal");
+                        if (zipModalEl) {
+                            const zipModal = bootstrap.Modal.getOrCreateInstance(zipModalEl);
+                            zipModal.show();
+                        }
+                        return;
+                    }
+                } else if (photoMethod === "drive") {
+                    if (!driveInput.value.trim()) {
+                        driveInput.classList.add("is-invalid");
+                        driveInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        return;
+                    }
+                } else if (photoMethod === "email") {
+                    if (largeZipChk && !largeZipChk.checked) {
+                        largeZipChk.classList.add("is-invalid");
+                        largeZipChk.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        return;
+                    } else if (largeZipChk) {
+                        largeZipChk.classList.remove("is-invalid");
+                    }
                 }
 
                 // Standard validation on other fields
@@ -2403,9 +2556,19 @@
             const coordinators = (document.getElementById("coordinators").value || "-").toUpperCase();
             const objective = (document.getElementById("briefObjective").value || "-").toUpperCase();
 
+            const photoMethod = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
             const zipInput = document.getElementById("activityPhotos");
-            const zipName = (zipInput.files.length > 0 ? zipInput.files[0].name : "NOT UPLOADED").toUpperCase();
-            const driveLink = (document.getElementById("driveLink").value || "NOT PROVIDED").toUpperCase();
+            let zipName = "NOT UPLOADED";
+            let driveLink = (document.getElementById("driveLink").value || "NOT PROVIDED").toUpperCase();
+            if (photoMethod === "zip") {
+                zipName = (zipInput.files.length > 0 ? zipInput.files[0].name : "NOT UPLOADED").toUpperCase();
+                driveLink = "NOT PROVIDED";
+            } else if (photoMethod === "drive") {
+                zipName = "NOT UPLOADED (USING GOOGLE DRIVE LINK)";
+            } else if (photoMethod === "email") {
+                zipName = "MY ZIP FILE IS LARGER THAN 5 MB. I WILL SUBMIT THE REPORT FIRST AND ATTACH THE ZIP FILE IN THE EMAIL REPLY I RECEIVE.";
+                driveLink = "ATTACH VIA EMAIL REPLY";
+            }
 
             // New core fields
             const batch = (document.getElementById("batch").value || "-").toUpperCase();
@@ -2487,9 +2650,12 @@
                 return rowStr;
             };
 
+            const deptTitle = getDepartmentTitle(dept);
+            const docTitle = getCleanActivityTitle(reportType).toUpperCase();
+
             table += hr;
-            table += centerAlign("DEPARTMENT OF INFORMATION TECHNOLOGY");
-            table += centerAlign(`${reportType.toUpperCase()} ACTIVITY REPORT`);
+            table += centerAlign(deptTitle);
+            table += centerAlign(docTitle);
             table += hr;
             table += centerAlign("1. FACULTY REQUEST PROFILE");
             table += hr;
@@ -2566,9 +2732,20 @@
             const coordinators = (document.getElementById("coordinators").value || "-").toUpperCase();
             const objective = (document.getElementById("briefObjective").value || "-").toUpperCase();
 
+            const photoMethod = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
             const zipInput = document.getElementById("activityPhotos");
-            const zipName = (zipInput.files.length > 0 ? zipInput.files[0].name : "NOT UPLOADED").toUpperCase();
-            const rawDriveLink = document.getElementById("driveLink").value || "Not Provided";
+            let zipName = "NOT UPLOADED";
+            let rawDriveLink = document.getElementById("driveLink").value || "Not Provided";
+
+            if (photoMethod === "zip") {
+                zipName = (zipInput.files.length > 0 ? zipInput.files[0].name : "NOT UPLOADED").toUpperCase();
+                rawDriveLink = "Not Provided";
+            } else if (photoMethod === "drive") {
+                zipName = "NOT UPLOADED (USING GOOGLE DRIVE LINK)";
+            } else if (photoMethod === "email") {
+                zipName = "MY ZIP FILE IS LARGER THAN 5 MB. I WILL SUBMIT THE REPORT FIRST AND ATTACH THE ZIP FILE IN THE EMAIL REPLY I RECEIVE.";
+                rawDriveLink = "Not Provided (Attaching via Email Reply)";
+            }
             const driveLink = rawDriveLink.toUpperCase();
 
             const batch = (document.getElementById("batch").value || "-").toUpperCase();
@@ -2637,15 +2814,18 @@
                 });
             }
 
+            const deptTitle = getDepartmentTitle(dept);
+            const docTitle = getCleanActivityTitle(reportType).toUpperCase();
+
             return `
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap" rel="stylesheet">
             <div style="font-family: 'Playfair Display', serif; line-height: 1.6; color: #333; max-width: 700px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                 <div style="background-color: #8c1d1d; color: white; padding: 25px; text-align: center; font-family: 'Playfair Display', serif;">
-                    <h2 style="margin: 0; font-size: 22px; font-weight: bold; letter-spacing: 0.5px; font-family: 'Playfair Display', serif; text-transform: uppercase;">Department of CE & IT</h2>
+                    <h2 style="margin: 0; font-size: 22px; font-weight: bold; letter-spacing: 0.5px; font-family: 'Playfair Display', serif; text-transform: uppercase;">${deptTitle}</h2>
                     <div style="margin-top: 15px; display: inline-block; background-color: rgba(255, 255, 255, 0.2); padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; font-family: 'Playfair Display', serif;">
-                        ${reportType} ACTIVITY DOCUMENTATION
+                        ${docTitle}
                     </div>
                 </div>
                 
@@ -2763,7 +2943,7 @@
                         <tr>
                             <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">GOOGLE DRIVE LINK</td>
                             <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">
-                                ${rawDriveLink.toLowerCase() !== "not provided" ? `<a href="${rawDriveLink}" target="_blank" style="color: #8c1d1d; text-decoration: underline; font-family: 'Playfair Display', serif;">OPEN GOOGLE DRIVE FOLDER</a>` : "NOT PROVIDED"}
+                                ${(rawDriveLink.toLowerCase() !== "not provided" && !rawDriveLink.toLowerCase().includes("not provided")) ? `<a href="${rawDriveLink}" target="_blank" style="color: #8c1d1d; text-decoration: underline; font-family: 'Playfair Display', serif;">OPEN GOOGLE DRIVE FOLDER</a>` : "NOT PROVIDED"}
                             </td>
                         </tr>
                         <tr style="background-color: #fff5f5;">
@@ -2845,15 +3025,48 @@ Department of CE & IT`;
                 jumpToSection(2);
                 return false;
             }
-            // Check ZIP or Drive validation
+            // Check ZIP, Drive or Email validation
+            const photoMethod = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
             const photosInput = document.getElementById("activityPhotos");
             const driveInput = document.getElementById("driveLink");
-            if (photosInput.files.length === 0 && !driveInput.value.trim()) {
-                photosInput.classList.add("is-invalid");
-                driveInput.classList.add("is-invalid");
-                isValid = false;
-                jumpToSection(2);
-                return false;
+            const largeZipChk = document.getElementById("largeZipCheckbox");
+
+            if (photoMethod === "zip") {
+                if (photosInput.files.length === 0) {
+                    photosInput.classList.add("is-invalid");
+                    isValid = false;
+                    jumpToSection(2);
+                    return false;
+                } else if (photosInput.files[0].size > 5 * 1024 * 1024) {
+                    photosInput.value = "";
+                    const listContainer = document.getElementById("activityPhotosList");
+                    if (listContainer) listContainer.innerHTML = "";
+                    photosInput.classList.add("is-invalid");
+                    const zipModalEl = document.getElementById("zipSizeModal");
+                    if (zipModalEl) {
+                        const zipModal = bootstrap.Modal.getOrCreateInstance(zipModalEl);
+                        zipModal.show();
+                    }
+                    isValid = false;
+                    jumpToSection(2);
+                    return false;
+                }
+            } else if (photoMethod === "drive") {
+                if (!driveInput.value.trim()) {
+                    driveInput.classList.add("is-invalid");
+                    isValid = false;
+                    jumpToSection(2);
+                    return false;
+                }
+            } else if (photoMethod === "email") {
+                if (largeZipChk && !largeZipChk.checked) {
+                    largeZipChk.classList.add("is-invalid");
+                    isValid = false;
+                    jumpToSection(2);
+                    return false;
+                } else if (largeZipChk) {
+                    largeZipChk.classList.remove("is-invalid");
+                }
             }
 
             // Check Deadline validation (MANDATORY)
@@ -2943,7 +3156,8 @@ Department of CE & IT`;
                         coordinators: document.getElementById("coordinators").value,
                         briefObjective: document.getElementById("briefObjective").value,
                         driveLink: document.getElementById("driveLink").value,
-                        photoMethod: document.querySelector('input[name="photoMethod"]:checked')?.value || "zip",
+                        photoMethod: document.querySelector('input[name="photoMethod"]:checked')?.value || "drive",
+                        largeZipCheckbox: document.getElementById("largeZipCheckbox")?.checked,
                         enableDeadline: document.getElementById("enableDeadline")?.checked,
                         deadlineVal: document.getElementById("deadlineVal")?.value,
 
@@ -3064,6 +3278,10 @@ Department of CE & IT`;
                         if (draft.photoMethod) {
                             const rb = document.querySelector(`input[name="photoMethod"][value="${draft.photoMethod}"]`);
                             if (rb) rb.checked = true;
+                        }
+                        if (draft.largeZipCheckbox) {
+                            const chk = document.getElementById("largeZipCheckbox");
+                            if (chk) chk.checked = true;
                         }
                         togglePhotoMethod();
 
@@ -3312,39 +3530,20 @@ Department of CE & IT`;
             }
 
             // Sync details to Printable Area
-            document.getElementById("printHeaderTitle").innerText = `${reportTypeLabel} Activity Documentation`;
-            document.getElementById("pFacultyName").innerText = document.getElementById("facultySearch").value;
-            document.getElementById("pFacultyEmpId").innerText = document.getElementById("facultyEmpId").value;
-            document.getElementById("pFacultyDesignation").innerText = document.getElementById("facultyDesignation").value;
-            document.getElementById("pFacultyEmail").innerText = document.getElementById("facultyEmail").value;
-            document.getElementById("pFacultyPhone").innerText = document.getElementById("facultyPhone").value;
-            document.getElementById("pFacultyDept").innerText = document.getElementById("facultyDept").value;
+            syncPrintReportArea();
 
-            document.getElementById("pAcademicYear").innerText = academicYear;
-            document.getElementById("pReportType").innerText = reportTypeLabel;
-            document.getElementById("pReportTitle").innerText = reportTitle;
-            document.getElementById("pActivityDate").innerText = activityDate;
-            document.getElementById("pActivityTime").innerText = `${startTime} to ${endTime}`;
-            document.getElementById("pVenue").innerText = venue;
-            document.getElementById("pProgramme").innerText = progs.join(", ");
-            document.getElementById("pSemesterClass").innerText = `Sem ${semester} (${divisionClass})`;
-            document.getElementById("pParticipantsCount").innerText = participantsCount;
-            document.getElementById("pBatch").innerText = batch;
-            document.getElementById("pStudentCoordinator").innerText = studentCoordinator;
-            document.getElementById("pPublishWebsite").innerText = publishWebsite;
-            document.getElementById("pPressNote").innerText = pressNote;
-            document.getElementById("pCoordinators").innerText = coordinators;
-            document.getElementById("pBriefObjective").innerText = briefObjective;
-            document.getElementById("pDeadline").innerText = deadline;
+            const photoMethodText = document.getElementById("pPhotoMethod")?.innerText || "Google Drive Link";
+            const photoZipText = document.getElementById("pPhotoZip")?.innerText || "Not Uploaded";
+            const driveLinkText = document.getElementById("pDriveLink")?.innerText || "Not Provided";
+            const rawDriveLink = document.getElementById("driveLink")?.value || "";
 
-            // Sync dynamic specific fields to Print Area
-            const printDynamicTable = document.getElementById("pDynamicMetaTable");
-            printDynamicTable.innerHTML = specificHtml || "<tr><td colspan='4' class='text-center text-muted'>No dynamic fields configured.</td></tr>";
+            const deptTitle = getDepartmentTitle(document.getElementById("facultyDept")?.value);
+            const docTitle = getCleanActivityTitle(reportTypeLabel);
 
             let previewHtml = `
                 <div class="text-center border-bottom pb-3 mb-4">
-                    <h4 class="fw-bold mb-0 text-dark text-uppercase" style="font-family: 'Playfair Display', serif; letter-spacing: 0.5px;">Department of CE & IT</h4>
-                    <h5 class="mt-2 fw-semibold text-danger" style="font-family: 'Playfair Display', serif;">${reportTypeLabel} — Activity Documentation</h5>
+                    <h4 class="fw-bold mb-0 text-dark text-uppercase" style="font-family: 'Playfair Display', serif; letter-spacing: 0.5px;">${deptTitle}</h4>
+                    <h5 class="mt-2 fw-semibold text-danger" style="font-family: 'Playfair Display', serif;">${docTitle}</h5>
                 </div>
                 
                 <h6 class="text-danger fw-bold border-bottom pb-1 mb-2">1. Request Profile</h6>
@@ -3392,10 +3591,20 @@ Department of CE & IT`;
                         <th class="table-light">Press Note Required</th><td>${pressNote}</td>
                     </tr>
                     <tr>
-                        <th class="table-light">Coordinators</th><td colspan="3">${coordinators}</td>
+                        <th class="table-light">Faculty Coordinator(s)</th><td colspan="3">${coordinators || "-"}</td>
                     </tr>
                     <tr>
-                        <th class="table-light">Objective</th><td colspan="3" class="small">${briefObjective}</td>
+                        <th class="table-light">Brief Objective</th><td colspan="3" class="small">${briefObjective || "-"}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Photo Method</th><td>${photoMethodText}</td>
+                        <th class="table-light">Photos ZIP File</th><td class="small fw-semibold">${photoZipText}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Google Drive Link</th>
+                        <td colspan="3">
+                            ${rawDriveLink && photoMethod === "drive" ? `<a href="${rawDriveLink}" target="_blank" class="text-danger fw-bold text-decoration-underline">${rawDriveLink}</a>` : driveLinkText}
+                        </td>
                     </tr>
                     <tr class="table-danger">
                         <th class="text-danger fw-bold">Submission Deadline</th><td colspan="3" class="fw-bold text-danger" style="font-size: 15px;">${deadline}</td>
@@ -3414,16 +3623,307 @@ Department of CE & IT`;
             modal.show();
         }
 
+        // ── Sync Data to Printable Report Area ──
+        function syncPrintReportArea() {
+            const reportTitle = document.getElementById("reportTitle")?.value || "-";
+            const academicYear = document.getElementById("academicYear")?.value || "-";
+            const reportSelect = document.getElementById("reportType");
+            let reportTypeLabel = reportSelect?.options[reportSelect.selectedIndex]?.text || "-";
+            if (reportSelect?.value === "other") {
+                const customType = document.getElementById("customReportType")?.value.trim();
+                if (customType) {
+                    reportTypeLabel = `Other (${customType})`;
+                }
+            }
+            const activityDate = document.getElementById("activityDate")?.value || "-";
+            const startTime = document.getElementById("startTime")?.value || "";
+            const endTime = document.getElementById("endTime")?.value || "";
+            const venue = document.getElementById("venue")?.value || "-";
+            const semester = document.getElementById("semester")?.value || "-";
+            const divisionClass = document.getElementById("divisionClass")?.value || "-";
+            const participantsCount = document.getElementById("participantsCount")?.value || "-";
+            const coordinators = document.getElementById("coordinators")?.value || "-";
+            const briefObjective = document.getElementById("briefObjective")?.value || "-";
+
+            // Extract deadline
+            const enableDeadline = document.getElementById("enableDeadline")?.checked;
+            const deadlineVal = document.getElementById("deadlineVal")?.value;
+            let deadline = "-";
+            if (enableDeadline && deadlineVal) {
+                const dateObj = new Date(deadlineVal);
+                if (!isNaN(dateObj)) {
+                    const dd = String(dateObj.getDate()).padStart(2, '0');
+                    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const yyyy = dateObj.getFullYear();
+                    let hours = dateObj.getHours();
+                    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12;
+                    const hh = String(hours).padStart(2, '0');
+                    deadline = `${dd}/${mm}/${yyyy} ${hh}:${minutes} ${ampm}`;
+                }
+            }
+
+            // New core fields
+            const batch = document.getElementById("batch")?.value || "-";
+            const studentCoordinator = document.getElementById("studentCoordinator")?.value || "-";
+            const publishWebsite = document.querySelector('input[name="publishWebsite"]:checked')?.value || "-";
+            const pressNote = document.querySelector('input[name="pressNote"]:checked')?.value || "-";
+
+            // Checked programmes
+            const progs = [];
+            document.querySelectorAll(".prog-checkbox:checked").forEach(cb => progs.push(cb.value));
+
+            // Get Specific Fields dynamically
+            let specificHtml = "";
+            const activeSec = document.querySelector(`.dynamic-report-section:not(.d-none)`);
+            if (activeSec) {
+                const inputs = activeSec.querySelectorAll("input, select, textarea");
+                inputs.forEach(input => {
+                    let isHidden = false;
+                    let p = input;
+                    while (p && p !== activeSec) {
+                        if (p.classList.contains("d-none")) {
+                            isHidden = true;
+                            break;
+                        }
+                        p = p.parentElement;
+                    }
+                    if (isHidden) return;
+
+                    if (input.type === "radio") {
+                        if (input.checked) {
+                            const parentLabel = input.closest(".col-md-12")?.querySelector(".form-label")?.innerText || "Activity Type";
+                            const label = parentLabel.replace("*", "").trim();
+                            const val = input.value;
+                            specificHtml += `
+                                <tr>
+                                    <th>${label}</th>
+                                    <td colspan="3">${val}</td>
+                                </tr>
+                            `;
+                        }
+                    } else {
+                        const label = (input.previousElementSibling ? input.previousElementSibling.innerText : "Field").replace("*", "").trim();
+                        const val = input.value || "-";
+                        specificHtml += `
+                            <tr>
+                                <th>${label}</th>
+                                <td colspan="3">${val}</td>
+                            </tr>
+                        `;
+                    }
+                });
+            }
+
+            // Photo submission details
+            const photoMethod = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
+            const zipInput = document.getElementById("activityPhotos");
+            const rawDriveLink = document.getElementById("driveLink")?.value || "";
+
+            let photoMethodText = "Google Drive Link";
+            let photoZipText = "Not Uploaded (Using Google Drive Link)";
+            let driveLinkText = rawDriveLink || "Not Provided";
+
+            if (photoMethod === "zip") {
+                photoMethodText = "Upload ZIP File (Max 5 MB)";
+                photoZipText = zipInput && zipInput.files.length > 0 ? zipInput.files[0].name : "Not Uploaded";
+                driveLinkText = "Not Provided";
+            } else if (photoMethod === "email") {
+                photoMethodText = "ZIP > 5 MB (Attach via Email Reply)";
+                photoZipText = "My ZIP file is larger than 5 MB. I will submit the report first and attach the ZIP file in the email reply I receive.";
+                driveLinkText = "Not Provided (Attaching via Email Reply)";
+            }
+
+            const deptTitle = getDepartmentTitle(document.getElementById("facultyDept")?.value);
+            const docTitle = getCleanActivityTitle(reportTypeLabel);
+
+            // Sync details to Printable Area
+            const pDeptHeader = document.getElementById("printDeptHeader");
+            if (pDeptHeader) pDeptHeader.innerText = deptTitle;
+
+            const pHeader = document.getElementById("printHeaderTitle");
+            if (pHeader) pHeader.innerText = docTitle;
+            const setTxt = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = (val !== undefined && val !== null && val.trim() !== "") ? val : "-";
+            };
+
+            setTxt("pFacultyName", document.getElementById("facultySearch")?.value);
+            setTxt("pFacultyEmpId", document.getElementById("facultyEmpId")?.value);
+            setTxt("pFacultyDesignation", document.getElementById("facultyDesignation")?.value);
+            setTxt("pFacultyEmail", document.getElementById("facultyEmail")?.value);
+            setTxt("pFacultyPhone", document.getElementById("facultyPhone")?.value);
+            setTxt("pFacultyDept", document.getElementById("facultyDept")?.value);
+
+            setTxt("pAcademicYear", academicYear);
+            setTxt("pReportType", reportTypeLabel);
+            setTxt("pReportTitle", reportTitle);
+            setTxt("pActivityDate", activityDate);
+            setTxt("pActivityTime", (startTime || endTime) ? `${startTime} to ${endTime}` : "-");
+            setTxt("pVenue", venue);
+            setTxt("pProgramme", progs.join(", "));
+            setTxt("pSemesterClass", (semester || divisionClass) ? `Sem ${semester} (${divisionClass})` : "-");
+            setTxt("pParticipantsCount", participantsCount);
+            setTxt("pBatch", batch);
+            setTxt("pStudentCoordinator", studentCoordinator);
+            setTxt("pPublishWebsite", publishWebsite);
+            setTxt("pPressNote", pressNote);
+            setTxt("pCoordinators", coordinators);
+            setTxt("pBriefObjective", briefObjective);
+            setTxt("pPhotoMethod", photoMethodText);
+            setTxt("pPhotoZip", photoZipText);
+            setTxt("pDriveLink", driveLinkText);
+            setTxt("pDeadline", deadline);
+
+            const printDynamicTable = document.getElementById("pDynamicMetaTable");
+            if (printDynamicTable) {
+                printDynamicTable.innerHTML = specificHtml || "<tr><td colspan='4' class='text-center text-muted'>No dynamic fields configured.</td></tr>";
+            }
+
+            // Sync Signatures in Printable Area
+            const facultyNameVal = document.getElementById("facultySearch")?.value?.trim();
+            const sigReqNameEl = document.getElementById("sigRequestedByName");
+            if (sigReqNameEl) {
+                sigReqNameEl.innerText = facultyNameVal || "Faculty Name";
+            }
+
+            const sigHodNameEl = document.getElementById("sigHodName");
+            if (sigHodNameEl) {
+                sigHodNameEl.innerText = "Prof. Dhaval Chandarana";
+            }
+
+            const deptVal = (document.getElementById("facultyDept")?.value || "IT").toUpperCase().trim();
+            const sigHodTitleEl = document.getElementById("sigHodTitle");
+            if (sigHodTitleEl) {
+                if (deptVal.includes("BOTH") || (deptVal.includes("CE") && deptVal.includes("IT"))) {
+                    sigHodTitleEl.innerText = "Head of Department (CE & IT)";
+                } else if (deptVal.includes("COMPUTER") || deptVal.includes("CE")) {
+                    sigHodTitleEl.innerText = "Head of Department (CE)";
+                } else {
+                    sigHodTitleEl.innerText = "Head of Department (IT)";
+                }
+            }
+        }
+
         // ── Print Report Trigger ──
         function triggerPrint() {
+            syncPrintReportArea();
             const modalEl = document.getElementById("previewModal");
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            if (modal) modal.hide();
-
+            if (modalEl) {
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
             window.print();
         }
 
-        // ── Form Submission to send parallel emails with ZIP attachment ──
+        window.addEventListener("beforeprint", syncPrintReportArea);
+
+        // ── Client-side PDF Report Generator for Automatic Email Attachment ──
+        function generateReportPdfBase64() {
+            syncPrintReportArea();
+            const origElement = document.getElementById("printReportArea");
+            if (!origElement || typeof html2pdf === "undefined") {
+                return Promise.resolve(null);
+            }
+
+            // Create temporary container reset to viewport origin (0,0) with exact A4 printable canvas width (718px)
+            const container = document.createElement("div");
+            container.style.position = "fixed";
+            container.style.top = "0px";
+            container.style.left = "0px";
+            container.style.width = "718px";
+            container.style.zIndex = "-9999";
+            container.style.opacity = "0.01";
+            container.style.pointerEvents = "none";
+            container.style.background = "#ffffff";
+            container.style.color = "#000000";
+            container.style.boxSizing = "border-box";
+            container.style.margin = "0";
+            container.style.padding = "0";
+
+            const clone = origElement.cloneNode(true);
+            clone.id = "pdfPrintClone";
+            clone.style.display = "block";
+            clone.style.width = "718px";
+            clone.style.boxSizing = "border-box";
+            clone.style.padding = "10px 0";
+            clone.style.margin = "0";
+            clone.style.background = "#ffffff";
+            clone.style.color = "#000000";
+
+            // Ensure table styles in clone fit 100% within the 718px width
+            const tables = clone.querySelectorAll("table");
+            tables.forEach(t => {
+                t.style.width = "100%";
+                t.style.margin = "0 0 15px 0";
+                t.style.boxSizing = "border-box";
+                t.style.tableLayout = "fixed";
+                t.style.wordBreak = "break-word";
+                t.style.overflowWrap = "break-word";
+            });
+
+            const cells = clone.querySelectorAll("th, td");
+            cells.forEach(c => {
+                c.style.wordBreak = "break-word";
+                c.style.overflowWrap = "break-word";
+                c.style.whiteSpace = "normal";
+                c.style.boxSizing = "border-box";
+            });
+
+            // Ensure signatures row stays within width
+            const sigs = clone.querySelector(".print-signatures");
+            if (sigs) {
+                sigs.style.width = "100%";
+                sigs.style.boxSizing = "border-box";
+                sigs.style.display = "flex";
+                sigs.style.justifyContent = "space-between";
+            }
+
+            container.appendChild(clone);
+            document.body.appendChild(container);
+
+            const reportTitle = document.getElementById("reportTitle")?.value || "Activity_Report";
+            const cleanFileName = reportTitle.replace(/[^a-zA-Z0-9_-]/g, "_") + "_Documentation.pdf";
+
+            const opt = {
+                margin:       [10, 10, 10, 10], // Standard 10mm A4 Margins
+                filename:     cleanFileName,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    logging: false, 
+                    scrollX: 0, 
+                    scrollY: 0,
+                    x: 0,
+                    y: 0,
+                    width: 718,
+                    windowWidth: 718
+                },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            return html2pdf().set(opt).from(clone).outputPdf('datauristring').then(pdfDataUrl => {
+                if (document.body.contains(container)) {
+                    document.body.removeChild(container);
+                }
+                return {
+                    data: pdfDataUrl,
+                    filename: cleanFileName
+                };
+            }).catch(err => {
+                if (document.body.contains(container)) {
+                    document.body.removeChild(container);
+                }
+                console.error("PDF generation error:", err);
+                return null;
+            });
+        }
+
+        // ── Form Submission to send parallel emails with ZIP & PDF attachment ──
         function simulateFormSubmission() {
             if (!validateFullForm()) return;
 
@@ -3439,11 +3939,12 @@ Department of CE & IT`;
             submitBtn.disabled = true;
             submitBtn.innerHTML = `
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span>Reading attachment & Submitting...</span>
+                <span>Generating PDF & Preparing Emails...</span>
             `;
 
+            const photoMethod = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
             const photosInput = document.getElementById("activityPhotos");
-            const hasFile = photosInput.files.length > 0;
+            const hasFile = (photoMethod === "zip" && photosInput && photosInput.files.length > 0);
 
             const getAttachmentData = () => {
                 if (!hasFile) {
@@ -3465,11 +3966,25 @@ Department of CE & IT`;
                 });
             };
 
-            getAttachmentData().then(attachInfo => {
+            Promise.all([
+                generateReportPdfBase64(),
+                getAttachmentData()
+            ]).then(([pdfObj, zipObj]) => {
                 submitBtn.innerHTML = `
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    <span>Sending Emails...</span>
+                    <span>Sending Emails with PDF Attachment...</span>
                 `;
+
+                const attachmentsList = [];
+                if (pdfObj && pdfObj.data) {
+                    attachmentsList.push(pdfObj);
+                }
+                if (zipObj && zipObj.attachment && zipObj.filename) {
+                    attachmentsList.push({
+                        data: zipObj.attachment,
+                        filename: zipObj.filename
+                    });
+                }
 
                 const htmlMessageFaculty = generateReportHtml(true);
                 const htmlMessageAdmin = generateReportHtml(false);
@@ -3518,8 +4033,9 @@ Department of CE & IT`;
                                 html: htmlMessageAdmin
                             }
                         ],
-                        attachment: attachInfo.attachment,
-                        filename: attachInfo.filename,
+                        attachments: attachmentsList,
+                        attachment: zipObj ? zipObj.attachment : "",
+                        filename: zipObj ? zipObj.filename : "",
                         dept: document.getElementById("facultyDept").value === "Computer Engineering" ? "CE" : "IT"
                     })
                 }).then(res => res.json());
@@ -3676,8 +4192,13 @@ Department of CE & IT`;
             photosInput.classList.remove("is-invalid");
             driveInput.classList.remove("is-invalid");
             
-            const zipRadio = document.getElementById("photoMethodZip");
-            if (zipRadio) zipRadio.checked = true;
+            const driveRadio = document.getElementById("photoMethodDrive");
+            if (driveRadio) driveRadio.checked = true;
+            const largeZipChk = document.getElementById("largeZipCheckbox");
+            if (largeZipChk) {
+                largeZipChk.checked = false;
+                largeZipChk.classList.remove("is-invalid");
+            }
             togglePhotoMethod();
 
             // Reset Deadline check and picker
@@ -4550,7 +5071,7 @@ Department of CE & IT`;
     </script>
 </body>
 
-</html>cript>
+</html>
 </body>
 
 </html>

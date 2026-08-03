@@ -166,6 +166,7 @@ function send_instant_success_response() {
 $emails = $input['emails'] ?? [];
 $attachment = $input['attachment'] ?? '';
 $filename = $input['filename'] ?? '';
+$attachments = $input['attachments'] ?? [];
 
 if (!empty($emails) && is_array($emails)) {
     // Multi-email request
@@ -177,8 +178,11 @@ if (!empty($emails) && is_array($emails)) {
             $cc = $item['cc'] ?? [];
             $subject = $item['subject'] ?? '';
             $html = $item['html'] ?? '';
+            $item_attachments = $item['attachments'] ?? $attachments;
+            $item_attachment = $item['attachment'] ?? $attachment;
+            $item_filename = $item['filename'] ?? $filename;
             if (!empty($to)) {
-                send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $attachment, $filename, $from_name);
+                send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $item_attachment, $item_filename, $from_name, $item_attachments);
             }
         }
     } catch (Exception $e) {
@@ -201,7 +205,7 @@ if (!empty($emails) && is_array($emails)) {
     send_instant_success_response();
     
     try {
-        send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $attachment, $filename, $from_name);
+        send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $attachment, $filename, $from_name, $attachments);
     } catch (Exception $e) {
         error_log("Single SMTP Error: " . $e->getMessage());
     }
@@ -212,7 +216,7 @@ if (!empty($emails) && is_array($emails)) {
 /**
  * Direct SMTP socket client to send mail via Gmail SSL port 465
  */
-function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attachment = '', $filename = '', $from_name = 'IT Department') {
+function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attachment = '', $filename = '', $from_name = 'IT Department', $attachments = []) {
     $timeout = 15;
     $smtp = fsockopen("ssl://smtp.gmail.com", 465, $errno, $errstr, $timeout);
     if (!$smtp) {
@@ -282,12 +286,15 @@ function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attac
         throw new Exception("DATA command failed: " . trim($response));
     }
 
-    // Clean data URI from attachment if present
-    if (!empty($attachment) && preg_match('/^data:.*;base64,/', $attachment)) {
-        $attachment = preg_replace('/^data:.*;base64,/', '', $attachment);
+    // Build attachments list
+    $all_attachments = [];
+    if (!empty($attachments) && is_array($attachments)) {
+        $all_attachments = $attachments;
+    } else if (!empty($attachment) && !empty($filename)) {
+        $all_attachments[] = ['data' => $attachment, 'filename' => $filename];
     }
 
-    if (!empty($attachment) && !empty($filename)) {
+    if (!empty($all_attachments)) {
         $boundary = md5(uniqid(time(), true));
 
         $headers = [
@@ -310,11 +317,31 @@ function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attac
         $body .= "Content-Transfer-Encoding: 8bit\r\n\r\n";
         $body .= $html . "\r\n\r\n";
 
-        $body .= "--$boundary\r\n";
-        $body .= "Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; name=\"$filename\"\r\n";
-        $body .= "Content-Transfer-Encoding: base64\r\n";
-        $body .= "Content-Disposition: attachment; filename=\"$filename\"\r\n\r\n";
-        $body .= chunk_split($attachment) . "\r\n";
+        foreach ($all_attachments as $att) {
+            $att_data = $att['data'] ?? $att['attachment'] ?? '';
+            $att_filename = $att['filename'] ?? 'attachment';
+
+            if (preg_match('/^data:.*;base64,/', $att_data)) {
+                $att_data = preg_replace('/^data:.*;base64,/', '', $att_data);
+            }
+
+            if (empty($att_data)) continue;
+
+            $mime_type = "application/octet-stream";
+            if (preg_match('/\.pdf$/i', $att_filename)) {
+                $mime_type = "application/pdf";
+            } else if (preg_match('/\.zip$/i', $att_filename)) {
+                $mime_type = "application/zip";
+            } else if (preg_match('/\.xlsx$/i', $att_filename)) {
+                $mime_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            }
+
+            $body .= "--$boundary\r\n";
+            $body .= "Content-Type: {$mime_type}; name=\"{$att_filename}\"\r\n";
+            $body .= "Content-Transfer-Encoding: base64\r\n";
+            $body .= "Content-Disposition: attachment; filename=\"{$att_filename}\"\r\n\r\n";
+            $body .= chunk_split($att_data) . "\r\n";
+        }
 
         $body .= "--$boundary--";
 
