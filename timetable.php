@@ -1,4 +1,5 @@
 <?php
+require_once 'auto-cache-bust.php';
 $excelFile = __DIR__ . '/uploads/timetable/timetable.xlsx';
 if (!file_exists($excelFile)) {
     $glob = glob(__DIR__ . '/uploads/timetable/*.xlsx');
@@ -20,18 +21,17 @@ $jsDataExists = file_exists($jsDataFile);
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts & Preconnect -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@300;400;600;700;800&family=Share+Tech&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Playfair+Display:wght@700;800&family=Share+Tech&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/portal.css?v=3">
-    <link rel="stylesheet" href="assets/css/faculty.css?v=3">
-    <link rel="stylesheet" href="assets/css/timetable.css?v=8">
-    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/portal.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/faculty.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/timetable.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme-light.css'); ?>">
 </head>
 
 <body>
@@ -282,8 +282,8 @@ $jsDataExists = file_exists($jsDataFile);
     ?>
 
     <!-- Timetable Data and Logic -->
-    <script src="assets/js/facultyData.js"></script>
-    <script src="assets/js/timetableData.js"></script>
+    <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
+    <script src="<?php echo v_asset('assets/js/timetableData.js'); ?>"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const selectTrigger = document.getElementById("selectTrigger");
@@ -310,6 +310,7 @@ $jsDataExists = file_exists($jsDataFile);
             // Map Excel timetableData with official facultyData.js file to filter, name-match, and group by department
             const mappedTimetable = {};
             if (typeof facultyData !== 'undefined' && typeof timetableData !== 'undefined') {
+                // 1. First map official members from facultyData.js
                 facultyData.forEach(member => {
                     const initials = member.initials.toUpperCase().trim();
                     const excelKey = Object.keys(timetableData).find(
@@ -323,6 +324,22 @@ $jsDataExists = file_exists($jsDataFile);
                             designation: member.designation || '',
                             semesterInfo: timetableData[excelKey].semesterInfo || '',
                             schedule: timetableData[excelKey].schedule
+                        };
+                    }
+                });
+
+                // 2. Fallback: Map any extra keys in timetableData from Excel that were missing in facultyData
+                Object.keys(timetableData).forEach(excelKey => {
+                    const initials = excelKey.toUpperCase().trim();
+                    if (!mappedTimetable[initials]) {
+                        const item = timetableData[excelKey];
+                        mappedTimetable[initials] = {
+                            name: item.name || `Prof. ${initials}`,
+                            initials: initials,
+                            department: item.department || "Computer Engineering",
+                            designation: 'Faculty',
+                            semesterInfo: item.semesterInfo || '',
+                            schedule: item.schedule || []
                         };
                     }
                 });
@@ -627,14 +644,15 @@ $jsDataExists = file_exists($jsDataFile);
             });
 
             // Populate custom select options
-            function populateDropdown() {
+            function populateDropdown(searchQuery = "") {
                 optionsListContainer.innerHTML = "";
                 const sortedKeys = Object.keys(mappedTimetable).sort();
+                const q = (searchQuery || "").toLowerCase().trim();
                 
                 sortedKeys.forEach(initials => {
                     const data = mappedTimetable[initials];
-                    // If in timetable tab, show only active department
-                    if (currentTab !== "leave" && data.department !== currentActiveDept && data.department !== "Both") return;
+                    // If user is actively searching, match across ALL departments. If not searching, filter by active department.
+                    if (!q && currentTab !== "leave" && data.department !== currentActiveDept && data.department !== "Both") return;
 
                     const option = document.createElement("div");
                     option.className = `select-option ${initials === selectedInitials ? 'selected' : ''}`;
@@ -655,7 +673,9 @@ $jsDataExists = file_exists($jsDataFile);
 
             // Filter options dynamically
             function filterOptions(query) {
+                populateDropdown(query);
                 const q = query.toLowerCase().trim();
+                if (!q) return;
                 const options = optionsListContainer.querySelectorAll(".select-option");
                 options.forEach(opt => {
                     const text = opt.innerText.toLowerCase();
@@ -672,6 +692,25 @@ $jsDataExists = file_exists($jsDataFile);
                 selectedInitials = initials;
                 const faculty = mappedTimetable[initials];
                 if (!faculty) return;
+
+                // Auto-switch department tab if selected faculty belongs to the other department
+                if (currentTab !== "leave" && faculty.department !== "Both" && faculty.department !== currentActiveDept) {
+                    currentActiveDept = faculty.department;
+                    if (currentActiveDept === "Computer Engineering") {
+                        document.body.classList.add("ce-active");
+                        if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Computer Engineering";
+                        if (portalBadge) portalBadge.textContent = "CE Timetable";
+                        itBtn.classList.remove("active");
+                        ceBtn.classList.add("active");
+                    } else {
+                        document.body.classList.remove("ce-active");
+                        if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Information Technology";
+                        if (portalBadge) portalBadge.textContent = "IT Timetable";
+                        ceBtn.classList.remove("active");
+                        itBtn.classList.add("active");
+                    }
+                    populateDropdown(selectSearchInput ? selectSearchInput.value : "");
+                }
 
                 // Update UI text triggers
                 selectedFacultyText.innerText = `${faculty.name} (${initials})`;

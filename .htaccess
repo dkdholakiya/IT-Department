@@ -48,11 +48,14 @@ ErrorDocument 404 /it/error.php
 ErrorDocument 500 /it/error.php
 ErrorDocument 503 /it/error.php
 
-# 5. Live Server Auto Cache Revalidation (Bypasses stale browser cache without Ctrl+Shift+R)
+# 5. Live Server Speed Optimization: Gzip Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/x-javascript application/json application/xml image/svg+xml
+</IfModule>
+
+# 6. Smart Browser Asset Caching (Versioned assets with v_asset query parameter cache instantly)
 <IfModule mod_headers.c>
-    <FilesMatch "\.(js|css|json)$">
-        Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
-        Header set Pragma "no-cache"
-        Header set Expires "0"
+    <FilesMatch "\.(js|css|ico|png|jpg|jpeg|svg|woff2)$">
+        Header set Cache-Control "public, max-age=604800, must-revalidate"
     </FilesMatch>
 </IfModule>

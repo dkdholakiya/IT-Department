@@ -230,12 +230,17 @@ if (!file_exists($excelFile)) {
             $facultyName = "Unknown Faculty";
             $facultyInitials = $sheetName;
             
-            $row3Val = isset($rows[3]['C']) ? $rows[3]['C'] : '';
-            if (preg_match('/PERSONAL\s*-\s*TIME\s*TABLE\s*\|\s*(.*?)\s*\((.*?)\)/i', $row3Val, $m)) {
+            $row3Val = isset($rows[3]['C']) ? $rows[3]['C'] : (isset($rows[3]['B']) ? $rows[3]['B'] : '');
+            if (preg_match('/PERSONAL\s*[-|]?\s*TIME\s*TABLE\s*[-|]?\s*(.*?)\s*\((.*?)\)/i', $row3Val, $m)) {
                 $facultyName = trim($m[1]);
                 $facultyInitials = trim($m[2]);
-            } else if (preg_match('/PERSONAL\s*-\s*TIME\s*TABLE\s*\|\s*(.*)/i', $row3Val, $m)) {
-                $facultyName = trim($m[1]);
+            } else if (preg_match('/PERSONAL\s*[-|]?\s*TIME\s*TABLE\s*[-|]?\s*(.*)/i', $row3Val, $m)) {
+                $rawTitle = trim($m[1]);
+                $rawTitle = preg_replace('/^Faculty\s+Short\s+Name\s*:\s*/i', '', $rawTitle);
+                $rawTitle = trim($rawTitle);
+                if (!empty($rawTitle) && strlen($rawTitle) > 3) {
+                    $facultyName = $rawTitle;
+                }
             }
             
             if (strtoupper($facultyName) == "UNKNOWN FACULTY" || empty($facultyName)) {
@@ -347,9 +352,10 @@ if (!file_exists($excelFile)) {
         }
 
         $jsContent = "// Auto-generated Faculty Timetable Data\n";
-        $jsContent .= "const timetableData = " . json_encode($timetableDataset, JSON_PRETTY_PRINT) . ";\n";
+        $jsContent .= "const timetableData = " . json_encode($timetableDataset, JSON_UNESCAPED_UNICODE) . ";\n";
 
         if (file_put_contents(__DIR__ . '/assets/js/timetableData.js', $jsContent)) {
+            @touch(__DIR__ . '/assets/js/timetableData.js');
             $success = true;
             $facultyCount = count($timetableDataset);
             $message = "Successfully processed and compiled schedules for $facultyCount faculty members.";

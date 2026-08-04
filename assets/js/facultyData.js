@@ -155,17 +155,17 @@ const facultyData = [
         avatarClass: "av-sp",
         initials: "SRP"
     },
-    // {
-    //     id: "pr",
-    //     name: "Dr. Pruthviraj Parmar",
-    //     designation: "HR Director",
-    //     department: "Information Technology",
-    //     empId: "#88888",
-    //     email: "pvparmar@gmiu.edu.in",
-    //     phone: "90339 08112",
-    //     avatarClass: "av-pr",
-    //     initials: "PVP"
-    // },
+    {
+        id: "pr",
+        name: "Dr. Pruthviraj Parmar",
+        designation: "HR Director",
+        department: "Information Technology",
+        empId: "#88888",
+        email: "pvparmar@gmiu.edu.in",
+        phone: "90339 08112",
+        avatarClass: "av-pr",
+        initials: "PVP"
+    },
     {
         id: "sv",
         name: "Prof. Sahil Vasaya",

@@ -1,4 +1,5 @@
 <?php
+require_once 'auto-cache-bust.php';
 $active_page = 'workload-summary';
 $excelFile = __DIR__ . '/uploads/timetable/timetable.xlsx';
 if (!file_exists($excelFile)) {
@@ -859,8 +860,8 @@ $jsDataExists = file_exists($jsDataFile);
     </main>
 
     <!-- Include Data Files -->
-    <script src="assets/js/facultyData.js?v=<?php echo time(); ?>"></script>
-    <script src="assets/js/timetableData.js?v=<?php echo time(); ?>"></script>
+    <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
+    <script src="<?php echo v_asset('assets/js/timetableData.js'); ?>"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -909,12 +910,11 @@ $jsDataExists = file_exists($jsDataFile);
 
             // Add any faculty from facultyData that might not have a timetable tab yet
             facultyData.forEach(f => {
-                // Exclude non-teaching administrative/developer roles (HOD, Developer, Admin, HR Director)
+                // Exclude non-teaching administrative/developer roles (HOD, Developer, Admin)
                 if (f.designation && (
                     f.designation.toLowerCase() === "hod" ||
                     f.designation.toLowerCase().includes("developer") ||
-                    f.designation.toLowerCase().includes("admin") ||
-                    f.designation.toLowerCase().includes("hr director")
+                    f.designation.toLowerCase().includes("admin")
                 )) return;
 
                 if (!allRows.some(r => r.initials.toUpperCase() === f.initials.toUpperCase())) {
@@ -946,12 +946,11 @@ $jsDataExists = file_exists($jsDataFile);
             // Render table
             function renderTable() {
                 let filtered = allRows.filter(r => {
-                    // Exclude non-teaching administrative & developer entries (HOD, Developer, Admin, HR Director)
+                    // Exclude non-teaching administrative & developer entries (HOD, Developer, Admin)
                     if (r.designation && (
                         r.designation.toLowerCase() === "hod" ||
                         r.designation.toLowerCase().includes("developer") ||
-                        r.designation.toLowerCase().includes("admin") ||
-                        r.designation.toLowerCase().includes("hr director")
+                        r.designation.toLowerCase().includes("admin")
                     )) return false;
 
                     let matchesFilter = (currentFilter === "ALL") || (r.department === currentFilter) || (r.department === "Both");
