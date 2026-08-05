@@ -1,4 +1,6 @@
 <?php 
+require_once 'auto-cache-bust.php';
+
 // Public access: session start and security headers without auth check redirection
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -44,6 +46,7 @@ $excelFiles = glob($studentUploadDir . '*.{xlsx,xls}', GLOB_BRACE);
 $excelExists = !empty($excelFiles);
 $activeExcelFile = $excelExists ? basename($excelFiles[0]) : '';
 $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excelFiles[0]) : '';
+$excelMTime = ($excelExists && file_exists($studentUploadDir . $activeExcelFile)) ? filemtime($studentUploadDir . $activeExcelFile) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,16 +60,18 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts & Preconnect for Fast Loading -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/portal.css?v=3">
-    <link rel="stylesheet" href="assets/css/faculty.css?v=3">
-    <link rel="stylesheet" href="assets/css/timetable.css?v=8">
-    <link rel="stylesheet" href="assets/css/theme-light.css?v=<?php echo time(); ?>">
+    <!-- Stylesheets with Auto Cache Busting -->
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/portal.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/faculty.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/timetable.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme-light.css'); ?>">
 
     <style>
         /* Modern Dark Glassmorphic Theme (Matches Website Aesthetic) */
@@ -620,6 +625,254 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
             border: 1px dashed rgba(255, 255, 255, 0.08);
         }
 
+        /* ══════════════════════════════════════════════════════════
+           Light Theme Specific Overrides for Student Timetable
+           ══════════════════════════════════════════════════════════ */
+        html[data-theme="light"] .student-tt-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+            color: #0f172a;
+        }
+
+        html[data-theme="light"] .controls-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        html[data-theme="light"] .student-select-wrap .custom-form-select {
+            background: #ffffff;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        html[data-theme="light"] .student-select-wrap .custom-form-select:hover,
+        html[data-theme="light"] .student-select-wrap .custom-form-select:focus {
+            border-color: #c0392b;
+            box-shadow: 0 0 10px rgba(192, 57, 43, 0.15);
+        }
+
+        html[data-theme="light"] body.ce-active .student-select-wrap .custom-form-select:hover,
+        html[data-theme="light"] body.ce-active .student-select-wrap .custom-form-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.15);
+        }
+
+        html[data-theme="light"] .student-select-wrap .select-arrow {
+            color: #475569;
+        }
+
+        html[data-theme="light"] .student-tt-card table {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        html[data-theme="light"] .student-tt-card th, 
+        html[data-theme="light"] .student-tt-card td {
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
+        }
+
+        html[data-theme="light"] .student-tt-card .university-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #ffffff;
+            border-bottom: 2px solid #0284c7;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        html[data-theme="light"] .student-tt-card .institute-header {
+            background: #f0f9ff;
+            color: #0284c7;
+            border-bottom: 1px solid #e0f2fe;
+        }
+
+        html[data-theme="light"] .student-tt-card .title-header {
+            background: #fef2f2;
+            color: #dc2626;
+            border-bottom: 1px solid #fee2e2;
+        }
+
+        html[data-theme="light"] .student-tt-card .header-info-row td {
+            background: #f8fafc;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+
+        html[data-theme="light"] .student-tt-card .days-header-row td {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            border-bottom: 2px solid #94a3b8;
+        }
+
+        html[data-theme="light"] .student-tt-card .recess-row {
+            background: linear-gradient(90deg, #fef3c7 0%, #fde68a 50%, #fef3c7 100%) !important;
+            color: #92400e !important;
+            border: 1px solid #f59e0b !important;
+        }
+
+        html[data-theme="light"] .student-tt-card .logo-cell {
+            background: #f8fafc;
+        }
+
+        html[data-theme="light"] .slot-pill {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        html[data-theme="light"] .slot-pill:hover {
+            border-color: #0284c7;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+        }
+
+        html[data-theme="light"] .slot-pill .fac-init {
+            color: #e11d48;
+        }
+
+        html[data-theme="light"] .slot-pill .room-tag {
+            color: #0284c7;
+        }
+
+        html[data-theme="light"] .student-tt-card .details-section {
+            border-top: 1px solid #e2e8f0;
+        }
+
+        html[data-theme="light"] .student-tt-card .details-column {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #334155;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        html[data-theme="light"] .student-tt-card .details-column:nth-child(1) {
+            border-left-color: #10b981;
+        }
+
+        html[data-theme="light"] .student-tt-card .details-column:nth-child(1) strong {
+            color: #047857;
+        }
+
+        html[data-theme="light"] .student-tt-card .details-column:nth-child(2) {
+            border-left-color: #f43f5e;
+        }
+
+        html[data-theme="light"] .student-tt-card .details-column:nth-child(2) strong {
+            color: #e11d48;
+        }
+
+        html[data-theme="light"] .student-tt-card .details-column:nth-child(3) {
+            border-left-color: #0284c7;
+        }
+
+        html[data-theme="light"] .student-tt-card .details-column:nth-child(3) strong {
+            color: #0369a1;
+        }
+
+        html[data-theme="light"] .student-tt-card .signatures {
+            color: #0f172a;
+        }
+
+        html[data-theme="light"] .student-tt-card .signatures div {
+            border-top: 1.5px dashed #64748b;
+        }
+
+        html[data-theme="light"] .student-tt-card .signatures span {
+            color: #64748b;
+        }
+
+        html[data-theme="light"] .meta-badge {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        }
+
+        html[data-theme="light"] .mobile-tabs-container {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        html[data-theme="light"] .day-tab-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+        }
+
+        html[data-theme="light"] .day-tab-btn:hover {
+            color: #0284c7;
+            border-color: #38bdf8;
+            background: #f0f9ff;
+        }
+
+        html[data-theme="light"] .day-tab-btn.active {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            border-color: #0284c7;
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+        }
+
+        html[data-theme="light"] .mobile-slot-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        html[data-theme="light"] .mobile-slot-card:hover {
+            border-color: #38bdf8;
+            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.15);
+        }
+
+        html[data-theme="light"] .mobile-slot-time {
+            color: #0284c7;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        html[data-theme="light"] .mobile-slot-subject {
+            color: #0f172a;
+        }
+
+        html[data-theme="light"] .mobile-slot-faculty {
+            color: #e11d48;
+            background: #ffe4e6;
+        }
+
+        html[data-theme="light"] .mobile-slot-room {
+            color: #0284c7;
+            background: #e0f2fe;
+        }
+
+        html[data-theme="light"] .mobile-recess-divider {
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+
+        html[data-theme="light"] .mobile-empty-state {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            color: #64748b;
+        }
+
+        html[data-theme="light"] .controls-card.empty-state-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        html[data-theme="light"] .empty-state-title {
+            color: #dc2626;
+        }
+
+        html[data-theme="light"] .empty-state-desc {
+            color: #475569;
+        }
+
         /* Responsive Breakpoints */
         @media (max-width: 768px) {
             .desktop-timetable-view {
@@ -900,6 +1153,8 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
 
 <body>
 
+    <?php include_once 'theme-toggle.php'; ?>
+
     <!-- ░░ Particles ░░ -->
     <div class="particles" aria-hidden="true">
         <div class="particle"></div>
@@ -996,12 +1251,6 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
                     <table>
                         <!-- Header Rows -->
                         <tr>
-                            <td colspan="8" class="university-header">GYANMANJARI INNOVATIVE UNIVERSITY (GMIU)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="8" class="institute-header">Gyanmanjari Institute of Technology</td>
-                        </tr>
-                        <tr>
                             <td colspan="8" class="title-header" id="stTitleHeader">Time Table</td>
                         </tr>
                         <tr class="header-info-row bold">
@@ -1087,10 +1336,13 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
     <!-- Data & Excel Parsing Libraries -->
     <?php if ($excelExists): ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="assets/js/facultyData.js"></script>
+    <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const excelPath = "<?php echo $activeExcelPath; ?>";
+            const excelMTime = "<?php echo $excelMTime; ?>";
+            const cacheKey = "st_tt_data_v3_" + excelMTime;
+
             const sheetSelect = document.getElementById("sheetSelect");
 
             const stTitleHeader = document.getElementById("stTitleHeader");
@@ -1107,56 +1359,84 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
             const rpDeptBadgeText = document.getElementById("rpDeptBadgeText");
             const portalBadge = document.getElementById("portalBadge");
 
-            let workbook = null;
+            let cachedWorkbook = null;
 
-            // Populate all sheet options directly from uploaded Excel file
-            function updateSheetDropdown() {
-                if (!workbook) return;
+            // Fast 0ms instant load from sessionStorage
+            try {
+                const stored = sessionStorage.getItem(cacheKey);
+                if (stored) {
+                    cachedWorkbook = JSON.parse(stored);
+                }
+            } catch(e) {}
 
-                const allSheets = workbook.SheetNames;
+            if (cachedWorkbook && cachedWorkbook.SheetNames && cachedWorkbook.SheetNames.length > 0) {
+                initTimetable(cachedWorkbook);
+            } else {
+                fetch(excelPath)
+                    .then(res => res.arrayBuffer())
+                    .then(buffer => {
+                        const data = new Uint8Array(buffer);
+                        const wb = XLSX.read(data, { type: 'array' });
+                        cachedWorkbook = {
+                            SheetNames: wb.SheetNames,
+                            SheetsData: {},
+                            MergesData: {}
+                        };
+                        wb.SheetNames.forEach(sName => {
+                            const sheet = wb.Sheets[sName];
+                            cachedWorkbook.SheetsData[sName] = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+                            cachedWorkbook.MergesData[sName] = sheet['!merges'] || null;
+                        });
+                        try {
+                            sessionStorage.setItem(cacheKey, JSON.stringify(cachedWorkbook));
+                        } catch(e) {}
+                        initTimetable(cachedWorkbook);
+                    })
+                    .catch(err => {
+                        console.error("Error loading student timetable Excel:", err);
+                    });
+            }
+
+            function initTimetable(wbData) {
+                const allSheets = wbData.SheetNames;
                 sheetSelect.innerHTML = "";
 
-                if (allSheets.length === 0) {
+                if (!allSheets || allSheets.length === 0) {
                     sheetSelect.innerHTML = `<option value="">No sheets found in Excel file</option>`;
                     return;
+                }
+
+                const savedSheet = localStorage.getItem("gmiu_student_tt_sheet");
+                let defaultSheet = allSheets[0];
+                if (savedSheet && allSheets.includes(savedSheet)) {
+                    defaultSheet = savedSheet;
                 }
 
                 allSheets.forEach((sName, index) => {
                     const option = document.createElement("option");
                     option.value = sName;
                     option.textContent = `${index + 1}. ${sName}`;
-                    if (index === 0) option.selected = true;
+                    if (sName === defaultSheet) option.selected = true;
                     sheetSelect.appendChild(option);
                 });
 
-                renderSheet(allSheets[0]);
+                renderSheet(defaultSheet);
             }
-
-            // Load Excel workbook from uploads/student_timetable/
-            fetch(excelPath)
-                .then(res => res.arrayBuffer())
-                .then(buffer => {
-                    const data = new Uint8Array(buffer);
-                    workbook = XLSX.read(data, { type: 'array' });
-                    updateSheetDropdown();
-                })
-                .catch(err => {
-                    console.error("Error loading student timetable Excel:", err);
-                });
 
             // Sheet Selection Change Listener
             sheetSelect.addEventListener("change", (e) => {
-                if (workbook && e.target.value) {
+                if (cachedWorkbook && e.target.value) {
+                    try { localStorage.setItem("gmiu_student_tt_sheet", e.target.value); } catch(err) {}
                     renderSheet(e.target.value);
                 }
             });
 
             // Render selected sheet contents from Excel file
             function renderSheet(sheetName) {
-                if (!workbook || !workbook.Sheets[sheetName]) return;
+                if (!cachedWorkbook || !cachedWorkbook.SheetsData[sheetName]) return;
 
-                const sheet = workbook.Sheets[sheetName];
-                const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+                const rows = cachedWorkbook.SheetsData[sheetName];
+                const sheetMerges = cachedWorkbook.MergesData[sheetName];
 
                 if (!rows || rows.length === 0) return;
 
@@ -1240,11 +1520,11 @@ $activeExcelPath = $excelExists ? 'uploads/student_timetable/' . basename($excel
                     scheduleRowIndices.push(i);
                 }
 
-                // Map merged cells (rowspans) from sheet['!merges'] or consecutive empty slot detection
+                // Map merged cells (rowspans) from sheetMerges or consecutive empty slot detection
                 const mergeGrid = {}; // key: "rowIdx,colIdx" -> { rowspan, skip }
 
-                if (sheet['!merges']) {
-                    sheet['!merges'].forEach(m => {
+                if (sheetMerges) {
+                    sheetMerges.forEach(m => {
                         const startR = m.s.r;
                         const endR = m.e.r;
                         const startC = m.s.c;
