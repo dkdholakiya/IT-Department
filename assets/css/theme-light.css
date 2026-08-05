@@ -2496,3 +2496,225 @@ html[data-theme="light"] #previewModal .modal-footer .btn-secondary:hover {
     background: #cbd5e1 !important;
     color: #0f172a !important;
 }
+
+/* ── Student Timetable Light Theme Overrides ── */
+html[data-theme="light"] .student-tt-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: blur(20px) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .student-select-wrap .custom-form-select {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .student-select-wrap .custom-form-select:hover,
+html[data-theme="light"] .student-select-wrap .custom-form-select:focus {
+    border-color: #c0392b !important;
+    box-shadow: 0 0 10px rgba(192, 57, 43, 0.15) !important;
+}
+
+html[data-theme="light"] body.ce-active .student-select-wrap .custom-form-select:hover,
+html[data-theme="light"] body.ce-active .student-select-wrap .custom-form-select:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.15) !important;
+}
+
+html[data-theme="light"] .student-tt-card table {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .student-tt-card th, 
+html[data-theme="light"] .student-tt-card td {
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .student-tt-card .university-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%) !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid #0284c7 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+html[data-theme="light"] .student-tt-card .institute-header {
+    background: #f0f9ff !important;
+    color: #0284c7 !important;
+    border-bottom: 1px solid #e0f2fe !important;
+}
+
+html[data-theme="light"] .student-tt-card .title-header {
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    border-bottom: 1px solid #fee2e2 !important;
+}
+
+html[data-theme="light"] .student-tt-card .header-info-row td {
+    background: #f8fafc !important;
+    color: #334155 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html[data-theme="light"] .student-tt-card .days-header-row td {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    border-bottom: 2px solid #94a3b8 !important;
+}
+
+html[data-theme="light"] .student-tt-card .recess-row {
+    background: linear-gradient(90deg, #fef3c7 0%, #fde68a 50%, #fef3c7 100%) !important;
+    color: #92400e !important;
+    border: 1px solid #f59e0b !important;
+}
+
+html[data-theme="light"] .student-tt-card .logo-cell {
+    background: #f8fafc !important;
+}
+
+html[data-theme="light"] .slot-pill {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .slot-pill:hover {
+    border-color: #0284c7 !important;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15) !important;
+}
+
+html[data-theme="light"] .slot-pill .fac-init {
+    color: #e11d48 !important;
+}
+
+html[data-theme="light"] .slot-pill .room-tag {
+    color: #0284c7 !important;
+}
+
+html[data-theme="light"] .student-tt-card .details-section {
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] .student-tt-card .details-column {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #334155 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+}
+
+html[data-theme="light"] .student-tt-card .details-column:nth-child(1) {
+    border-left-color: #10b981 !important;
+}
+
+html[data-theme="light"] .student-tt-card .details-column:nth-child(1) strong {
+    color: #047857 !important;
+}
+
+html[data-theme="light"] .student-tt-card .details-column:nth-child(2) {
+    border-left-color: #f43f5e !important;
+}
+
+html[data-theme="light"] .student-tt-card .details-column:nth-child(2) strong {
+    color: #e11d48 !important;
+}
+
+html[data-theme="light"] .student-tt-card .details-column:nth-child(3) {
+    border-left-color: #0284c7 !important;
+}
+
+html[data-theme="light"] .student-tt-card .details-column:nth-child(3) strong {
+    color: #0369a1 !important;
+}
+
+html[data-theme="light"] .student-tt-card .signatures {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .student-tt-card .signatures div {
+    border-top: 1.5px dashed #64748b !important;
+}
+
+html[data-theme="light"] .student-tt-card .signatures span {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .meta-badge {
+    background: #f1f5f9 !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+}
+
+html[data-theme="light"] .mobile-tabs-container {
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] .day-tab-btn {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #475569 !important;
+}
+
+html[data-theme="light"] .day-tab-btn:hover {
+    color: #0284c7 !important;
+    border-color: #38bdf8 !important;
+    background: #f0f9ff !important;
+}
+
+html[data-theme="light"] .day-tab-btn.active {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    border-color: #0284c7 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25) !important;
+}
+
+html[data-theme="light"] .mobile-slot-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .mobile-slot-card:hover {
+    border-color: #38bdf8 !important;
+    box-shadow: 0 6px 16px rgba(56, 189, 248, 0.15) !important;
+}
+
+html[data-theme="light"] .mobile-slot-time {
+    color: #0284c7 !important;
+    border-right: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] .mobile-slot-subject {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .mobile-slot-faculty {
+    color: #e11d48 !important;
+    background: #ffe4e6 !important;
+}
+
+html[data-theme="light"] .mobile-slot-room {
+    color: #0284c7 !important;
+    background: #e0f2fe !important;
+}
+
+html[data-theme="light"] .mobile-recess-divider {
+    background: #fef3c7 !important;
+    border: 1px solid #fde68a !important;
+    color: #92400e !important;
+}
+
+html[data-theme="light"] .mobile-empty-state {
+    background: #f8fafc !important;
+    border: 1px dashed #cbd5e1 !important;
+    color: #64748b !important;
+}

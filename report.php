@@ -2796,8 +2796,8 @@
                             const val = input.value.toUpperCase();
                             specificHtml += `
                                 <tr>
-                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Playfair Display', serif;">${label}</td>
-                                    <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${val}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Lora', Georgia, serif;">${label}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${val}</td>
                                 </tr>
                             `;
                         }
@@ -2806,8 +2806,8 @@
                         const val = (input.value || "-").toUpperCase();
                         specificHtml += `
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Playfair Display', serif;">${label}</td>
-                                <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${val}</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Lora', Georgia, serif;">${label}</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${val}</td>
                             </tr>
                         `;
                     }
@@ -2818,151 +2818,154 @@
             const docTitle = getCleanActivityTitle(reportType).toUpperCase();
 
             return `
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+            </style>
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap" rel="stylesheet">
-            <div style="font-family: 'Playfair Display', serif; line-height: 1.6; color: #333; max-width: 700px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                <div style="background-color: #8c1d1d; color: white; padding: 25px; text-align: center; font-family: 'Playfair Display', serif;">
-                    <h2 style="margin: 0; font-size: 22px; font-weight: bold; letter-spacing: 0.5px; font-family: 'Playfair Display', serif; text-transform: uppercase;">${deptTitle}</h2>
-                    <div style="margin-top: 15px; display: inline-block; background-color: rgba(255, 255, 255, 0.2); padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; font-family: 'Playfair Display', serif;">
+            <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+            <div style="font-family: 'Lora', Georgia, serif; line-height: 1.6; color: #333; max-width: 700px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <div style="background-color: #8c1d1d; color: white; padding: 25px; text-align: center; font-family: 'Lora', Georgia, serif;">
+                    <h2 style="margin: 0; font-size: 22px; font-weight: bold; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif; text-transform: uppercase;">${deptTitle}</h2>
+                    <div style="margin-top: 15px; display: inline-block; background-color: rgba(255, 255, 255, 0.2); padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; font-family: 'Playfair Display', Georgia, serif;">
                         ${docTitle}
                     </div>
                 </div>
                 
-                <div style="padding: 25px; background-color: #ffffff; font-family: 'Playfair Display', serif;">
-                    <p style="margin-top: 0; font-size: 15px; font-family: 'Playfair Display', serif;">
+                <div style="padding: 25px; background-color: #ffffff; font-family: 'Lora', Georgia, serif;">
+                    <p style="margin-top: 0; font-size: 15px; font-family: 'Lora', Georgia, serif;">
                         ${isFacultyCopy ? `<strong>DEAR ${facultyName}</strong>,` : `<strong>DEAR ADMINISTRATOR</strong>,`}
                     </p>
-                    <p style="font-size: 14px; color: #555; font-family: 'Playfair Display', serif;">
+                    <p style="font-size: 14px; color: #555; font-family: 'Lora', Georgia, serif;">
     KINDLY <strong>REVIEW</strong> THE <strong>DETAILS</strong> PROVIDED BELOW.
 </p>
                     ${isFacultyCopy ? `
-                    <p style="font-size: 14px; color: #555; font-family: 'Playfair Display', serif; margin-top: 10px;">
+                    <p style="font-size: 14px; color: #555; font-family: 'Lora', Georgia, serif; margin-top: 10px;">
                         THIS INFORMATION IS FOR YOUR <strong>REVIEW</strong>. PLEASE CHECK IF THERE IS ANY <strong>MISSING OR INCORRECT DETAIL</strong>. IF ANY <strong>CHANGES OR UPDATES</strong> ARE REQUIRED, PLEASE <strong>REPORT AND SUBMIT</strong> THEM TO <strong>Mr. DEV DHOLAKIYA</strong>.
                     </p>
                     ` : ''}
-                    <div style="margin-top: 15px; padding: 12px 15px; background-color: #fff8e6; border-left: 4px solid #f59e0b; border-radius: 4px; font-size: 13px; color: #854d0e; font-family: 'Playfair Display', serif;">
+                    <div style="margin-top: 15px; padding: 12px 15px; background-color: #fff8e6; border-left: 4px solid #f59e0b; border-radius: 4px; font-size: 13px; color: #854d0e; font-family: 'Lora', Georgia, serif;">
                         <strong>Please Note:</strong><br>
                         The report will be ready within a minimum of 48 hours.
                     </div>
                     
-                    <h3 style="color: #8c1d1d; border-bottom: 2px solid #8c1d1d; padding-bottom: 5px; font-size: 16px; margin-top: 25px; font-family: 'Playfair Display', serif;">1. FACULTY REQUEST PROFILE</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; font-family: 'Playfair Display', serif;">
+                    <h3 style="color: #8c1d1d; border-bottom: 2px solid #8c1d1d; padding-bottom: 5px; font-size: 16px; margin-top: 25px; font-family: 'Playfair Display', Georgia, serif;">1. FACULTY REQUEST PROFILE</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; font-family: 'Lora', Georgia, serif;">
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Playfair Display', serif;">FACULTY NAME</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${facultyName}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Lora', Georgia, serif;">FACULTY NAME</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${facultyName}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">DESIGNATION</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${designation}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">DESIGNATION</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${designation}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">EMPLOYEE ID</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${empId}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">EMPLOYEE ID</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${empId}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">EMAIL ADDRESS</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;"><a href="mailto:${email.toLowerCase()}" style="color: #8c1d1d; text-decoration: underline; font-family: 'Playfair Display', serif;">${email}</a></td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">EMAIL ADDRESS</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;"><a href="mailto:${email.toLowerCase()}" style="color: #8c1d1d; text-decoration: underline; font-family: 'Lora', Georgia, serif;">${email}</a></td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">MOBILE NUMBER</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${phone}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">MOBILE NUMBER</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${phone}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">DEPARTMENT</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${dept}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">DEPARTMENT</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${dept}</td>
                         </tr>
                     </table>
 
-                    <h3 style="color: #8c1d1d; border-bottom: 2px solid #8c1d1d; padding-bottom: 5px; font-size: 16px; margin-top: 25px; font-family: 'Playfair Display', serif;">2. BASIC ACTIVITY DETAILS</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; font-family: 'Playfair Display', serif;">
+                    <h3 style="color: #8c1d1d; border-bottom: 2px solid #8c1d1d; padding-bottom: 5px; font-size: 16px; margin-top: 25px; font-family: 'Playfair Display', Georgia, serif;">2. BASIC ACTIVITY DETAILS</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; font-family: 'Lora', Georgia, serif;">
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Playfair Display', serif;">REPORT TITLE</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; color: #111; font-family: 'Playfair Display', serif;">${title}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; width: 30%; font-family: 'Lora', Georgia, serif;">REPORT TITLE</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; color: #111; font-family: 'Lora', Georgia, serif;">${title}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">ACADEMIC YEAR</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${year}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">ACADEMIC YEAR</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${year}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">REPORT TYPE</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${reportType}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">REPORT TYPE</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${reportType}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">ACTIVITY DATE</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${date}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">ACTIVITY DATE</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${date}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">DURATION / TIME</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${start} TO ${end}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">DURATION / TIME</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${start} TO ${end}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">VENUE</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${venue}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">VENUE</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${venue}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">PROGRAMME(S)</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${programmes}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">PROGRAMME(S)</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${programmes}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">SEMESTER & DIVISION</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">SEM ${semester} (${division})</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">SEMESTER & DIVISION</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">SEM ${semester} (${division})</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">PARTICIPANTS COUNT</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${participants}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">PARTICIPANTS COUNT</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${participants}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">BATCH</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${batch}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">BATCH</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${batch}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">STUDENT COORDINATOR</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${studentCoordinator}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">STUDENT COORDINATOR</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${studentCoordinator}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">PUBLISHED ON WEBSITE</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${publishWebsite}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">PUBLISHED ON WEBSITE</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${publishWebsite}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">PRESS NOTE REQUIRED</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${pressNote}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">PRESS NOTE REQUIRED</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${pressNote}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">FACULTY COORDINATOR(S)</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${coordinators}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">FACULTY COORDINATOR(S)</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${coordinators}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">BRIEF OBJECTIVE</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">${objective}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">BRIEF OBJECTIVE</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">${objective}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">PHOTOS ZIP FILE</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">PHOTOS ZIP FILE</td>
                             <td style="padding: 10px; border: 1px solid #ddd; font-family: monospace;">${zipName}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Playfair Display', serif;">GOOGLE DRIVE LINK</td>
-                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Playfair Display', serif;">
-                                ${(rawDriveLink.toLowerCase() !== "not provided" && !rawDriveLink.toLowerCase().includes("not provided")) ? `<a href="${rawDriveLink}" target="_blank" style="color: #8c1d1d; text-decoration: underline; font-family: 'Playfair Display', serif;">OPEN GOOGLE DRIVE FOLDER</a>` : "NOT PROVIDED"}
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fcfcfc; font-family: 'Lora', Georgia, serif;">GOOGLE DRIVE LINK</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Lora', Georgia, serif;">
+                                ${(rawDriveLink.toLowerCase() !== "not provided" && !rawDriveLink.toLowerCase().includes("not provided")) ? `<a href="${rawDriveLink}" target="_blank" style="color: #8c1d1d; text-decoration: underline; font-family: 'Lora', Georgia, serif;">OPEN GOOGLE DRIVE FOLDER</a>` : "NOT PROVIDED"}
                             </td>
                         </tr>
                         <tr style="background-color: #fff5f5;">
-                            <td style="padding: 10px; border: 1px solid #feb2b2; font-weight: bold; color: #c53030; font-family: 'Playfair Display', serif;">SUBMISSION DEADLINE</td>
-                            <td style="padding: 10px; border: 1px solid #feb2b2; font-family: 'Playfair Display', serif; font-weight: bold; color: #e53e3e; font-size: 14px; text-shadow: 0 0 8px rgba(229, 62, 62, 0.1);">${deadline}</td>
+                            <td style="padding: 10px; border: 1px solid #feb2b2; font-weight: bold; color: #c53030; font-family: 'Lora', Georgia, serif;">SUBMISSION DEADLINE</td>
+                            <td style="padding: 10px; border: 1px solid #feb2b2; font-family: 'Lora', Georgia, serif; font-weight: bold; color: #e53e3e; font-size: 14px; text-shadow: 0 0 8px rgba(229, 62, 62, 0.1);">${deadline}</td>
                         </tr>
                     </table>
 
                     ${specificHtml ? `
-                    <h3 style="color: #8c1d1d; border-bottom: 2px solid #8c1d1d; padding-bottom: 5px; font-size: 16px; margin-top: 25px; font-family: 'Playfair Display', serif;">3. ACTIVITY-SPECIFIC DETAILS</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; font-family: 'Playfair Display', serif;">
+                    <h3 style="color: #8c1d1d; border-bottom: 2px solid #8c1d1d; padding-bottom: 5px; font-size: 16px; margin-top: 25px; font-family: 'Playfair Display', Georgia, serif;">3. ACTIVITY-SPECIFIC DETAILS</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; font-family: 'Lora', Georgia, serif;">
                         ${specificHtml}
                     </table>
                     ` : ''}
                 </div>
-                <div class="footer-container" style="background-color: #f8fafc; padding: 24px 24px; border-top: 1px solid #cbd5e1; text-align: center; font-family: 'Playfair Display', serif;">
-                    <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.5; font-family: 'Playfair Display', serif;">THIS EMAIL WAS AUTOMATICALLY GENERATED BY THE <br><a href="https://engineering.gt.tc/" target="_blank" style="color: ${isCe ? '#2563eb' : '#c0392b'}; text-decoration: none; font-weight: 600; font-family: 'Playfair Display', serif;">${isCe ? 'CE DEPARTMENT' : 'IT DEPARTMENT'}</a>.</p>
-                    <p style="margin: 4px 0 0 0; font-size: 11px; color: #94a3b8; font-family: 'Playfair Display', serif;">&copy; 2026 ALL RIGHTS RESERVED.</p>
-                    <p style="margin: 6px 0 0 0; font-size: 11px; color: #64748b; font-family: 'Playfair Display', serif;"><a href="https://engineering.gt.tc/" target="_blank" style="color: ${isCe ? '#2563eb' : '#c0392b'}; text-decoration: underline; font-weight: 600; font-family: 'Playfair Display', serif;">https://engineering.gt.tc/</a></p>
+                <div class="footer-container" style="background-color: #f8fafc; padding: 24px 24px; border-top: 1px solid #cbd5e1; text-align: center; font-family: 'Lora', Georgia, serif;">
+                    <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.5; font-family: 'Lora', Georgia, serif;">THIS EMAIL WAS AUTOMATICALLY GENERATED BY THE <br><a href="https://engineering.gt.tc/" target="_blank" style="color: ${isCe ? '#2563eb' : '#c0392b'}; text-decoration: none; font-weight: 600; font-family: 'Lora', Georgia, serif;">${isCe ? 'CE DEPARTMENT' : 'IT DEPARTMENT'}</a>.</p>
+                    <p style="margin: 4px 0 0 0; font-size: 11px; color: #94a3b8; font-family: 'Lora', Georgia, serif;">&copy; 2026 ALL RIGHTS RESERVED.</p>
+                    <p style="margin: 6px 0 0 0; font-size: 11px; color: #64748b; font-family: 'Lora', Georgia, serif;"><a href="https://engineering.gt.tc/" target="_blank" style="color: ${isCe ? '#2563eb' : '#c0392b'}; text-decoration: underline; font-weight: 600; font-family: 'Lora', Georgia, serif;">https://engineering.gt.tc/</a></p>
                 </div>
             </div>
             `;
@@ -3852,6 +3855,13 @@ Department of CE & IT`;
             clone.style.margin = "0";
             clone.style.background = "#ffffff";
             clone.style.color = "#000000";
+            clone.style.fontFamily = "'Lora', Georgia, serif";
+
+            // Enforce explicit font styling on clone elements matching print view
+            const printHeaders = clone.querySelectorAll(".print-title, .print-section-title, #printDeptHeader");
+            printHeaders.forEach(h => {
+                h.style.fontFamily = "'Playfair Display', Georgia, serif";
+            });
 
             // Ensure table styles in clone fit 100% within the 718px width
             const tables = clone.querySelectorAll("table");
@@ -3862,6 +3872,7 @@ Department of CE & IT`;
                 t.style.tableLayout = "fixed";
                 t.style.wordBreak = "break-word";
                 t.style.overflowWrap = "break-word";
+                t.style.fontFamily = "'Lora', Georgia, serif";
             });
 
             const cells = clone.querySelectorAll("th, td");
@@ -3870,6 +3881,7 @@ Department of CE & IT`;
                 c.style.overflowWrap = "break-word";
                 c.style.whiteSpace = "normal";
                 c.style.boxSizing = "border-box";
+                c.style.fontFamily = "'Lora', Georgia, serif";
             });
 
             // Ensure signatures row stays within width

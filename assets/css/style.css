@@ -1817,13 +1817,18 @@ body.ce-active .form-check-input:checked {
 }
 
 /* Printable Layout Style */
-#printReportArea {
+#printReportArea,
+#pdfPrintClone {
     display: none;
     background: #ffffff;
     color: #000000;
     padding: 40px;
     font-family: 'Lora', Georgia, serif;
     min-height: 100vh;
+}
+
+#pdfPrintClone {
+    display: block !important;
 }
 
 .print-header {
@@ -1834,7 +1839,7 @@ body.ce-active .form-check-input:checked {
 }
 
 .print-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-weight: 800;
     font-size: 24px;
     margin-top: 8px;
@@ -1850,7 +1855,7 @@ body.ce-active .form-check-input:checked {
 }
 
 .print-section-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 16px;
     font-weight: 700;
     border-bottom: 1px solid #000000;

@@ -461,7 +461,7 @@ const facultyData = [
         email: "fdremona@gmiu.edu.in",
         phone: "9909730707",
         avatarClass: "av-rfd",
-        initials: "RDF"
+        initials: "RFD"
     },
     {
         id: "hpg",
@@ -606,26 +606,170 @@ const facultyData = [
         avatarClass: "av-ygl",
         initials: "YGL"
     },
-    // {
-    //     id: "blv",
-    //     name: "Prof. B. L. Vyas",
-    //     designation: "Lecturer",
-    //     department: "Computer Engineering",
-    //     empId: "#10677",
-    //     email: "blvyas@gmiu.edu.in",
-    //     phone: "0",
-    //     avatarClass: "av-blv",
-    //     initials: "BLV"
-    // },
-    // {
-    //     id: "Ac",
-    //     name: "Admin Ce",
-    //     designation: "Admin Ce",
-    //     department: "Computer Engineering",
-    //     empId: "#22222",
-    //     email: "admincecse@gmiu.edu.in",
-    //     phone: "0000000000",
-    //     avatarClass: "av-AC",
-    //     initials: "AC"
-    // }
+    {
+        id: "blv",
+        name: "Prof. B. L. Vyas",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10677",
+        email: "blvyas@gmiu.edu.in",
+        phone: "0",
+        avatarClass: "av-blv",
+        initials: "BLV"
+    },
+    // External / Allied Department Faculty Members
+    {
+        id: "ap",
+        name: "Prof. Aayush Pandey",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10720",
+        email: "apandey@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-ap",
+        initials: "AP"
+    },
+    {
+        id: "dds",
+        name: "Prof. Diya D.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10721",
+        email: "ddiya@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-dds",
+        initials: "DDS"
+    },
+    {
+        id: "mjm",
+        name: "Prof. Mandeep J.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10722",
+        email: "mjmandeep@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-mjm",
+        initials: "MJM"
+    },
+    {
+        id: "mrs",
+        name: "Prof. Minakshi R.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10723",
+        email: "mrminakshi@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-mrs",
+        initials: "MRS"
+    },
+    {
+        id: "phc",
+        name: "Prof. Poorvi H.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10724",
+        email: "phpoorvi@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-phc",
+        initials: "PHC"
+    },
+    {
+        id: "pjv",
+        name: "Prof. Prashant J.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10725",
+        email: "pjprashant@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-pjv",
+        initials: "PJV"
+    },
+    {
+        id: "prc",
+        name: "Prof. Pankaj R.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10726",
+        email: "prpankaj@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-prc",
+        initials: "PRC"
+    },
+    {
+        id: "prd",
+        name: "Prof. Pratap R.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10727",
+        email: "prpratap@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-prd",
+        initials: "PRD"
+    },
+    {
+        id: "rjb",
+        name: "Dr. Ravi J.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10728",
+        email: "rjravi@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-rjb",
+        initials: "RJB"
+    },
+    {
+        id: "sap",
+        name: "Prof. Sahil A.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10729",
+        email: "sasahil@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-sap",
+        initials: "SAP"
+    },
+    {
+        id: "vhj",
+        name: "Prof. Vimal H.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10730",
+        email: "vhvimal@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-vhj",
+        initials: "VHJ"
+    },
+    {
+        id: "vmc",
+        name: "Prof. Vatsal M.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10731",
+        email: "vmvatsal@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-vmc",
+        initials: "VMC"
+    },
+    {
+        id: "yjg",
+        name: "Prof. Yuvrajsinh J.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10732",
+        email: "yjyuvraj@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-yjg",
+        initials: "YJG"
+    },
+    {
+        id: "ynb",
+        name: "Prof. Yogesh N.",
+        designation: "Assistant Professor",
+        department: "Allied",
+        empId: "#10733",
+        email: "ynyogesh@gmiu.edu.in",
+        phone: "",
+        avatarClass: "av-ynb",
+        initials: "YNB"
+    }
 ];
