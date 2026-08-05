@@ -25,6 +25,8 @@ return [
     // Google Sheets Apps Script Web App URLs
     'sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbzgEUHcbbF7k5gp8RyEJxwzPiUeTeu6wLIZOPbNn-ALnsGPPzyNEKVx9q5ZnHKESHEUxA/exec',
     'zero_sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbw1zMUC-u2HP1S1ld58Dc4HtIEqWTrcR8h1G0wNfc6bod2KW3rX9knynzW99c2z0oWf/exec',
+    'mail_tracking_webapp_url' => 'https://script.google.com/macros/s/AKfycbzxEuVzCR9mSSzoOWpRo2stvO5Bcn-MGRgpbCanDvnErmfQ-kZKXaIF7cXmf_az8rFEBg/exec', // Paste your deployed Google Apps Script Web App URL here for Email Audit Logs
+
 
     // Password configuration
     'password_required' => 1, // Toggle: 1 to require password, 0 to bypass (matches verify-password.php current state)
