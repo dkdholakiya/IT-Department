@@ -1,0 +1,47 @@
+# ==============================================================================
+# GitHub Actions - Automated Production FTP Deployment
+# Target Hosting: InfinityFree Web Hosting (/htdocs/)
+# ==============================================================================
+
+name: Production Deployment (FTP)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual trigger directly from GitHub UI
+
+# Prevent concurrent deployments from overwriting each other
+concurrency:
+  group: production-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: 🚀 Deploy to InfinityFree Hosting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Optimizes git diff calculation for incremental FTP transfers
+
+      - name: 📡 Synchronize Files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
+          server-dir: ./htdocs/
+          # Exclude non-production / internal development files from being uploaded
+          exclude: |
+            **/.git**
+            **/.git*/**
+            **/.github/**
+            **/scratch/**
+            **/README.md
+            **/.gitignore
+            **/*.md
