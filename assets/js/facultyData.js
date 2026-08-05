@@ -461,7 +461,7 @@ const facultyData = [
         email: "fdremona@gmiu.edu.in",
         phone: "9909730707",
         avatarClass: "av-rfd",
-        initials: "RFD"
+        initials: "RDF"
     },
     {
         id: "hpg",
