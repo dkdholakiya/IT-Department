@@ -121,18 +121,6 @@ const facultyData = [
         avatarClass: "av-bs",
         initials: "BSS"
     },
-    // {
-    //     id: "hb",
-    //     name: "Prof. Hirenkumar Bhatt",
-    //     designation: "Assistant Professor",
-    //     department: "Information Technology",
-    //     empId: "#10474",
-    //     email: "hhbhatt@gmiu.edu.in",
-    //     phone: "84607 77343",
-    //     avatarClass: "av-hb",
-    //     initials: "HHB"
-    // },
-
     {
         id: "vs",
         name: "Prof. Vishakha Savani",
@@ -376,17 +364,6 @@ const facultyData = [
         initials: "NRJ"
     },
     {
-        id: "pkg",
-        name: "Prof. Priyanka Gandhi",
-        designation: "Lecturer",
-        department: "Computer Engineering",
-        empId: "#10661",
-        email: "pkgandhi@gmiu.edu.in",
-        phone: "84603 20183",
-        avatarClass: "av-pkg",
-        initials: "PKG"
-    },
-    {
         id: "rpj",
         name: "Prof. Rahul Jani",
         designation: "Lecturer",
@@ -562,16 +539,26 @@ const facultyData = [
         avatarClass: "av-ami",
         initials: "AMI"
     },
-    // {
-    //     id: "apv",
-    //     name: "Prof. Aarti Vandra",
-    //     designation: "Lecturer",
-    //     department: "Computer Engineering",
-    //     empId: "#10675",
-    //     email: "apvandra@gmiu.edu.in",
-    //     phone: "0",
-    //     avatarClass: "av-apv",
-    //     initials: "APV"
-    // },
-
+    {
+        id: "ygl",
+        name: "Prof. Yug Lakhani",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10691",
+        email: "yglakhani@gmiu.edu.in",
+        phone: "98257 51614",
+        avatarClass: "av-ygl",
+        initials: "YGL"
+    },
+    {
+        id: "dyv",
+        name: "Prof. Dhruvik Vaghela",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10689",
+        email: "dyvaghela@gmiu.edu.in",
+        phone: "63539 51518",
+        avatarClass: "av-dyv",
+        initials: "DYV"
+    },
 ];
