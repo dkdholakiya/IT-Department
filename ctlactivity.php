@@ -278,6 +278,9 @@
     ?>
 
     <!-- Script Logic -->
+    <script>
+        const ctlExcelServerError = <?php echo !empty($config['ctl_excel_server_error']) ? 'true' : 'false'; ?>;
+    </script>
     <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
     <script>
         // Clear the session on load so that refresh triggers password re-prompt
@@ -1092,6 +1095,42 @@
 
         function handleFileLoad(file) {
             if (!file) return;
+
+            if (typeof ctlExcelServerError !== 'undefined' && ctlExcelServerError) {
+                // Show failed upload visual update on dropzone
+                uploadText.innerText = "Upload Failed: " + file.name;
+                uploadText.style.color = "var(--red-bright)";
+                uploadArea.style.borderColor = "var(--red-bright)";
+                uploadArea.style.background = "rgba(192, 57, 43, 0.12)";
+
+                // Clear previous data and reset metrics cards
+                allData = [];
+                activeData = [];
+                updateCards(allData);
+
+                // Render Server Error state in table (do not show data down)
+                const tbody = document.getElementById('tbody');
+                if (tbody) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="9" style="text-align: center; color: var(--red-bright); padding: 50px; font-weight: 600; font-family: 'Share Tech', monospace; font-size: 15px; letter-spacing: 0.5px; background: rgba(192, 57, 43, 0.05);">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                                    <svg width="44" height="44" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--red-bright);">
+                                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                    </svg>
+                                    <span style="color: #fca5a5; font-size: 18px; font-weight: 700; text-transform: uppercase;">500 Internal Server Error</span>
+                                    <span style="color: var(--text-muted); font-size: 13px; font-family: 'Merriweather Sans', sans-serif;">Failed to process uploaded Excel sheet. Server encountered an unexpected internal error.</span>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }
+                return;
+            }
+
+            // Reset dropzone styling to normal if previously in error state
+            uploadArea.style.borderColor = "";
+            uploadArea.style.background = "";
 
             // Show filename visual update
             uploadText.innerText = "Loaded: " + file.name;
