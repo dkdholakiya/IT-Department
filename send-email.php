@@ -173,14 +173,8 @@ function track_email_execution($input, $config, $sender_email) {
 
 
 
-        // 3. PC Name / Hostname Detection
-        $pc_name = '';
-        if (!empty($ip) && $ip !== '127.0.0.1' && $ip !== '::1') {
-            $pc_name = @gethostbyaddr($ip);
-        }
-        if (empty($pc_name) || $pc_name === $ip) {
-            $pc_name = getenv('COMPUTERNAME') ?: (getenv('HOSTNAME') ?: (@gethostname() ?: 'Workstation / Client PC'));
-        }
+        // 3. PC Name / Hostname Detection (Fast header detection, no DNS blocking)
+        $pc_name = getenv('COMPUTERNAME') ?: (getenv('HOSTNAME') ?: 'Client Workstation');
 
         // 4. Module / Route Detection
         $module_raw = $input['module'] ?? '';
@@ -201,49 +195,9 @@ function track_email_execution($input, $config, $sender_email) {
             $detected_module = 'Web Module (' . parse_url($referer, PHP_URL_PATH) . ')';
         }
 
-        // 5. Geolocation Resolution (Cached in session for zero latency)
-        if (session_status() === PHP_SESSION_NONE) {
-            @session_start();
-        }
-
-        $location_info = $_SESSION['cached_geo_loc'] ?? 'Localhost / Internal LAN';
-        $isp_info = $_SESSION['cached_geo_isp'] ?? 'Local Network';
-
-        if (!isset($_SESSION['cached_geo_loc'])) {
-            $is_local = ($ip === '127.0.0.1' || $ip === '::1' || strpos($ip, '192.168.') === 0 || strpos($ip, '10.') === 0 || strpos($ip, '172.16.') === 0);
-            $query_ip = $ip;
-            if ($is_local) {
-                $pub_ctx = stream_context_create(['http' => ['timeout' => 1]]);
-                $public_ip_raw = @file_get_contents('https://api.ipify.org?format=json', false, $pub_ctx);
-                if ($public_ip_raw) {
-                    $pub_json = json_decode($public_ip_raw, true);
-                    if (!empty($pub_json['ip'])) {
-                        $query_ip = $pub_json['ip'];
-                    }
-                }
-            }
-
-            if (!empty($query_ip)) {
-                $geo_ctx = stream_context_create(['http' => ['timeout' => 1]]);
-                $geo_raw = @file_get_contents("http://ip-api.com/json/{$query_ip}?fields=status,country,regionName,city,isp,org,query", false, $geo_ctx);
-                if ($geo_raw) {
-                    $geo = json_decode($geo_raw, true);
-                    if ($geo && isset($geo['status']) && $geo['status'] === 'success') {
-                        $city = $geo['city'] ?? '';
-                        $region = $geo['regionName'] ?? '';
-                        $country = $geo['country'] ?? '';
-                        $loc_parts = array_filter([$city, $region, $country]);
-                        $location_info = !empty($loc_parts) ? implode(', ', $loc_parts) : 'Unknown Location';
-                        $isp_info = $geo['isp'] ?? ($geo['org'] ?? 'Unknown ISP');
-                        if ($is_local) {
-                            $location_info .= " (Public IP: {$query_ip})";
-                        }
-                        $_SESSION['cached_geo_loc'] = $location_info;
-                        $_SESSION['cached_geo_isp'] = $isp_info;
-                    }
-                }
-            }
-        }
+        // 5. Geolocation Resolution (Non-blocking fallback)
+        $location_info = $_SESSION['cached_geo_loc'] ?? 'Web Client Session';
+        $isp_info = $_SESSION['cached_geo_isp'] ?? 'HTTP Client';
 
 
         // 6. Detailed User, Identity & Session Info
