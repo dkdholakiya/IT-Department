@@ -872,15 +872,16 @@ $jsDataExists = file_exists($jsDataFile);
             let currentSearch = "";
             let currentSort = "load-desc";
 
-            // Process data for all faculty members in timetableData
+            // Process data for faculty members in timetableData that exist in facultyData.js
             Object.keys(timetableData).forEach(initials => {
                 const info = timetableData[initials];
-                let facultyObj = facultyData.find(f => f.initials.toUpperCase() === initials.toUpperCase());
+                let facultyObj = facultyData.find(f => f.initials && f.initials.toUpperCase() === initials.toUpperCase());
+                if (!facultyObj) return;
 
-                let name = facultyObj ? facultyObj.name : (info.name || `Prof. ${initials}`);
-                let dept = facultyObj ? facultyObj.department : (info.department || "Information Technology");
-                let designation = facultyObj ? facultyObj.designation : "Lecturer";
-                let avatarClass = facultyObj ? facultyObj.avatarClass : `av-${initials.toLowerCase()}`;
+                let name = facultyObj.name;
+                let dept = facultyObj.department;
+                let designation = facultyObj.designation || "Lecturer";
+                let avatarClass = facultyObj.avatarClass || `av-${initials.toLowerCase()}`;
 
                 let daily = { MON: 0, TUE: 0, WED: 0, THU: 0, FRI: 0, SAT: 0 };
                 

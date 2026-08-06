@@ -310,8 +310,9 @@ $jsDataExists = file_exists($jsDataFile);
             // Map Excel timetableData with official facultyData.js file to filter, name-match, and group by department
             const mappedTimetable = {};
             if (typeof facultyData !== 'undefined' && typeof timetableData !== 'undefined') {
-                // 1. First map official members from facultyData.js
+                // Map official members from facultyData.js whose initials match a sheet name in timetableData
                 facultyData.forEach(member => {
+                    if (!member.initials) return;
                     const initials = member.initials.toUpperCase().trim();
                     const excelKey = Object.keys(timetableData).find(
                         key => key.toUpperCase().trim() === initials
@@ -324,22 +325,6 @@ $jsDataExists = file_exists($jsDataFile);
                             designation: member.designation || '',
                             semesterInfo: timetableData[excelKey].semesterInfo || '',
                             schedule: timetableData[excelKey].schedule
-                        };
-                    }
-                });
-
-                // 2. Fallback: Map any extra keys in timetableData from Excel that were missing in facultyData
-                Object.keys(timetableData).forEach(excelKey => {
-                    const initials = excelKey.toUpperCase().trim();
-                    if (!mappedTimetable[initials]) {
-                        const item = timetableData[excelKey];
-                        mappedTimetable[initials] = {
-                            name: item.name || `Prof. ${initials}`,
-                            initials: initials,
-                            department: item.department || "Computer Engineering",
-                            designation: 'Faculty',
-                            semesterInfo: item.semesterInfo || '',
-                            schedule: item.schedule || []
                         };
                     }
                 });
@@ -1249,7 +1234,16 @@ $jsDataExists = file_exists($jsDataFile);
             } else {
                 // By default, show Information Technology department on initial load
                 const startingDept = "Information Technology";
-                selectedInitials = "SBC"; // default IT
+                const keys = Object.keys(mappedTimetable);
+                const defaultKey = keys.find(k => 
+                    mappedTimetable[k].department === startingDept || mappedTimetable[k].department === "Both"
+                ) || keys[0];
+
+                if (defaultKey) {
+                    selectedInitials = defaultKey;
+                } else {
+                    selectedInitials = "SBC";
+                }
                 setDepartmentTheme(startingDept);
             }
         });

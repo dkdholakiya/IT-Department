@@ -529,17 +529,6 @@ const facultyData = [
         initials: "HPD"
     },
     {
-        id: "ami",
-        name: "Prof. Ansh M Italiya",
-        designation: "Lecturer",
-        department: "Information Technology",
-        empId: "#10717",
-        email: "amitaliya@gmiu.edu.in",
-        phone: "7265939927",
-        avatarClass: "av-ami",
-        initials: "AMI"
-    },
-    {
         id: "ygl",
         name: "Prof. Yug Lakhani",
         designation: "Lecturer",
