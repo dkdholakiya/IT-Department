@@ -651,8 +651,8 @@ $jsDataExists = file_exists($jsDataFile);
                 
                 sortedKeys.forEach(initials => {
                     const data = mappedTimetable[initials];
-                    // If user is actively searching, match across ALL departments. If not searching, filter by active department.
-                    if (!q && currentTab !== "leave" && data.department !== currentActiveDept && data.department !== "Both") return;
+                    // Filter strictly by active department (unless in global leave alteration mode)
+                    if (currentTab !== "leave" && data.department !== currentActiveDept && data.department !== "Both") return;
 
                     const option = document.createElement("div");
                     option.className = `select-option ${initials === selectedInitials ? 'selected' : ''}`;
@@ -676,15 +676,29 @@ $jsDataExists = file_exists($jsDataFile);
                 populateDropdown(query);
                 const q = query.toLowerCase().trim();
                 if (!q) return;
+                let visibleCount = 0;
                 const options = optionsListContainer.querySelectorAll(".select-option");
                 options.forEach(opt => {
                     const text = opt.innerText.toLowerCase();
                     if (text.includes(q)) {
                         opt.style.display = "flex";
+                        visibleCount++;
                     } else {
                         opt.style.display = "none";
                     }
                 });
+
+                if (visibleCount === 0) {
+                    const noResult = document.createElement("div");
+                    noResult.className = "select-option no-results";
+                    noResult.style.pointerEvents = "none";
+                    noResult.style.color = "var(--text-muted, #94a3b8)";
+                    noResult.style.justifyContent = "center";
+                    noResult.style.padding = "12px";
+                    noResult.style.fontSize = "13px";
+                    noResult.innerText = "No faculty found in " + (currentActiveDept === "Information Technology" ? "IT" : "CE") + " department";
+                    optionsListContainer.appendChild(noResult);
+                }
             }
 
             // Load and render timetable
