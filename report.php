@@ -1172,16 +1172,25 @@
             <!-- Dynamically populated rows based on selected report type -->
         </table>
 
-        <div class="print-signatures">
-            <div class="sig-block">
-                <div class="sig-line"></div>
-                <div class="sig-name" id="sigRequestedByName">Mr. Dev K Dholakiya</div>
-                <div class="sig-title" id="sigRequestedByTitle">Requested By (Faculty)</div>
+        <div class="print-signatures-container">
+            <div class="print-signatures-row">
+                <div class="sig-block">
+                    <div class="sig-line"></div>
+                    <div class="sig-name" id="sigDevName">Mr. Dev K Dholakiya</div>
+                    <div class="sig-title" id="sigDevTitle">Department of IT / ICT / CE / CSE</div>
+                </div>
+                <div class="sig-block">
+                    <div class="sig-line"></div>
+                    <div class="sig-name" id="sigRequestedByName">Faculty Name</div>
+                    <div class="sig-title" id="sigRequestedByTitle">Requested By (Faculty)</div>
+                </div>
             </div>
-            <div class="sig-block">
-                <div class="sig-line"></div>
-                <div class="sig-name" id="sigHodName">Prof. Dhaval Chandarana</div>
-                <div class="sig-title" id="sigHodTitle">Head of Department (CE & IT)</div>
+            <div class="print-signatures-center">
+                <div class="sig-block">
+                    <div class="sig-line"></div>
+                    <div class="sig-name" id="sigHodName">Prof. Dhaval Chandarana</div>
+                    <div class="sig-title" id="sigHodTitle">Head of Department (CE & IT)</div>
+                </div>
             </div>
         </div>
     </div>
@@ -1192,6 +1201,9 @@
     <!-- Shared Faculty Database -->
     <!-- Google Sheets configuration loaded securely from backend proxy -->
     <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>" defer></script>
+
+    <!-- 6-Digit Email OTP Verification Component -->
+    <script src="<?php echo v_asset('assets/js/otp-verify.js'); ?>"></script>
 
     <!-- Department Report System logic -->
     <script>
@@ -3787,9 +3799,24 @@ Department of CE & IT`;
 
             // Sync Signatures in Printable Area
             const facultyNameVal = document.getElementById("facultySearch")?.value?.trim();
+            const facultyDesgVal = document.getElementById("facultyDesignation")?.value?.trim();
+
+            const sigDevNameEl = document.getElementById("sigDevName");
+            if (sigDevNameEl) {
+                sigDevNameEl.innerText = "Mr. Dev K Dholakiya";
+            }
+            const sigDevTitleEl = document.getElementById("sigDevTitle");
+            if (sigDevTitleEl) {
+                sigDevTitleEl.innerText = "Department of IT / ICT / CE / CSE";
+            }
+
             const sigReqNameEl = document.getElementById("sigRequestedByName");
             if (sigReqNameEl) {
                 sigReqNameEl.innerText = facultyNameVal || "Faculty Name";
+            }
+            const sigReqTitleEl = document.getElementById("sigRequestedByTitle");
+            if (sigReqTitleEl) {
+                sigReqTitleEl.innerText = facultyDesgVal ? `${facultyDesgVal} (Requested By)` : "Requested By (Faculty)";
             }
 
             const sigHodNameEl = document.getElementById("sigHodName");
@@ -3884,14 +3911,40 @@ Department of CE & IT`;
                 c.style.fontFamily = "'Lora', Georgia, serif";
             });
 
-            // Ensure signatures row stays within width
-            const sigs = clone.querySelector(".print-signatures");
-            if (sigs) {
-                sigs.style.width = "100%";
-                sigs.style.boxSizing = "border-box";
-                sigs.style.display = "flex";
-                sigs.style.justifyContent = "space-between";
+            // Force Section 3 (Activity-Specific Details) to start cleanly at the top of Page 2
+            const dynamicHeader = clone.querySelector("#pDynamicSecHeader");
+            if (dynamicHeader) {
+                dynamicHeader.style.pageBreakBefore = "always";
+                dynamicHeader.style.breakBefore = "page";
+                dynamicHeader.style.marginTop = "0";
             }
+
+            // Ensure signatures container stays formatted properly in cloned PDF DOM
+            const sigsContainer = clone.querySelector(".print-signatures-container");
+            if (sigsContainer) {
+                sigsContainer.style.width = "100%";
+                sigsContainer.style.boxSizing = "border-box";
+                sigsContainer.style.marginTop = "60px";
+                sigsContainer.style.pageBreakInside = "avoid";
+                sigsContainer.style.breakInside = "avoid";
+            }
+            const sigsRow = clone.querySelector(".print-signatures-row");
+            if (sigsRow) {
+                sigsRow.style.width = "100%";
+                sigsRow.style.display = "flex";
+                sigsRow.style.justifyContent = "space-between";
+                sigsRow.style.marginBottom = "55px";
+            }
+            const sigsCenter = clone.querySelector(".print-signatures-center");
+            if (sigsCenter) {
+                sigsCenter.style.width = "100%";
+                sigsCenter.style.display = "flex";
+                sigsCenter.style.justifyContent = "center";
+            }
+            const sigBlocks = clone.querySelectorAll(".sig-block");
+            sigBlocks.forEach(b => {
+                b.style.paddingTop = "35px";
+            });
 
             container.appendChild(clone);
             document.body.appendChild(container);
@@ -3941,6 +3994,7 @@ Department of CE & IT`;
 
             const submitBtn = document.getElementById("submitBtn");
             const facultyEmail = document.getElementById("facultyEmail").value;
+            const facultyName = document.getElementById("facultySearch")?.value || document.getElementById("refName")?.value || "Faculty Member";
             const reportTitle = document.getElementById("reportTitle").value || "New Report";
 
             if (!facultyEmail) {
@@ -3948,131 +4002,146 @@ Department of CE & IT`;
                 return;
             }
 
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span>Generating PDF & Preparing Emails...</span>
-            `;
+            // Trigger OTP verification if service script is active
+            if (typeof window.triggerOtpVerification === "function") {
+                window.triggerOtpVerification(facultyEmail, facultyName)
+                    .then(() => {
+                        executeActualSubmission();
+                    })
+                    .catch(err => {
+                        console.log("OTP Verification cancelled or bypassed:", err);
+                    });
+            } else {
+                executeActualSubmission();
+            }
 
-            const photoMethod = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
-            const photosInput = document.getElementById("activityPhotos");
-            const hasFile = (photoMethod === "zip" && photosInput && photosInput.files.length > 0);
-
-            const getAttachmentData = () => {
-                if (!hasFile) {
-                    return Promise.resolve({ attachment: "", filename: "" });
-                }
-                const file = photosInput.files[0];
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        resolve({
-                            attachment: e.target.result,
-                            filename: file.name
-                        });
-                    };
-                    reader.onerror = function () {
-                        resolve({ attachment: "", filename: "" });
-                    };
-                    reader.readAsDataURL(file);
-                });
-            };
-
-            Promise.all([
-                generateReportPdfBase64(),
-                getAttachmentData()
-            ]).then(([pdfObj, zipObj]) => {
+            function executeActualSubmission() {
+                submitBtn.disabled = true;
                 submitBtn.innerHTML = `
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    <span>Sending Emails with PDF Attachment...</span>
+                    <span>Generating PDF & Preparing Emails...</span>
                 `;
 
-                const attachmentsList = [];
-                if (pdfObj && pdfObj.data) {
-                    attachmentsList.push(pdfObj);
-                }
-                if (zipObj && zipObj.attachment && zipObj.filename) {
-                    attachmentsList.push({
-                        data: zipObj.attachment,
-                        filename: zipObj.filename
+                const photoMethod = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
+                const photosInput = document.getElementById("activityPhotos");
+                const hasFile = (photoMethod === "zip" && photosInput && photosInput.files.length > 0);
+
+                const getAttachmentData = () => {
+                    if (!hasFile) {
+                        return Promise.resolve({ attachment: "", filename: "" });
+                    }
+                    const file = photosInput.files[0];
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            resolve({
+                                attachment: e.target.result,
+                                filename: file.name
+                            });
+                        };
+                        reader.onerror = function () {
+                            resolve({ attachment: "", filename: "" });
+                        };
+                        reader.readAsDataURL(file);
                     });
-                }
+                };
 
-                const htmlMessageFaculty = generateReportHtml(true);
-                const htmlMessageAdmin = generateReportHtml(false);
-                const adminEmail = "dkdholakiya@gmiu.edu.in";
+                Promise.all([
+                    generateReportPdfBase64(),
+                    getAttachmentData()
+                ]).then(([pdfObj, zipObj]) => {
+                    submitBtn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span>Sending Emails with PDF Attachment...</span>
+                    `;
 
-                const ccSelect = document.getElementById("ccEmails");
-                const selectedCcEmails = ccSelect ? Array.from(ccSelect.selectedOptions).map(option => option.value) : [];
-
-                // Extract formatted deadline to append to subject
-                const enableDeadline = document.getElementById("enableDeadline")?.checked;
-                const deadlineVal = document.getElementById("deadlineVal")?.value;
-                let subjectDeadlineSuffix = "";
-                if (enableDeadline && deadlineVal) {
-                    const dateObj = new Date(deadlineVal);
-                    if (!isNaN(dateObj)) {
-                        const dd = String(dateObj.getDate()).padStart(2, '0');
-                        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-                        const yyyy = dateObj.getFullYear();
-                        let hours = dateObj.getHours();
-                        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-                        const ampm = hours >= 12 ? 'PM' : 'AM';
-                        hours = hours % 12;
-                        hours = hours ? hours : 12;
-                        const hh = String(hours).padStart(2, '0');
-                        subjectDeadlineSuffix = ` [Deadline: ${dd}/${mm}/${yyyy} ${hh}:${minutes} ${ampm}]`;
+                    const attachmentsList = [];
+                    if (pdfObj && pdfObj.data) {
+                        attachmentsList.push(pdfObj);
                     }
-                }
+                    if (zipObj && zipObj.attachment && zipObj.filename) {
+                        attachmentsList.push({
+                            data: zipObj.attachment,
+                            filename: zipObj.filename
+                        });
+                    }
 
-                return fetch("send-email", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        emails: [
-                            {
-                                to: facultyEmail,
-                                cc: selectedCcEmails,
-                                subject: `Submitted Report Copy: ${reportTitle}${subjectDeadlineSuffix}`,
-                                html: htmlMessageFaculty
-                            },
-                            {
-                                to: adminEmail,
-                                cc: selectedCcEmails,
-                                subject: `Make New Report : ${reportTitle} (Faculty Copy)${subjectDeadlineSuffix}`,
-                                html: htmlMessageAdmin
-                            }
-                        ],
-                        attachments: attachmentsList,
-                        attachment: zipObj ? zipObj.attachment : "",
-                        filename: zipObj ? zipObj.filename : "",
-                        dept: document.getElementById("facultyDept").value === "Computer Engineering" ? "CE" : "IT"
+                    const htmlMessageFaculty = generateReportHtml(true);
+                    const htmlMessageAdmin = generateReportHtml(false);
+                    const adminEmail = "dkdholakiya@gmiu.edu.in";
+
+                    const ccSelect = document.getElementById("ccEmails");
+                    const selectedCcEmails = ccSelect ? Array.from(ccSelect.selectedOptions).map(option => option.value) : [];
+
+                    // Extract formatted deadline to append to subject
+                    const enableDeadline = document.getElementById("enableDeadline")?.checked;
+                    const deadlineVal = document.getElementById("deadlineVal")?.value;
+                    let subjectDeadlineSuffix = "";
+                    if (enableDeadline && deadlineVal) {
+                        const dateObj = new Date(deadlineVal);
+                        if (!isNaN(dateObj)) {
+                            const dd = String(dateObj.getDate()).padStart(2, '0');
+                            const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                            const yyyy = dateObj.getFullYear();
+                            let hours = dateObj.getHours();
+                            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                            hours = hours % 12;
+                            hours = hours ? hours : 12;
+                            const hh = String(hours).padStart(2, '0');
+                            subjectDeadlineSuffix = ` [Deadline: ${dd}/${mm}/${yyyy} ${hh}:${minutes} ${ampm}]`;
+                        }
+                    }
+
+                    return fetch("send-email", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            emails: [
+                                {
+                                    to: facultyEmail,
+                                    cc: selectedCcEmails,
+                                    subject: `Submitted Report Copy: ${reportTitle}${subjectDeadlineSuffix}`,
+                                    html: htmlMessageFaculty
+                                },
+                                {
+                                    to: adminEmail,
+                                    cc: selectedCcEmails,
+                                    subject: `Make New Report : ${reportTitle} (Faculty Copy)${subjectDeadlineSuffix}`,
+                                    html: htmlMessageAdmin
+                                }
+                            ],
+                            attachments: attachmentsList,
+                            attachment: zipObj ? zipObj.attachment : "",
+                            filename: zipObj ? zipObj.filename : "",
+                            dept: document.getElementById("facultyDept").value === "Computer Engineering" ? "CE" : "IT"
+                        })
+                    }).then(res => res.json());
+                })
+                    .then(data => {
+                        if (data.success) {
+                            // 1. Notify user
+                            showToast("SUCCESS: Report Submitted. Confirmation emails sending in background.");
+                            // 2. Auto-fill Google Sheet in background
+                            appendToGoogleSheet();
+                            // 3. Clear draft & reset
+                            localStorage.removeItem("gmiu_it_report_draft");
+                            resetReportForm();
+                        } else {
+                            showToast("ERROR submitting report: " + (data.error || "Unknown error"));
+                        }
                     })
-                }).then(res => res.json());
-            })
-                .then(data => {
-                    if (data.success) {
-                        // 1. Notify user
-                        showToast("SUCCESS: Report Submitted. Confirmation emails sending in background.");
-                        // 2. Auto-fill Google Sheet in background
-                        appendToGoogleSheet();
-                        // 3. Clear draft & reset
-                        localStorage.removeItem("gmiu_it_report_draft");
-                        resetReportForm();
-                    } else {
-                        showToast("ERROR submitting report: " + (data.error || "Unknown error"));
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    showToast("ERROR: Connection failed, could not send emails.");
-                })
-                .finally(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = `<i class="bi bi-cloud-arrow-up"></i> Submit & Send`;
-                });
+                    .catch(err => {
+                        console.error(err);
+                        showToast("ERROR: Connection failed, could not send emails.");
+                    })
+                    .finally(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = `<i class="bi bi-cloud-arrow-up"></i> Submit & Send`;
+                    });
+            }
         }
 
         // ── Reset Form values ──

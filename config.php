@@ -21,6 +21,7 @@ return [
 
     'mail_enabled' => 1, // Toggle: 1 to enable email system, 0 to disable
     'zero_mail_enabled' => 0, // Toggle: 1 to enable email for zero student report, 0 to disable
+    'otp_enabled' => 1, // Toggle: 1 to require 6-digit email OTP verification before submitting report, 0 to bypass
 
     // Google Sheets Apps Script Web App URLs
     'sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbzgEUHcbbF7k5gp8RyEJxwzPiUeTeu6wLIZOPbNn-ALnsGPPzyNEKVx9q5ZnHKESHEUxA/exec',

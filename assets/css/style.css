@@ -1865,6 +1865,13 @@ body.ce-active .form-check-input:checked {
     text-transform: uppercase;
 }
 
+#pDynamicSecHeader,
+.print-page-break-before {
+    page-break-before: always !important;
+    break-before: page !important;
+    margin-top: 0 !important;
+}
+
 .print-meta-table {
     width: 100%;
     border-collapse: collapse;
@@ -1904,16 +1911,32 @@ body.ce-active .form-check-input:checked {
     text-align: justify;
 }
 
-.print-signatures {
-    margin-top: 60px;
+.print-signatures-container {
+    margin-top: 70px;
+    width: 100%;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.print-signatures-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+.print-signatures-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .sig-block {
     text-align: center;
-    width: 38%;
+    width: 42%;
+    padding-top: 35px;
 }
 
 .sig-line {
