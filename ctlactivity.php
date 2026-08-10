@@ -95,171 +95,196 @@
 
         <main class="container">
 
-            <!-- Top Layout: Upload on left, Faculty Profile on right -->
-            <div class="top-layout">
-                <!-- Left: Upload Master Sheet Dropzone -->
-                <div class="top-panel left-panel">
-                    <label
-                        style="display:block; margin-bottom:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px; font-size:12px;">Upload
-                        Master Sheet (.xlsx)</label>
-                    <div class="upload-area" id="uploadArea">
-                        <svg class="upload-icon" width="36" height="36" fill="none" stroke="currentColor"
-                            stroke-width="1.8" viewBox="0 0 24 24">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2 2v-4M17 8l-5-5-5 5M12 3v12" />
-                        </svg>
-                        <div class="upload-text" id="uploadText">Click or Drag &amp; Drop to Upload File</div>
-                        <div class="upload-subtext">Excel Master Sheet (.xlsx, .xls)</div>
+            <div id="mainDashboardContent">
+                <!-- Top Layout: Upload on left, Faculty Profile on right -->
+                <div class="top-layout">
+                    <!-- Left: Upload Master Sheet Dropzone -->
+                    <div class="top-panel left-panel">
+                        <label
+                            style="display:block; margin-bottom:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px; font-size:12px;">Upload
+                            Master Sheet (.xlsx)</label>
+                        <div class="upload-area" id="uploadArea">
+                            <svg class="upload-icon" width="36" height="36" fill="none" stroke="currentColor"
+                                stroke-width="1.8" viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2 2v-4M17 8l-5-5-5 5M12 3v12" />
+                            </svg>
+                            <div class="upload-text" id="uploadText">Click or Drag &amp; Drop to Upload File</div>
+                            <div class="upload-subtext">Excel Master Sheet (.xlsx, .xls)</div>
+                        </div>
+                        <input type="file" id="excelFile" accept=".xlsx,.xls">
                     </div>
-                    <input type="file" id="excelFile" accept=".xlsx,.xls">
+
+                    <!-- Right: Faculty Info Profile Form -->
+                    <div class="top-panel right-panel" style="padding: 0; overflow: visible;">
+                        <!-- Form Stepper Header -->
+                        <div class="form-stepper" style="padding: 18px 24px;">
+                            <div class="step-indicator active">
+                                <span class="step-num">1</span>
+                                <span class="step-label">Faculty Info</span>
+                            </div>
+                        </div>
+
+                        <div style="padding: 24px;">
+                            <div class="form-group">
+                                <label for="facultySearch">Prepared By (Faculty Name) <span class="req">*</span></label>
+                                <div class="search-select-wrap">
+                                    <input type="text" id="facultySearch"
+                                        placeholder="Type to search faculty name (e.g. Prof. Dhaval Chandarana)..."
+                                        autocomplete="off" required>
+                                    <input type="hidden" id="preparedBy" name="preparedBy" required>
+                                    <div class="search-dropdown-list" id="facultyDropdownList"></div>
+                                    <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor"
+                                        stroke-width="2" viewBox="0 0 24 24">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                    </svg>
+                                </div>
+                                <div id="facultyError" class="validation-error hidden">Please select a faculty member from
+                                    the dropdown.</div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="facultyEmail">Email Address</label>
+                                    <input type="text" id="facultyEmail" placeholder="Auto-filled..." readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="facultyPhone">Mobile Number</label>
+                                    <input type="text" id="facultyPhone" placeholder="Auto-filled..." readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="position: relative; margin-top: 16px;">
+                                <label for="ccSearch">CC Emails (Multi-select)</label>
+                                <div class="cc-select-wrap">
+                                    <div class="cc-tags-container" id="ccTagsContainer"></div>
+                                    <input type="text" id="ccSearch" placeholder="Type or click to select CC emails..."
+                                        autocomplete="off">
+                                    <div class="search-dropdown-list" id="ccDropdownList"></div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="submit-btn" id="sendBtn"
+                                style="width: 100%; margin-top: 24px; gap: 8px;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path d="M22 2L11 13" />
+                                    <path d="M22 2L15 22l-4-9-9-4 20-7z" />
+                                </svg>
+                                <span>Send</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Right: Faculty Info Profile Form -->
-                <div class="top-panel right-panel" style="padding: 0; overflow: visible;">
-                    <!-- Form Stepper Header -->
-                    <div class="form-stepper" style="padding: 18px 24px;">
-                        <div class="step-indicator active">
-                            <span class="step-num">1</span>
-                            <span class="step-label">Faculty Info</span>
-                        </div>
+                <!-- KPI Cards Grid -->
+                <div class="cards">
+                    <div class="card">
+                        <h2 id="total">0</h2>
+                        <p>Total Activities</p>
+                    </div>
+                    <div class="card submitted-card">
+                        <h2 id="submittedCount">0</h2>
+                        <p>Submitted</p>
+                    </div>
+                    <div class="card not-submitted-card">
+                        <h2 id="notSubmittedCount">0</h2>
+                        <p>Not Submitted</p>
+                    </div>
+                    <div class="card approved-card">
+                        <h2 id="approved">0</h2>
+                        <p>Approved</p>
+                    </div>
+                    <div class="card pending-card">
+                        <h2 id="pending">0</h2>
+                        <p>Pending</p>
+                    </div>
+                    <div class="card missing-card">
+                        <h2 id="rejected">0</h2>
+                        <p>Reject</p>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters -->
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Approval Status</label>
+                        <select id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Reject</option>
+                        </select>
                     </div>
 
-                    <div style="padding: 24px;">
-                        <div class="form-group">
-                            <label for="facultySearch">Prepared By (Faculty Name) <span class="req">*</span></label>
-                            <div class="search-select-wrap">
-                                <input type="text" id="facultySearch"
-                                    placeholder="Type to search faculty name (e.g. Prof. Dhaval Chandarana)..."
-                                    autocomplete="off" required>
-                                <input type="hidden" id="preparedBy" name="preparedBy" required>
-                                <div class="search-dropdown-list" id="facultyDropdownList"></div>
-                                <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor"
-                                    stroke-width="2" viewBox="0 0 24 24">
-                                    <circle cx="11" cy="11" r="8" />
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                </svg>
-                            </div>
-                            <div id="facultyError" class="validation-error hidden">Please select a faculty member from
-                                the dropdown.</div>
-                        </div>
+                    <div class="filter-group">
+                        <label>Submission Condition</label>
+                        <select id="submissionFilter">
+                            <option value="">All Conditions</option>
+                            <option value="Submitted">Submitted (Any)</option>
+                            <option value="Not Submitted">Not Submitted</option>
+                            <option value="On Time">On Time</option>
+                            <option value="Delayed">Delayed</option>
+                            <option value="Over Grace Period">Over Grace Period</option>
+                        </select>
+                    </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="facultyEmail">Email Address</label>
-                                <input type="text" id="facultyEmail" placeholder="Auto-filled..." readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="facultyPhone">Mobile Number</label>
-                                <input type="text" id="facultyPhone" placeholder="Auto-filled..." readonly>
-                            </div>
-                        </div>
+                    <div class="filter-group">
+                        <label>Search Activity</label>
+                        <input type="text" id="search" placeholder="Type activity name...">
+                    </div>
+                </div>
 
-                        <div class="form-group" style="position: relative; margin-top: 16px;">
-                            <label for="ccSearch">CC Emails (Multi-select)</label>
-                            <div class="cc-select-wrap">
-                                <div class="cc-tags-container" id="ccTagsContainer"></div>
-                                <input type="text" id="ccSearch" placeholder="Type or click to select CC emails..."
-                                    autocomplete="off">
-                                <div class="search-dropdown-list" id="ccDropdownList"></div>
-                            </div>
-                        </div>
+                <!-- Table List -->
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="col-sr">#</th>
+                                <th class="col-name">Name</th>
+                                <th class="col-plan">Plan Date</th>
+                                <th class="col-actual">Actual Date</th>
+                                <th class="col-modified">Modified Date</th>
+                                <th class="col-marks">Marks</th>
+                                <th class="col-flags">Flags</th>
+                                <th class="col-sub">Submission Flags</th>
+                                <th class="col-status">Approval Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            <tr>
+                                <td colspan="9"
+                                    style="text-align: center; color: var(--text-dim); padding: 50px; font-weight: 500; font-family: 'Share Tech', monospace; font-size: 16px; letter-spacing: 0.5px;">
+                                    AWAITING EXCEL MASTER SHEET UPLOAD...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div><!-- /#mainDashboardContent -->
 
-                        <button type="button" class="submit-btn" id="sendBtn"
-                            style="width: 100%; margin-top: 24px; gap: 8px;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <path d="M22 2L11 13" />
-                                <path d="M22 2L15 22l-4-9-9-4 20-7z" />
+            <!-- Full Page Centered Server Error Container -->
+            <div id="fullServerErrorContainer" style="display: none; width: 100%; min-height: 60vh; align-items: center; justify-content: center; text-align: center; padding: 40px 15px;">
+                <div style="background: rgba(192, 57, 43, 0.04); border: 1px solid rgba(192, 57, 43, 0.25); border-radius: 20px; padding: 60px 30px; max-width: 680px; width: 100%; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+                    <div style="width: 80px; height: 80px; margin: 0 auto 24px auto; background: rgba(192, 57, 43, 0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(192, 57, 43, 0.4); box-shadow: 0 0 25px rgba(192, 57, 43, 0.2);">
+                        <svg width="44" height="44" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #ef4444;">
+                            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <h2 style="color: #fca5a5; font-family: 'Share Tech', monospace; font-size: 28px; font-weight: 800; letter-spacing: 1.5px; margin: 0 0 14px 0; text-transform: uppercase;">500 Internal Server Error</h2>
+                    <p style="color: var(--text-muted); font-size: 15px; font-family: 'Merriweather Sans', sans-serif; margin: 0 0 32px 0; line-height: 1.6; max-width: 520px; margin-left: auto; margin-right: auto;">
+                        Failed to process uploaded Excel sheet. Server encountered an unexpected internal error.
+                    </p>
+                    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+                        <button type="button" onclick="location.reload();" style="display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; background: linear-gradient(135deg, #c0392b 0%, #962d22 100%); color: #ffffff; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 20px rgba(192, 57, 43, 0.4); font-family: 'Merriweather Sans', sans-serif;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M23 4v6h-6M1 20v-6h6"/>
+                                <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
                             </svg>
-                            <span>Send</span>
+                            <span>Try Again</span>
                         </button>
                     </div>
                 </div>
-            </div>
-
-            <!-- KPI Cards Grid -->
-            <!-- KPI Cards Grid -->
-            <div class="cards">
-                <div class="card">
-                    <h2 id="total">0</h2>
-                    <p>Total Activities</p>
-                </div>
-                <div class="card submitted-card">
-                    <h2 id="submittedCount">0</h2>
-                    <p>Submitted</p>
-                </div>
-                <div class="card not-submitted-card">
-                    <h2 id="notSubmittedCount">0</h2>
-                    <p>Not Submitted</p>
-                </div>
-                <div class="card approved-card">
-                    <h2 id="approved">0</h2>
-                    <p>Approved</p>
-                </div>
-                <div class="card pending-card">
-                    <h2 id="pending">0</h2>
-                    <p>Pending</p>
-                </div>
-                <div class="card missing-card">
-                    <h2 id="rejected">0</h2>
-                    <p>Reject</p>
-                </div>
-            </div>
-
-            <!-- Advanced Filters -->
-            <div class="filters">
-                <div class="filter-group">
-                    <label>Approval Status</label>
-                    <select id="statusFilter">
-                        <option value="">All Statuses</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Rejected">Reject</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>Submission Condition</label>
-                    <select id="submissionFilter">
-                        <option value="">All Conditions</option>
-                        <option value="Submitted">Submitted (Any)</option>
-                        <option value="Not Submitted">Not Submitted</option>
-                        <option value="On Time">On Time</option>
-                        <option value="Delayed">Delayed</option>
-                        <option value="Over Grace Period">Over Grace Period</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>Search Activity</label>
-                    <input type="text" id="search" placeholder="Type activity name...">
-                </div>
-            </div>
-
-            <!-- Table List -->
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="col-sr">#</th>
-                            <th class="col-name">Name</th>
-                            <th class="col-plan">Plan Date</th>
-                            <th class="col-actual">Actual Date</th>
-                            <th class="col-modified">Modified Date</th>
-                            <th class="col-marks">Marks</th>
-                            <th class="col-flags">Flags</th>
-                            <th class="col-sub">Submission Flags</th>
-                            <th class="col-status">Approval Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody">
-                        <tr>
-                            <td colspan="9"
-                                style="text-align: center; color: var(--text-dim); padding: 50px; font-weight: 500; font-family: 'Share Tech', monospace; font-size: 16px; letter-spacing: 0.5px;">
-                                AWAITING EXCEL MASTER SHEET UPLOAD...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
 
         </main>
@@ -1096,37 +1121,19 @@
         function handleFileLoad(file) {
             if (!file) return;
 
+            const mainContent = document.getElementById('mainDashboardContent');
+            const fullError = document.getElementById('fullServerErrorContainer');
+
             if (typeof ctlExcelServerError !== 'undefined' && ctlExcelServerError) {
-                // Show failed upload visual update on dropzone
-                uploadText.innerText = "Upload Failed: " + file.name;
-                uploadText.style.color = "var(--red-bright)";
-                uploadArea.style.borderColor = "var(--red-bright)";
-                uploadArea.style.background = "rgba(192, 57, 43, 0.12)";
-
-                // Clear previous data and reset metrics cards
-                allData = [];
-                activeData = [];
-                updateCards(allData);
-
-                // Render Server Error state in table (do not show data down)
-                const tbody = document.getElementById('tbody');
-                if (tbody) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="9" style="text-align: center; color: var(--red-bright); padding: 50px; font-weight: 600; font-family: 'Share Tech', monospace; font-size: 15px; letter-spacing: 0.5px; background: rgba(192, 57, 43, 0.05);">
-                                <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
-                                    <svg width="44" height="44" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--red-bright);">
-                                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                                    </svg>
-                                    <span style="color: #fca5a5; font-size: 18px; font-weight: 700; text-transform: uppercase;">500 Internal Server Error</span>
-                                    <span style="color: var(--text-muted); font-size: 13px; font-family: 'Merriweather Sans', sans-serif;">Failed to process uploaded Excel sheet. Server encountered an unexpected internal error.</span>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                }
+                // Hide main dashboard content (top layout, faculty info, cards, filters, table)
+                if (mainContent) mainContent.style.display = 'none';
+                if (fullError) fullError.style.display = 'flex';
                 return;
             }
+
+            // Normal state: ensure main dashboard is visible and full error container is hidden
+            if (mainContent) mainContent.style.display = 'block';
+            if (fullError) fullError.style.display = 'none';
 
             // Reset dropzone styling to normal if previously in error state
             uploadArea.style.borderColor = "";
