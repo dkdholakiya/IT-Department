@@ -524,6 +524,22 @@ $jsDataExists = file_exists($jsDataFile);
                 badge.style.animation = "";
             }
 
+            // Helper to check if a faculty member's department matches the filter
+            const isDeptMatch = (memberDept, filterDept) => {
+                if (!memberDept || filterDept === "all") return true;
+                const d = memberDept.toLowerCase().trim();
+                if (d === "both" || d.includes("both") || d.includes("it & ce") || d.includes("ce & it") || d.includes("it/ce") || d.includes("ce/it")) {
+                    return true;
+                }
+                if (filterDept === "Information Technology") {
+                    return d === "information technology" || d.includes("information technology") || d === "it";
+                }
+                if (filterDept === "Computer Engineering") {
+                    return d === "computer engineering" || d.includes("computer engineering") || d === "ce";
+                }
+                return d === filterDept.toLowerCase();
+            };
+
             // Sync layout themes
             function setDepartmentTheme(dept) {
                 currentActiveDept = dept;
@@ -546,9 +562,9 @@ $jsDataExists = file_exists($jsDataFile);
                 
                 // Select first faculty in selected department
                 const faculty = mappedTimetable[selectedInitials];
-                if (!faculty || (faculty.department !== dept && faculty.department !== "Both")) {
+                if (!faculty || !isDeptMatch(faculty.department, dept)) {
                     const keys = Object.keys(mappedTimetable);
-                    const match = keys.find(k => mappedTimetable[k].department === dept || mappedTimetable[k].department === "Both");
+                    const match = keys.find(k => isDeptMatch(mappedTimetable[k].department, dept));
                     if (match) {
                         loadTimetable(match);
                     }
@@ -631,20 +647,35 @@ $jsDataExists = file_exists($jsDataFile);
             // Populate custom select options
             function populateDropdown(searchQuery = "") {
                 optionsListContainer.innerHTML = "";
-                const sortedKeys = Object.keys(mappedTimetable).sort();
-                const q = (searchQuery || "").toLowerCase().trim();
                 
-                sortedKeys.forEach(initials => {
+                // Collect faculty initials in official facultyData.js order
+                let facultyKeys = [];
+                if (typeof facultyData !== 'undefined') {
+                    facultyData.forEach(m => {
+                        if (m.initials) {
+                            const init = m.initials.toUpperCase().trim();
+                            if (mappedTimetable[init] && !facultyKeys.includes(init)) {
+                                facultyKeys.push(init);
+                            }
+                        }
+                    });
+                }
+                if (facultyKeys.length === 0) {
+                    facultyKeys = Object.keys(mappedTimetable).sort();
+                }
+
+                let indexCounter = 1;
+                facultyKeys.forEach(initials => {
                     const data = mappedTimetable[initials];
                     // Filter strictly by active department (unless in global leave alteration mode)
-                    if (currentTab !== "leave" && data.department !== currentActiveDept && data.department !== "Both") return;
+                    if (currentTab !== "leave" && !isDeptMatch(data.department, currentActiveDept)) return;
 
                     const option = document.createElement("div");
                     option.className = `select-option ${initials === selectedInitials ? 'selected' : ''}`;
                     option.setAttribute("data-initials", initials);
                     
                     option.innerHTML = `
-                        <span>${data.name} (${initials})</span>
+                        <span>${indexCounter}. ${data.name} (${initials})</span>
                         <span class="option-initials">${initials}</span>
                     `;
 
@@ -653,6 +684,7 @@ $jsDataExists = file_exists($jsDataFile);
                     });
 
                     optionsListContainer.appendChild(option);
+                    indexCounter++;
                 });
             }
 

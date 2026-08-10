@@ -146,16 +146,27 @@
             let currentFilterDept = "all";
             let currentSearchQuery = "";
 
+            // Helper to check if a faculty member's department matches the filter (supports Both, IT & CE, etc.)
+            const isDeptMatch = (memberDept, filterDept) => {
+                if (filterDept === "all") return true;
+                if (!memberDept) return true;
+                const d = memberDept.toLowerCase().trim();
+                if (d === "both" || d.includes("both") || d.includes("it & ce") || d.includes("ce & it") || d.includes("it/ce") || d.includes("ce/it")) {
+                    return true;
+                }
+                if (filterDept === "Information Technology") {
+                    return d === "information technology" || d.includes("information technology") || d === "it";
+                }
+                if (filterDept === "Computer Engineering") {
+                    return d === "computer engineering" || d.includes("computer engineering") || d === "ce";
+                }
+                return d === filterDept.toLowerCase();
+            };
+
             // Calculate faculty counts dynamically
             const allCount = facultyData.length;
-            const itCount = facultyData.filter(m => {
-                const dept = m.department || "Information Technology";
-                return dept === "Information Technology" || dept === "Both";
-            }).length;
-            const ceCount = facultyData.filter(m => {
-                const dept = m.department || "Computer Engineering";
-                return dept === "Both" || dept === "Computer Engineering";
-            }).length;
+            const itCount = facultyData.filter(m => isDeptMatch(m.department, "Information Technology")).length;
+            const ceCount = facultyData.filter(m => isDeptMatch(m.department, "Computer Engineering")).length;
 
             // Update button texts to show counts with styled badge
             const allBtn = document.getElementById("filter-all-btn");
@@ -191,26 +202,8 @@
                     return colors[index];
                 };
 
-                facultyData.forEach(member => {
-                    const dept = member.department || "Information Technology";
-                    if (filterDept !== "all" && dept !== filterDept && dept !== "Both") {
-                        return; // skip if it doesn't match the active filter
-                    }
-
-                    // Check search query against name, initials, and setting
-                    if (query !== "") {
-                        const nameMatches = (member.name || "").toLowerCase().includes(query);
-                        const initialsMatches = (member.initials || "").toLowerCase().includes(query);
-                        const settingMatches = (member.setting || "").toLowerCase().includes(query);
-                        if (!nameMatches && !initialsMatches && !settingMatches) {
-                            return; // skip if it doesn't match name, initials, or setting
-                        }
-                    }
-
-                    const avatarClass = getAvatarClass(member);
-
-                    // Generate Card HTML
-                    cardsHtml += `
+                const generateCardHtml = (member, avatarClass) => {
+                    return `
                     <div class="faculty-card">
                         <div class="avatar-wrapper">
                             <div class="avatar-glow"></div>
@@ -227,10 +220,11 @@
                             </svg>
                         </button>
                     </div>`;
+                };
 
-                    // Generate Modal HTML
-                    const phoneDigits = member.phone.replace(/\s+/g, '');
-                    modalsHtml += `
+                const generateModalHtml = (member, avatarClass) => {
+                    const phoneDigits = (member.phone || '').replace(/\s+/g, '');
+                    return `
                     <div class="modal fade gmiu-modal" id="modal-${member.id}" tabindex="-1" aria-labelledby="modal-${member.id}-label" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
                             <div class="modal-content">
@@ -273,6 +267,69 @@
                             </div>
                         </div>
                     </div>`;
+                };
+
+                // Fixed Top HOD IDs in exact order: [1st: Dhaval Chandarana (HOD), 2nd: Shwetaba Chauhan, 3rd: Ekta Unagar]
+                const fixedHodIds = ["dc", "sw", "eu"];
+
+                // 1. Separate fixed top HOD members that match active filter
+                let topHodMembers = [];
+                fixedHodIds.forEach(id => {
+                    const member = facultyData.find(m => m.id === id);
+                    if (member) {
+                        const deptMatch = isDeptMatch(member.department, filterDept);
+                        let searchMatch = true;
+                        if (query !== "") {
+                            const nameMatches = (member.name || "").toLowerCase().includes(query);
+                            const initialsMatches = (member.initials || "").toLowerCase().includes(query);
+                            const settingMatches = (member.setting || "").toLowerCase().includes(query);
+                            searchMatch = nameMatches || initialsMatches || settingMatches;
+                        }
+                        if (deptMatch && searchMatch) {
+                            topHodMembers.push(member);
+                        }
+                    }
+                });
+
+                // 2. Filter remaining faculty members (excluding fixed HODs)
+                let remainingMembers = facultyData.filter(member => {
+                    if (fixedHodIds.includes(member.id)) return false;
+
+                    if (!isDeptMatch(member.department, filterDept)) {
+                        return false;
+                    }
+                    if (query !== "") {
+                        const nameMatches = (member.name || "").toLowerCase().includes(query);
+                        const initialsMatches = (member.initials || "").toLowerCase().includes(query);
+                        const settingMatches = (member.setting || "").toLowerCase().includes(query);
+                        if (!nameMatches && !initialsMatches && !settingMatches) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+
+                // 3. Shuffle remaining members using Fisher-Yates algorithm
+                for (let i = remainingMembers.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [remainingMembers[i], remainingMembers[j]] = [remainingMembers[j], remainingMembers[i]];
+                }
+
+                // 4. Render HTML: Top HOD Row (Row 1: 3 cards) + Shuffled Grid (Row 2+: 4 cards per row)
+                if (topHodMembers.length > 0) {
+                    let topRowCardsHtml = "";
+                    topHodMembers.forEach(member => {
+                        const avatarClass = getAvatarClass(member);
+                        topRowCardsHtml += generateCardHtml(member, avatarClass);
+                        modalsHtml += generateModalHtml(member, avatarClass);
+                    });
+                    cardsHtml += `<div class="hod-top-row hod-cols-${topHodMembers.length}">${topRowCardsHtml}</div>`;
+                }
+
+                remainingMembers.forEach(member => {
+                    const avatarClass = getAvatarClass(member);
+                    cardsHtml += generateCardHtml(member, avatarClass);
+                    modalsHtml += generateModalHtml(member, avatarClass);
                 });
 
                 grid.innerHTML = cardsHtml || `<div class="col-12 text-center text-muted py-5" style="grid-column: 1 / -1; font-size: 15px; font-family: 'Share Tech', monospace; color: var(--text-dim) !important;">No faculty members found in this department.</div>`;
@@ -342,8 +399,7 @@
                 const runExport = () => {
                     const query = currentSearchQuery.toLowerCase().trim();
                     const listToExport = facultyData.filter(member => {
-                        const dept = member.department || "Information Technology";
-                        if (currentFilterDept !== "all" && dept !== currentFilterDept && dept !== "Both") {
+                        if (!isDeptMatch(member.department, currentFilterDept)) {
                             return false;
                         }
                         if (query !== "") {
