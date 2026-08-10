@@ -599,4 +599,16 @@ const facultyData = [
         initials: "DYV",
         setting: "FF-01"
     },
+    {
+        id: "pmm",
+        name: "Prof. Parvez Makwana",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10690",
+        email: "pmmakwana@gmiu.edu.in",
+        phone: "81603 54232",
+        avatarClass: "av-pmm",
+        initials: "PMM",
+        setting: "FF-01"
+    },
 ];
