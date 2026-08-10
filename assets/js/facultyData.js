@@ -9,7 +9,8 @@ const facultyData = [
         email: "drchandarana@gmiu.edu.in",
         phone: "96015 24282",
         avatarClass: "av-dc",
-        initials: "DRC"
+        initials: "DRC",
+        setting: "FF-38"
     },
     {
         id: "sw",
@@ -20,7 +21,8 @@ const facultyData = [
         email: "sbchauhan@gmiu.edu.in",
         phone: "74358 12357",
         avatarClass: "av-sw",
-        initials: "SBC"
+        initials: "SBC",
+        setting: "FF-38"
     },
     {
         id: "eu",
@@ -31,7 +33,8 @@ const facultyData = [
         email: "ehunagar@gmiu.edu.in",
         phone: "96019 10753",
         avatarClass: "av-eu",
-        initials: "EHU"
+        initials: "EHU",
+        setting: "FF-37"
     },
     {
         id: "tv",
@@ -42,7 +45,8 @@ const facultyData = [
         email: "tmvyas@gmiu.edu.in",
         phone: "81409 67331",
         avatarClass: "av-tv",
-        initials: "TMV"
+        initials: "TMV",
+        setting: "FF-37"
     },
     {
         id: "sc",
@@ -53,7 +57,8 @@ const facultyData = [
         email: "shchavda@gmiu.edu.in",
         phone: "78789 09816",
         avatarClass: "av-sc",
-        initials: "SHC"
+        initials: "SHC",
+        setting: "FF-37"
     },
     {
         id: "pk",
@@ -64,7 +69,8 @@ const facultyData = [
         email: "phkaneijya@gmiu.edu.in",
         phone: "8401782901",
         avatarClass: "av-pk",
-        initials: "PHK"
+        initials: "PHK",
+        setting: "FF-38"
     },
     {
         id: "svb",
@@ -75,7 +81,8 @@ const facultyData = [
         email: "svbhamani@gmiu.edu.in",
         phone: "9978443539",
         avatarClass: "av-svb",
-        initials: "SVB"
+        initials: "SVB",
+        setting: "FF-29"
     },
     {
         id: "jm",
@@ -86,7 +93,8 @@ const facultyData = [
         email: "jmmavani@gmiu.edu.in",
         phone: "94260 27689",
         avatarClass: "av-jm",
-        initials: "JMM"
+        initials: "JMM",
+        setting: "FF-37"
     },
     {
         id: "db",
@@ -97,7 +105,8 @@ const facultyData = [
         email: "djbhatt@gmiu.edu.in",
         phone: "94995 48563",
         avatarClass: "av-db",
-        initials: "DJB"
+        initials: "DJB",
+        setting: "FF-38"
     },
     {
         id: "ks",
@@ -108,7 +117,8 @@ const facultyData = [
         email: "kbsolanki@gmiu.edu.in",
         phone: "63534 26013",
         avatarClass: "av-ks",
-        initials: "KBS"
+        initials: "KBS",
+        setting: "GF-37"
     },
     {
         id: "bss",
@@ -119,7 +129,8 @@ const facultyData = [
         email: "bssasmal@gmiu.edu.in",
         phone: "70771 60281",
         avatarClass: "av-bs",
-        initials: "BSS"
+        initials: "BSS",
+        setting: "FF-37"
     },
     {
         id: "vs",
@@ -130,7 +141,8 @@ const facultyData = [
         email: "vbsavani@gmiu.edu.in",
         phone: "97249 10886",
         avatarClass: "av-vs",
-        initials: "VBS"
+        initials: "VBS",
+        setting: "FF-37"
     },
     {
         id: "srp",
@@ -141,7 +153,8 @@ const facultyData = [
         email: "srpatel@gmiu.edu.in",
         phone: "97144 84352",
         avatarClass: "av-sp",
-        initials: "SRP"
+        initials: "SRP",
+        setting: "FF-38"
     },
     {
         id: "pr",
@@ -152,7 +165,8 @@ const facultyData = [
         email: "pvparmar@gmiu.edu.in",
         phone: "90339 08112",
         avatarClass: "av-pr",
-        initials: "PVP"
+        initials: "PVP",
+        setting: "FF-01"
     },
     {
         id: "sv",
@@ -163,7 +177,8 @@ const facultyData = [
         email: "smvasaya@gmiu.edu.in",
         phone: "95583 07747",
         avatarClass: "av-sv",
-        initials: "SMV"
+        initials: "SMV",
+        setting: "FF-38"
     },
     {
         id: "sg",
@@ -174,7 +189,8 @@ const facultyData = [
         email: "sdgohil@gmiu.edu.in",
         phone: "81286 00880",
         avatarClass: "av-sg",
-        initials: "SDG"
+        initials: "SDG",
+        setting: "FF-38"
     },
     {
         id: "dk",
@@ -185,7 +201,8 @@ const facultyData = [
         email: "dkdholakiya@gmiu.edu.in",
         phone: "9328946676",
         avatarClass: "av-dk",
-        initials: "DKD"
+        initials: "DKD",
+        setting: "FF-38"
     },
     // {
     //     id: "Ai",
@@ -207,7 +224,8 @@ const facultyData = [
         email: "rdchimanani@gmiu.edu.in",
         phone: "94270 35838",
         avatarClass: "av-rc",
-        initials: "RDC"
+        initials: "RDC",
+        setting: "FF-38"
     },
     {
         id: "jv",
@@ -218,7 +236,8 @@ const facultyData = [
         email: "javyas@gmiu.edu.in",
         phone: "88663 56525",
         avatarClass: "av-jv",
-        initials: "JAV"
+        initials: "JAV",
+        setting: "FF-32"
     },
     {
         id: "pri",
@@ -229,7 +248,8 @@ const facultyData = [
         email: "pprathod@gmiu.edu.in",
         phone: "93134 62924",
         avatarClass: "av-pri",
-        initials: "PPR"
+        initials: "PPR",
+        setting: "GF-37"
     },
     {
         id: "km",
@@ -240,7 +260,8 @@ const facultyData = [
         email: "ksmakwana@gmiu.edu.in",
         phone: "63550 09392",
         avatarClass: "av-km",
-        initials: "KSM"
+        initials: "KSM",
+        setting: "FF-38"
     },
     {
         id: "dch",
@@ -251,7 +272,8 @@ const facultyData = [
         email: "ddchavda@gmiu.edu.in",
         phone: "78783 31246",
         avatarClass: "av-dch",
-        initials: "DDC"
+        initials: "DDC",
+        setting: "FF-38"
     },
     {
         id: "dg",
@@ -262,7 +284,8 @@ const facultyData = [
         email: "djgadhadara@gmiu.edu.in",
         phone: "98750 10257",
         avatarClass: "av-dg",
-        initials: "DJG"
+        initials: "DJG",
+        setting: "GF-37"
     },
     {
         id: "ag",
@@ -273,7 +296,8 @@ const facultyData = [
         email: "apgohil@gmiu.edu.in",
         phone: "83477 68861",
         avatarClass: "av-ag",
-        initials: "APG"
+        initials: "APG",
+        setting: "FF-38"
     },
     {
         id: "bm",
@@ -284,7 +308,8 @@ const facultyData = [
         email: "bdmehta@gmiu.edu.in",
         phone: "98254 05933",
         avatarClass: "av-bm",
-        initials: "BDM"
+        initials: "BDM",
+        setting: "FF-38"
     },
     {
         id: "pdc",
@@ -295,7 +320,8 @@ const facultyData = [
         email: "pdchoksi@gmiu.edu.in",
         phone: "8141336361",
         avatarClass: "PDC",
-        initials: "PDC"
+        initials: "PDC",
+        setting: "FF-38"
     },
     {
         id: "VDV",
@@ -306,7 +332,8 @@ const facultyData = [
         email: "vdvadher@gmiu.edu.in",
         phone: "8141927737",
         avatarClass: "VDV",
-        initials: "VDV"
+        initials: "VDV",
+        setting: "FF-37"
     },
     {
         id: "TDO",
@@ -317,7 +344,8 @@ const facultyData = [
         email: "tdoza@gmiu.edu.in",
         phone: "9427111626",
         avatarClass: "TDO",
-        initials: "TDO"
+        initials: "TDO",
+        setting: "FF-38"
     },
     {
         id: "mkc",
@@ -328,7 +356,8 @@ const facultyData = [
         email: "mkchampaneri@gmiu.edu.in",
         phone: "81415 20199",
         avatarClass: "av-mkc",
-        initials: "MKC"
+        initials: "MKC",
+        setting: "FF-38"
     },
     {
         id: "mcs",
@@ -339,7 +368,8 @@ const facultyData = [
         email: "mcshanishwara@gmiu.edu.in",
         phone: "99042 42221",
         avatarClass: "av-mcs",
-        initials: "MCS"
+        initials: "MCS",
+        setting: "TF-24 A"
     },
     {
         id: "pmb",
@@ -350,7 +380,8 @@ const facultyData = [
         email: "pmbhatt@gmiu.edu.in",
         phone: "94082 56550",
         avatarClass: "av-pmb",
-        initials: "PMB"
+        initials: "PMB",
+        setting: "GF-37"
     },
     {
         id: "nrj",
@@ -361,7 +392,8 @@ const facultyData = [
         email: "nrjadeja@gmiu.edu.in",
         phone: "79908 24431",
         avatarClass: "av-nrj",
-        initials: "NRJ"
+        initials: "NRJ",
+        setting: "FF-24"
     },
     {
         id: "rpj",
@@ -372,7 +404,8 @@ const facultyData = [
         email: "rjani@gmiu.edu.in",
         phone: "63534 74152",
         avatarClass: "av-rpj",
-        initials: "RPJ"
+        initials: "RPJ",
+        setting: "FF-27"
     },
     {
         id: "jam",
@@ -383,7 +416,8 @@ const facultyData = [
         email: "jamusani@gmiu.edu.in",
         phone: "94093 14004",
         avatarClass: "av-jam",
-        initials: "JAM"
+        initials: "JAM",
+        setting: "FF-38"
     },
     {
         id: "jbs",
@@ -394,7 +428,8 @@ const facultyData = [
         email: "jbsaraliya@gmiu.edu.in",
         phone: "76229 92547",
         avatarClass: "av-jbs",
-        initials: "JBS"
+        initials: "JBS",
+        setting: "FF-22"
     },
     {
         id: "dpz",
@@ -405,7 +440,8 @@ const facultyData = [
         email: "dpzala@gmiu.edu.in",
         phone: "63547 04061",
         avatarClass: "av-dpz",
-        initials: "DPZ"
+        initials: "DPZ",
+        setting: "FF-01"
     },
     {
         id: "dbv",
@@ -416,7 +452,8 @@ const facultyData = [
         email: "dbvadgama@gmiu.edu.in",
         phone: "76006 63547",
         avatarClass: "av-dbv",
-        initials: "DBV"
+        initials: "DBV",
+        setting: "FF-01"
     },
     {
         id: "iap",
@@ -427,7 +464,8 @@ const facultyData = [
         email: "iapattani@gmiu.edu.in",
         phone: "90544 44106",
         avatarClass: "av-iap",
-        initials: "IAP"
+        initials: "IAP",
+        setting: "FF-38"
     },
     {
         id: "rfd",
@@ -438,7 +476,8 @@ const facultyData = [
         email: "fdremona@gmiu.edu.in",
         phone: "9909730707",
         avatarClass: "av-rfd",
-        initials: "RDF"
+        initials: "RDF",
+        setting: "FF-01"
     },
     {
         id: "hpg",
@@ -449,7 +488,8 @@ const facultyData = [
         email: "hpgohel@gmiu.edu.in",
         phone: "94098 06364",
         avatarClass: "av-hpg",
-        initials: "HPG"
+        initials: "HPG",
+        setting: "FF-25"
     },
     {
         id: "hds",
@@ -460,7 +500,8 @@ const facultyData = [
         email: "hdshah@gmiu.edu.in",
         phone: "79849 32848",
         avatarClass: "av-hds",
-        initials: "HDS"
+        initials: "HDS",
+        setting: "FF-01"
     },
     {
         id: "knr",
@@ -471,7 +512,8 @@ const facultyData = [
         email: "knrupera@gmiu.edu.in",
         phone: "94267 51762",
         avatarClass: "av-knr",
-        initials: "KNR"
+        initials: "KNR",
+        setting: "FF-01"
     },
     {
         id: "hag",
@@ -482,7 +524,8 @@ const facultyData = [
         email: "hagohil@gmiu.edu.in",
         phone: "9157131430",
         avatarClass: "av-hag",
-        initials: "HAG"
+        initials: "HAG",
+        setting: "FF-28"
     },
     {
         id: "srm",
@@ -493,7 +536,8 @@ const facultyData = [
         email: "srmalek@gmiu.edu.in",
         phone: "95103 20090",
         avatarClass: "av-srm",
-        initials: "SRM"
+        initials: "SRM",
+        setting: "FF-01"
     },
     {
         id: "hpj",
@@ -504,7 +548,8 @@ const facultyData = [
         email: "hpjadeja@gmiu.edu.in",
         phone: "79846 88579",
         avatarClass: "av-hpj",
-        initials: "HPJ"
+        initials: "HPJ",
+        setting: ""
     },
     {
         id: "aps",
@@ -515,7 +560,8 @@ const facultyData = [
         email: "apsuthar@gmiu.edu.in",
         phone: "8154007309",
         avatarClass: "av-aps",
-        initials: "APS"
+        initials: "APS",
+        setting: "GF-38"
     },
     {
         id: "hpd",
@@ -526,7 +572,8 @@ const facultyData = [
         email: "hpdodiya@gmiu.edu.in",
         phone: "6352258691",
         avatarClass: "av-hpd",
-        initials: "HPD"
+        initials: "HPD",
+        setting: ""
     },
     {
         id: "ygl",
@@ -537,7 +584,8 @@ const facultyData = [
         email: "yglakhani@gmiu.edu.in",
         phone: "98257 51614",
         avatarClass: "av-ygl",
-        initials: "YGL"
+        initials: "YGL",
+        setting: "FF-01"
     },
     {
         id: "dyv",
@@ -548,6 +596,7 @@ const facultyData = [
         email: "dyvaghela@gmiu.edu.in",
         phone: "63539 51518",
         avatarClass: "av-dyv",
-        initials: "DYV"
+        initials: "DYV",
+        setting: "FF-01"
     },
 ];

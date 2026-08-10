@@ -197,12 +197,13 @@
                         return; // skip if it doesn't match the active filter
                     }
 
-                    // Check search query against name and initials
+                    // Check search query against name, initials, and setting
                     if (query !== "") {
                         const nameMatches = (member.name || "").toLowerCase().includes(query);
                         const initialsMatches = (member.initials || "").toLowerCase().includes(query);
-                        if (!nameMatches && !initialsMatches) {
-                            return; // skip if it doesn't match name or initials
+                        const settingMatches = (member.setting || "").toLowerCase().includes(query);
+                        if (!nameMatches && !initialsMatches && !settingMatches) {
+                            return; // skip if it doesn't match name, initials, or setting
                         }
                     }
 
@@ -218,7 +219,7 @@
                         <h3 class="faculty-name">${member.name}</h3>
                         <div class="faculty-desg">${member.designation}</div>
                         <div class="faculty-dept">${member.department || "Information Technology"}</div>
-                        <p class="faculty-focus">Employee ID: ${member.empId}<br>Contact: ${member.email}</p>
+                        <p class="faculty-focus">Employee ID: ${member.empId}${member.setting ? ` | Setting: ${member.setting}` : ''}<br>Contact: ${member.email}</p>
                         <button type="button" class="details-btn" data-bs-toggle="modal" data-bs-target="#modal-${member.id}">
                             <span>View More Details</span>
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -245,9 +246,9 @@
                                     <p class="modal-fac-desg">${member.designation}</p>
                                     <p class="modal-fac-dept">${member.department || "Information Technology"}</p>
                                     
-                                    <div class="modal-fac-cabin mb-3">
-                                        <span>🆔</span>
-                                        <span>Employee ID: ${member.empId}</span>
+                                    <div class="modal-fac-cabin mb-3 d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                                        <span>🆔 Employee ID: ${member.empId}</span>
+                                        ${member.setting ? `<span>📍 Setting: <strong>${member.setting}</strong></span>` : ''}
                                     </div>
                                     
                                     <div class="modal-fac-contact d-flex flex-column gap-2">
@@ -348,7 +349,8 @@
                         if (query !== "") {
                             const nameMatches = (member.name || "").toLowerCase().includes(query);
                             const initialsMatches = (member.initials || "").toLowerCase().includes(query);
-                            if (!nameMatches && !initialsMatches) return false;
+                            const settingMatches = (member.setting || "").toLowerCase().includes(query);
+                            if (!nameMatches && !initialsMatches && !settingMatches) return false;
                         }
                         return true;
                     });
@@ -366,7 +368,8 @@
                         "Department": member.department || "Information Technology",
                         "Employee ID": member.empId ? member.empId.replace('#', '') : "",
                         "Email Address": member.email || "",
-                        "Mobile Number": member.phone ? `+91 ${member.phone}` : ""
+                        "Mobile Number": member.phone ? `+91 ${member.phone}` : "",
+                        "Setting": member.setting || ""
                     }));
 
                     // Build worksheet and set column widths
@@ -378,7 +381,8 @@
                         { wch: 26 },  // Department
                         { wch: 14 },  // Employee ID
                         { wch: 32 },  // Email Address
-                        { wch: 18 }   // Mobile Number
+                        { wch: 18 },  // Mobile Number
+                        { wch: 12 }   // Setting
                     ];
 
                     // Build workbook
