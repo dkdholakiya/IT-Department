@@ -288,6 +288,12 @@
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
+                                                    value="Diploma PLM" id="progDiplomaPLM">
+                                                <label class="form-check-label text-light"
+                                                    for="progDiplomaPLM">Diploma PLM</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="B.Tech" id="progBTech">
                                                 <label class="form-check-label text-light"
                                                     for="progBTech">B.Tech</label>
@@ -297,6 +303,12 @@
                                                     value="B.Tech Premium" id="progBTechPremium">
                                                 <label class="form-check-label text-light"
                                                     for="progBTechPremium">B.Tech Premium</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input prog-checkbox" type="checkbox"
+                                                    value="B.Tech PLM" id="progBTechPLM">
+                                                <label class="form-check-label text-light"
+                                                    for="progBTechPLM">B.Tech PLM</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
