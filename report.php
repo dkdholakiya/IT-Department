@@ -3842,9 +3842,9 @@ Department of CE & IT`;
                 if (deptVal.includes("BOTH") || (deptVal.includes("CE") && deptVal.includes("IT"))) {
                     sigHodTitleEl.innerText = "Head of Department (CE & IT)";
                 } else if (deptVal.includes("COMPUTER") || deptVal.includes("CE")) {
-                    sigHodTitleEl.innerText = "Head of Department (CE)";
+                    sigHodTitleEl.innerText = "Head of Department (CE & IT)";
                 } else {
-                    sigHodTitleEl.innerText = "Head of Department (IT)";
+                    sigHodTitleEl.innerText = "Head of Department (CE & IT)";
                 }
             }
         }
