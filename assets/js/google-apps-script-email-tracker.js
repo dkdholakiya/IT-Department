@@ -36,7 +36,7 @@ function doPost(e) {
       "PC / Hostname", 
       "Location (City, Region, Country)", 
       "ISP / Network Provider", 
-      "User / Session / Faculty Info", 
+      "User / Faculty Details", 
       "Browser / OS (User Agent)"
     ];
 

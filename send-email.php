@@ -178,7 +178,7 @@ function track_email_execution($input, $config, $sender_email) {
 
         // 4. Module / Route Detection
         $module_raw = $input['module'] ?? '';
-        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        $referer = $input['referer'] ?? ($_SERVER['HTTP_REFERER'] ?? ($_SERVER['HTTP_ORIGIN'] ?? ($_SERVER['REQUEST_URI'] ?? 'Direct Web Endpoint')));
         $detected_module = 'Unknown Module';
 
         if (stripos($referer, 'zero-student-report') !== false || $module_raw === 'zero') {
@@ -195,15 +195,50 @@ function track_email_execution($input, $config, $sender_email) {
             $detected_module = 'Web Module (' . parse_url($referer, PHP_URL_PATH) . ')';
         }
 
-        // 5. Geolocation Resolution (Non-blocking fallback)
-        $location_info = $_SESSION['cached_geo_loc'] ?? 'Web Client Session';
-        $isp_info = $_SESSION['cached_geo_isp'] ?? 'HTTP Client';
-
-
-        // 6. Detailed User, Identity & Session Info
+        // 5. Geolocation Resolution (Real-time lookup with session cache & WAN fallback)
         if (session_status() === PHP_SESSION_NONE) {
             @session_start();
         }
+
+        $clean_ip = trim(explode(',', $ip)[0]);
+        $location_info = $_SESSION['cached_geo_loc'] ?? '';
+        $isp_info = $_SESSION['cached_geo_isp'] ?? '';
+
+        if (empty($location_info) || empty($isp_info)) {
+            $is_local = ($clean_ip === '::1' || $clean_ip === '127.0.0.1' || filter_var($clean_ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false);
+            
+            // If local IP, query caller's public WAN IP; otherwise query specified IP
+            $geo_api = $is_local 
+                ? "http://ip-api.com/json/?fields=status,country,regionName,city,isp,org,query" 
+                : "http://ip-api.com/json/{$clean_ip}?fields=status,country,regionName,city,isp,org,query";
+
+            try {
+                $ctx = stream_context_create(['http' => ['timeout' => 3]]);
+                $geo_res = @file_get_contents($geo_api, false, $ctx);
+                if ($geo_res) {
+                    $geo_data = json_decode($geo_res, true);
+                    if (!empty($geo_data) && ($geo_data['status'] ?? '') === 'success') {
+                        $loc_parts = array_filter([$geo_data['city'] ?? '', $geo_data['regionName'] ?? '', $geo_data['country'] ?? '']);
+                        $location_info = implode(', ', $loc_parts);
+                        $isp_info = $geo_data['isp'] ?? ($geo_data['org'] ?? 'Network Provider');
+
+                        if ($is_local && !empty($clean_ip)) {
+                            $location_info .= " (LAN: {$clean_ip})";
+                        }
+
+                        $_SESSION['cached_geo_loc'] = $location_info;
+                        $_SESSION['cached_geo_isp'] = $isp_info;
+                    }
+                }
+            } catch (Exception $e) {
+                // Fallback on error
+            }
+        }
+
+        if (empty($location_info)) $location_info = 'Web Client Session';
+        if (empty($isp_info)) $isp_info = 'HTTP Client';
+
+        // 6. Detailed User, Identity & Session Info
         $sess_user = $_SESSION['user_name'] ?? ($_SESSION['user'] ?? ($_SESSION['username'] ?? ($_SESSION['email'] ?? '')));
         $faculty_name = $input['faculty_name'] ?? ($input['prepared_by'] ?? ($input['faculty'] ?? ($input['name'] ?? '')));
         $faculty_email = $input['faculty_email'] ?? ($input['ref_email'] ?? '');
@@ -218,7 +253,7 @@ function track_email_execution($input, $config, $sender_email) {
         $user_info = !empty($user_parts) ? implode(' | ', $user_parts) : 'Guest / System Web User';
 
         // 7. Network Port, Language & User-Agent Parsing
-        $remote_port = $_SERVER['REMOTE_PORT'] ?? '';
+        $remote_port = $_SERVER['REMOTE_PORT'] ?? ($_SERVER['HTTP_X_FORWARDED_PORT'] ?? ($_SERVER['SERVER_PORT'] ?? 'N/A'));
         $accept_lang = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
         $lang_clean = !empty($accept_lang) ? explode(',', $accept_lang)[0] : 'en-US';
 
@@ -282,12 +317,16 @@ function track_email_execution($input, $config, $sender_email) {
             $subject_str = $input['subject'] ?? '';
         }
 
-        // Attachments check
+        // Attachments check (PDFs, ZIPs, files & Google Drive links)
         $attachment_files = [];
         if (!empty($input['filename'])) $attachment_files[] = $input['filename'];
         if (!empty($input['attachments']) && is_array($input['attachments'])) {
             foreach ($input['attachments'] as $att) {
-                if (!empty($att['filename'])) $attachment_files[] = $att['filename'];
+                if (is_array($att) && !empty($att['filename'])) {
+                    $attachment_files[] = $att['filename'];
+                } elseif (is_string($att) && !empty($att)) {
+                    $attachment_files[] = $att;
+                }
             }
         }
         if (!empty($input['emails']) && is_array($input['emails'])) {
@@ -295,12 +334,24 @@ function track_email_execution($input, $config, $sender_email) {
                 if (!empty($item['filename'])) $attachment_files[] = $item['filename'];
                 if (!empty($item['attachments']) && is_array($item['attachments'])) {
                     foreach ($item['attachments'] as $att) {
-                        if (!empty($att['filename'])) $attachment_files[] = $att['filename'];
+                        if (is_array($att) && !empty($att['filename'])) {
+                            $attachment_files[] = $att['filename'];
+                        } elseif (is_string($att) && !empty($att)) {
+                            $attachment_files[] = $att;
+                        }
                     }
                 }
             }
         }
-        $attachments_str = !empty($attachment_files) ? implode(', ', array_unique($attachment_files)) : 'None (Inline Body)';
+
+        $drive_link = $input['driveLink'] ?? ($input['drive_link'] ?? '');
+        if (!empty($attachment_files)) {
+            $attachments_str = implode(', ', array_unique($attachment_files));
+        } elseif (!empty($drive_link)) {
+            $attachments_str = 'Google Drive: ' . $drive_link;
+        } else {
+            $attachments_str = 'None (Inline Body Report)';
+        }
 
         $payload = [
             'timestamp' => $timestamp,
