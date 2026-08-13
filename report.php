@@ -422,10 +422,14 @@
                                     <div class="col-md-12">
                                         <label class="form-label" for="briefObjective">Brief Objective <span
                                                 class="text-danger">*</span></label>
-                                        <textarea class="form-control" id="briefObjective" rows="3"
-                                            placeholder="Define the primary objective of this activity..."
+                                        <textarea class="form-control" id="briefObjective" rows="4"
+                                            placeholder="Define the primary objective of this activity (Minimum 51 words required)..."
                                             required></textarea>
-                                        <div class="invalid-feedback">Brief Objective is required.</div>
+                                        <div class="invalid-feedback" id="briefObjectiveFeedback">Brief Objective is required and must contain at least 51 words.</div>
+                                        <div class="form-text mt-1 d-flex justify-content-between align-items-center">
+                                            <span class="small text-muted"><i class="bi bi-info-circle me-1"></i> Minimum 51 words required to proceed to next section.</span>
+                                            <span class="badge bg-dark text-warning border border-warning" id="briefObjectiveWordCount">0 / 51 words</span>
+                                        </div>
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label text-light">Photo Submission Method <span class="text-danger">*</span></label>
@@ -1411,6 +1415,9 @@
             // Initialize File Upload Displays
             initFileUploadDisplays();
 
+            // Initialize Brief Objective Word Counter
+            initBriefObjectiveWordCount();
+
             // Auto load draft if exists
             loadSavedDraft();
 
@@ -2220,6 +2227,40 @@
             updateStepState(2, true);
         }
 
+        // ── Word Counter & Minimum 51 Words Validation for Brief Objective ──
+        function getWordCount(str) {
+            if (!str) return 0;
+            const trimmed = str.trim();
+            if (!trimmed) return 0;
+            return trimmed.split(/\s+/).filter(Boolean).length;
+        }
+
+        function updateBriefObjectiveWordCount() {
+            const el = document.getElementById("briefObjective");
+            const countBadge = document.getElementById("briefObjectiveWordCount");
+            const feedback = document.getElementById("briefObjectiveFeedback");
+            if (!el || !countBadge) return;
+
+            const words = getWordCount(el.value);
+            countBadge.innerText = `${words} / 51 words`;
+
+            if (words >= 51) {
+                countBadge.className = "badge bg-success text-light border border-success";
+                el.classList.remove("is-invalid");
+                if (feedback) feedback.innerText = "Brief Objective is required.";
+            } else {
+                countBadge.className = "badge bg-dark text-warning border border-warning";
+            }
+        }
+
+        function initBriefObjectiveWordCount() {
+            const el = document.getElementById("briefObjective");
+            if (el) {
+                el.addEventListener("input", updateBriefObjectiveWordCount);
+                updateBriefObjectiveWordCount();
+            }
+        }
+
         // ── Character Counters (Section 4) ──
         function initCharacterCounters() {
             const textareas = document.querySelectorAll(".word-counter");
@@ -2471,6 +2512,28 @@
                         return;
                     } else if (largeZipChk) {
                         largeZipChk.classList.remove("is-invalid");
+                    }
+                }
+
+                // Minimum 51 words validation for Brief Objective
+                const briefObjInput = document.getElementById("briefObjective");
+                const briefObjVal = briefObjInput ? briefObjInput.value : "";
+                const briefObjWords = getWordCount(briefObjVal);
+                const briefObjFeedback = document.getElementById("briefObjectiveFeedback");
+
+                if (briefObjWords < 51) {
+                    briefObjInput.classList.add("is-invalid");
+                    if (briefObjFeedback) {
+                        briefObjFeedback.innerText = `Brief Objective requires a minimum of 51 words (currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'}).`;
+                    }
+                    briefObjInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    briefObjInput.focus();
+                    showToast(`ERROR: Brief Objective must contain at least 51 words. (Currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'})`);
+                    return;
+                } else {
+                    briefObjInput.classList.remove("is-invalid");
+                    if (briefObjFeedback) {
+                        briefObjFeedback.innerText = "Brief Objective is required.";
                     }
                 }
 
@@ -3094,6 +3157,23 @@ Department of CE & IT`;
                 } else if (largeZipChk) {
                     largeZipChk.classList.remove("is-invalid");
                 }
+            }
+
+            // Minimum 51 words validation for Brief Objective
+            const briefObjInput = document.getElementById("briefObjective");
+            const briefObjVal = briefObjInput ? briefObjInput.value : "";
+            const briefObjWords = getWordCount(briefObjVal);
+            const briefObjFeedback = document.getElementById("briefObjectiveFeedback");
+
+            if (briefObjWords < 51) {
+                briefObjInput.classList.add("is-invalid");
+                if (briefObjFeedback) {
+                    briefObjFeedback.innerText = `Brief Objective requires a minimum of 51 words (currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'}).`;
+                }
+                showToast(`ERROR: Brief Objective must contain at least 51 words. (Currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'})`);
+                jumpToSection(2);
+                briefObjInput.focus();
+                return false;
             }
 
             // Check Deadline validation (MANDATORY)
@@ -4275,6 +4355,7 @@ Department of CE & IT`;
                 const countSpan = document.getElementById(textarea.id + "Count");
                 if (countSpan) countSpan.innerText = "0";
             });
+            if (typeof updateBriefObjectiveWordCount === "function") updateBriefObjectiveWordCount();
 
             // Clear file badge lists
             document.querySelectorAll(".selected-files-list").forEach(list => list.innerHTML = "");
