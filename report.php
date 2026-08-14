@@ -423,12 +423,12 @@
                                         <label class="form-label" for="briefObjective">Brief Objective <span
                                                 class="text-danger">*</span></label>
                                         <textarea class="form-control" id="briefObjective" rows="4"
-                                            placeholder="Define the primary objective of this activity (Minimum 51 words required)..."
+                                            placeholder="Define the primary objective of this activity (Minimum 30 words required)..."
                                             required></textarea>
-                                        <div class="invalid-feedback" id="briefObjectiveFeedback">Brief Objective is required and must contain at least 51 words.</div>
+                                        <div class="invalid-feedback" id="briefObjectiveFeedback">Brief Objective is required and must contain at least 30 words.</div>
                                         <div class="form-text mt-1 d-flex justify-content-between align-items-center">
-                                            <span class="small text-muted"><i class="bi bi-info-circle me-1"></i> Minimum 51 words required to proceed to next section.</span>
-                                            <span class="badge bg-dark text-warning border border-warning" id="briefObjectiveWordCount">0 / 51 words</span>
+                                            <span class="small text-muted"><i class="bi bi-info-circle me-1"></i> Minimum 30 words required to proceed to next section.</span>
+                                            <span class="badge bg-dark text-warning border border-warning" id="briefObjectiveWordCount">0 / 30 words</span>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -2227,7 +2227,7 @@
             updateStepState(2, true);
         }
 
-        // ── Word Counter & Minimum 51 Words Validation for Brief Objective ──
+        // ── Word Counter & Minimum 30 Words Validation for Brief Objective ──
         function getWordCount(str) {
             if (!str) return 0;
             const trimmed = str.trim();
@@ -2242,9 +2242,9 @@
             if (!el || !countBadge) return;
 
             const words = getWordCount(el.value);
-            countBadge.innerText = `${words} / 51 words`;
+            countBadge.innerText = `${words} / 30 words`;
 
-            if (words >= 51) {
+            if (words >= 30) {
                 countBadge.className = "badge bg-success text-light border border-success";
                 el.classList.remove("is-invalid");
                 if (feedback) feedback.innerText = "Brief Objective is required.";
@@ -2515,20 +2515,20 @@
                     }
                 }
 
-                // Minimum 51 words validation for Brief Objective
+                // Minimum 30 words validation for Brief Objective
                 const briefObjInput = document.getElementById("briefObjective");
                 const briefObjVal = briefObjInput ? briefObjInput.value : "";
                 const briefObjWords = getWordCount(briefObjVal);
                 const briefObjFeedback = document.getElementById("briefObjectiveFeedback");
 
-                if (briefObjWords < 51) {
+                if (briefObjWords < 30) {
                     briefObjInput.classList.add("is-invalid");
                     if (briefObjFeedback) {
-                        briefObjFeedback.innerText = `Brief Objective requires a minimum of 51 words (currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'}).`;
+                        briefObjFeedback.innerText = `Brief Objective requires a minimum of 30 words (currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'}).`;
                     }
                     briefObjInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     briefObjInput.focus();
-                    showToast(`ERROR: Brief Objective must contain at least 51 words. (Currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'})`);
+                    showToast(`ERROR: Brief Objective must contain at least 30 words. (Currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'})`);
                     return;
                 } else {
                     briefObjInput.classList.remove("is-invalid");
@@ -3159,18 +3159,18 @@ Department of CE & IT`;
                 }
             }
 
-            // Minimum 51 words validation for Brief Objective
+            // Minimum 30 words validation for Brief Objective
             const briefObjInput = document.getElementById("briefObjective");
             const briefObjVal = briefObjInput ? briefObjInput.value : "";
             const briefObjWords = getWordCount(briefObjVal);
             const briefObjFeedback = document.getElementById("briefObjectiveFeedback");
 
-            if (briefObjWords < 51) {
+            if (briefObjWords < 30) {
                 briefObjInput.classList.add("is-invalid");
                 if (briefObjFeedback) {
-                    briefObjFeedback.innerText = `Brief Objective requires a minimum of 51 words (currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'}).`;
+                    briefObjFeedback.innerText = `Brief Objective requires a minimum of 30 words (currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'}).`;
                 }
-                showToast(`ERROR: Brief Objective must contain at least 51 words. (Currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'})`);
+                showToast(`ERROR: Brief Objective must contain at least 30 words. (Currently ${briefObjWords} word${briefObjWords === 1 ? '' : 's'})`);
                 jumpToSection(2);
                 briefObjInput.focus();
                 return false;
