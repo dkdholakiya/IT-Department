@@ -611,4 +611,16 @@ const facultyData = [
         initials: "PMM",
         setting: "FF-01"
     },
+    {
+        id: "kkb",
+        name: "Prof. Karan K. Bhayani",
+        designation: "Lecturer",
+        department: "Computer Engineering",
+        empId: "#10718",
+        email: "kkbhayani@gmiu.edu.in",
+        phone: "9409302701",
+        avatarClass: "av-kkb",
+        initials: "KKB",
+        setting: ""
+    },
 ];

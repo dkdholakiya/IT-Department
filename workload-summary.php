@@ -911,9 +911,8 @@ $jsDataExists = file_exists($jsDataFile);
 
             // Add any faculty from facultyData that might not have a timetable tab yet
             facultyData.forEach(f => {
-                // Exclude non-teaching administrative/developer roles (HOD, Developer, Admin)
+                // Exclude non-teaching administrative/developer roles (Developer, Admin)
                 if (f.designation && (
-                    f.designation.toLowerCase() === "hod" ||
                     f.designation.toLowerCase().includes("developer") ||
                     f.designation.toLowerCase().includes("admin")
                 )) return;
@@ -947,9 +946,8 @@ $jsDataExists = file_exists($jsDataFile);
             // Render table
             function renderTable() {
                 let filtered = allRows.filter(r => {
-                    // Exclude non-teaching administrative & developer entries (HOD, Developer, Admin)
+                    // Exclude non-teaching administrative & developer entries (Developer, Admin)
                     if (r.designation && (
-                        r.designation.toLowerCase() === "hod" ||
                         r.designation.toLowerCase().includes("developer") ||
                         r.designation.toLowerCase().includes("admin")
                     )) return false;

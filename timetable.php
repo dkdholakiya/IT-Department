@@ -1,5 +1,7 @@
 <?php
 require_once 'auto-cache-bust.php';
+require_once 'timetable-compiler.php';
+
 $excelFile = __DIR__ . '/uploads/timetable/timetable.xlsx';
 if (!file_exists($excelFile)) {
     $glob = glob(__DIR__ . '/uploads/timetable/*.xlsx');
@@ -7,6 +9,12 @@ if (!file_exists($excelFile)) {
 }
 $excelExists = file_exists($excelFile);
 $jsDataFile = __DIR__ . '/assets/js/timetableData.js';
+
+// Auto-compile JS database whenever Excel file is uploaded or modified
+if ($excelExists && (!file_exists($jsDataFile) || filemtime($excelFile) > filemtime($jsDataFile))) {
+    compileTimetableData();
+}
+
 $jsDataExists = file_exists($jsDataFile);
 ?>
 <!DOCTYPE html>
@@ -304,27 +312,45 @@ $jsDataExists = file_exists($jsDataFile);
             const timetableBody = document.getElementById("timetableBody");
 
             let currentActiveDept = "Information Technology";
-            let selectedInitials = "SBC";
+            let selectedInitials = "DRC";
             let currentTab = "timetable"; // "timetable" or "leave"
 
             // Map Excel timetableData with official facultyData.js file to filter, name-match, and group by department
             const mappedTimetable = {};
-            if (typeof facultyData !== 'undefined' && typeof timetableData !== 'undefined') {
-                // Map official members from facultyData.js whose initials match a sheet name in timetableData
-                facultyData.forEach(member => {
-                    if (!member.initials) return;
-                    const initials = member.initials.toUpperCase().trim();
-                    const excelKey = Object.keys(timetableData).find(
-                        key => key.toUpperCase().trim() === initials
-                    );
-                    if (excelKey) {
+            if (typeof timetableData !== 'undefined') {
+                // 1. Map official members from facultyData.js whose initials match a sheet in timetableData
+                if (typeof facultyData !== 'undefined') {
+                    facultyData.forEach(member => {
+                        if (!member.initials) return;
+                        const initials = member.initials.toUpperCase().trim();
+                        const excelKey = Object.keys(timetableData).find(
+                            key => key.toUpperCase().trim() === initials
+                        );
+                        if (excelKey) {
+                            mappedTimetable[initials] = {
+                                name: member.name,
+                                initials: initials,
+                                department: member.department,
+                                designation: member.designation || '',
+                                semesterInfo: timetableData[excelKey].semesterInfo || '',
+                                schedule: timetableData[excelKey].schedule
+                            };
+                        }
+                    });
+                }
+
+                // 2. Automatically map any remaining Excel sheets in timetableData missing from facultyData.js
+                Object.keys(timetableData).forEach(excelKey => {
+                    const initials = excelKey.toUpperCase().trim();
+                    if (!mappedTimetable[initials]) {
+                        const rawItem = timetableData[excelKey];
                         mappedTimetable[initials] = {
-                            name: member.name,
+                            name: rawItem.name || (`Prof. ${initials}`),
                             initials: initials,
-                            department: member.department,
-                            designation: member.designation || '',
-                            semesterInfo: timetableData[excelKey].semesterInfo || '',
-                            schedule: timetableData[excelKey].schedule
+                            department: rawItem.department || 'Information Technology',
+                            designation: 'Faculty Member',
+                            semesterInfo: rawItem.semesterInfo || '',
+                            schedule: rawItem.schedule || []
                         };
                     }
                 });
@@ -725,22 +751,10 @@ $jsDataExists = file_exists($jsDataFile);
                 if (!faculty) return;
 
                 // Auto-switch department tab if selected faculty belongs to the other department
-                if (currentTab !== "leave" && faculty.department !== "Both" && faculty.department !== currentActiveDept) {
-                    currentActiveDept = faculty.department;
-                    if (currentActiveDept === "Computer Engineering") {
-                        document.body.classList.add("ce-active");
-                        if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Computer Engineering";
-                        if (portalBadge) portalBadge.textContent = "CE Timetable";
-                        itBtn.classList.remove("active");
-                        ceBtn.classList.add("active");
-                    } else {
-                        document.body.classList.remove("ce-active");
-                        if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Information Technology";
-                        if (portalBadge) portalBadge.textContent = "IT Timetable";
-                        ceBtn.classList.remove("active");
-                        itBtn.classList.add("active");
-                    }
-                    populateDropdown(selectSearchInput ? selectSearchInput.value : "");
+                if (currentTab !== "leave" && !isDeptMatch(faculty.department, currentActiveDept)) {
+                    const targetDept = isDeptMatch(faculty.department, "Information Technology") ? "Information Technology" : "Computer Engineering";
+                    setDepartmentTheme(targetDept);
+                    return;
                 }
 
                 // Update UI text triggers
@@ -1268,13 +1282,13 @@ $jsDataExists = file_exists($jsDataFile);
                 const startingDept = "Information Technology";
                 const keys = Object.keys(mappedTimetable);
                 const defaultKey = keys.find(k => 
-                    mappedTimetable[k].department === startingDept || mappedTimetable[k].department === "Both"
+                    isDeptMatch(mappedTimetable[k].department, startingDept)
                 ) || keys[0];
 
                 if (defaultKey) {
                     selectedInitials = defaultKey;
                 } else {
-                    selectedInitials = "SBC";
+                    selectedInitials = "DRC";
                 }
                 setDepartmentTheme(startingDept);
             }
