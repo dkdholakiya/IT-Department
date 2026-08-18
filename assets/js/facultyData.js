@@ -10,7 +10,8 @@ const facultyData = [
         phone: "96015 24282",
         avatarClass: "av-dc",
         initials: "DRC",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: ""
     },
     {
         id: "sw",
@@ -22,7 +23,8 @@ const facultyData = [
         phone: "74358 12357",
         avatarClass: "av-sw",
         initials: "SBC",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: ""
     },
     {
         id: "eu",
@@ -34,7 +36,8 @@ const facultyData = [
         phone: "96019 10753",
         avatarClass: "av-eu",
         initials: "EHU",
-        setting: "FF-37"
+        setting: "FF-37",
+        link: ""
     },
     {
         id: "tv",
@@ -46,7 +49,11 @@ const facultyData = [
         phone: "81409 67331",
         avatarClass: "av-tv",
         initials: "TMV",
-        setting: "FF-37"
+        setting: "FF-37",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=943&type=1&activity=0&cumulative=0",
+        semClass: "Diploma 5th Sem - B (IT)",
+        dept: "IT",
+        sem: "sem5"
     },
     {
         id: "sc",
@@ -58,7 +65,8 @@ const facultyData = [
         phone: "78789 09816",
         avatarClass: "av-sc",
         initials: "SHC",
-        setting: "FF-37"
+        setting: "FF-37",
+        link: ""
     },
     {
         id: "pk",
@@ -70,7 +78,11 @@ const facultyData = [
         phone: "8401782901",
         avatarClass: "av-pk",
         initials: "PHK",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=783&type=8&activity=0&cumulative=0",
+        semClass: "Diploma 1st Sem - C (CE)",
+        dept: "CE",
+        sem: "sem1"
     },
     {
         id: "svb",
@@ -82,7 +94,11 @@ const facultyData = [
         phone: "9978443539",
         avatarClass: "av-svb",
         initials: "SVB",
-        setting: "FF-29"
+        setting: "FF-29",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=586&type=1&activity=0&cumulative=0",
+        semClass: "Diploma 3rd Sem - B (IT)",
+        dept: "IT",
+        sem: "sem3"
     },
     {
         id: "jm",
@@ -94,7 +110,11 @@ const facultyData = [
         phone: "94260 27689",
         avatarClass: "av-jm",
         initials: "JMM",
-        setting: "FF-37"
+        setting: "FF-37",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=593&type=8&activity=0&cumulative=0",
+        semClass: "Diploma 3rd Sem - PREMIUM",
+        dept: "IT",
+        sem: "sem3"
     },
     {
         id: "db",
@@ -106,7 +126,11 @@ const facultyData = [
         phone: "94995 48563",
         avatarClass: "av-db",
         initials: "DJB",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=801&type=1&activity=0&cumulative=0",
+        semClass: "Degree 7th Sem - Z (IT)",
+        dept: "IT",
+        sem: "sem7"
     },
     {
         id: "ks",
@@ -118,7 +142,11 @@ const facultyData = [
         phone: "63534 26013",
         avatarClass: "av-ks",
         initials: "KBS",
-        setting: "GF-37"
+        setting: "GF-37",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=918&type=1&activity=0&cumulative=0",
+        semClass: "Diploma 5th Sem - A (CE)",
+        dept: "CE",
+        sem: "sem5"
     },
     {
         id: "bss",
@@ -130,7 +158,8 @@ const facultyData = [
         phone: "70771 60281",
         avatarClass: "av-bs",
         initials: "BSS",
-        setting: "FF-37"
+        setting: "FF-37",
+        link: ""
     },
     {
         id: "vs",
@@ -142,7 +171,8 @@ const facultyData = [
         phone: "97249 10886",
         avatarClass: "av-vs",
         initials: "VBS",
-        setting: "FF-37"
+        setting: "FF-37",
+        link: ""
     },
     {
         id: "srp",
@@ -154,7 +184,8 @@ const facultyData = [
         phone: "97144 84352",
         avatarClass: "av-sp",
         initials: "SRP",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: ""
     },
     {
         id: "pr",
@@ -166,7 +197,8 @@ const facultyData = [
         phone: "90339 08112",
         avatarClass: "av-pr",
         initials: "PVP",
-        setting: "FF-01"
+        setting: "FF-01",
+        link: ""
     },
     {
         id: "sv",
@@ -178,7 +210,11 @@ const facultyData = [
         phone: "95583 07747",
         avatarClass: "av-sv",
         initials: "SMV",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=572&type=1&activity=0&cumulative=0",
+        semClass: "Diploma 5th Sem - C (IT)",
+        dept: "IT",
+        sem: "sem5"
     },
     {
         id: "sg",
@@ -190,7 +226,11 @@ const facultyData = [
         phone: "81286 00880",
         avatarClass: "av-sg",
         initials: "SDG",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=537&type=1&activity=0&cumulative=0",
+        semClass: "Degree 7th Sem - C (IT)",
+        dept: "IT",
+        sem: "sem7"
     },
     {
         id: "dk",
@@ -202,19 +242,9 @@ const facultyData = [
         phone: "9328946676",
         avatarClass: "av-dk",
         initials: "DKD",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: ""
     },
-    // {
-    //     id: "Ai",
-    //     name: "Admin It",
-    //     designation: "Admin It",
-    //     department: "Information Technology",
-    //     empId: "#11111",
-    //     email: "adminit@gmiu.edu.in",
-    //     phone: "0000000000",
-    //     avatarClass: "av-AI",
-    //     initials: "AI"
-    // },
     {
         id: "rc",
         name: "Prof. Ritesh Chimnani",
@@ -225,7 +255,11 @@ const facultyData = [
         phone: "94270 35838",
         avatarClass: "av-rc",
         initials: "RDC",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=329&type=8&activity=0&cumulative=0",
+        semClass: "Diploma 3rd Sem - A",
+        dept: "CE",
+        sem: "sem3"
     },
     {
         id: "jv",
@@ -237,7 +271,11 @@ const facultyData = [
         phone: "88663 56525",
         avatarClass: "av-jv",
         initials: "JAV",
-        setting: "FF-32"
+        setting: "FF-32",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1174&type=1&activity=0&cumulative=0",
+        semClass: "Degree 3rd Sem - X (CSE)",
+        dept: "CE",
+        sem: "sem3"
     },
     {
         id: "pri",
@@ -249,7 +287,11 @@ const facultyData = [
         phone: "93134 62924",
         avatarClass: "av-pri",
         initials: "PPR",
-        setting: "GF-37"
+        setting: "GF-37",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=569&type=1&activity=0&cumulative=0",
+        semClass: "Degree 5th Sem - X1 (CSE)",
+        dept: "CE",
+        sem: "sem5"
     },
     {
         id: "km",
@@ -261,7 +303,11 @@ const facultyData = [
         phone: "63550 09392",
         avatarClass: "av-km",
         initials: "KSM",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=802&type=1&activity=0&cumulative=0",
+        semClass: "Degree 5th Sem - X2 (CSE)",
+        dept: "CE",
+        sem: "sem5"
     },
     {
         id: "dch",
@@ -273,7 +319,11 @@ const facultyData = [
         phone: "78783 31246",
         avatarClass: "av-dch",
         initials: "DDC",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=356&type=1&activity=0&cumulative=0",
+        semClass: "Degree 5th Sem - Y1 (CE)",
+        dept: "CE",
+        sem: "sem5"
     },
     {
         id: "dg",
@@ -285,7 +335,11 @@ const facultyData = [
         phone: "98750 10257",
         avatarClass: "av-dg",
         initials: "DJG",
-        setting: "GF-37"
+        setting: "GF-37",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=880&type=1&activity=0&cumulative=0",
+        semClass: "Degree 5th Sem - Y2 (CE/CSE)",
+        dept: "CE",
+        sem: "sem5"
     },
     {
         id: "ag",
@@ -297,7 +351,11 @@ const facultyData = [
         phone: "83477 68861",
         avatarClass: "av-ag",
         initials: "APG",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=330&type=1&activity=0&cumulative=0",
+        semClass: "Degree 7th Sem - A (CE)",
+        dept: "CE",
+        sem: "sem7"
     },
     {
         id: "bm",
@@ -309,7 +367,11 @@ const facultyData = [
         phone: "98254 05933",
         avatarClass: "av-bm",
         initials: "BDM",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=328&type=1&activity=0&cumulative=0",
+        semClass: "Degree 7th Sem - B (CE)",
+        dept: "CE",
+        sem: "sem7"
     },
     {
         id: "pdc",
@@ -321,7 +383,11 @@ const facultyData = [
         phone: "8141336361",
         avatarClass: "PDC",
         initials: "PDC",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=322&type=8&activity=0&cumulative=0",
+        semClass: "Diploma 1st Sem - A (CSE)",
+        dept: "CE",
+        sem: "sem1"
     },
     {
         id: "VDV",
@@ -333,7 +399,11 @@ const facultyData = [
         phone: "8141927737",
         avatarClass: "VDV",
         initials: "VDV",
-        setting: "FF-37"
+        setting: "FF-37",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=325&type=8&activity=0&cumulative=0",
+        semClass: "Degree 3rd Sem D2D - X2 (CE)",
+        dept: "CE",
+        sem: "sem3"
     },
     {
         id: "TDO",
@@ -345,7 +415,11 @@ const facultyData = [
         phone: "9427111626",
         avatarClass: "TDO",
         initials: "TDO",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=327&type=8&activity=0&cumulative=0",
+        semClass: "Diploma 1st Sem - B (IT)",
+        dept: "IT",
+        sem: "sem1"
     },
     {
         id: "mkc",
@@ -357,7 +431,8 @@ const facultyData = [
         phone: "81415 20199",
         avatarClass: "av-mkc",
         initials: "MKC",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: ""
     },
     {
         id: "mcs",
@@ -369,7 +444,11 @@ const facultyData = [
         phone: "99042 42221",
         avatarClass: "av-mcs",
         initials: "MCS",
-        setting: "TF-24 A"
+        setting: "TF-24 A",
+        link: "http://erp.gmiu.edu.in/admin/activity/report?teacher=897&type=8&activity=0&cumulative=0",
+        semClass: "Degree 5th Sem - PREMIUM",
+        dept: "CE",
+        sem: "sem5"
     },
     {
         id: "pmb",
@@ -381,7 +460,11 @@ const facultyData = [
         phone: "94082 56550",
         avatarClass: "av-pmb",
         initials: "PMB",
-        setting: "GF-37"
+        setting: "GF-37",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=920&type=8&activity=0&cumulative=0",
+        semClass: "Degree 1st Sem - X1 (CSE)",
+        dept: "CE",
+        sem: "sem1"
     },
     {
         id: "nrj",
@@ -393,7 +476,8 @@ const facultyData = [
         phone: "79908 24431",
         avatarClass: "av-nrj",
         initials: "NRJ",
-        setting: "FF-24"
+        setting: "FF-24",
+        link: ""
     },
     {
         id: "rpj",
@@ -405,7 +489,11 @@ const facultyData = [
         phone: "63534 74152",
         avatarClass: "av-rpj",
         initials: "RPJ",
-        setting: "FF-27"
+        setting: "FF-27",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=955&type=8&activity=0&cumulative=0",
+        semClass: "Degree 3rd Sem - CSE",
+        dept: "CE",
+        sem: "sem3"
     },
     {
         id: "jam",
@@ -417,7 +505,8 @@ const facultyData = [
         phone: "94093 14004",
         avatarClass: "av-jam",
         initials: "JAM",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: ""
     },
     {
         id: "jbs",
@@ -429,7 +518,8 @@ const facultyData = [
         phone: "76229 92547",
         avatarClass: "av-jbs",
         initials: "JBS",
-        setting: "FF-22"
+        setting: "FF-22",
+        link: ""
     },
     {
         id: "dpz",
@@ -441,7 +531,11 @@ const facultyData = [
         phone: "63547 04061",
         avatarClass: "av-dpz",
         initials: "DPZ",
-        setting: "FF-01"
+        setting: "FF-01",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1190&type=8&activity=0&cumulative=0",
+        semClass: "Degree 1st Sem - X2 (CE)",
+        dept: "CE",
+        sem: "sem1"
     },
     {
         id: "dbv",
@@ -453,7 +547,11 @@ const facultyData = [
         phone: "76006 63547",
         avatarClass: "av-dbv",
         initials: "DBV",
-        setting: "FF-01"
+        setting: "FF-01",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1181&type=8&activity=0&cumulative=0",
+        semClass: "Degree 3rd Sem D2D - X1 (CSE)",
+        dept: "CE",
+        sem: "sem3"
     },
     {
         id: "iap",
@@ -465,7 +563,8 @@ const facultyData = [
         phone: "90544 44106",
         avatarClass: "av-iap",
         initials: "IAP",
-        setting: "FF-38"
+        setting: "FF-38",
+        link: ""
     },
     {
         id: "rfd",
@@ -477,7 +576,11 @@ const facultyData = [
         phone: "9909730707",
         avatarClass: "av-rfd",
         initials: "RDF",
-        setting: "FF-01"
+        setting: "FF-01",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1193&type=8&activity=0&cumulative=0",
+        semClass: "Degree 3rd Sem D2D - Y1 (IT)",
+        dept: "IT",
+        sem: "sem3"
     },
     {
         id: "hpg",
@@ -489,7 +592,8 @@ const facultyData = [
         phone: "94098 06364",
         avatarClass: "av-hpg",
         initials: "HPG",
-        setting: "FF-25"
+        setting: "FF-25",
+        link: ""
     },
     {
         id: "hds",
@@ -501,7 +605,8 @@ const facultyData = [
         phone: "79849 32848",
         avatarClass: "av-hds",
         initials: "HDS",
-        setting: "FF-01"
+        setting: "FF-01",
+        link: ""
     },
     {
         id: "knr",
@@ -513,7 +618,8 @@ const facultyData = [
         phone: "94267 51762",
         avatarClass: "av-knr",
         initials: "KNR",
-        setting: "FF-01"
+        setting: "FF-01",
+        link: ""
     },
     {
         id: "hag",
@@ -525,7 +631,8 @@ const facultyData = [
         phone: "9157131430",
         avatarClass: "av-hag",
         initials: "HAG",
-        setting: "FF-28"
+        setting: "FF-28",
+        link: ""
     },
     {
         id: "srm",
@@ -537,7 +644,8 @@ const facultyData = [
         phone: "95103 20090",
         avatarClass: "av-srm",
         initials: "SRM",
-        setting: "FF-01"
+        setting: "FF-01",
+        link: ""
     },
     {
         id: "hpj",
@@ -549,7 +657,8 @@ const facultyData = [
         phone: "79846 88579",
         avatarClass: "av-hpj",
         initials: "HPJ",
-        setting: ""
+        setting: "",
+        link: ""
     },
     {
         id: "aps",
@@ -561,7 +670,8 @@ const facultyData = [
         phone: "8154007309",
         avatarClass: "av-aps",
         initials: "APS",
-        setting: "GF-38"
+        setting: "GF-38",
+        link: ""
     },
     {
         id: "hpd",
@@ -573,7 +683,8 @@ const facultyData = [
         phone: "6352258691",
         avatarClass: "av-hpd",
         initials: "HPD",
-        setting: ""
+        setting: "",
+        link: ""
     },
     {
         id: "ygl",
@@ -585,7 +696,11 @@ const facultyData = [
         phone: "98257 51614",
         avatarClass: "av-ygl",
         initials: "YGL",
-        setting: "FF-01"
+        setting: "FF-01",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1203&type=8&activity=0&cumulative=0",
+        semClass: "Degree 3rd Sem D2D - Y2 (IT)",
+        dept: "IT",
+        sem: "sem3"
     },
     {
         id: "dyv",
@@ -597,7 +712,8 @@ const facultyData = [
         phone: "63539 51518",
         avatarClass: "av-dyv",
         initials: "DYV",
-        setting: "FF-01"
+        setting: "FF-01",
+        link: ""
     },
     {
         id: "pmm",
@@ -609,7 +725,8 @@ const facultyData = [
         phone: "81603 54232",
         avatarClass: "av-pmm",
         initials: "PMM",
-        setting: "FF-01"
+        setting: "FF-01",
+        link: ""
     },
     {
         id: "kkb",
@@ -621,6 +738,7 @@ const facultyData = [
         phone: "9409302701",
         avatarClass: "av-kkb",
         initials: "KKB",
-        setting: ""
+        setting: "",
+        link: ""
     },
 ];

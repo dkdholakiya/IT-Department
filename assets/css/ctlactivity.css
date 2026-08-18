@@ -1320,3 +1320,415 @@ input[readonly] {
         border-radius: var(--radius-md) !important;
     }
 }
+
+/* ── Header Right & Direct ERP Link Button ── */
+.rp-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.direct-erp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(192, 57, 43, 0.15);
+    border: 1.5px solid rgba(192, 57, 43, 0.4);
+    color: #ffffff;
+    font-family: 'Merriweather Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 15px rgba(192, 57, 43, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.direct-erp-btn:hover {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    border-color: rgba(231, 76, 60, 0.8);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(192, 57, 43, 0.45);
+}
+
+.direct-erp-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.direct-erp-btn .erp-icon {
+    transition: transform 0.3s ease;
+}
+
+.direct-erp-btn:hover .erp-icon {
+    transform: rotate(15deg) scale(1.1);
+}
+
+/* ── Direct ERP Link Modal Popup ── */
+.erp-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(4, 9, 24, 0.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+}
+
+.erp-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.erp-modal-container {
+    width: 100%;
+    max-width: 1240px;
+    max-height: 88vh;
+    background: rgba(11, 21, 48, 0.95);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    box-shadow: 0 35px 90px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.erp-modal-overlay.active .erp-modal-container {
+    transform: scale(1) translateY(0);
+}
+
+/* Modal Header */
+.erp-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px 18px 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(6, 12, 30, 0.5);
+}
+
+.erp-header-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.erp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Share Tech', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: #fca5a5;
+    text-transform: uppercase;
+}
+
+.erp-modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.erp-modal-close {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-muted);
+    font-size: 22px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.erp-modal-close:hover {
+    background: rgba(192, 57, 43, 0.2);
+    border-color: rgba(192, 57, 43, 0.5);
+    color: #ffffff;
+    transform: rotate(90deg);
+}
+
+/* Modal Controls (Search & Filters) */
+.erp-modal-controls {
+    padding: 18px 32px;
+    background: rgba(8, 16, 38, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.erp-search-box {
+    position: relative;
+    flex: 1;
+    min-width: 260px;
+}
+
+.erp-search-box input {
+    width: 100%;
+    padding: 10px 38px 10px 38px !important;
+    height: 42px !important;
+    background: rgba(6, 10, 28, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 50px !important;
+    font-size: 13.5px !important;
+    color: #f1f5f9 !important;
+}
+
+.erp-search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.erp-search-clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.erp-search-clear:hover {
+    color: var(--red-bright);
+}
+
+.erp-filter-pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.erp-pill {
+    padding: 7px 16px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: 'Share Tech', monospace;
+    letter-spacing: 0.5px;
+}
+
+.erp-pill:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.erp-pill.active {
+    background: linear-gradient(135deg, #c0392b 0%, #962d22 100%);
+    border-color: rgba(192, 57, 43, 0.6);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(192, 57, 43, 0.3);
+}
+
+/* Modal Body Cards Grid */
+.erp-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 32px;
+}
+
+.erp-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px;
+}
+
+@media (min-width: 1100px) {
+    .erp-cards-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+.erp-card {
+    background: rgba(6, 13, 30, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 125px;
+    transition: var(--transition);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.erp-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(192, 57, 43, 0.6);
+    background: rgba(13, 23, 50, 0.9);
+    box-shadow: 0 12px 28px rgba(192, 57, 43, 0.18), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.erp-card-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.35;
+    margin-bottom: 6px;
+}
+
+.erp-card-sem {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 12px;
+    letter-spacing: 0.2px;
+}
+
+.erp-card-link-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.erp-card-link-btn:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #962d22 100%);
+    border-color: rgba(192, 57, 43, 0.6);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(192, 57, 43, 0.3);
+}
+
+/* No data message */
+.erp-no-data {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-muted);
+}
+
+.erp-no-data svg {
+    margin-bottom: 12px;
+    opacity: 0.5;
+}
+
+.erp-no-data p {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Modal Footer */
+.erp-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    background: rgba(6, 12, 30, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.erp-footer-info {
+    font-family: 'Share Tech', monospace;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+}
+
+.erp-close-btn {
+    padding: 8px 22px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.erp-close-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive adjustments for header right & modal */
+@media (max-width: 768px) {
+    .rp-header-right {
+        grid-column: 2 !important;
+        justify-content: flex-end !important;
+    }
+    
+    .erp-modal-header,
+    .erp-modal-controls,
+    .erp-modal-body,
+    .erp-modal-footer {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .erp-cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+    }
+
+    .erp-modal-title {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .direct-erp-btn span {
+        display: none;
+    }
+    .direct-erp-btn {
+        padding: 8px;
+        border-radius: 50%;
+    }
+    .erp-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -89,7 +89,17 @@
                     <h1 class="rp-title">CTL Activity Dashboard</h1>
                 </div>
 
-                <span class="portal-badge">CTL Activity</span>
+                <div class="rp-header-right">
+                    <span class="portal-badge">CTL Activity</span>
+                    <button type="button" class="direct-erp-btn" id="directErpBtn" title="Direct ERP Links Quick Access">
+                        <svg class="erp-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                        <span>Direct ERP Link</span>
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -297,6 +307,62 @@
 
     </div><!-- /ctl-page -->
 
+    <!-- ── Direct ERP Link Popup Modal ── -->
+    <div class="erp-modal-overlay" id="erpModalOverlay" aria-hidden="true" role="dialog" aria-labelledby="erpModalTitle">
+        <div class="erp-modal-container">
+            <!-- Modal Header -->
+            <div class="erp-modal-header">
+                <div class="erp-header-title-wrap">
+                    <div class="erp-badge">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                        </svg>
+                        <span>QUICK ACCESS</span>
+                    </div>
+                    <h2 class="erp-modal-title" id="erpModalTitle">Direct ERP LINK</h2>
+                </div>
+                <button type="button" class="erp-modal-close" id="erpModalClose" aria-label="Close modal">&times;</button>
+            </div>
+
+            <!-- Modal Search & Filters Bar -->
+            <div class="erp-modal-controls">
+                <div class="erp-search-box">
+                    <svg class="erp-search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="erpSearchInput" placeholder="Search by faculty name, semester, or class..." autocomplete="off">
+                    <button type="button" class="erp-search-clear hidden" id="erpSearchClear">&times;</button>
+                </div>
+                <div class="erp-filter-pills" id="erpFilterPills">
+                    <button type="button" class="erp-pill active" data-filter="all">All</button>
+                    <button type="button" class="erp-pill" data-filter="ce">CE Dept</button>
+                    <button type="button" class="erp-pill" data-filter="it">IT Dept</button>
+                    <button type="button" class="erp-pill" data-filter="sem1">Sem 1</button>
+                    <button type="button" class="erp-pill" data-filter="sem3">Sem 3</button>
+                    <button type="button" class="erp-pill" data-filter="sem5">Sem 5</button>
+                    <button type="button" class="erp-pill" data-filter="sem7">Sem 7</button>
+                </div>
+            </div>
+
+            <!-- Modal Cards Body Grid -->
+            <div class="erp-modal-body">
+                <div class="erp-cards-grid" id="erpCardsGrid">
+                    <!-- Dynamically populated via JS -->
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="erp-modal-footer">
+                <div class="erp-footer-info">
+                    <span id="erpItemCount">0 links available</span>
+                </div>
+                <button type="button" class="erp-close-btn" id="erpCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
     <?php 
     $active_page = 'ctlactivity';
     include 'fab-nav.php'; 
@@ -312,6 +378,143 @@
         window.addEventListener('load', () => {
             fetch('verify-password?action=clear');
         });
+
+        // ── Direct ERP Link Modal Popup Logic ──
+        const directErpData = (typeof facultyData !== 'undefined' ? facultyData : [])
+            .filter(member => member.link && member.link.trim() !== '')
+            .map(member => ({
+                name: member.name,
+                semClass: member.semClass || '',
+                link: member.link,
+                dept: member.dept || (member.department && member.department.toLowerCase().includes('computer') ? 'CE' : 'IT'),
+                sem: member.sem || ''
+            }));
+
+        let activeErpFilter = "all";
+        let erpSearchQuery = "";
+
+        function initDirectErpModal() {
+            const btn = document.getElementById("directErpBtn");
+            const overlay = document.getElementById("erpModalOverlay");
+            const closeBtn = document.getElementById("erpModalClose");
+            const footerClose = document.getElementById("erpCloseBtn");
+            const searchInput = document.getElementById("erpSearchInput");
+            const searchClear = document.getElementById("erpSearchClear");
+            const filterPills = document.querySelectorAll("#erpFilterPills .erp-pill");
+
+            if (!btn || !overlay) return;
+
+            function openModal() {
+                overlay.classList.add("active");
+                document.body.style.overflow = "hidden";
+                if (searchInput) searchInput.focus();
+                renderErpCards();
+            }
+
+            function closeModal() {
+                overlay.classList.remove("active");
+                document.body.style.overflow = "";
+            }
+
+            btn.addEventListener("click", openModal);
+            if (closeBtn) closeBtn.addEventListener("click", closeModal);
+            if (footerClose) footerClose.addEventListener("click", closeModal);
+
+            overlay.addEventListener("click", function(e) {
+                if (e.target === overlay) closeModal();
+            });
+
+            document.addEventListener("keydown", function(e) {
+                if (e.key === "Escape" && overlay.classList.contains("active")) {
+                    closeModal();
+                }
+            });
+
+            if (searchInput) {
+                searchInput.addEventListener("input", function() {
+                    erpSearchQuery = this.value.trim().toLowerCase();
+                    if (searchClear) {
+                        searchClear.classList.toggle("hidden", erpSearchQuery.length === 0);
+                    }
+                    renderErpCards();
+                });
+            }
+
+            if (searchClear) {
+                searchClear.addEventListener("click", function() {
+                    searchInput.value = "";
+                    erpSearchQuery = "";
+                    searchClear.classList.add("hidden");
+                    searchInput.focus();
+                    renderErpCards();
+                });
+            }
+
+            filterPills.forEach(pill => {
+                pill.addEventListener("click", function() {
+                    filterPills.forEach(p => p.classList.remove("active"));
+                    this.classList.add("active");
+                    activeErpFilter = this.getAttribute("data-filter");
+                    renderErpCards();
+                });
+            });
+        }
+
+        function renderErpCards() {
+            const grid = document.getElementById("erpCardsGrid");
+            const itemCount = document.getElementById("erpItemCount");
+            if (!grid) return;
+
+            const filtered = directErpData.filter(item => {
+                let matchesFilter = true;
+                if (activeErpFilter === "ce") matchesFilter = item.dept.toUpperCase() === "CE";
+                else if (activeErpFilter === "it") matchesFilter = item.dept.toUpperCase() === "IT";
+                else if (activeErpFilter.startsWith("sem")) matchesFilter = item.sem.toLowerCase() === activeErpFilter.toLowerCase();
+
+                let matchesSearch = true;
+                if (erpSearchQuery) {
+                    matchesSearch = item.name.toLowerCase().includes(erpSearchQuery) ||
+                                    item.semClass.toLowerCase().includes(erpSearchQuery) ||
+                                    item.dept.toLowerCase().includes(erpSearchQuery);
+                }
+
+                return matchesFilter && matchesSearch;
+            });
+
+            if (itemCount) {
+                itemCount.textContent = `${filtered.length} link${filtered.length === 1 ? '' : 's'} available`;
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="erp-no-data">
+                        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <p>No ERP links found matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="erp-card">
+                    <div class="erp-card-name">${item.name}</div>
+                    <div class="erp-card-sem">${item.semClass}</div>
+                    <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="erp-card-link-btn">
+                        <span>Button Link</span>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener("DOMContentLoaded", initDirectErpModal);
 
         const getAvatarClass = (member) => {
             const legacyClasses = ["av-dc", "av-sw", "av-eu", "av-tv"];

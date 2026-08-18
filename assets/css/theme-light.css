@@ -2718,3 +2718,169 @@ html[data-theme="light"] .mobile-empty-state {
     border: 1px dashed #cbd5e1 !important;
     color: #64748b !important;
 }
+
+/* ── Direct ERP Link Button & Modal in Light Mode ── */
+html[data-theme="light"] .direct-erp-btn {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border: 1.5px solid rgba(0, 0, 0, 0.14) !important;
+    color: #0f172a !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+html[data-theme="light"] .direct-erp-btn:hover {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+    border-color: rgba(192, 57, 43, 0.8) !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 25px rgba(192, 57, 43, 0.35) !important;
+}
+
+html[data-theme="light"] body.ce-active .direct-erp-btn:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    border-color: rgba(37, 99, 235, 0.8) !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.35) !important;
+}
+
+html[data-theme="light"] .erp-modal-overlay {
+    background: rgba(15, 23, 42, 0.6) !important;
+}
+
+html[data-theme="light"] .erp-modal-container {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 1.5px solid rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.18) !important;
+}
+
+html[data-theme="light"] .erp-modal-header {
+    background: rgba(248, 250, 252, 0.9) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme="light"] .erp-badge {
+    color: #c0392b !important;
+}
+
+html[data-theme="light"] body.ce-active .erp-badge {
+    color: #2563eb !important;
+}
+
+html[data-theme="light"] .erp-modal-title {
+    background: linear-gradient(135deg, #0f172a 0%, #334155 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+html[data-theme="light"] .erp-modal-close {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: #475569 !important;
+}
+
+html[data-theme="light"] .erp-modal-close:hover {
+    background: rgba(192, 57, 43, 0.12) !important;
+    border-color: rgba(192, 57, 43, 0.4) !important;
+    color: #c0392b !important;
+}
+
+html[data-theme="light"] .erp-modal-controls {
+    background: rgba(241, 245, 249, 0.7) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme="light"] .erp-search-box input {
+    background: #ffffff !important;
+    border: 1px solid rgba(203, 213, 225, 0.9) !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .erp-search-icon {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .erp-pill {
+    background: #ffffff !important;
+    border: 1px solid rgba(203, 213, 225, 0.9) !important;
+    color: #475569 !important;
+}
+
+html[data-theme="light"] .erp-pill:hover {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .erp-pill.active {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+    border-color: rgba(192, 57, 43, 0.6) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(192, 57, 43, 0.25) !important;
+}
+
+html[data-theme="light"] body.ce-active .erp-pill.active {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    border-color: rgba(37, 99, 235, 0.6) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+}
+
+html[data-theme="light"] .erp-card {
+    background: #ffffff !important;
+    border: 2px solid rgba(203, 213, 225, 0.8) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .erp-card:hover {
+    border-color: rgba(192, 57, 43, 0.5) !important;
+    box-shadow: 0 10px 24px rgba(192, 57, 43, 0.12), 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-theme="light"] body.ce-active .erp-card:hover {
+    border-color: rgba(37, 99, 235, 0.5) !important;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.12), 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-theme="light"] .erp-card-name {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .erp-card-sem {
+    color: #475569 !important;
+}
+
+html[data-theme="light"] .erp-card-link-btn {
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #334155 !important;
+}
+
+html[data-theme="light"] .erp-card-link-btn:hover {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+    border-color: rgba(192, 57, 43, 0.6) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(192, 57, 43, 0.25) !important;
+}
+
+html[data-theme="light"] body.ce-active .erp-card-link-btn:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    border-color: rgba(37, 99, 235, 0.6) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+}
+
+html[data-theme="light"] .erp-modal-footer {
+    background: #f8fafc !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme="light"] .erp-footer-info {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .erp-close-btn {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #475569 !important;
+}
+
+html[data-theme="light"] .erp-close-btn:hover {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+}
