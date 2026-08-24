@@ -261,22 +261,22 @@ const facultyData = [
         dept: "CE",
         sem: "sem3"
     },
-    {
-        id: "jv",
-        name: "Prof. Jhanvi Vyas",
-        designation: "Lecturer",
-        department: "Computer Engineering",
-        empId: "#10656",
-        email: "javyas@gmiu.edu.in",
-        phone: "88663 56525",
-        avatarClass: "av-jv",
-        initials: "JAV",
-        setting: "FF-32",
-        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1174&type=1&activity=0&cumulative=0",
-        semClass: "Degree 3rd Sem - X (CSE)",
-        dept: "CE",
-        sem: "sem3"
-    },
+    // {
+    //     id: "jv",
+    //     name: "Prof. Jhanvi Vyas",
+    //     designation: "Lecturer",
+    //     department: "Computer Engineering",
+    //     empId: "#10656",
+    //     email: "javyas@gmiu.edu.in",
+    //     phone: "88663 56525",
+    //     avatarClass: "av-jv",
+    //     initials: "JAV",
+    //     setting: "FF-32",
+    //     link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1174&type=1&activity=0&cumulative=0",
+    //     semClass: "Degree 3rd Sem - X (CSE)",
+    //     dept: "CE",
+    //     sem: "sem3"
+    // },
     {
         id: "pri",
         name: "Prof. Princy Rathod",
