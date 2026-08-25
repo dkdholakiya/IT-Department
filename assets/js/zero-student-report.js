@@ -70,6 +70,8 @@ document.addEventListener("DOMContentLoaded", () => {
     initFacultyAutocomplete();
     initBranchAutocomplete();
     initDepartmentToggle();
+    initCcAutocomplete("entry-cc", "ccDropdownList");
+    initCcAutocomplete("import-cc", "importCcDropdownList");
 
     // Always default to Information Technology on initial load
     setDepartment("Information Technology");
@@ -363,6 +365,11 @@ function handleAddEntry() {
 
         if (remarksInput) remarksInput.value = "NO STUDENT";
         if (studentsInput) studentsInput.value = "---";
+        const ccInput = document.getElementById("entry-cc");
+        if (ccInput) {
+            ccInput.value = "";
+            updateCcFieldForDept(currentDepartment);
+        }
 
         // Set date back to today
         const today = new Date().toISOString().split("T")[0];
@@ -372,6 +379,9 @@ function handleAddEntry() {
             dateInput.value = today;
         }
     };
+
+    // Extract CC email recipients
+    const ccEmails = getCcEmails("entry-cc");
 
     // 5. Submit to Google Sheet via secure backend proxy
     fetch('proxy-sheets?target=zero', {
@@ -398,7 +408,7 @@ function handleAddEntry() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 to: facultyEmail,
-                cc: [],
+                cc: ccEmails,
                 subject: `Zero Student As Per Timetable — ${facInitNormalized} (${deptAbbr})`,
                 html: emailHtml,
                 module: 'zero',
@@ -569,6 +579,12 @@ function initPdfImport() {
     // Modal control
     const openModal = () => {
         modal.classList.add("show");
+        // Sync main form CC value to import CC input if empty
+        const entryCc = document.getElementById("entry-cc");
+        const importCc = document.getElementById("import-cc");
+        if (entryCc && importCc && !importCc.value.trim()) {
+            importCc.value = entryCc.value;
+        }
         // Reset progress bar UI
         document.getElementById("importProgressContainer").style.display = "none";
         document.getElementById("importProgressBarFill").style.width = "0%";
@@ -1019,6 +1035,10 @@ async function handleBatchImport() {
         return `${hrs}:${mins}:00 ${ampm}`;
     };
 
+    const importCcVal = getCcEmails("import-cc");
+    const mainCcVal = getCcEmails("entry-cc");
+    const extraUserCc = importCcVal.length > 0 ? importCcVal : mainCcVal;
+
     for (let i = 0; i < total; i++) {
         const index = indicesToImport[i];
         const row = pdfParsedData[index];
@@ -1170,6 +1190,18 @@ async function handleBatchImport() {
                 continue;
             }
 
+            // Build row-specific CC list: Dhaval Sir + target department Incharge HOD + user CCs
+            const rowDefaultCc = getDefaultCcForDept(targetDept);
+            const itHodEmail = "sbchauhan@gmiu.edu.in";
+            const ceHodEmail = "ehunagar@gmiu.edu.in";
+            let combinedCc = [...rowDefaultCc, ...extraUserCc];
+            if (targetDept === "Computer Engineering") {
+                combinedCc = combinedCc.filter(e => e !== itHodEmail);
+            } else {
+                combinedCc = combinedCc.filter(e => e !== ceHodEmail);
+            }
+            const rowCcEmails = Array.from(new Set(combinedCc));
+
             // Send email (catch any connection reset/close errors locally so sheet write success is kept)
             try {
                 await fetch('send-email', {
@@ -1177,7 +1209,7 @@ async function handleBatchImport() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         to: row.facultyEmail,
-                        cc: [],
+                        cc: rowCcEmails,
                         subject: `Zero Student As Per Timetable — ${row.resolvedFaculty} (${deptAbbr})`,
                         html: emailHtml,
                         module: 'zero',
@@ -1386,8 +1418,144 @@ function setDepartment(dept) {
     if (typeof pdfParsedData !== 'undefined' && pdfParsedData.length > 0) {
         renderPreviewRows();
     }
+
+    // Update default CC field based on selected department (Dhaval Sir + Dept Incharge HOD)
+    updateCcFieldForDept(dept);
 }
 
 function getActiveBranchList() {
     return currentDepartment === "Computer Engineering" ? defaultBranchesCE : defaultBranchesIT;
 }
+
+// ── CC Email Helper & Autocomplete ──
+function getDefaultCcForDept(dept) {
+    const dhavalEmail = "drchandarana@gmiu.edu.in";
+    const itHodEmail = "sbchauhan@gmiu.edu.in";
+    const ceHodEmail = "ehunagar@gmiu.edu.in";
+
+    if (dept === "Computer Engineering" || dept === "CE") {
+        return [dhavalEmail, ceHodEmail];
+    } else {
+        return [dhavalEmail, itHodEmail];
+    }
+}
+
+function updateCcFieldForDept(dept) {
+    const ccInput = document.getElementById("entry-cc");
+    if (!ccInput) return;
+
+    const dhavalEmail = "drchandarana@gmiu.edu.in";
+    const itHodEmail = "sbchauhan@gmiu.edu.in";
+    const ceHodEmail = "ehunagar@gmiu.edu.in";
+
+    let currentVal = ccInput.value.trim();
+    if (!currentVal) {
+        const defaults = getDefaultCcForDept(dept);
+        ccInput.value = defaults.join(", ") + ", ";
+        return;
+    }
+
+    let parts = currentVal.split(/[\s,;]+/).map(e => e.trim()).filter(Boolean);
+
+    // Always ensure Dhaval Sir is included
+    if (!parts.includes(dhavalEmail)) {
+        parts.unshift(dhavalEmail);
+    }
+
+    if (dept === "Computer Engineering" || dept === "CE") {
+        parts = parts.filter(e => e !== itHodEmail);
+        if (!parts.includes(ceHodEmail)) {
+            const idx = parts.indexOf(dhavalEmail);
+            parts.splice(idx >= 0 ? idx + 1 : 0, 0, ceHodEmail);
+        }
+    } else {
+        parts = parts.filter(e => e !== ceHodEmail);
+        if (!parts.includes(itHodEmail)) {
+            const idx = parts.indexOf(dhavalEmail);
+            parts.splice(idx >= 0 ? idx + 1 : 0, 0, itHodEmail);
+        }
+    }
+
+    ccInput.value = Array.from(new Set(parts)).join(", ") + ", ";
+}
+
+function getCcEmails(inputId = "entry-cc") {
+    const input = document.getElementById(inputId);
+    if (!input || !input.value.trim()) return [];
+    const parts = input.value.split(/[\s,;]+/);
+    const emails = [];
+    parts.forEach(p => {
+        const clean = p.trim();
+        if (clean) {
+            emails.push(clean);
+        }
+    });
+    return emails;
+}
+
+function initCcAutocomplete(inputId, dropdownId) {
+    const input = document.getElementById(inputId);
+    const dropdown = document.getElementById(dropdownId);
+    if (!input || !dropdown) return;
+
+    input.addEventListener("focus", () => {
+        dropdown.classList.add("show");
+        filterList();
+    });
+
+    input.addEventListener("input", () => {
+        dropdown.classList.add("show");
+        filterList();
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(`#${inputId}`) && !e.target.closest(`#${dropdownId}`)) {
+            dropdown.classList.remove("show");
+        }
+    });
+
+    function filterList() {
+        const fullVal = input.value;
+        const currentSegment = fullVal.split(/[\s,;]+/).pop().toLowerCase().trim();
+        let filtered = facultyData;
+        if (currentSegment) {
+            filtered = facultyData.filter(m =>
+                m.name.toLowerCase().includes(currentSegment) ||
+                m.initials.toLowerCase().includes(currentSegment) ||
+                (m.email && m.email.toLowerCase().includes(currentSegment))
+            );
+        }
+        renderList(filtered);
+    }
+
+    function renderList(list) {
+        dropdown.innerHTML = "";
+        if (list.length === 0) {
+            dropdown.innerHTML = `<div class="no-results-item">No matching faculty emails</div>`;
+            return;
+        }
+
+        list.slice(0, 10).forEach(member => {
+            if (!member.email) return;
+            const item = document.createElement("div");
+            item.className = "dropdown-item";
+            item.innerHTML = `
+                <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
+                <div class="item-info">
+                    <div class="item-name">${member.name} (${member.initials})</div>
+                    <div class="item-desg" style="color: #60a5fa; font-weight: 500;">${member.email}</div>
+                </div>
+            `;
+            item.addEventListener("click", () => {
+                const parts = input.value.split(/,\s*/);
+                parts.pop();
+                parts.push(member.email);
+                input.value = parts.filter(Boolean).join(", ") + ", ";
+                dropdown.classList.remove("show");
+                input.focus();
+            });
+            dropdown.appendChild(item);
+        });
+    }
+}
+

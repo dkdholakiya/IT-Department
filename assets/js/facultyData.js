@@ -1,6 +1,32 @@
 // Shared Faculty Members Data Array for CE & IT Department
 const facultyData = [
     {
+        id: "adminit",
+        name: "Admin IT Department",
+        designation: "Department Admin",
+        department: "Information Technology",
+        empId: "#IT01",
+        email: "adminit@gmiu.edu.in",
+        phone: "---",
+        avatarClass: "av-theme-red",
+        initials: "AIT",
+        setting: "FF-38",
+        link: ""
+    },
+    {
+        id: "admince",
+        name: "Admin CE Department",
+        designation: "Department Admin",
+        department: "Computer Engineering",
+        empId: "#CE01",
+        email: "admincecse@gmiu.edu.in",
+        phone: "---",
+        avatarClass: "av-theme-blue",
+        initials: "ACE",
+        setting: "FF-38",
+        link: ""
+    },
+    {
         id: "dc",
         name: "Prof. Dhaval Chandarana",
         designation: "HOD",
@@ -130,7 +156,7 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=801&type=1&activity=0&cumulative=0",
         semClass: "Degree 7th Sem - Z (IT)",
         dept: "IT",
-        sem: "sem7"
+        sem: "sem5"
     },
     {
         id: "ks",
@@ -256,7 +282,7 @@ const facultyData = [
         avatarClass: "av-rc",
         initials: "RDC",
         setting: "FF-38",
-        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=329&type=8&activity=0&cumulative=0",
+        link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=329&type=1&activity=0&cumulative=0",
         semClass: "Diploma 3rd Sem - A",
         dept: "CE",
         sem: "sem3"

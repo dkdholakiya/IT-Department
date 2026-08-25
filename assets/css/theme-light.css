@@ -274,14 +274,19 @@ html[data-theme="light"] .card,
 html[data-theme="light"] .filters,
 html[data-theme="light"] .table-wrapper,
 html[data-theme="light"] .zs-form-card {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border-color: rgba(0, 0, 0, 0.1) !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    border: 1px solid rgba(226, 232, 240, 0.95) !important;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07), 0 2px 6px rgba(15, 23, 42, 0.03) !important;
+    border-radius: 16px !important;
+    overflow: visible !important;
 }
 
 html[data-theme="light"] .zs-form-header {
-    background: #f8fafc !important;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
     border-bottom: 1px solid #e2e8f0 !important;
+    padding: 12px 20px 10px !important;
+    border-top-left-radius: 16px !important;
+    border-top-right-radius: 16px !important;
 }
 
 html[data-theme="light"] .zs-form-header h2 {
@@ -294,6 +299,20 @@ html[data-theme="light"] .zs-form-header p {
     font-weight: 600 !important;
 }
 
+html[data-theme="light"] .zs-form-body {
+    padding: 12px 20px 14px !important;
+    gap: 9px !important;
+}
+
+html[data-theme="light"] #ccDropdownList,
+html[data-theme="light"] #importCcDropdownList {
+    top: auto !important;
+    bottom: calc(100% + 6px) !important;
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 -12px 35px rgba(15, 23, 42, 0.15) !important;
+}
+
 html[data-theme="light"] .import-pdf-btn,
 html[data-theme="light"] .import-excel-btn {
     background: #ffffff !important;
@@ -301,6 +320,9 @@ html[data-theme="light"] .import-excel-btn {
     color: #334155 !important;
     font-weight: 700 !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    border-radius: 8px !important;
+    padding: 7px 13px !important;
+    font-size: 12px !important;
 }
 
 html[data-theme="light"] .import-pdf-btn:hover,
@@ -313,13 +335,18 @@ html[data-theme="light"] .import-excel-btn:hover {
 html[data-theme="light"] .submit-btn {
     background: linear-gradient(135deg, #e74c3c 0%, #c0392b 60%, #991b1b 100%) !important;
     color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 11px 20px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
     box-shadow: 0 4px 14px rgba(192, 57, 43, 0.35) !important;
+    margin-top: 4px !important;
 }
 
 html[data-theme="light"] body.ce-active .submit-btn {
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 60%, #1e40af 100%) !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35) !important;
 }
 
 html[data-theme="light"] .report-accordion .accordion-button {

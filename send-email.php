@@ -48,9 +48,13 @@ if (!empty($emails) && is_array($emails)) {
         if (!empty($item['to'])) {
             $emails_to_validate[] = $item['to'];
         }
-        if (!empty($item['cc']) && is_array($item['cc'])) {
-            foreach ($item['cc'] as $cc_email) {
-                $emails_to_validate[] = $cc_email;
+        if (!empty($item['cc'])) {
+            $cc_raw = $item['cc'];
+            $cc_list = is_array($cc_raw) ? $cc_raw : preg_split('/[\s,;]+/', $cc_raw);
+            foreach ($cc_list as $cc_email) {
+                if (!empty(trim($cc_email))) {
+                    $emails_to_validate[] = trim($cc_email);
+                }
             }
         }
     }
@@ -60,9 +64,12 @@ if (!empty($emails) && is_array($emails)) {
         $emails_to_validate[] = $to;
     }
     $cc = $input['cc'] ?? [];
-    if (!empty($cc) && is_array($cc)) {
-        foreach ($cc as $cc_email) {
-            $emails_to_validate[] = $cc_email;
+    if (!empty($cc)) {
+        $cc_list = is_array($cc) ? $cc : preg_split('/[\s,;]+/', $cc);
+        foreach ($cc_list as $cc_email) {
+            if (!empty(trim($cc_email))) {
+                $emails_to_validate[] = trim($cc_email);
+            }
         }
     }
 }
@@ -75,7 +82,7 @@ foreach ($emails_to_validate as $check_email) {
     }
     if (substr(strtolower($check_email), -12) !== '@gmiu.edu.in') {
         http_response_code(403);
-        echo json_encode(["success" => false, "error" => "Forbidden. Recipient email address must be an official @gmiu.edu.in domain."]);
+        echo json_encode(["success" => false, "error" => "Forbidden. Recipient email address ($check_email) must be an official @gmiu.edu.in domain."]);
         exit;
     }
 }
@@ -543,15 +550,22 @@ function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attac
         throw new Exception("RCPT TO <$to> failed: " . trim($response));
     }
 
+    $cc_list = [];
     if (is_array($cc)) {
-        foreach ($cc as $cc_email) {
-            $cc_email = trim($cc_email);
-            if (!empty($cc_email)) {
-                fwrite($smtp, "RCPT TO: <$cc_email>\r\n");
-                $response = $get_response($smtp);
-                if (strpos($response, "250") === false && strpos($response, "251") === false) {
-                    throw new Exception("RCPT TO CC <$cc_email> failed: " . trim($response));
-                }
+        $cc_list = $cc;
+    } else if (is_string($cc) && !empty(trim($cc))) {
+        $cc_list = preg_split('/[\s,;]+/', trim($cc));
+    }
+
+    $clean_cc = [];
+    foreach ($cc_list as $cc_email) {
+        $cc_email = trim($cc_email);
+        if (!empty($cc_email)) {
+            $clean_cc[] = $cc_email;
+            fwrite($smtp, "RCPT TO: <$cc_email>\r\n");
+            $response = $get_response($smtp);
+            if (strpos($response, "250") === false && strpos($response, "251") === false) {
+                throw new Exception("RCPT TO CC <$cc_email> failed: " . trim($response));
             }
         }
     }
@@ -581,8 +595,8 @@ function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attac
             "Subject: =?UTF-8?B?" . base64_encode($subject) . "?="
         ];
 
-        if (is_array($cc) && count($cc) > 0) {
-            $headers[] = "Cc: " . implode(", ", $cc);
+        if (count($clean_cc) > 0) {
+            $headers[] = "Cc: " . implode(", ", $clean_cc);
         }
 
         $headers[] = "Date: " . date("r");
@@ -632,8 +646,8 @@ function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attac
             "Subject: =?UTF-8?B?" . base64_encode($subject) . "?="
         ];
 
-        if (is_array($cc) && count($cc) > 0) {
-            $headers[] = "Cc: " . implode(", ", $cc);
+        if (count($clean_cc) > 0) {
+            $headers[] = "Cc: " . implode(", ", $clean_cc);
         }
 
         $headers[] = "Date: " . date("r");
