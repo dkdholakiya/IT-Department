@@ -217,8 +217,16 @@
     include 'fab-nav.php'; 
     ?>
 
-    <!-- Faculty Member Data source -->
+    <!-- Faculty Member & Timetable Data source -->
     <script src="assets/js/facultyData.js"></script>
+    <script src="assets/js/timetableData.js"></script>
+    <?php
+    $stCacheFile = __DIR__ . '/uploads/student_timetable/student_timetable_cache.json';
+    $studentTtDataJson = file_exists($stCacheFile) ? file_get_contents($stCacheFile) : 'null';
+    ?>
+    <script>
+    window.studentTimetableData = <?php echo $studentTtDataJson; ?>;
+    </script>
 
     <!-- Sheets Configuration Proxy loaded via JS -->
 
@@ -298,6 +306,7 @@
                                 <th>Students</th>
                                 <th>Remarks</th>
                                 <th style="text-align: center;">Dept</th>
+                                <th style="text-align: center;">TT Match</th>
                             </tr>
                         </thead>
                         <tbody id="pdf-parsed-rows-body">

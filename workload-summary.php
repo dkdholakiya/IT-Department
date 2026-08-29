@@ -845,6 +845,7 @@ $jsDataExists = file_exists($jsDataFile);
                                 <th>Department</th>
                                 <th>Daily Schedule Breakdown</th>
                                 <th style="text-align: center;">Total Load</th>
+                                <th style="text-align: center;">TT Match</th>
                                 <th style="text-align: center;">Action</th>
                             </tr>
                         </thead>
@@ -1026,6 +1027,11 @@ $jsDataExists = file_exists($jsDataFile);
                             <td style="text-align: center;">
                                 <span class="load-badge-main ${loadBadgeClass}">
                                     ${r.totalLoad} Hrs
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                <span style="display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; ${r.totalLoad > 0 ? 'background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);' : 'background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4);'}">
+                                    ${r.totalLoad > 0 ? '✓ Matched' : '⚠️ No Schedule'}
                                 </span>
                             </td>
                             <td style="text-align: center;">

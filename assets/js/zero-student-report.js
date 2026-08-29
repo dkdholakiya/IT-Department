@@ -17,8 +17,8 @@ const getAvatarClass = (member) => {
         return member.avatarClass;
     }
     const colors = [
-        'av-theme-red', 'av-theme-blue', 'av-theme-purple', 
-        'av-theme-teal', 'av-theme-green', 'av-theme-orange', 
+        'av-theme-red', 'av-theme-blue', 'av-theme-purple',
+        'av-theme-teal', 'av-theme-green', 'av-theme-orange',
         'av-theme-indigo', 'av-theme-cyan', 'av-theme-pink'
     ];
     let hash = 0;
@@ -195,17 +195,19 @@ function handleAddEntry() {
 
     // 1. Resolve Faculty Initials to get full name and email
     let facInitNormalized = facultyInitials.toUpperCase().trim();
-    if (facInitNormalized === "PHC") facInitNormalized = "PHK";
-    if (facInitNormalized === "PMM") facInitNormalized = "PMB";
 
     let matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === facInitNormalized);
+    if (!matchedFaculty && facInitNormalized === "PHC") {
+        matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === "PHK");
+    }
     if (!matchedFaculty) {
         const parenMatch = facultyInitials.match(/\(([^)]+)\)/);
         if (parenMatch) {
             let extractedInitials = parenMatch[1].toUpperCase().trim();
-            if (extractedInitials === "PHC") extractedInitials = "PHK";
-            if (extractedInitials === "PMM") extractedInitials = "PMB";
             matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === extractedInitials);
+            if (!matchedFaculty && extractedInitials === "PHC") {
+                matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === "PHK");
+            }
         }
     }
     if (!matchedFaculty) {
@@ -389,51 +391,51 @@ function handleAddEntry() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(sheetsPayload)
     })
-    .then(res => {
-        if (!res.ok) throw new Error('Proxy response not ok');
-        return res.json();
-    })
-    .then(sheetData => {
-        if (!sheetData.success) throw new Error(sheetData.error || 'Logging failed');
-
-        if (sheetData.duplicate) {
-            showToast("Duplicate entry. Record already exists in Google Sheet.", "error");
-            resetInputs();
-            return;
-        }
-
-        // 6. Send Email Notification (only if not duplicate!)
-        fetch('send-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                to: facultyEmail,
-                cc: ccEmails,
-                subject: `Zero Student As Per Timetable — ${facInitNormalized} (${deptAbbr})`,
-                html: emailHtml,
-                module: 'zero',
-                dept: deptAbbr
-            })
+        .then(res => {
+            if (!res.ok) throw new Error('Proxy response not ok');
+            return res.json();
         })
-        .then(res => res.json())
-        .then(emailRes => {
-            showToast("Log submitted to Sheet & emailed successfully!");
-            resetInputs();
+        .then(sheetData => {
+            if (!sheetData.success) throw new Error(sheetData.error || 'Logging failed');
+
+            if (sheetData.duplicate) {
+                showToast("Duplicate entry. Record already exists in Google Sheet.", "error");
+                resetInputs();
+                return;
+            }
+
+            // 6. Send Email Notification (only if not duplicate!)
+            fetch('send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    to: facultyEmail,
+                    cc: ccEmails,
+                    subject: `Zero Student As Per Timetable — ${facInitNormalized} (${deptAbbr})`,
+                    html: emailHtml,
+                    module: 'zero',
+                    dept: deptAbbr
+                })
+            })
+                .then(res => res.json())
+                .then(emailRes => {
+                    showToast("Log submitted to Sheet & emailed successfully!");
+                    resetInputs();
+                })
+                .catch(err => {
+                    console.error("Email failed:", err);
+                    showToast("Log submitted to Sheet, but email failed.", "error");
+                    resetInputs();
+                });
         })
         .catch(err => {
-            console.error("Email failed:", err);
-            showToast("Log submitted to Sheet, but email failed.", "error");
-            resetInputs();
+            console.error("Submission failed:", err);
+            showToast("Log submission failed.", "error");
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalContent;
         });
-    })
-    .catch(err => {
-        console.error("Submission failed:", err);
-        showToast("Log submission failed.", "error");
-    })
-    .finally(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalContent;
-    });
 }
 
 // ── Toast Alert Helper ──
@@ -544,12 +546,13 @@ function initPdfImport() {
     const closeBtn = document.getElementById("pdfModalClose");
     const cancelBtn = document.getElementById("pdfModalCancel");
     const importConfirmBtn = document.getElementById("pdfModalImportBtn");
-    const selectAllCheckbox = document.getElementById("select-all-pdf-rows");
+    const selectAllCheckbox = document.getElementById("pdfSelectAllRows") || document.getElementById("select-all-pdf-rows");
 
     if (!importBtn || !fileInput || !modal) return;
 
     // Trigger file dialog
-    importBtn.addEventListener("click", () => {
+    importBtn.addEventListener("click", (e) => {
+        if (e) e.preventDefault();
         fileInput.value = ""; // clear previous select
         fileInput.click();
     });
@@ -563,11 +566,7 @@ function initPdfImport() {
         try {
             const data = await parseExcelFile(file);
             processParsedExcelRows(data);
-            
-            if (pdfParsedData.length === 0) {
-                showToast("No matching records found in Excel for our faculty initials.", "error");
-                return;
-            }
+
             renderPreviewRows();
             openModal();
         } catch (error) {
@@ -585,32 +584,42 @@ function initPdfImport() {
         if (entryCc && importCc && !importCc.value.trim()) {
             importCc.value = entryCc.value;
         }
+        syncImportModalCcRecipients();
+
         // Reset progress bar UI
-        document.getElementById("importProgressContainer").style.display = "none";
-        document.getElementById("importProgressBarFill").style.width = "0%";
-        document.getElementById("validationSummaryContainer").style.display = "none";
-        importConfirmBtn.disabled = false;
-        importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
-        selectAllCheckbox.checked = true;
+        const pContainer = document.getElementById("importProgressContainer");
+        const pFill = document.getElementById("importProgressBarFill");
+        const vSummary = document.getElementById("validationSummaryContainer");
+        if (pContainer) pContainer.style.display = "none";
+        if (pFill) pFill.style.width = "0%";
+        if (vSummary) vSummary.style.display = "none";
+        if (importConfirmBtn) {
+            importConfirmBtn.disabled = false;
+            importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
+        }
+        if (selectAllCheckbox) selectAllCheckbox.checked = true;
     };
 
     const closeModal = () => {
         modal.classList.remove("show");
     };
 
-    closeBtn.addEventListener("click", closeModal);
-    cancelBtn.addEventListener("click", closeModal);
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
 
     // Select all handler
-    selectAllCheckbox.addEventListener("change", (e) => {
-        const checked = e.target.checked;
-        const rowCheckboxes = document.querySelectorAll(".pdf-row-checkbox");
-        rowCheckboxes.forEach(cb => cb.checked = checked);
-        importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
-    });
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener("change", (e) => {
+            const checked = e.target.checked;
+            const rowCheckboxes = document.querySelectorAll(".pdf-row-checkbox");
+            rowCheckboxes.forEach(cb => cb.checked = checked);
+            if (importConfirmBtn) importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
+            syncImportModalCcRecipients();
+        });
+    }
 
     // Import confirmation handler
-    importConfirmBtn.addEventListener("click", handleBatchImport);
+    if (importConfirmBtn) importConfirmBtn.addEventListener("click", handleBatchImport);
 }
 
 function getSelectedCount() {
@@ -626,7 +635,7 @@ function renderPreviewRows() {
     tbody.innerHTML = "";
 
     if (pdfParsedData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-muted); padding: 24px;">No records with remarks found in this Excel file.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="13" style="text-align: center; color: var(--text-muted); padding: 24px;">No records with remarks found in this Excel file.</td></tr>`;
         importConfirmBtn.innerText = `Import Selected (0)`;
         importConfirmBtn.disabled = true;
         return;
@@ -637,10 +646,9 @@ function renderPreviewRows() {
     pdfParsedData.forEach((row, index) => {
         const tr = document.createElement("tr");
         tr.id = `pdf-row-${index}`;
-        
-        // Checked by default only if auto-detected dept matches currently selected portal tab AND has a valid remark
-        const isCurrentDept = (row.selectedDept === currentDepartment);
-        const isCheckedStr = (isCurrentDept && row.hasValidRemark) ? "checked" : "";
+
+        // Auto-select checkbox ONLY if row has a valid target department selected (IT or CE); Skip for Civil/Mech/Elect
+        const isCheckedStr = (row.selectedDept && row.selectedDept !== "") ? "checked" : "";
 
         // Build interactive dropdown select for Department
         const deptSelectHtml = `
@@ -650,6 +658,10 @@ function renderPreviewRows() {
                 <option value="" ${!row.selectedDept ? "selected" : ""}>Skip</option>
             </select>
         `;
+
+        // Check combined match status against Personal Faculty TT and Student Class TT
+        const ttMatch = checkCombinedTimetableMatch(row);
+        const ttBadgeHtml = `<span class="zs-tt-badge ${ttMatch.badgeClass}" title="${ttMatch.tooltip}">${ttMatch.label}</span>`;
 
         tr.innerHTML = `
             <td style="text-align: center;"><input type="checkbox" class="pdf-row-checkbox" data-index="${index}" ${isCheckedStr}></td>
@@ -664,6 +676,7 @@ function renderPreviewRows() {
             <td style="text-align: center;">${row.noOfStudents}</td>
             <td style="font-size: 11px;">${row.remarks || "NO STUDENT"}</td>
             <td style="text-align: center;">${deptSelectHtml}</td>
+            <td style="text-align: center;">${ttBadgeHtml}</td>
         `;
 
         // Update selectedDept and check state on change
@@ -676,30 +689,456 @@ function renderPreviewRows() {
                 cb.checked = (e.target.value !== "");
             }
             importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
+            syncImportModalCcRecipients();
         });
 
         // Update select count on checkbox change
         const checkbox = tr.querySelector(".pdf-row-checkbox");
         checkbox.addEventListener("change", () => {
             importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
+            syncImportModalCcRecipients();
         });
 
         tbody.appendChild(tr);
     });
 
     importConfirmBtn.innerText = `Import Selected (${getSelectedCount()})`;
+    syncImportModalCcRecipients();
+}
+
+function syncImportModalCcRecipients() {
+    const importCcInput = document.getElementById("import-cc");
+    if (!importCcInput) return;
+
+    const dhavalEmail = "drchandarana@gmiu.edu.in";
+    const itHodEmail = "sbchauhan@gmiu.edu.in";
+    const ceHodEmail = "ehunagar@gmiu.edu.in";
+
+    let hasItRows = false;
+    let hasCeRows = false;
+
+    // Inspect all checked rows in the batch import preview modal table
+    const checkedBoxes = document.querySelectorAll(".pdf-row-checkbox:checked");
+    checkedBoxes.forEach(cb => {
+        const index = parseInt(cb.getAttribute("data-index"), 10);
+        if (typeof pdfParsedData !== "undefined" && pdfParsedData && pdfParsedData[index]) {
+            const dept = pdfParsedData[index].selectedDept;
+            if (dept === "Information Technology" || dept === "IT") {
+                hasItRows = true;
+            } else if (dept === "Computer Engineering" || dept === "CE") {
+                hasCeRows = true;
+            }
+        }
+    });
+
+    // If no checkboxes are currently checked, check all rows in pdfParsedData
+    if (!hasItRows && !hasCeRows && typeof pdfParsedData !== "undefined" && pdfParsedData && pdfParsedData.length > 0) {
+        pdfParsedData.forEach(row => {
+            const dept = row.selectedDept;
+            if (dept === "Information Technology" || dept === "IT") hasItRows = true;
+            if (dept === "Computer Engineering" || dept === "CE") hasCeRows = true;
+        });
+    }
+
+    // Fallback to active currentDepartment if still empty
+    if (!hasItRows && !hasCeRows) {
+        if (typeof currentDepartment !== "undefined" && currentDepartment === "Computer Engineering") {
+            hasCeRows = true;
+        } else {
+            hasItRows = true;
+        }
+    }
+
+    let requiredEmails = [dhavalEmail];
+    if (hasItRows) requiredEmails.push(itHodEmail);
+    if (hasCeRows) requiredEmails.push(ceHodEmail);
+
+    let currentText = importCcInput.value.trim();
+    let existingEmails = currentText ? currentText.split(/[\s,;]+/).map(e => e.trim()).filter(Boolean) : [];
+
+    // Retain any additional custom email addresses entered by user, but enforce required HOD emails
+    let finalEmails = [...requiredEmails];
+    existingEmails.forEach(email => {
+        if (!finalEmails.includes(email) && email !== dhavalEmail && email !== itHodEmail && email !== ceHodEmail) {
+            finalEmails.push(email);
+        }
+    });
+
+    importCcInput.value = Array.from(new Set(finalEmails)).join(", ") + ", ";
+}
+
+// ── Personal Timetable Matching Utility ──
+// ── Personal Timetable Matching Utility ──
+function extractRoomFromText(text) {
+    if (!text) return "";
+    text = text.toString().toUpperCase().trim();
+    const match = text.match(/\b([GFTXS]F)\s*[-–]?\s*(\d{1,2}\s*[A-Z]?)\b/i);
+    if (match) {
+        return (match[1] + "-" + match[2]).replace(/\s+/g, "");
+    }
+    const match2 = text.match(/\b([A-Z]{2,4})\s*[-–]?\s*(\d{1,2}[A-Z]?)\b/i);
+    if (match2) {
+        return (match2[1] + "-" + match2[2]).replace(/\s+/g, "");
+    }
+    return text.replace(/[\s\-]/g, "");
+}
+
+function getDayCodeFromDate(dateStr) {
+    if (!dateStr) return "";
+    let clean = dateStr.toString().trim();
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    // Month name regex: e.g. 27-Aug-2026 or 27/Aug/2026
+    const mMatch = clean.match(/^(\d{1,2})[\/\-\s]+([A-Za-z]{3})[\/\-\s]+(\d{4})$/);
+    if (mMatch) {
+        const day = parseInt(mMatch[1], 10);
+        const mStr = mMatch[2].toLowerCase();
+        const year = parseInt(mMatch[3], 10);
+        const mIdx = monthNames.findIndex(m => m.toLowerCase() === mStr);
+        if (mIdx >= 0) {
+            const dObj = new Date(year, mIdx, day);
+            const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+            return days[dObj.getDay()];
+        }
+    }
+
+    // ISO format: YYYY-MM-DD
+    const isoMatch = clean.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+    if (isoMatch) {
+        const year = parseInt(isoMatch[1], 10);
+        const month = parseInt(isoMatch[2], 10) - 1;
+        const day = parseInt(isoMatch[3], 10);
+        const dObj = new Date(year, month, day);
+        const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+        return days[dObj.getDay()];
+    }
+
+    // Numeric format: DD/MM/YYYY or MM/DD/YYYY
+    const numMatch = clean.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+    if (numMatch) {
+        let p1 = parseInt(numMatch[1], 10);
+        let p2 = parseInt(numMatch[2], 10);
+        let y = parseInt(numMatch[3], 10);
+        if (y < 100) y += 2000;
+
+        let day, month;
+        if (p1 > 12) {
+            day = p1; month = p2 - 1;
+        } else if (p2 > 12) {
+            month = p1 - 1; day = p2;
+        } else {
+            day = p1; month = p2 - 1;
+        }
+        const dObj = new Date(y, month, day);
+        if (!isNaN(dObj.getTime())) {
+            const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+            return days[dObj.getDay()];
+        }
+    }
+
+    const fallbackObj = new Date(clean);
+    if (!isNaN(fallbackObj.getTime())) {
+        const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+        return days[fallbackObj.getDay()];
+    }
+
+    return "";
+}
+
+function parseTimeToMin(timeStr) {
+    if (!timeStr) return null;
+    let s = timeStr.toString().trim().toLowerCase().replace(".", ":");
+    let isPm = s.includes("pm");
+    let isAm = s.includes("am");
+    let clean = s.replace(/[^0-9:]/g, "");
+    let parts = clean.split(":");
+    if (parts.length < 2) return null;
+    let hrs = parseInt(parts[0], 10);
+    let mins = parseInt(parts[1], 10);
+    if (isNaN(hrs) || isNaN(mins)) return null;
+    if (isPm && hrs < 12) hrs += 12;
+    if (isAm && hrs === 12) hrs = 0;
+    if (!isPm && !isAm) {
+        if (hrs >= 1 && hrs <= 7) hrs += 12;
+    }
+    return hrs * 60 + mins;
+}
+
+function getSlotMinRange(slotTimeStr) {
+    if (!slotTimeStr) return null;
+    const matches = slotTimeStr.match(/\d{1,2}\s*[:.]\s*\d{2}(?:\s*(?:am|pm))?/gi);
+    if (matches && matches.length >= 2) {
+        const start = parseTimeToMin(matches[0]);
+        const end = parseTimeToMin(matches[matches.length - 1]);
+        if (start !== null && end !== null) return { start, end };
+    }
+    const numMatches = slotTimeStr.match(/\d{1,2}(?::\d{2})?/g);
+    if (numMatches && numMatches.length >= 2) {
+        let sStr = numMatches[0].includes(":") ? numMatches[0] : numMatches[0] + ":00";
+        let eStr = numMatches[1].includes(":") ? numMatches[1] : numMatches[1] + ":00";
+        const start = parseTimeToMin(sStr);
+        const end = parseTimeToMin(eStr);
+        if (start !== null && end !== null) return { start, end };
+    }
+    return null;
+}
+
+function checkTimetableMatch(row) {
+    if (typeof timetableData === "undefined") {
+        return { status: "no_data", label: "No TT Data", badgeClass: "tt-no-data", tooltip: "Timetable database not loaded" };
+    }
+
+    const facInitials = (row.resolvedFaculty || row.faculty || "").toUpperCase().trim();
+    const ttFaculty = timetableData[facInitials] || Object.values(timetableData).find(f => f.initials && f.initials.toUpperCase().trim() === facInitials);
+
+    if (!ttFaculty || !ttFaculty.schedule) {
+        return { status: "no_data", label: "No TT Data", badgeClass: "tt-no-data", tooltip: `No personal timetable found for ${facInitials}` };
+    }
+
+    const dayCode = getDayCodeFromDate(row.date || row.formattedDate);
+    if (!dayCode) {
+        return { status: "no_data", label: "Invalid Date", badgeClass: "tt-no-data", tooltip: "Could not determine day of week" };
+    }
+    if (dayCode === "SUN") {
+        return { status: "no_slot", label: "Sunday", badgeClass: "tt-unscheduled", tooltip: "Sunday / No scheduled day" };
+    }
+
+    // Parse record time
+    let recStart = parseTimeToMin(row.timeInStr || row.timeIn);
+    let recEnd = parseTimeToMin(row.timeOutStr || row.timeOut);
+
+    if (recStart === null || recEnd === null) {
+        return { status: "no_data", label: "Unknown Time", badgeClass: "tt-no-data", tooltip: "Could not parse class time" };
+    }
+
+    // Look for overlapping occupied slot on that day
+    let matchingSlots = [];
+    let sameDayOccupiedCount = 0;
+
+    ttFaculty.schedule.forEach(slot => {
+        if (slot.isRecess) return;
+        const daySlot = slot[dayCode];
+        if (daySlot && daySlot.occupied) {
+            sameDayOccupiedCount++;
+            const range = getSlotMinRange(slot.time);
+            if (range) {
+                // Check overlap: slot start < record end AND slot end > record start
+                if (range.start < recEnd && range.end > recStart) {
+                    matchingSlots.push({ slot, daySlot, range });
+                }
+            }
+        }
+    });
+
+    if (matchingSlots.length === 0) {
+        if (sameDayOccupiedCount === 0) {
+            return { status: "off_day", label: "✗ Day Off", badgeClass: "tt-unscheduled", tooltip: `${facInitials} has no lectures on ${dayCode}` };
+        }
+        return { status: "no_slot", label: "✗ Free Slot", badgeClass: "tt-unscheduled", tooltip: `${facInitials} is free at this time on ${dayCode}` };
+    }
+
+    // Overlapping occupied slot(s) found
+    const recRoomNorm = extractRoomFromText(row.room);
+    const recSubNorm = (row.subject || "").toUpperCase().replace(/[\s\-]/g, "");
+
+    let roomMatch = false;
+    let subMatch = false;
+    let ttRooms = [];
+    let ttClasses = [];
+
+    matchingSlots.forEach(m => {
+        let ttR = (m.daySlot.room || "").toUpperCase().trim();
+        let ttC = (m.daySlot.class || "").toUpperCase().trim();
+
+        // If room field is empty in timetable, extract room from class string if present
+        if (!ttR && ttC) {
+            ttR = extractRoomFromText(ttC);
+        }
+
+        if (ttR) ttRooms.push(ttR);
+        if (ttC) ttClasses.push(ttC);
+
+        const cleanTtR = extractRoomFromText(ttR);
+        const cleanTtC = ttC.replace(/[\s\-]/g, "");
+
+        if (recRoomNorm && cleanTtR && (cleanTtR === recRoomNorm || cleanTtR.includes(recRoomNorm) || recRoomNorm.includes(cleanTtR))) {
+            roomMatch = true;
+        }
+        if (recSubNorm && cleanTtC && (cleanTtC.includes(recSubNorm) || recSubNorm.includes(cleanTtC))) {
+            subMatch = true;
+        }
+    });
+
+    const ttRoomStr = Array.from(new Set(ttRooms)).join(", ") || "No room specified";
+    const ttClassStr = Array.from(new Set(ttClasses)).join(", ") || "Lecture";
+
+    if (roomMatch || (subMatch && (ttRooms.length === 0 || !ttRooms[0]))) {
+        return {
+            status: "matched",
+            label: "✓ Matched",
+            badgeClass: "tt-matched",
+            tooltip: `Matches Personal TT: ${ttClassStr} in ${ttRoomStr} (${dayCode})`
+        };
+    } else {
+        return {
+            status: "mismatch",
+            label: `⚠️ Diff (${ttRooms[0] || 'Room'})`,
+            badgeClass: "tt-mismatch",
+            tooltip: `TT shows: ${ttClassStr} in ${ttRoomStr} on ${dayCode} (Excel room: ${row.room})`
+        };
+    }
+}
+
+// ── Student Timetable Matching Utility ──
+function checkStudentTimetableMatch(row) {
+    if (!window.studentTimetableData || !window.studentTimetableData.SheetsData) {
+        return { matched: false, sheetName: "", tooltip: "Student timetable cache not loaded" };
+    }
+
+    const dayCode = getDayCodeFromDate(row.date || row.formattedDate);
+    if (!dayCode || dayCode === "SUN") return { matched: false, sheetName: "" };
+
+    const recStart = parseTimeToMin(row.timeInStr || row.timeIn);
+    const recEnd = parseTimeToMin(row.timeOutStr || row.timeOut);
+    if (recStart === null || recEnd === null) return { matched: false, sheetName: "" };
+
+    const facInit = (row.resolvedFaculty || row.faculty || "").toUpperCase().trim();
+    const recSubNorm = (row.subject || "").toUpperCase().replace(/[\s\-]/g, "");
+
+    const dayColMap = { "MON": 2, "TUE": 3, "WED": 4, "THU": 5, "FRI": 6, "SAT": 7 };
+    const dayColIdx = dayColMap[dayCode];
+    if (!dayColIdx) return { matched: false, sheetName: "" };
+
+    const sheetsData = window.studentTimetableData.SheetsData;
+    let matchedSheet = "";
+    let matchedSlotInfo = "";
+
+    const rawBranch = (row.branch || "").toUpperCase().replace(/[\.\s\-\&]/g, "");
+    const rawSem = (row.semester || "").toString().replace(/[^0-9]/g, "");
+
+    const sheetNames = Object.keys(sheetsData);
+
+    // Sort sheet names to prioritize sheets matching row's branch / sem & class code (e.g. X1, X2, Y1, Y2, Z)
+    sheetNames.sort((a, b) => {
+        const cleanA = a.toUpperCase().replace(/[\.\s\-\&]/g, "");
+        const cleanB = b.toUpperCase().replace(/[\.\s\-\&]/g, "");
+        let scoreA = 0, scoreB = 0;
+
+        // 1. Semester matching
+        if (rawSem && cleanA.includes(rawSem)) scoreA += 10;
+        if (rawSem && cleanB.includes(rawSem)) scoreB += 10;
+
+        // 2. Class code matching (e.g. X1, X2, Y1, Y2, Z, A, B, C)
+        const classMatch = rawBranch.match(/(X1|X2|Y1|Y2|Z\d*|CLASS[-_\s]*[A-Z0-9]+)/i);
+        if (classMatch) {
+            const classCode = classMatch[1].toUpperCase().replace(/[\s\-]/g, "");
+            if (cleanA.includes(classCode)) scoreA += 30;
+            if (cleanB.includes(classCode)) scoreB += 30;
+        }
+
+        // 3. Branch matching (IT vs CE / CSE / Computer Science)
+        const isIt = rawBranch.includes("IT") || rawBranch.includes("INFO");
+        const isCe = rawBranch.includes("COMP") || rawBranch.includes("CE") || rawBranch.includes("CSE") || rawBranch.includes("SCIENCE");
+
+        if (isIt) {
+            if (cleanA.includes("IT")) scoreA += 15;
+            if (cleanB.includes("IT")) scoreB += 15;
+        } else if (isCe) {
+            if (cleanA.includes("CE") || cleanA.includes("CSE") || cleanA.includes("COMP")) scoreA += 15;
+            if (cleanB.includes("CE") || cleanB.includes("CSE") || cleanB.includes("COMP")) scoreB += 15;
+        }
+
+        return scoreB - scoreA;
+    });
+
+    for (const sheetName of sheetNames) {
+        const matrix = sheetsData[sheetName];
+        if (!matrix || !Array.isArray(matrix)) continue;
+
+        for (let r = 0; r < matrix.length; r++) {
+            const rowData = matrix[r];
+            if (!rowData || rowData.length <= dayColIdx) continue;
+
+            const timeStr = String(rowData[1] || rowData[0] || "");
+            const range = getSlotMinRange(timeStr);
+            if (!range) continue;
+
+            if (range.start < recEnd && range.end > recStart) {
+                const cellVal = String(rowData[dayColIdx] || "").trim();
+                if (!cellVal) continue;
+
+                const cellUpper = cellVal.toUpperCase();
+                const hasFacMatch = facInit && (cellUpper.includes(`(${facInit})`) || cellUpper.includes(`(${facInit} `) || cellUpper.includes(` ${facInit})`));
+                const cleanCellVal = cellUpper.replace(/[\s\-]/g, "");
+                const hasSubMatch = recSubNorm && cleanCellVal.includes(recSubNorm);
+
+                if (hasFacMatch || hasSubMatch) {
+                    matchedSheet = sheetName;
+                    matchedSlotInfo = cellVal.replace(/\r\n|\r|\n/g, " ");
+                    break;
+                }
+            }
+        }
+        if (matchedSheet) break;
+    }
+
+    if (matchedSheet) {
+        return {
+            matched: true,
+            sheetName: matchedSheet,
+            slotInfo: matchedSlotInfo,
+            tooltip: `Student TT (${matchedSheet}): ${matchedSlotInfo}`
+        };
+    }
+
+    return { matched: false, sheetName: "", tooltip: "" };
+}
+
+function checkCombinedTimetableMatch(row) {
+    const facMatch = checkTimetableMatch(row);
+    const stuMatch = checkStudentTimetableMatch(row);
+
+    const isFacOk = (facMatch.status === "matched");
+    const isStuOk = stuMatch.matched;
+
+    if (isFacOk && isStuOk) {
+        return {
+            status: "both_matched",
+            label: "✓✓ Both Matched",
+            badgeClass: "tt-both-matched",
+            tooltip: `Matched BOTH Personal Faculty TT & Student TT (${stuMatch.sheetName})`
+        };
+    } else if (isFacOk) {
+        return {
+            status: "fac_matched",
+            label: "✓ Faculty TT",
+            badgeClass: "tt-matched",
+            tooltip: `${facMatch.tooltip} (Student slot not found)`
+        };
+    } else if (isStuOk) {
+        return {
+            status: "stu_matched",
+            label: "✓ Student TT",
+            badgeClass: "tt-student-matched",
+            tooltip: `Matches Student Timetable (${stuMatch.sheetName}): ${stuMatch.slotInfo}`
+        };
+    } else if (facMatch.status === "mismatch") {
+        return facMatch;
+    } else {
+        return facMatch;
+    }
 }
 
 async function parseExcelFile(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             try {
                 const data = new Uint8Array(e.target.result);
                 const workbook = XLSX.read(data, { type: 'array' });
                 const sheetName = workbook.SheetNames[0];
                 const sheet = workbook.Sheets[sheetName];
-                
+
                 const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false });
                 if (rows.length === 0) {
                     resolve([]);
@@ -731,8 +1170,8 @@ async function parseExcelFile(file) {
                     if (!cell) return;
                     const hText = cell.toString().toUpperCase().trim();
                     if (hText.includes("DATE")) colMapping.date = idx;
-                    else if (hText.includes("SR") || hText.includes("NO.")) colMapping.srNo = idx;
-                    else if (hText.includes("CLASS") || hText.includes("LAB")) colMapping.room = idx;
+                    else if (hText === "SR" || hText === "SR NO" || hText === "SR.NO" || hText === "SR. NO." || hText === "NO." || hText === "S.NO" || hText === "S.N.") colMapping.srNo = idx;
+                    else if (hText.includes("CLASS") || hText.includes("LAB") || hText.includes("ROOM")) colMapping.room = idx;
                     else if (hText.includes("SUBJECT")) colMapping.subject = idx;
                     else if (hText.includes("FACULTY")) colMapping.faculty = idx;
                     else if (hText.includes("ALTERATION")) colMapping.alteration = idx;
@@ -741,14 +1180,19 @@ async function parseExcelFile(file) {
                     else if (hText.includes("SEM")) colMapping.semester = idx;
                     else if (hText.includes("TIME IN")) colMapping.timeIn = idx;
                     else if (hText.includes("TIME OUT")) colMapping.timeOut = idx;
-                    else if (hText.includes("REMARKS")) colMapping.remarks = idx;
-                    else if (hText.includes("STUDENT")) colMapping.students = idx;
+                    else if (hText.includes("STUDENT") || hText.includes("NO OF STUDENTS")) colMapping.students = idx;
+                    else if (hText === "REMARKS" || hText === "REMARK") colMapping.remarks = idx;
+                    else if (hText.includes("ACADEMIC") || hText.includes("CONVENER")) colMapping.convenerRemarks = idx;
                 });
+
+                if (colMapping.srNo === -1) colMapping.srNo = 1;
+                if (colMapping.remarks === -1) colMapping.remarks = 11; // Column L fallback
+                if (colMapping.students === -1) colMapping.students = 12; // Column M fallback
 
                 let parsedRows = [];
                 let currentDate = "";
                 let currentFormattedDate = "";
-                
+
                 const cleanStr = (val) => {
                     if (val === undefined || val === null) return "";
                     return val.toString().replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim();
@@ -760,19 +1204,28 @@ async function parseExcelFile(file) {
                     const row = rows[r];
                     if (!row) continue;
 
-                    const srNoVal = colMapping.srNo !== -1 ? cleanStr(row[colMapping.srNo]) : "";
-                    const roomVal = colMapping.room !== -1 ? cleanStr(row[colMapping.room]) : "";
-                    const subjectVal = colMapping.subject !== -1 ? cleanStr(row[colMapping.subject]) : "";
-                    const rawDate = colMapping.date !== -1 ? cleanStr(row[colMapping.date]) : "";
-                    const facultyInitials = colMapping.faculty !== -1 ? cleanStr(row[colMapping.faculty]) : "";
-                    const alterationVal = colMapping.alteration !== -1 ? cleanStr(row[colMapping.alteration]) : "";
-                    const ptVal = colMapping.pt !== -1 ? cleanStr(row[colMapping.pt]) : "";
-                    const branchVal = colMapping.branch !== -1 ? cleanStr(row[colMapping.branch]) : "";
-                    const semVal = colMapping.semester !== -1 ? cleanStr(row[colMapping.semester]) : "";
-                    const timeInVal = colMapping.timeIn !== -1 ? cleanStr(row[colMapping.timeIn]) : "";
-                    const timeOutVal = colMapping.timeOut !== -1 ? cleanStr(row[colMapping.timeOut]) : "";
-                    const remarksVal = colMapping.remarks !== -1 ? cleanStr(row[colMapping.remarks]) : "";
-                    const studentsVal = colMapping.students !== -1 ? cleanStr(row[colMapping.students]) : "";
+                    const srNoVal = colMapping.srNo !== -1 ? cleanStr(row[colMapping.srNo]) : cleanStr(row[1]);
+                    const roomVal = colMapping.room !== -1 ? cleanStr(row[colMapping.room]) : cleanStr(row[2]);
+                    const subjectVal = colMapping.subject !== -1 ? cleanStr(row[colMapping.subject]) : cleanStr(row[3]);
+                    const rawDate = colMapping.date !== -1 ? cleanStr(row[colMapping.date]) : cleanStr(row[0]);
+                    const facultyInitials = colMapping.faculty !== -1 ? cleanStr(row[colMapping.faculty]) : cleanStr(row[4]);
+                    const alterationVal = colMapping.alteration !== -1 ? cleanStr(row[colMapping.alteration]) : cleanStr(row[5]);
+                    const ptVal = colMapping.pt !== -1 ? cleanStr(row[colMapping.pt]) : cleanStr(row[6]);
+                    const branchVal = colMapping.branch !== -1 ? cleanStr(row[colMapping.branch]) : cleanStr(row[7]);
+                    const semVal = colMapping.semester !== -1 ? cleanStr(row[colMapping.semester]) : cleanStr(row[8]);
+                    const timeInVal = colMapping.timeIn !== -1 ? cleanStr(row[colMapping.timeIn]) : cleanStr(row[9]);
+                    const timeOutVal = colMapping.timeOut !== -1 ? cleanStr(row[colMapping.timeOut]) : cleanStr(row[10]);
+                    
+                    const remarksVal = colMapping.remarks !== -1 ? cleanStr(row[colMapping.remarks]) : cleanStr(row[11]);
+                    const studentsVal = colMapping.students !== -1 ? cleanStr(row[colMapping.students]) : cleanStr(row[12]);
+                    const convenerVal = colMapping.convenerRemarks !== -1 ? cleanStr(row[colMapping.convenerRemarks]) : cleanStr(row[13]);
+
+                    let finalRemarks = remarksVal;
+                    if (!finalRemarks && convenerVal) {
+                        finalRemarks = convenerVal;
+                    } else if (finalRemarks && convenerVal && convenerVal !== finalRemarks) {
+                        finalRemarks = `${finalRemarks} (${convenerVal})`;
+                    }
 
                     if (!srNoVal && !roomVal && !subjectVal) continue;
 
@@ -780,7 +1233,7 @@ async function parseExcelFile(file) {
 
                     let parsedDateVal = "";
                     let formattedDate = "";
-                    
+
                     if (rawDate) {
                         const res = formatPDFDate(rawDate);
                         currentDate = res.parsed;
@@ -807,7 +1260,7 @@ async function parseExcelFile(file) {
                         timeOut: timeOut24,
                         timeInStr: timeInVal,
                         timeOutStr: timeOutVal,
-                        remarks: remarksVal,
+                        remarks: finalRemarks,
                         noOfStudents: studentsVal || "---"
                     });
                 }
@@ -829,87 +1282,154 @@ function processParsedExcelRows(allRows) {
         return str.toUpperCase().replace(/[\.\s\-\&]/g, "").replace(/[\(\)]/g, "");
     };
 
-    let filtered = [];
+    let allValidRows = [];
     let seenKeys = new Set();
 
     allRows.forEach(row => {
         const cleanRemarks = row.remarks ? row.remarks.trim() : "";
-        const hasValidRemark = (cleanRemarks !== "" && cleanRemarks !== "---");
+        const hasValidRemark = (cleanRemarks !== "" && cleanRemarks !== "-" && cleanRemarks !== "--" && cleanRemarks !== "---" && cleanRemarks !== "N/A" && cleanRemarks !== "NA");
         row.hasValidRemark = hasValidRemark;
 
         const clean = normalizeBranch(row.branch);
+        const cleanBranchLower = clean ? clean.toLowerCase() : "";
+
+        // 1. Minus (exclude) Civil, Mechanical, Electrical, Chemical, Automobile branch rows completely
+        const isNonCeItBranch = cleanBranchLower.includes("civil") ||
+            cleanBranchLower.includes("mechanical") ||
+            cleanBranchLower.includes("mech") ||
+            cleanBranchLower.includes("electrical") ||
+            cleanBranchLower.includes("elect") ||
+            cleanBranchLower.includes("chemical") ||
+            cleanBranchLower.includes("automobile") ||
+            cleanBranchLower.includes("auto");
+
+        if (isNonCeItBranch) {
+            return; // Exclude non-CE/non-IT department rows completely
+        }
 
         // 2. Resolve faculty initials with mappings for variations
         let facInit = row.faculty.toUpperCase().trim();
-        if (facInit === "PHC") facInit = "PHK";
-        if (facInit === "PMM") facInit = "PMB";
 
         let matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === facInit);
+        if (!matchedFaculty && facInit === "PHC") matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === "PHK");
+        if (!matchedFaculty && facInit === "PLP") matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === "PMM" || f.initials.toUpperCase() === "PLP");
+        if (!matchedFaculty && facInit === "HKS") matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === "HDS" || f.initials.toUpperCase() === "HKS");
+        if (!matchedFaculty && facInit === "SRS") matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === "SRP" || f.initials.toUpperCase() === "SRS");
+
         if (!matchedFaculty) {
             const parenMatch = row.faculty.match(/\(([^)]+)\)/);
             if (parenMatch) {
                 let extractedInitials = parenMatch[1].toUpperCase().trim();
-                if (extractedInitials === "PHC") extractedInitials = "PHK";
-                if (extractedInitials === "PMM") extractedInitials = "PMB";
                 matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === extractedInitials);
+                if (!matchedFaculty && extractedInitials === "PHC") matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === "PHK");
+                if (!matchedFaculty && extractedInitials === "PLP") matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === "PMM" || f.initials.toUpperCase() === "PLP");
+                if (!matchedFaculty && extractedInitials === "HKS") matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === "HDS" || f.initials.toUpperCase() === "HKS");
+                if (!matchedFaculty && extractedInitials === "SRS") matchedFaculty = facultyData.find(f => f.initials.toUpperCase() === "SRP" || f.initials.toUpperCase() === "SRS");
             }
         }
         if (!matchedFaculty) {
             matchedFaculty = facultyData.find(f => {
                 const cleanName = f.name.replace(/Prof\.\s*/i, "").toUpperCase().trim();
-                return facInit.includes(cleanName) || facInit.includes(f.initials.toUpperCase());
+                return facInit.length >= 2 && (cleanName.includes(facInit) || f.initials.toUpperCase().includes(facInit));
             });
         }
 
-        const facultyLabel = matchedFaculty ? `${matchedFaculty.name} (${matchedFaculty.initials})` : `Prof. ${facInit}`;
-        const facultyDept = matchedFaculty ? matchedFaculty.department : "";
+        // Only show rows if Column E (FACULTY) matches a faculty member in facultyData.js
+        if (!matchedFaculty) {
+            return;
+        }
 
-        // 3. Auto-detect department (CE/CSE vs IT vs Skip)
+        const facultyLabel = `${matchedFaculty.name} (${matchedFaculty.initials})`;
+        const facultyDept = matchedFaculty.department ? matchedFaculty.department.trim() : "";
+        const facultyName = matchedFaculty.name;
+
+        // 3. Auto-detect department (CE/CSE vs IT vs Skip for Civil/Mech/Electrical)
         let autoDept = "";
         if (clean) {
             const cleanLower = clean.toLowerCase();
-            // Strict CE and CSE branch detection (excludes CS)
-            const isCeOrCse = cleanLower.includes("computerengineering") || cleanLower.includes("cse") || (cleanLower.includes("computerscience") && cleanLower.includes("engineering"));
-            const isItBranch = cleanLower.includes("it") || cleanLower.includes("info") || cleanLower.includes("ict");
 
-            if (isCeOrCse) {
-                autoDept = "Computer Engineering";
-            } else if (isItBranch) {
-                autoDept = "Information Technology";
-            } else {
-                // If branch is ambiguous, check the faculty's home department
-                if (facultyDept === "Computer Engineering" || facultyDept === "Information Technology") {
-                    autoDept = facultyDept;
+            const isOtherDeptBranch = cleanLower.includes("civil") ||
+                cleanLower.includes("mechanical") ||
+                cleanLower.includes("mech") ||
+                cleanLower.includes("electrical") ||
+                cleanLower.includes("elect") ||
+                cleanLower.includes("chemical") ||
+                cleanLower.includes("automobile") ||
+                cleanLower.includes("auto");
+
+            if (!isOtherDeptBranch) {
+                const isItBranch = cleanLower.includes("it") ||
+                    cleanLower.includes("info") ||
+                    cleanLower.includes("information") ||
+                    cleanLower.includes("ict");
+
+                const isCeOrCse = cleanLower.includes("computer") ||
+                    cleanLower.includes("cse") ||
+                    cleanLower.includes("ce") ||
+                    cleanLower.includes("science");
+
+                if (isCeOrCse && !isItBranch) {
+                    autoDept = "Computer Engineering";
+                } else if (isItBranch && !isCeOrCse) {
+                    autoDept = "Information Technology";
+                } else if (isItBranch && isCeOrCse) {
+                    if (facultyDept.includes("Computer") || facultyDept.includes("CE")) {
+                        autoDept = "Computer Engineering";
+                    } else {
+                        autoDept = "Information Technology";
+                    }
                 }
             }
         }
 
-        const facultyEmail = matchedFaculty ? matchedFaculty.email : (autoDept === "Computer Engineering" ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
+        // If branch is ambiguous or not explicit, check faculty's department from facultyData.js
+        if (!autoDept && facultyDept && !isNonCeItBranch) {
+            if (facultyDept.includes("Computer") || facultyDept.includes("CE")) {
+                autoDept = "Computer Engineering";
+            } else if (facultyDept.includes("Information") || facultyDept.includes("IT")) {
+                autoDept = "Information Technology";
+            }
+        }
 
-        row.resolvedFaculty = matchedFaculty ? matchedFaculty.initials : facInit;
+        if (!autoDept && !isNonCeItBranch) {
+            autoDept = currentDepartment || "Information Technology";
+        }
+
+        const facultyEmail = matchedFaculty.email || (autoDept === "Computer Engineering" ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
+
+        row.resolvedFaculty = matchedFaculty.initials;
+        row.facultyName = facultyName;
         row.facultyLabel = facultyLabel;
         row.facultyEmail = facultyEmail;
         row.facultyDept = facultyDept;
         row.autoDept = autoDept;
-        row.selectedDept = autoDept; // Default to auto-detected department
+        row.selectedDept = autoDept;
 
         const uniqueKey = `${row.date}|${row.srNo}|${row.room}|${row.subject}|${row.resolvedFaculty}|${row.branch}|${row.semester}|${row.timeInStr}-${row.timeOutStr}`;
         if (seenKeys.has(uniqueKey)) return;
         seenKeys.add(uniqueKey);
 
-        filtered.push(row);
+        allValidRows.push(row);
     });
 
-    pdfParsedData = filtered;
-    pdfEligibleRowsCount = filtered.length;
+    const remarkRows = allValidRows.filter(r => r.hasValidRemark);
+
+    // If there are entries with valid remarks, show those by default. Otherwise fall back to all valid entries.
+    if (remarkRows.length > 0) {
+        pdfParsedData = remarkRows;
+    } else {
+        pdfParsedData = allValidRows;
+    }
+    pdfEligibleRowsCount = pdfParsedData.length;
 }
 
 function formatPDFDate(dateStr) {
     if (!dateStr) return { parsed: "", formatted: "" };
-    const cleanDate = dateStr.replace(/\s+/g, "");
+    const cleanDate = dateStr.toString().trim();
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
-    const monthRegex = new RegExp(`^(\\d{1,2})[\\/\\-]?(${monthNames.join("|")})[\\/\\-]?(\\d{4})$`, "i");
+
+    // Month name regex: e.g. 27-Aug-2026 or 27/Aug/2026
+    const monthRegex = new RegExp(`^(\\d{1,2})[\\/\\-\\s]?(${monthNames.join("|")})[\\/\\-\\s]?(\\d{4})$`, "i");
     const mMatch = cleanDate.match(monthRegex);
     if (mMatch) {
         const day = mMatch[1].padStart(2, '0');
@@ -923,11 +1443,12 @@ function formatPDFDate(dateStr) {
         };
     }
 
-    const match = cleanDate.match(/^(\d{1,2})[\/\-]?(\d{1,2})[\/\-]?(\d{4})$/);
-    if (match) {
-        const day = match[1].padStart(2, '0');
-        const month = match[2].padStart(2, '0');
-        const year = match[3];
+    // ISO format: YYYY-MM-DD
+    const isoMatch = cleanDate.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+    if (isoMatch) {
+        const year = isoMatch[1];
+        const month = isoMatch[2].padStart(2, '0');
+        const day = isoMatch[3].padStart(2, '0');
         const mIdx = parseInt(month, 10) - 1;
         if (mIdx >= 0 && mIdx < 12) {
             return {
@@ -936,35 +1457,52 @@ function formatPDFDate(dateStr) {
             };
         }
     }
-    
-    const dateParts = cleanDate.split(/[\/\-]/);
+
+    // Numeric format: DD/MM/YYYY or MM/DD/YYYY
+    const dateParts = cleanDate.split(/[\/\-\s]+/);
     if (dateParts.length === 3) {
-        let day = dateParts[0].padStart(2, '0');
-        let month = dateParts[1].padStart(2, '0');
+        let p1 = parseInt(dateParts[0], 10);
+        let p2 = parseInt(dateParts[1], 10);
         let year = dateParts[2];
         if (year.length === 2) year = "20" + year;
-        const mIdx = parseInt(month, 10) - 1;
+
+        let day, month;
+        if (p1 > 12) {
+            day = p1;
+            month = p2;
+        } else if (p2 > 12) {
+            month = p1;
+            day = p2;
+        } else {
+            day = p1;
+            month = p2;
+        }
+
+        const mIdx = month - 1;
         if (mIdx >= 0 && mIdx < 12) {
+            const dayStr = day.toString().padStart(2, '0');
+            const monthStr = month.toString().padStart(2, '0');
             return {
-                parsed: `${year}-${month}-${day}`,
-                formatted: `${parseInt(day, 10)}-${monthNames[mIdx]}-${year}`
+                parsed: `${year}-${monthStr}-${dayStr}`,
+                formatted: `${day}-${monthNames[mIdx]}-${year}`
             };
         }
     }
-    
-    return { parsed: "", formatted: "" };
+
+    return { parsed: cleanDate, formatted: cleanDate };
 }
 
 function parseTimeTo24h(timeStr) {
     if (!timeStr) return "";
-    const clean = timeStr.replace(/\s*[AP]M\s*/gi, "").trim();
+    let s = timeStr.toString().trim().replace(".", ":");
+    const clean = s.replace(/\s*[AP]M\s*/gi, "").trim();
     const parts = clean.split(":");
     if (parts.length < 2) return timeStr;
     let hrs = parseInt(parts[0], 10);
     const mins = parts[1];
-    
-    let isPm = timeStr.toLowerCase().includes("pm");
-    if (!isPm && !timeStr.toLowerCase().includes("am")) {
+
+    let isPm = s.toLowerCase().includes("pm");
+    if (!isPm && !s.toLowerCase().includes("am")) {
         if (hrs === 12 || (hrs >= 1 && hrs <= 7)) {
             isPm = true;
         }
@@ -979,7 +1517,7 @@ function mergeCloseItems(items) {
     if (items.length === 0) return [];
     let merged = [];
     let current = { ...items[0] };
-    
+
     for (let i = 1; i < items.length; i++) {
         const next = items[i];
         const distance = next.transform[4] - (current.transform[4] + current.width);
@@ -1111,7 +1649,7 @@ async function handleBatchImport() {
                                 <table style="width: 100%; border-collapse: collapse; font-size: 13px; color: #334155;">
                                     <tr style="border-bottom: 1px solid #e2e8f0;">
                                         <td style="padding: 10px 0; font-weight: bold; width: 150px; color: #64748b; text-transform: uppercase;">Faculty Initials</td>
-                                        <td style="padding: 10px 0; font-weight: 600; color: #0f172a;">${row.resolvedFaculty} (${row.facultyName})</td>
+                                        <td style="padding: 10px 0; font-weight: 600; color: #0f172a;">${row.resolvedFaculty} (${row.facultyName || row.facultyLabel})</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #e2e8f0;">
                                         <td style="padding: 10px 0; font-weight: bold; color: #64748b; text-transform: uppercase;">Session Date</td>
@@ -1164,7 +1702,7 @@ async function handleBatchImport() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(sheetsPayload)
             });
-            
+
             if (!sheetRes.ok) {
                 let errMsg = 'Google sheet proxy write failed';
                 try {
@@ -1172,7 +1710,7 @@ async function handleBatchImport() {
                     if (errData && errData.error) {
                         errMsg = errData.error + (errData.details ? " (" + errData.details + ")" : "");
                     }
-                } catch (e) {}
+                } catch (e) { }
                 throw new Error(errMsg);
             }
 
@@ -1238,7 +1776,7 @@ async function handleBatchImport() {
 
     progressBarFill.style.width = "100%";
     progressPercent.innerText = "100%";
-    
+
     let summaryText = `Completed: ${successCount} imported successfully`;
     if (duplicateCount > 0) summaryText += `, ${duplicateCount} duplicate(s) skipped`;
     if (failCount > 0) summaryText += `, ${failCount} failed`;
@@ -1259,10 +1797,10 @@ async function handleBatchImport() {
         document.getElementById("val-imported").innerText = successCount;
         document.getElementById("val-missing").innerText = failCount;
         document.getElementById("val-duplicate").innerText = duplicateCount;
-        
+
         const statusBox = document.getElementById("val-status-box");
         const detailsBox = document.getElementById("val-mismatch-details");
-        
+
         if (failCount === 0) {
             statusBox.style.background = "rgba(16, 185, 129, 0.2)";
             statusBox.style.color = "#10b981";
@@ -1274,7 +1812,7 @@ async function handleBatchImport() {
             statusBox.style.color = "#ef4444";
             statusBox.style.border = "1px solid #ef4444";
             statusBox.innerText = "✗ Mismatch";
-            
+
             detailsBox.style.display = "block";
             detailsBox.innerHTML = `<strong>Error Details:</strong><br>` + errorDetails.join("<br>");
         }
@@ -1283,7 +1821,7 @@ async function handleBatchImport() {
     let finalMsg = `Excel Import complete: ${successCount} success`;
     if (duplicateCount > 0) finalMsg += `, ${duplicateCount} skipped duplicates`;
     if (failCount > 0) finalMsg += `, ${failCount} failed`;
-    
+
     if (failCount > 0) {
         alert(finalMsg + "\n\nError details:\n" + errorDetails.join("\n"));
     } else {
@@ -1353,11 +1891,13 @@ function initDepartmentToggle() {
 
     if (!itBtn || !ceBtn) return;
 
-    itBtn.addEventListener("click", () => {
+    itBtn.addEventListener("click", (e) => {
+        if (e) e.preventDefault();
         setDepartment("Information Technology");
     });
 
-    ceBtn.addEventListener("click", () => {
+    ceBtn.addEventListener("click", (e) => {
+        if (e) e.preventDefault();
         setDepartment("Computer Engineering");
     });
 }
