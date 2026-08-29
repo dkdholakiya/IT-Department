@@ -714,57 +714,15 @@ function syncImportModalCcRecipients() {
     const itHodEmail = "sbchauhan@gmiu.edu.in";
     const ceHodEmail = "ehunagar@gmiu.edu.in";
 
-    let hasItRows = false;
-    let hasCeRows = false;
-
-    // Inspect all checked rows in the batch import preview modal table
-    const checkedBoxes = document.querySelectorAll(".pdf-row-checkbox:checked");
-    checkedBoxes.forEach(cb => {
-        const index = parseInt(cb.getAttribute("data-index"), 10);
-        if (typeof pdfParsedData !== "undefined" && pdfParsedData && pdfParsedData[index]) {
-            const dept = pdfParsedData[index].selectedDept;
-            if (dept === "Information Technology" || dept === "IT") {
-                hasItRows = true;
-            } else if (dept === "Computer Engineering" || dept === "CE") {
-                hasCeRows = true;
-            }
-        }
-    });
-
-    // If no checkboxes are currently checked, check all rows in pdfParsedData
-    if (!hasItRows && !hasCeRows && typeof pdfParsedData !== "undefined" && pdfParsedData && pdfParsedData.length > 0) {
-        pdfParsedData.forEach(row => {
-            const dept = row.selectedDept;
-            if (dept === "Information Technology" || dept === "IT") hasItRows = true;
-            if (dept === "Computer Engineering" || dept === "CE") hasCeRows = true;
-        });
-    }
-
-    // Fallback to active currentDepartment if still empty
-    if (!hasItRows && !hasCeRows) {
-        if (typeof currentDepartment !== "undefined" && currentDepartment === "Computer Engineering") {
-            hasCeRows = true;
-        } else {
-            hasItRows = true;
-        }
-    }
-
-    let requiredEmails = [dhavalEmail];
-    if (hasItRows) requiredEmails.push(itHodEmail);
-    if (hasCeRows) requiredEmails.push(ceHodEmail);
+    let requiredEmails = [dhavalEmail, itHodEmail, ceHodEmail];
 
     let currentText = importCcInput.value.trim();
-    let existingEmails = currentText ? currentText.split(/[\s,;]+/).map(e => e.trim()).filter(Boolean) : [];
+    let existingParts = currentText ? currentText.split(/[\s,;]+/).map(e => e.trim()).filter(Boolean) : [];
 
-    // Retain any additional custom email addresses entered by user, but enforce required HOD emails
-    let finalEmails = [...requiredEmails];
-    existingEmails.forEach(email => {
-        if (!finalEmails.includes(email) && email !== dhavalEmail && email !== itHodEmail && email !== ceHodEmail) {
-            finalEmails.push(email);
-        }
-    });
+    let customEmails = existingParts.filter(email => !requiredEmails.includes(email));
 
-    importCcInput.value = Array.from(new Set(finalEmails)).join(", ") + ", ";
+    let finalCc = [...requiredEmails, ...customEmails];
+    importCcInput.value = Array.from(new Set(finalCc)).join(", ") + ", ";
 }
 
 // ── Personal Timetable Matching Utility ──
@@ -1973,11 +1931,7 @@ function getDefaultCcForDept(dept) {
     const itHodEmail = "sbchauhan@gmiu.edu.in";
     const ceHodEmail = "ehunagar@gmiu.edu.in";
 
-    if (dept === "Computer Engineering" || dept === "CE") {
-        return [dhavalEmail, ceHodEmail];
-    } else {
-        return [dhavalEmail, itHodEmail];
-    }
+    return [dhavalEmail, itHodEmail, ceHodEmail];
 }
 
 function updateCcFieldForDept(dept) {
@@ -1990,31 +1944,15 @@ function updateCcFieldForDept(dept) {
 
     let currentVal = ccInput.value.trim();
     if (!currentVal) {
-        const defaults = getDefaultCcForDept(dept);
-        ccInput.value = defaults.join(", ") + ", ";
+        ccInput.value = [dhavalEmail, itHodEmail, ceHodEmail].join(", ") + ", ";
         return;
     }
 
     let parts = currentVal.split(/[\s,;]+/).map(e => e.trim()).filter(Boolean);
 
-    // Always ensure Dhaval Sir is included
-    if (!parts.includes(dhavalEmail)) {
-        parts.unshift(dhavalEmail);
-    }
-
-    if (dept === "Computer Engineering" || dept === "CE") {
-        parts = parts.filter(e => e !== itHodEmail);
-        if (!parts.includes(ceHodEmail)) {
-            const idx = parts.indexOf(dhavalEmail);
-            parts.splice(idx >= 0 ? idx + 1 : 0, 0, ceHodEmail);
-        }
-    } else {
-        parts = parts.filter(e => e !== ceHodEmail);
-        if (!parts.includes(itHodEmail)) {
-            const idx = parts.indexOf(dhavalEmail);
-            parts.splice(idx >= 0 ? idx + 1 : 0, 0, itHodEmail);
-        }
-    }
+    if (!parts.includes(dhavalEmail)) parts.push(dhavalEmail);
+    if (!parts.includes(itHodEmail)) parts.push(itHodEmail);
+    if (!parts.includes(ceHodEmail)) parts.push(ceHodEmail);
 
     ccInput.value = Array.from(new Set(parts)).join(", ") + ", ";
 }

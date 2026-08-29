@@ -187,7 +187,7 @@
                         <div class="form-group">
                             <label for="entry-cc">CC Email Recipient(s) <span style="font-size: 10.5px; color: var(--text-dim); text-transform: none; font-weight: normal;">(Default: HOD & Incharge HOD)</span></label>
                             <div class="search-select-wrap">
-                                <input type="text" id="entry-cc" placeholder="e.g. drchandarana@gmiu.edu.in, sbchauhan@gmiu.edu.in" autocomplete="off">
+                                <input type="text" id="entry-cc" placeholder="e.g. drchandarana@gmiu.edu.in, sbchauhan@gmiu.edu.in, ehunagar@gmiu.edu.in" autocomplete="off">
                                 <div class="search-dropdown-list" id="ccDropdownList"></div>
                             </div>
                         </div>
@@ -256,7 +256,7 @@
                 <div class="form-group" style="margin-bottom: 6px;">
                     <label for="import-cc" style="font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">CC Email Recipient(s) <span style="font-size: 11px; color: #64748b; text-transform: none; font-weight: normal;">(Optional, for batch email dispatch)</span></label>
                     <div class="search-select-wrap">
-                        <input type="text" id="import-cc" placeholder="e.g. sbchauhan@gmiu.edu.in, drchandarana@gmiu.edu.in" autocomplete="off" style="width: 100%; padding: 8px 12px; font-size: 13px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--zs-border); border-radius: 8px; color: #f8fafc;">
+                        <input type="text" id="import-cc" placeholder="e.g. drchandarana@gmiu.edu.in, sbchauhan@gmiu.edu.in, ehunagar@gmiu.edu.in" autocomplete="off" style="width: 100%; padding: 8px 12px; font-size: 13px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--zs-border); border-radius: 8px; color: #f8fafc;">
                         <div class="search-dropdown-list" id="importCcDropdownList"></div>
                     </div>
                 </div>
