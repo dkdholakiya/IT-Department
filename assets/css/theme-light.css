@@ -2910,4 +2910,186 @@ html[data-theme="light"] .erp-close-btn {
 html[data-theme="light"] .erp-close-btn:hover {
     background: #f1f5f9 !important;
     color: #0f172a !important;
+}
+
+/* ── Excel Import Preview Modal in Light Mode ── */
+html[data-theme="light"] .zs-modal-overlay {
+    background: rgba(15, 23, 42, 0.45) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+}
+
+html[data-theme="light"] .zs-modal-card,
+html[data-theme="light"] .zs-modal-header,
+html[data-theme="light"] .zs-modal-body,
+html[data-theme="light"] .zs-modal-footer,
+html[data-theme="light"] .zs-modal-table,
+html[data-theme="light"] .zs-modal-table th,
+html[data-theme="light"] .zs-modal-table td,
+html[data-theme="light"] .zs-row-dept-select,
+html[data-theme="light"] #import-cc,
+html[data-theme="light"] .zs-tt-badge {
+    font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+html[data-theme="light"] .zs-modal-card {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.22), 0 4px 12px rgba(15, 23, 42, 0.08) !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .zs-modal-header {
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] .zs-modal-header h3 {
+    font-family: 'Merriweather Sans', sans-serif !important;
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    font-size: 18px !important;
+}
+
+html[data-theme="light"] .zs-modal-close {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .zs-modal-close:hover {
+    color: #ef4444 !important;
+}
+
+html[data-theme="light"] .zs-modal-intro {
+    color: #475569 !important;
+    font-weight: 600 !important;
+}
+
+html[data-theme="light"] #import-cc {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    font-weight: 600 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-theme="light"] #import-cc:focus {
+    border-color: #c0392b !important;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15) !important;
+}
+
+html[data-theme="light"] body.ce-active #import-cc:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+}
+
+html[data-theme="light"] .zs-table-container {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+}
+
+html[data-theme="light"] .zs-modal-table {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .zs-modal-table th {
+    background: #f1f5f9 !important;
+    color: #334155 !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+    font-weight: 800 !important;
+    font-size: 11.5px !important;
+    letter-spacing: 0.5px !important;
+}
+
+html[data-theme="light"] .zs-modal-table td {
+    color: #0f172a !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    font-size: 12px !important;
+}
+
+html[data-theme="light"] .zs-modal-table td strong {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+}
+
+html[data-theme="light"] .zs-modal-table tbody tr {
+    background: #ffffff !important;
+}
+
+html[data-theme="light"] .zs-modal-table tbody tr:nth-child(even) {
+    background: #f8fafc !important;
+}
+
+html[data-theme="light"] .zs-modal-table tbody tr:hover {
+    background: #f1f5f9 !important;
+}
+
+html[data-theme="light"] .zs-row-dept-select {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* ── Light Mode Badges (High Contrast Sans-Serif) ── */
+html[data-theme="light"] .zs-tt-badge {
+    font-family: 'Merriweather Sans', sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 11px !important;
+    letter-spacing: 0.3px !important;
+    border-radius: 6px !important;
+    padding: 4px 10px !important;
+}
+
+html[data-theme="light"] .zs-tt-badge.tt-matched {
+    background: #ecfdf5 !important;
+    color: #047857 !important;
+    border: 1px solid #a7f3d0 !important;
+}
+
+html[data-theme="light"] .zs-tt-badge.tt-both-matched {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border: 1px solid #86efac !important;
+    box-shadow: 0 2px 6px rgba(22, 163, 74, 0.15) !important;
+}
+
+html[data-theme="light"] .zs-tt-badge.tt-student-matched {
+    background: #f3e8ff !important;
+    color: #7e22ce !important;
+    border: 1px solid #d8b4fe !important;
+}
+
+html[data-theme="light"] .zs-tt-badge.tt-mismatch {
+    background: #fff7ed !important;
+    color: #c2410c !important;
+    border: 1px solid #ffedd5 !important;
+}
+
+html[data-theme="light"] .zs-tt-badge.tt-unscheduled {
+    background: #fef2f2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
+}
+
+html[data-theme="light"] .zs-tt-badge.tt-no-data {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html[data-theme="light"] .zs-modal-footer {
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] .zs-modal-btn.secondary {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #334155 !important;
+}
+
+html[data-theme="light"] .zs-modal-btn.secondary:hover {
+    background: #f1f5f9 !important;
+    border-color: #94a3b8 !important;
 }
