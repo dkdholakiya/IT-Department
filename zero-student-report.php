@@ -273,19 +273,19 @@
                 </div>
 
                 <!-- Validation Summary Section -->
-                <div class="zs-validation-summary-container" id="validationSummaryContainer" style="display: none; margin-top: 15px; padding: 12px; background: rgba(30, 41, 59, 0.5); border-radius: 8px; border: 1px solid #334155; font-size: 13px;">
-                    <h4 style="margin: 0 0 8px 0; color: #f8fafc; font-size: 14px; font-weight: 600;">Validation Summary</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; color: #94a3b8; font-family: monospace;">
-                        <div>Total rows detected in Excel: <span id="val-total" style="color: #f8fafc; font-weight: bold;">0</span></div>
-                        <div>Eligible rows after filtering: <span id="val-eligible" style="color: #f8fafc; font-weight: bold;">0</span></div>
-                        <div>Rows imported: <span id="val-imported" style="color: #34d399; font-weight: bold;">0</span></div>
-                        <div>Missing rows: <span id="val-missing" style="color: #ef4444; font-weight: bold;">0</span></div>
-                        <div>Duplicate rows: <span id="val-duplicate" style="color: #fb923c; font-weight: bold;">0</span></div>
+                <div class="zs-validation-summary-container" id="validationSummaryContainer" style="display: none;">
+                    <h4 class="val-summary-title">Validation Summary</h4>
+                    <div class="val-summary-grid">
+                        <div>Total rows detected in Excel: <span id="val-total" class="val-num">0</span></div>
+                        <div>Eligible rows after filtering: <span id="val-eligible" class="val-num">0</span></div>
+                        <div>Rows imported: <span id="val-imported" class="val-num val-success-num">0</span></div>
+                        <div>Missing rows: <span id="val-missing" class="val-num val-danger-num">0</span></div>
+                        <div>Duplicate rows: <span id="val-duplicate" class="val-num val-warning-num">0</span></div>
                     </div>
-                    <div id="val-status-box" style="margin-top: 12px; padding: 8px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 14px;">
+                    <div id="val-status-box" class="val-status-box">
                         <!-- Status text here -->
                     </div>
-                    <div id="val-mismatch-details" style="display: none; margin-top: 10px; max-height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; color: #ef4444; padding: 6px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                    <div id="val-mismatch-details" class="val-mismatch-details" style="display: none;">
                         <!-- List of missing/duplicate records -->
                     </div>
                 </div>

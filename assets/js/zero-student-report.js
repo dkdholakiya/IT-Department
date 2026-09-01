@@ -1760,15 +1760,11 @@ async function handleBatchImport() {
         const detailsBox = document.getElementById("val-mismatch-details");
 
         if (failCount === 0) {
-            statusBox.style.background = "rgba(16, 185, 129, 0.2)";
-            statusBox.style.color = "#10b981";
-            statusBox.style.border = "1px solid #10b981";
+            statusBox.className = "val-status-box success";
             statusBox.innerText = "✓ Perfect Match";
             detailsBox.style.display = "none";
         } else {
-            statusBox.style.background = "rgba(239, 68, 68, 0.2)";
-            statusBox.style.color = "#ef4444";
-            statusBox.style.border = "1px solid #ef4444";
+            statusBox.className = "val-status-box error";
             statusBox.innerText = "✗ Mismatch";
 
             detailsBox.style.display = "block";

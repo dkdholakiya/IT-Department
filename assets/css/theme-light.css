@@ -3092,4 +3092,63 @@ html[data-theme="light"] .zs-modal-btn.secondary {
 html[data-theme="light"] .zs-modal-btn.secondary:hover {
     background: #f1f5f9 !important;
     border-color: #94a3b8 !important;
+}
+
+/* ── Validation Summary Section & Progress Bar (Light Theme) ── */
+html[data-theme="light"] .zs-validation-summary-container {
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+html[data-theme="light"] .val-summary-title {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+html[data-theme="light"] .val-summary-grid {
+    color: #475569 !important;
+}
+
+html[data-theme="light"] .val-num {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .val-success-num { color: #047857 !important; }
+html[data-theme="light"] .val-danger-num { color: #b91c1c !important; }
+html[data-theme="light"] .val-warning-num { color: #c2410c !important; }
+
+html[data-theme="light"] .val-status-box {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .val-status-box.success {
+    background: #ecfdf5 !important;
+    color: #047857 !important;
+    border: 1px solid #a7f3d0 !important;
+}
+
+html[data-theme="light"] .val-status-box.error {
+    background: #fef2f2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
+}
+
+html[data-theme="light"] .val-mismatch-details {
+    background: #fff5f5 !important;
+    border: 1px solid #fecaca !important;
+    color: #991b1b !important;
+}
+
+html[data-theme="light"] .zs-import-progress-container {
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html[data-theme="light"] .zs-progress-header {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .zs-progress-bar-bg {
+    background: #e2e8f0 !important;
 }

@@ -1525,3 +1525,73 @@ body {
     color: #94a3b8;
     border: 1px solid rgba(148, 163, 184, 0.3);
 }
+
+/* ── Validation Summary Section (Dark Theme Base) ── */
+.zs-validation-summary-container {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 15px;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.val-summary-title {
+    margin: 0 0 8px 0;
+    color: #f8fafc;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.val-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    color: #94a3b8;
+    font-family: monospace;
+}
+
+.val-num {
+    color: #f8fafc;
+    font-weight: bold;
+}
+
+.val-success-num { color: #34d399; }
+.val-danger-num { color: #ef4444; }
+.val-warning-num { color: #fb923c; }
+
+.val-status-box {
+    margin-top: 12px;
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.val-status-box.success {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border: 1px solid #10b981;
+}
+
+.val-status-box.error {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid #ef4444;
+}
+
+.val-mismatch-details {
+    margin-top: 10px;
+    max-height: 100px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 11px;
+    color: #f87171;
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
