@@ -2450,6 +2450,7 @@ html[data-theme="light"] .zip-warning-notice {
     border: 1px solid #fde68a !important;
     color: #92400e !important;
 }
+
 html[data-theme="light"] .zip-warning-notice i {
     color: #d97706 !important;
 }
@@ -2460,21 +2461,26 @@ html[data-theme="light"] .zip-size-modal-content {
     color: #0f172a !important;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18) !important;
 }
+
 html[data-theme="light"] .zip-modal-icon {
     color: #d97706 !important;
 }
+
 html[data-theme="light"] .zip-modal-title {
     color: #0f172a !important;
     -webkit-text-fill-color: #0f172a !important;
 }
+
 html[data-theme="light"] .zip-modal-text {
     color: #334155 !important;
 }
+
 html[data-theme="light"] .zip-modal-btn {
     background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
     color: #ffffff !important;
     box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35) !important;
 }
+
 html[data-theme="light"] .zip-modal-btn:hover {
     background: linear-gradient(135deg, #b45309 0%, #78350f 100%) !important;
     color: #ffffff !important;
@@ -2559,7 +2565,7 @@ html[data-theme="light"] .student-tt-card table {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04) !important;
 }
 
-html[data-theme="light"] .student-tt-card th, 
+html[data-theme="light"] .student-tt-card th,
 html[data-theme="light"] .student-tt-card td {
     border: 1px solid #cbd5e1 !important;
     color: #0f172a !important;
@@ -3114,9 +3120,17 @@ html[data-theme="light"] .val-num {
     color: #0f172a !important;
 }
 
-html[data-theme="light"] .val-success-num { color: #047857 !important; }
-html[data-theme="light"] .val-danger-num { color: #b91c1c !important; }
-html[data-theme="light"] .val-warning-num { color: #c2410c !important; }
+html[data-theme="light"] .val-success-num {
+    color: #047857 !important;
+}
+
+html[data-theme="light"] .val-danger-num {
+    color: #b91c1c !important;
+}
+
+html[data-theme="light"] .val-warning-num {
+    color: #c2410c !important;
+}
 
 html[data-theme="light"] .val-status-box {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
@@ -3151,4 +3165,209 @@ html[data-theme="light"] .zs-progress-header {
 
 html[data-theme="light"] .zs-progress-bar-bg {
     background: #e2e8f0 !important;
-}
+}
+
+/* ══════════════════════════════════════════════════════════
+   SYLLABUS CHECK MODULE — LIGHT THEME OVERRIDES
+   ══════════════════════════════════════════════════════════ */
+
+/* Scrollbar in light mode */
+html[data-theme="light"] .syl-page ::-webkit-scrollbar-track { background: #f1f5f9 !important; }
+html[data-theme="light"] .syl-page ::-webkit-scrollbar-thumb { background: rgba(192,57,43,0.3) !important; border-color: #f1f5f9 !important; }
+
+/* Header */
+html[data-theme="light"] .rp-dept-badge {
+    background: rgba(192, 57, 43, 0.08) !important;
+    border-color: rgba(192, 57, 43, 0.25) !important;
+    color: #991b1b !important;
+}
+
+html[data-theme="light"] .rp-badge-dot {
+    background: #10b981 !important;
+    box-shadow: 0 0 8px #10b981 !important;
+}
+
+html[data-theme="light"] .rp-title {
+    background: linear-gradient(130deg, #0f172a 0%, #1e293b 55%, #334155 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+html[data-theme="light"] .back-btn {
+    background: rgba(255, 255, 255, 0.88) !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #334155 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .back-btn:hover {
+    color: #c0392b !important;
+    border-color: rgba(192, 57, 43, 0.4) !important;
+    background: rgba(192, 57, 43, 0.08) !important;
+}
+
+html[data-theme="light"] .portal-badge {
+    background: rgba(255, 255, 255, 0.88) !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #334155 !important;
+}
+
+/* Input Card */
+html[data-theme="light"] .syl-input-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.03) !important;
+}
+
+html[data-theme="light"] .syl-input-card-title { color: #0f172a !important; }
+html[data-theme="light"] .syl-input-card-desc  { color: #475569 !important; }
+
+html[data-theme="light"] .syl-url-input {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-theme="light"] .syl-url-input::placeholder { color: #94a3b8 !important; }
+
+html[data-theme="light"] .syl-url-input:hover {
+    border-color: rgba(192, 57, 43, 0.4) !important;
+    background: #ffffff !important;
+}
+
+html[data-theme="light"] .syl-url-input:focus {
+    border-color: rgba(192, 57, 43, 0.6) !important;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15) !important;
+    background: #ffffff !important;
+}
+
+html[data-theme="light"] .syl-url-icon { color: #94a3b8 !important; }
+html[data-theme="light"] .syl-url-clear { color: #94a3b8 !important; }
+html[data-theme="light"] .syl-url-clear:hover { color: #c0392b !important; }
+
+/* Stat Cards */
+html[data-theme="light"] .stat-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05), 0 1px 4px rgba(15, 23, 42, 0.03) !important;
+}
+
+html[data-theme="light"] .stat-card:hover {
+    border-color: rgba(192, 57, 43, 0.25) !important;
+    box-shadow: 0 10px 30px rgba(192, 57, 43, 0.08), 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+}
+
+html[data-theme="light"] .stat-card-val { color: #c0392b !important; }
+html[data-theme="light"] .stat-card-lbl { color: #64748b !important; }
+
+html[data-theme="light"] .syl-export-btn {
+    background: #ecfdf5 !important;
+    border-color: #a7f3d0 !important;
+    color: #047857 !important;
+}
+
+html[data-theme="light"] .syl-export-btn:hover {
+    background: #d1fae5 !important;
+    border-color: #6ee7b7 !important;
+    color: #065f46 !important;
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.18) !important;
+}
+
+/* Semester Tabs */
+html[data-theme="light"] .syl-sem-tab {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #475569 !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .syl-sem-tab:hover {
+    color: #0f172a !important;
+    border-color: rgba(192, 57, 43, 0.35) !important;
+    background: rgba(192, 57, 43, 0.05) !important;
+}
+
+html[data-theme="light"] .syl-sem-tab.active {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 60%, #9b2226 100%) !important;
+    border-color: transparent !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(192, 57, 43, 0.3) !important;
+}
+
+/* Table Card */
+html[data-theme="light"] .syl-table-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.03) !important;
+}
+
+html[data-theme="light"] .syl-table-card-head {
+    border-bottom: 1px solid #e2e8f0 !important;
+    background: #f8fafc !important;
+}
+
+html[data-theme="light"] .syl-table-card-title { color: #0f172a !important; }
+
+html[data-theme="light"] .syl-count-badge {
+    background: #ecfdf5 !important;
+    border-color: #a7f3d0 !important;
+    color: #047857 !important;
+}
+
+html[data-theme="light"] .syl-table thead th {
+    background: #f1f5f9 !important;
+    color: #64748b !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] .syl-table tbody td {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+html[data-theme="light"] .syl-table tbody tr:hover td {
+    background: #f8fafc !important;
+}
+
+html[data-theme="light"] .code-pill {
+    background: #eff6ff !important;
+    border-color: #bfdbfe !important;
+    color: #1d4ed8 !important;
+}
+
+html[data-theme="light"] .code-pill:hover {
+    background: #dbeafe !important;
+    border-color: #93c5fd !important;
+}
+
+html[data-theme="light"] .credit-num { color: #c0392b !important; }
+html[data-theme="light"] .subj-name  { color: #0f172a !important; }
+html[data-theme="light"] .subj-short { color: #64748b !important; }
+
+/* Loading & Alert */
+html[data-theme="light"] .syl-loading {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
+}
+
+html[data-theme="light"] .syl-loading-title { color: #0f172a !important; }
+html[data-theme="light"] .syl-loading-desc  { color: #475569 !important; }
+
+html[data-theme="light"] .syl-alert {
+    background: #fef2f2 !important;
+    border: 1px solid #fecaca !important;
+    color: #991b1b !important;
+}
+
+html[data-theme="light"] .syl-alert-title { color: #991b1b !important; }
+html[data-theme="light"] .syl-alert-msg   { color: #b91c1c !important; }
+
+/* Filter bar in light mode */
+html[data-theme="light"] .syl-filter-wrap .zs-segment-control {
+    background: rgba(241, 245, 249, 0.9) !important;
+    border: 1px solid rgba(203, 213, 225, 0.9) !important;
+}

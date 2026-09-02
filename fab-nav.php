@@ -38,6 +38,14 @@ $active_page = isset($active_page) ? $active_page : 'home';
             </svg>
             Report Request
         </a>
+        <a href="syllabus" class="fab-link <?php echo ($active_page === 'syllabus' || $active_page === 'website') ? 'active' : ''; ?>" id="nav-syllabus">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                <path d="M6 6h10"></path>
+                <path d="M6 10h10"></path>
+            </svg>
+            Syllabus Check
+        </a>
     
         <a href="timetable" class="fab-link <?php echo ($active_page === 'timetable') ? 'active' : ''; ?>" id="nav-timetable">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
