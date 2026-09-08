@@ -233,12 +233,8 @@
     <!-- Page Logic Script -->
     <script src="assets/js/zero-student-report.js"></script>
 
-    <!-- Clear session for password prompt on refresh -->
+    <!-- Session is managed server-side; no client-side clear needed -->
     <script>
-        window.addEventListener('load', () => {
-            fetch('verify-password?action=clear');
-        });
-
         // Redundant FAB toggle logic removed
     </script>
 
