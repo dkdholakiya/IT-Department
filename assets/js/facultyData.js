@@ -767,4 +767,18 @@ const facultyData = [
         setting: "",
         link: ""
     },
+    {
+        id: "blv",
+        name: "Prof. Bhavesh Vyas",
+        designation: "Associate Professor",
+        department: "Computer Engineering",
+        empId: "#10604",
+        email: "blvyas@gmiu.edu.in",
+        phone: "8952010792",
+        avatarClass: "av-blv",
+        initials: "BLV",
+        setting: "",
+        link: ""
+    }
 ];
+
