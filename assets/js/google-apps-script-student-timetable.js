@@ -52,7 +52,9 @@ function doGet(e) {
   }
 }
 
-// Run this function ONCE in editor to approve UrlFetch permission prompt
+// Run this function ONCE in editor to approve UrlFetch & Drive permissions prompt
 function authorizeScript() {
+  DriveApp.getRootFolder();
+  SpreadsheetApp.getActiveSpreadsheet();
   UrlFetchApp.fetch("https://docs.google.com");
 }
