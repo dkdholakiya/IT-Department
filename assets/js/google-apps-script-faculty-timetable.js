@@ -18,15 +18,30 @@ function doGet(e) {
       }
     } catch(err) {}
 
-    var url = "https://docs.google.com/spreadsheets/d/" + sheetId + "/export?format=xlsx";
     var token = ScriptApp.getOAuthToken();
+    var response = null;
 
-    var response = UrlFetchApp.fetch(url, {
-      headers: {
-        'Authorization': 'Bearer ' + token
-      },
-      muteHttpExceptions: true
-    });
+    // Method 1: Official Drive API v3 Export (Works on Domain/Restricted Sheets)
+    try {
+      var driveUrl = "https://www.googleapis.com/drive/v3/files/" + sheetId + "/export?mimeType=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      response = UrlFetchApp.fetch(driveUrl, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+        muteHttpExceptions: true
+      });
+    } catch(err1) {}
+
+    // Method 2: Direct Docs Export Fallback
+    if (!response || response.getResponseCode() !== 200) {
+      var docsUrl = "https://docs.google.com/spreadsheets/d/" + sheetId + "/export?format=xlsx";
+      response = UrlFetchApp.fetch(docsUrl, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+        muteHttpExceptions: true
+      });
+    }
 
     if (response.getResponseCode() !== 200) {
       return ContentService.createTextOutput(JSON.stringify({
