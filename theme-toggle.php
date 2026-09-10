@@ -10,7 +10,7 @@
 <!-- Immediate Early Script to prevent FOUC (Flash of Unstyled Content) -->
 <script>
     (function() {
-        const savedTheme = localStorage.getItem('gmiu_theme') || 'light';
+        const savedTheme = localStorage.getItem('gmiu_theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
     })();
 </script>
@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Update tooltip title based on active theme
     function updateTooltip() {
-        const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+        const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
         if (currentTheme === "light") {
             themeBtn.setAttribute("title", "Switch to Dark Theme");
             themeBtn.setAttribute("aria-label", "Switch to Dark Theme");
@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let transitionTimer = null;
 
     themeBtn.addEventListener("click", function() {
-        const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+        const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
         const newTheme = (currentTheme === "dark") ? "light" : "dark";
 
         // Add smooth global transition class to root html element

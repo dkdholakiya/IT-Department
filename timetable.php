@@ -79,7 +79,9 @@ $jsDataExists = file_exists($jsDataFile);
                 <h1 class="rp-title" id="pageTitleMain">Faculty Timetable Viewer</h1>
             </div>
 
-            <span class="portal-badge" id="portalBadge">IT Timetable</span>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span class="portal-badge" id="portalBadge">IT Timetable</span>
+            </div>
         </div>
     </header>
 
@@ -92,11 +94,17 @@ $jsDataExists = file_exists($jsDataFile);
                 <div style="font-size: 54px;">📅</div>
                 <h2 style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 800; color: #f87171; margin: 0;">No Timetable Loaded</h2>
                 <p style="color: #94a3b8; font-size: 14.5px; max-width: 500px; line-height: 1.6; margin: 0;">
-                    The schedule Excel file is missing from the uploads folder. Please place the timetable Excel sheet inside the <code>uploads/timetable/</code> directory.
+                    The schedule Excel file is missing from the uploads folder. Please place the timetable Excel sheet inside <code>uploads/timetable/</code> or click below to sync directly from Google Sheets.
                 </p>
-                <div style="margin-top: 10px;">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+                    <button type="button" onclick="quickSyncSheet(event, 'faculty')" class="back-btn" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border-color: #38bdf8; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" class="quick-sync-icon">
+                            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        <span class="quick-sync-text">⚡ Direct Download & Set New Sheet</span>
+                    </button>
                     <a href="update-timetable" class="back-btn" style="text-decoration: none;">
-                        Upload & Sync Database
+                        Upload Local Excel File
                     </a>
                 </div>
             </div>
@@ -109,7 +117,13 @@ $jsDataExists = file_exists($jsDataFile);
                 <p style="color: #94a3b8; font-size: 14.5px; max-width: 500px; line-height: 1.6; margin: 0;">
                     The schedule Excel file is uploaded, but the database has not been compiled yet. Please run the sync utility to compile the timetable details.
                 </p>
-                <div style="margin-top: 10px;">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+                    <button type="button" onclick="quickSyncSheet(event, 'faculty')" class="back-btn" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border-color: #38bdf8; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" class="quick-sync-icon">
+                            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        <span class="quick-sync-text">⚡ Compile & Set Database</span>
+                    </button>
                     <a href="update-timetable" class="back-btn" style="text-decoration: none;">
                         Sync Database
                     </a>
@@ -139,7 +153,7 @@ $jsDataExists = file_exists($jsDataFile);
                     </div>
                 </div>
                 
-                <div class="zs-segment-control" style="margin-top: 0; max-width: 520px; width: 100%; display: flex;">
+                <div class="zs-segment-control" style="margin-top: 0; max-width: 680px; width: 100%; display: flex; flex-wrap: wrap; gap: 4px;">
                     <button type="button" class="segment-btn active" id="dept-it-btn" data-dept="Information Technology">Information Technology</button>
                     <button type="button" class="segment-btn" id="dept-ce-btn" data-dept="Computer Engineering">Computer Engineering</button>
                     <a href="workload-summary" class="segment-btn workload-summary-seg-btn" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
@@ -148,6 +162,12 @@ $jsDataExists = file_exists($jsDataFile);
                         </svg>
                         Workload Summary
                     </a>
+                    <button type="button" onclick="quickSyncSheet(event, 'faculty')" class="segment-btn" style="background: rgba(2, 132, 199, 0.2); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; display: inline-flex; align-items: center; justify-content: center; gap: 6px;" title="Download latest Google Sheet file, remove old file, and refresh">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" class="quick-sync-icon">
+                            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        <span class="quick-sync-text">Sync Live Sheet</span>
+                    </button>
                 </div>
             </div>
 
@@ -292,7 +312,12 @@ $jsDataExists = file_exists($jsDataFile);
     <!-- Timetable Data and Logic -->
     <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
     <script src="<?php echo v_asset('assets/js/timetableData.js'); ?>"></script>
+    <script src="<?php echo v_asset('assets/js/timetableSync.js'); ?>"></script>
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
     <script>
+
         document.addEventListener("DOMContentLoaded", () => {
             const selectTrigger = document.getElementById("selectTrigger");
             if (!selectTrigger) return;

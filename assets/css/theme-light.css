@@ -3371,3 +3371,79 @@ html[data-theme="light"] .syl-filter-wrap .zs-segment-control {
     background: rgba(241, 245, 249, 0.9) !important;
     border: 1px solid rgba(203, 213, 225, 0.9) !important;
 }
+
+/* ══════════════════════════════════════════════════════════
+   Password Sync Authentication Modal (Light Mode Overrides)
+   ══════════════════════════════════════════════════════════ */
+html[data-theme="light"] .sync-auth-overlay-container {
+    background: rgba(15, 23, 42, 0.45) !important;
+}
+
+html[data-theme="light"] .sync-auth-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .sync-auth-close-btn {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .sync-auth-close-btn:hover {
+    color: #0f172a !important;
+    background: rgba(0, 0, 0, 0.06) !important;
+}
+
+html[data-theme="light"] .sync-auth-title {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .sync-auth-subtitle {
+    color: #475569 !important;
+}
+
+html[data-theme="light"] .sync-auth-label {
+    color: #334155 !important;
+}
+
+html[data-theme="light"] .sync-auth-input {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    color-scheme: light !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-theme="light"] .sync-auth-input::placeholder {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="light"] .sync-auth-input:focus {
+    border-color: rgba(239, 68, 68, 0.7) !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+    background: #ffffff !important;
+}
+
+html[data-theme="light"] .sync-auth-toggle-pwd {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .sync-auth-toggle-pwd:hover {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .sync-auth-error {
+    background: rgba(239, 68, 68, 0.08) !important;
+    border: 1px solid rgba(239, 68, 68, 0.25) !important;
+    color: #b91c1c !important;
+}
+
+/* Light Theme Autofill overrides */
+html[data-theme="light"] input:-webkit-autofill,
+html[data-theme="light"] input:-webkit-autofill:hover, 
+html[data-theme="light"] input:-webkit-autofill:focus, 
+html[data-theme="light"] input:-webkit-autofill:active {
+    -webkit-text-fill-color: #0f172a !important;
+    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+}

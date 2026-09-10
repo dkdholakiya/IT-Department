@@ -1,13 +1,29 @@
 <?php
 /**
- * Faculty Timetable Auto-Updater from Excel
+ * Faculty Timetable Auto-Updater & Google Sheets Syncer
  */
 
 require_once __DIR__ . '/timetable-compiler.php';
-$res = compileTimetableData();
-$success = $res['success'] ?? false;
-$message = $res['message'] ?? '';
-$facultyCount = $res['count'] ?? 0;
+require_once __DIR__ . '/sync-timetables.php';
+
+$res = [];
+if (isset($_GET['sync']) && $_GET['sync'] === 'google') {
+    $syncRes = syncFacultyTimetable();
+    if ($syncRes['success']) {
+        $success = true;
+        $message = $syncRes['message'];
+        $facultyCount = $syncRes['count'] ?? 0;
+    } else {
+        $success = false;
+        $message = $syncRes['message'];
+        $facultyCount = 0;
+    }
+} else {
+    $res = compileTimetableData();
+    $success = $res['success'] ?? false;
+    $message = $res['message'] ?? '';
+    $facultyCount = $res['count'] ?? 0;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
