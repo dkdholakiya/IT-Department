@@ -36,6 +36,71 @@ function extractGoogleSheetId($urlOrId) {
     return false;
 }
 
+// Helper function to save Excel file directly from Base64 binary payload
+function saveExcelFromBase64($targetType, $base64Data) {
+    $binary = base64_decode($base64Data);
+    if (!$binary || substr($binary, 0, 4) !== "PK\x03\x04") {
+        return ['success' => false, 'message' => 'Invalid Excel binary payload received.'];
+    }
+    
+    if ($targetType === 'student') {
+        $dir = __DIR__ . '/uploads/student_timetable/';
+        if (!is_dir($dir)) @mkdir($dir, 0777, true);
+        $oldFiles = glob($dir . '*.{xlsx,xls,XLSX,XLS}', GLOB_BRACE);
+        if ($oldFiles) {
+            foreach ($oldFiles as $f) @unlink($f);
+        }
+        @unlink($dir . 'student_timetable_cache.json');
+        
+        $targetFile = $dir . 'student_timetable.xlsx';
+        if (file_put_contents($targetFile, $binary) === false) {
+            return ['success' => false, 'message' => 'Failed to save downloaded Student Excel file to server.'];
+        }
+        
+        $cacheFile = $dir . 'student_timetable_cache.json';
+        $parseRes = parseExcelToTtCache($targetFile, $cacheFile);
+        
+        if (!$parseRes || !file_exists($cacheFile)) {
+            return ['success' => false, 'message' => 'Saved Excel file, but failed to parse Student timetable structure.'];
+        }
+        
+        return [
+            'success' => true,
+            'message' => 'Student Timetable updated & cache rebuilt successfully!',
+            'file' => 'uploads/student_timetable/student_timetable.xlsx',
+            'size' => number_format(strlen($binary) / 1024, 1) . ' KB'
+        ];
+    } else {
+        $dir = __DIR__ . '/uploads/timetable/';
+        if (!is_dir($dir)) @mkdir($dir, 0777, true);
+        $oldFiles = glob($dir . '*.{xlsx,xls,XLSX,XLS}', GLOB_BRACE);
+        if ($oldFiles) {
+            foreach ($oldFiles as $f) @unlink($f);
+        }
+        
+        $targetFile = $dir . 'timetable.xlsx';
+        if (file_put_contents($targetFile, $binary) === false) {
+            return ['success' => false, 'message' => 'Failed to save downloaded Faculty Excel file to server.'];
+        }
+        
+        $compileRes = compileTimetableData();
+        if (!($compileRes['success'] ?? false)) {
+            return [
+                'success' => false,
+                'message' => 'Saved Faculty Excel file, but compilation failed: ' . ($compileRes['message'] ?? 'Unknown error')
+            ];
+        }
+        
+        return [
+            'success' => true,
+            'message' => 'Faculty Timetable downloaded & compiled successfully! (' . ($compileRes['count'] ?? 0) . ' faculty members)',
+            'file' => 'uploads/timetable/timetable.xlsx',
+            'size' => number_format(strlen($binary) / 1024, 1) . ' KB',
+            'count' => $compileRes['count'] ?? 0
+        ];
+    }
+}
+
 // Download sheet via Google Apps Script Web App (if configured)
 function downloadViaAppsScript($targetType) {
     if (!defined('SECURE_ACCESS')) {
@@ -113,8 +178,11 @@ function downloadViaAppsScript($targetType) {
     if ($data === false || ($httpCode !== 200 && $httpCode !== 0)) {
         return [
             'success' => false,
+            'client_fallback' => true,
+            'webapp_url' => $webAppUrl,
+            'target' => $targetType,
             'httpCode' => $httpCode,
-            'message' => 'Failed to reach Apps Script Web App (HTTP ' . $httpCode . ($curlErr ? ' Error: ' . $curlErr : '') . '). Check server internet/cURL access.'
+            'message' => 'Server outbound internet blocked. Switching to browser direct sync...'
         ];
     }
     
@@ -348,7 +416,7 @@ if (empty($action) && php_sapi_name() === 'cli' && isset($argv[1])) {
     }
 }
 
-if (!empty($action) && in_array($action, ['sync_all', 'sync_student', 'sync_faculty', 'cli'])) {
+if (!empty($action) && in_array($action, ['sync_all', 'sync_student', 'sync_faculty', 'save_base64', 'cli'])) {
     // Password authentication check (for Web requests when password_required is enabled)
     if (php_sapi_name() !== 'cli') {
         $configFile = __DIR__ . '/config.php';
@@ -381,6 +449,15 @@ if (!empty($action) && in_array($action, ['sync_all', 'sync_student', 'sync_facu
                 exit;
             }
         }
+    }
+
+    if ($action === 'save_base64') {
+        $targetType = $_REQUEST['target'] ?? 'faculty';
+        $base64 = $_REQUEST['base64'] ?? '';
+        $saveRes = saveExcelFromBase64($targetType, $base64);
+        header('Content-Type: application/json');
+        echo json_encode($saveRes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        exit;
     }
 
     $studentSheetId = $_REQUEST['student_sheet_id'] ?? $DEFAULT_STUDENT_SHEET_ID;
@@ -872,6 +949,26 @@ $ftSize = $ftCurrentFile ? number_format(filesize($ftDir . $ftCurrentFile) / 102
                         runSync(actionType, validPwd);
                     });
                     return;
+                }
+
+                if (data.results) {
+                    let fallbacks = [];
+                    if (data.results.student && data.results.student.client_fallback) fallbacks.push(data.results.student);
+                    if (data.results.faculty && data.results.faculty.client_fallback) fallbacks.push(data.results.faculty);
+                    
+                    if (fallbacks.length > 0) {
+                        btnText.textContent = 'Browser Fetching Sheets...';
+                        let doneCount = 0;
+                        fallbacks.forEach(fb => {
+                            fetchDirectFromAppsScript(fb.webapp_url, fb.target, providedPassword, function(res) {
+                                doneCount++;
+                                if (doneCount >= fallbacks.length) {
+                                    location.reload();
+                                }
+                            });
+                        });
+                        return;
+                    }
                 }
 
                 liveBox.classList.add('show');

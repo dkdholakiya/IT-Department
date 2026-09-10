@@ -128,6 +128,61 @@ function promptSyncPasswordModal(onSuccessCallback) {
     pwdInput.focus();
 }
 
+function fetchDirectFromAppsScript(webappUrl, targetType, providedPassword, callback) {
+    const btnTexts = document.querySelectorAll('.quick-sync-text');
+    const icons = document.querySelectorAll('.quick-sync-icon');
+    
+    btnTexts.forEach(el => el.textContent = 'Browser Downloading Sheet...');
+    
+    const url = webappUrl + (webappUrl.includes('?') ? '&' : '?') + 'target=' + encodeURIComponent(targetType);
+    
+    fetch(url)
+    .then(res => {
+        if (!res.ok) throw new Error('Apps Script Web App HTTP ' + res.status);
+        return res.json();
+    })
+    .then(json => {
+        if (json.success && json.base64) {
+            btnTexts.forEach(el => el.textContent = 'Saving Sheet...');
+            
+            let postBody = 'action=save_base64&target=' + encodeURIComponent(targetType) +
+                           '&password=' + encodeURIComponent(providedPassword || '') +
+                           '&base64=' + encodeURIComponent(json.base64);
+                           
+            return fetch('sync-timetables?action=save_base64', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: postBody
+            })
+            .then(res => res.json())
+            .then(saveRes => {
+                icons.forEach(el => el.style.animation = 'none');
+                if (saveRes.success) {
+                    btnTexts.forEach(el => el.textContent = '✓ Updated!');
+                    if (callback) callback(saveRes);
+                    else setTimeout(() => location.reload(), 500);
+                } else {
+                    btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
+                    alert("⚠️ Save Error: " + (saveRes.message || 'Failed to save base64 binary.'));
+                }
+            });
+        } else {
+            icons.forEach(el => el.style.animation = 'none');
+            btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
+            alert("⚠️ Google Apps Script Error: " + (json.error || 'Failed to fetch spreadsheet.'));
+        }
+    })
+    .catch(err => {
+        icons.forEach(el => el.style.animation = 'none');
+        btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
+        alert("⚠️ Direct Sync Error: " + err.message);
+    });
+}
+
 function quickSyncSheet(e, targetType, providedPassword) {
     if (e) e.preventDefault();
 
@@ -164,15 +219,27 @@ function quickSyncSheet(e, targetType, providedPassword) {
         return res.json();
     })
     .then(data => {
-        icons.forEach(el => el.style.animation = 'none');
-        btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
-
         if (data.auth_required) {
+            icons.forEach(el => el.style.animation = 'none');
+            btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
             promptSyncPasswordModal((validPassword) => {
                 quickSyncSheet(null, targetType, validPassword);
             });
             return;
         }
+
+        // Check if server cURL failed and requested client direct fallback
+        if (data.results) {
+            const key = targetType === 'student' ? 'student' : (data.results.faculty ? 'faculty' : 'student');
+            const resObj = data.results[key];
+            if (resObj && resObj.client_fallback && resObj.webapp_url) {
+                fetchDirectFromAppsScript(resObj.webapp_url, resObj.target, providedPassword);
+                return;
+            }
+        }
+
+        icons.forEach(el => el.style.animation = 'none');
+        btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
 
         if (data.success) {
             btnTexts.forEach(el => el.textContent = '✓ Updated!');
