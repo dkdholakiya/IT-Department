@@ -134,9 +134,9 @@ function fetchDirectFromAppsScript(webappUrl, targetType, providedPassword, call
     
     btnTexts.forEach(el => el.textContent = 'Browser Downloading Sheet...');
     
-    const url = webappUrl + (webappUrl.includes('?') ? '&' : '?') + 'target=' + encodeURIComponent(targetType);
+    const url = webappUrl + (webappUrl.includes('?') ? '&' : '?') + 'target=' + encodeURIComponent(targetType) + '&_t=' + Date.now();
     
-    fetch(url)
+    fetch(url, { cache: 'no-store' })
     .then(res => {
         if (!res.ok) throw new Error('Apps Script Web App HTTP ' + res.status);
         return res.json();

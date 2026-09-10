@@ -129,7 +129,7 @@ function downloadViaAppsScript($targetType) {
         ];
     }
     
-    $url = $webAppUrl . (strpos($webAppUrl, '?') !== false ? '&' : '?') . 'target=' . urlencode($targetType);
+    $url = $webAppUrl . (strpos($webAppUrl, '?') !== false ? '&' : '?') . 'target=' . urlencode($targetType) . '&_t=' . time();
     
     $data = false;
     $httpCode = 0;
