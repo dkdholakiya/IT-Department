@@ -42,7 +42,12 @@ function downloadViaAppsScript($targetType) {
         define('SECURE_ACCESS', true);
     }
     $configFile = __DIR__ . '/config.php';
-    if (!file_exists($configFile)) return false;
+    if (!file_exists($configFile)) {
+        return [
+            'success' => false,
+            'message' => 'config.php file missing on live server.'
+        ];
+    }
     $config = include $configFile;
     
     $webAppUrl = '';
@@ -52,25 +57,65 @@ function downloadViaAppsScript($targetType) {
         $webAppUrl = $config['faculty_timetable_webapp_url'];
     }
     
-    if (empty($webAppUrl)) return false;
+    if (empty($webAppUrl)) {
+        return [
+            'success' => false,
+            'message' => 'Google Apps Script Web App URL is not configured in config.php on live server. Please upload the updated config.php file.'
+        ];
+    }
     
     $url = $webAppUrl . (strpos($webAppUrl, '?') !== false ? '&' : '?') . 'target=' . urlencode($targetType);
     
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    $data = false;
+    $httpCode = 0;
+    $curlErr = '';
     
-    $data = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    // Method 1: cURL
+    if (function_exists('curl_init')) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
+        
+        $data = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlErr = curl_error($ch);
+        curl_close($ch);
+    }
     
-    if ($data === false || $httpCode !== 200) {
-        return false;
+    // Method 2: file_get_contents stream context fallback if cURL failed
+    if (($data === false || $httpCode !== 200) && ini_get('allow_url_fopen')) {
+        $opts = [
+            'http' => [
+                'method' => 'GET',
+                'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n",
+                'follow_location' => 1,
+                'timeout' => 60
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ];
+        $context = stream_context_create($opts);
+        $streamData = @file_get_contents($url, false, $context);
+        if ($streamData !== false) {
+            $data = $streamData;
+            $httpCode = 200;
+        }
+    }
+    
+    if ($data === false || ($httpCode !== 200 && $httpCode !== 0)) {
+        return [
+            'success' => false,
+            'httpCode' => $httpCode,
+            'message' => 'Failed to reach Apps Script Web App (HTTP ' . $httpCode . ($curlErr ? ' Error: ' . $curlErr : '') . '). Check server internet/cURL access.'
+        ];
     }
     
     $json = @json_decode($data, true);
@@ -96,7 +141,7 @@ function downloadViaAppsScript($targetType) {
             return [
                 'success' => false,
                 'httpCode' => $httpCode,
-                'message' => 'Apps Script Web App returned JSON schedule instead of Excel binary. Please update Code.gs with new Apps Script code and re-deploy as New Version.'
+                'message' => 'Apps Script Web App returned JSON schedule instead of Excel binary. Please update Apps Script code and deploy as New Version.'
             ];
         }
     }
@@ -109,7 +154,11 @@ function downloadViaAppsScript($targetType) {
         ];
     }
     
-    return false;
+    return [
+        'success' => false,
+        'httpCode' => $httpCode,
+        'message' => 'Apps Script Web App returned unrecognized response.'
+    ];
 }
 
 // Download file via cURL with redirect following and multiple URL endpoints
@@ -120,7 +169,7 @@ function downloadGoogleSheetXlsx($sheetId, $targetType = 'all') {
         if ($appScriptRes['success'] ?? false) {
             return $appScriptRes;
         }
-        // If Apps Script Web App is configured and returned a specific error message, return it!
+        // If Apps Script Web App returned a specific message, return it directly so user sees real status!
         if (!empty($appScriptRes['message'])) {
             return $appScriptRes;
         }
