@@ -251,6 +251,7 @@ $active_page = 'syllabus';
                                 <th scope="col">T</th>
                                 <th scope="col">P</th>
                                 <th scope="col">Credit</th>
+                                <th scope="col">Syllabus</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
@@ -422,21 +423,46 @@ $active_page = 'syllabus';
 
         if (!rows.length) {
             const tr = document.createElement('tr');
-            tr.innerHTML = '<td colspan="7" style="text-align:center; color:var(--text-muted); padding:32px;">No subject records found for this semester.</td>';
+            tr.innerHTML = '<td colspan="8" style="text-align:center; color:var(--text-muted); padding:32px;">No subject records found for this semester.</td>';
             tableBody.appendChild(tr);
             return;
         }
 
         rows.forEach(row => {
             const tr = document.createElement('tr');
+            const hasLink = row.link && row.link.trim() !== '';
+
+            const codeHtml = hasLink 
+                ? '<a href="' + esc(row.link) + '" target="_blank" rel="noopener noreferrer" class="code-pill code-pill-link" title="Open Syllabus PDF">' + esc(row.code) + '</a>'
+                : '<span class="code-pill">' + esc(row.code) + '</span>';
+
+            const downloadHtml = hasLink
+                ? '<a href="' + esc(row.link) + '" target="_blank" rel="noopener noreferrer" download class="syl-download-btn" title="Download Syllabus PDF">' +
+                    '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">' +
+                        '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>' +
+                        '<polyline points="7 10 12 15 17 10"></polyline>' +
+                        '<line x1="12" y1="15" x2="12" y2="3"></line>' +
+                    '</svg>' +
+                    '<span>Download</span>' +
+                  '</a>'
+                : '<span class="syl-download-btn disabled" title="Syllabus file not available">' +
+                    '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">' +
+                        '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>' +
+                        '<polyline points="7 10 12 15 17 10"></polyline>' +
+                        '<line x1="12" y1="15" x2="12" y2="3"></line>' +
+                    '</svg>' +
+                    '<span>N/A</span>' +
+                  '</span>';
+
             tr.innerHTML =
-                '<td><span class="code-pill">' + esc(row.code) + '</span></td>' +
+                '<td>' + codeHtml + '</td>' +
                 '<td><span class="subj-name">'  + esc(row.name) + '</span></td>' +
                 '<td><span class="subj-short">' + esc(row.short) + '</span></td>' +
                 '<td>' + esc(row.l) + '</td>' +
                 '<td>' + esc(row.t) + '</td>' +
                 '<td>' + esc(row.p) + '</td>' +
-                '<td><span class="credit-num">' + esc(row.credit) + '</span></td>';
+                '<td><span class="credit-num">' + esc(row.credit) + '</span></td>' +
+                '<td>' + downloadHtml + '</td>';
             tableBody.appendChild(tr);
         });
     }
@@ -444,7 +470,7 @@ $active_page = 'syllabus';
     // ─── Export CSV ───
     function exportCSV() {
         if (!parsedData) return;
-        let csv = 'data:text/csv;charset=utf-8,Semester,Subject Code,Subject Name,Short Name,L,T,P,Credit\n';
+        let csv = 'data:text/csv;charset=utf-8,Semester,Subject Code,Subject Name,Short Name,L,T,P,Credit,Syllabus URL\n';
         Object.keys(parsedData).forEach(sem => {
             parsedData[sem].forEach(row => {
                 csv += [
@@ -452,7 +478,8 @@ $active_page = 'syllabus';
                     '"' + row.code + '"',
                     '"' + row.name.replace(/"/g, '""') + '"',
                     '"' + row.short + '"',
-                    row.l, row.t, row.p, row.credit
+                    row.l, row.t, row.p, row.credit,
+                    '"' + (row.link || '') + '"'
                 ].join(',') + '\n';
             });
         });

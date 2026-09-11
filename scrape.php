@@ -68,6 +68,44 @@ if ($httpCode >= 400) {
     exit;
 }
 
+// Helper to convert relative URLs to absolute
+function rel2abs($rel, $base) {
+    if (empty($rel)) return '';
+    if (parse_url($rel, PHP_URL_SCHEME) != '') return $rel;
+    if (str_starts_with($rel, '//')) {
+        $scheme = parse_url($base, PHP_URL_SCHEME) ?: 'https';
+        return $scheme . ':' . $rel;
+    }
+
+    $baseParts = parse_url($base);
+    $scheme = $baseParts['scheme'] ?? 'https';
+    $host = $baseParts['host'] ?? '';
+    $port = isset($baseParts['port']) ? ':' . $baseParts['port'] : '';
+    $path = $baseParts['path'] ?? '/';
+
+    if (str_starts_with($rel, '/')) {
+        return "{$scheme}://{$host}{$port}{$rel}";
+    }
+
+    $dir = dirname($path);
+    if ($dir === '.' || $dir === '/') {
+        $dir = '';
+    }
+
+    $abs = "{$dir}/{$rel}";
+    
+    $stack = [];
+    foreach (explode('/', $abs) as $segment) {
+        if ($segment === '' || $segment === '.') continue;
+        if ($segment === '..') {
+            array_pop($stack);
+        } else {
+            $stack[] = $segment;
+        }
+    }
+    return "{$scheme}://{$host}{$port}/" . implode('/', $stack);
+}
+
 // Parse HTML DOM
 libxml_use_internal_errors(true);
 $dom = new DOMDocument();
@@ -141,6 +179,27 @@ foreach ($tables as $table) {
         $p      = $cells[5 + $offset] ?? '0';
         $credit = $cells[6 + $offset] ?? ($cells[7] ?? '0');
 
+        $link = '';
+        if (isset($cellNodes[0 + $offset])) {
+            $aNodes = $xpath->query('.//a[@href]', $cellNodes[0 + $offset]);
+            if ($aNodes->length > 0) {
+                $rawHref = trim($aNodes->item(0)->getAttribute('href'));
+                if (!empty($rawHref) && $rawHref !== '#') {
+                    $link = rel2abs($rawHref, $url);
+                }
+            }
+        }
+        if (empty($link)) {
+            $aNodes = $xpath->query('.//a[@href]', $tr);
+            foreach ($aNodes as $aNode) {
+                $rawHref = trim($aNode->getAttribute('href'));
+                if (!empty($rawHref) && $rawHref !== '#' && (str_contains(strtolower($rawHref), 'syllabus') || str_contains(strtolower($rawHref), '.pdf'))) {
+                    $link = rel2abs($rawHref, $url);
+                    break;
+                }
+            }
+        }
+
         if (!empty($code) || !empty($name)) {
             $rows[] = [
                 'code'   => $code ?: 'N/A',
@@ -149,7 +208,8 @@ foreach ($tables as $table) {
                 'l'      => $l ?: '0',
                 't'      => $t ?: '0',
                 'p'      => $p ?: '0',
-                'credit' => $credit ?: '0'
+                'credit' => $credit ?: '0',
+                'link'   => $link ?: ''
             ];
             $totalSubjects++;
         }
