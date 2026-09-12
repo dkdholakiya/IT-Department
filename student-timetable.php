@@ -1366,6 +1366,7 @@ if ($excelExists) {
 
     <!-- Data & Excel Parsing Libraries -->
     <?php 
+    if (!defined('SECURE_ACCESS')) define('SECURE_ACCESS', true);
     $config_file = __DIR__ . '/config.php';
     $config = file_exists($config_file) ? include $config_file : [];
     ?>

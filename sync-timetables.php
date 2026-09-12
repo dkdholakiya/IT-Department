@@ -910,6 +910,7 @@ $ftSize = $ftCurrentFile ? number_format(filesize($ftDir . $ftCurrentFile) / 102
     </div>
 
     <?php 
+    if (!defined('SECURE_ACCESS')) define('SECURE_ACCESS', true);
     $configFile = __DIR__ . '/config.php';
     $config = file_exists($configFile) ? include $configFile : [];
     ?>

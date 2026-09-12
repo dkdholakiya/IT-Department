@@ -313,6 +313,7 @@ $jsDataExists = file_exists($jsDataFile);
     <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
     <script src="<?php echo v_asset('assets/js/timetableData.js'); ?>"></script>
     <?php 
+    if (!defined('SECURE_ACCESS')) define('SECURE_ACCESS', true);
     $config_file = __DIR__ . '/config.php';
     $config = file_exists($config_file) ? include $config_file : [];
     ?>

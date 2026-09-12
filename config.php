@@ -38,6 +38,6 @@ return [
 
 
     // Password configuration
-    'password_required' => 1, /// Toggle: 1 to require password, 0 to bypass (matches verify-password.php current state)
+    'password_required' => 1, // Toggle: 1 to require password, 0 to bypass (matches verify-password.php current state)
     'correct_password' => '$2y$10$/uEX4Ru39hvF.sbH7oVCw.HTPqwMzEoqum4fYQqJkkQR3lGA0mWPG', // Bcrypt hash of 'itce@#@#'
 ];

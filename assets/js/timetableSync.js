@@ -94,7 +94,7 @@ function promptSyncPasswordModal(onSuccessCallback) {
         submitBtn.disabled = true;
         submitBtn.style.opacity = '0.7';
 
-        fetch('verify-password', {
+        fetch('verify-password.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ password: pwd })
@@ -149,7 +149,7 @@ function fetchDirectFromAppsScript(webappUrl, targetType, providedPassword, call
                            '&password=' + encodeURIComponent(providedPassword || '') +
                            '&base64=' + encodeURIComponent(json.base64);
                            
-            return fetch('sync-timetables?action=save_base64', {
+            return fetch('sync-timetables.php?action=save_base64', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -198,12 +198,15 @@ function quickSyncSheet(e, targetType, providedPassword) {
     const btnTexts = document.querySelectorAll('.quick-sync-text');
     const icons = document.querySelectorAll('.quick-sync-icon');
     
-    let postBody = 'action=' + encodeURIComponent(action) + '&password=' + encodeURIComponent(providedPassword);
+    let postBody = 'action=' + encodeURIComponent(action);
+    if (providedPassword) {
+        postBody += '&password=' + encodeURIComponent(providedPassword);
+    }
     
     btnTexts.forEach(el => el.textContent = 'Downloading...');
     icons.forEach(el => el.style.animation = 'spin 0.8s linear infinite');
     
-    fetch('sync-timetables?action=' + encodeURIComponent(action), {
+    fetch('sync-timetables.php?action=' + encodeURIComponent(action), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -270,7 +273,7 @@ function quickSyncSheet(e, targetType, providedPassword) {
         : 60000; // default 60 seconds interval
     
     setInterval(function() {
-        fetch('sync-timetables?action=sync_all&auto=1', {
+        fetch('sync-timetables.php?action=sync_all&auto=1', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
