@@ -374,10 +374,7 @@
     </script>
     <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
     <script>
-        // Clear the session on load so that refresh triggers password re-prompt
-        window.addEventListener('load', () => {
-            fetch('verify-password?action=clear');
-        });
+        // Session authenticated for protected page access
 
         // ── Direct ERP Link Modal Popup Logic ──
         const directErpData = (typeof facultyData !== 'undefined' ? facultyData : [])
@@ -1147,7 +1144,7 @@
                 let emailSubject = "CTL Activity Report In Website ERP Upload Documents";
 
                 // Trigger POST request to the local PHP email service
-                fetch('send-email', {
+                fetch('send-email.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

@@ -12,7 +12,12 @@ error_reporting(E_ALL); // Still log all errors internally
 // Configure secure session cookies
 ini_set('session.cookie_httponly', 1);
 ini_set('session.use_only_cookies', 1);
-if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['SERVER_PORT'] == 443)) {
+$isHttps = (
+    (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] == 1)) ||
+    (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
+    (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+);
+if ($isHttps) {
     ini_set('session.cookie_secure', 1);
 }
 
@@ -39,8 +44,12 @@ $password_required = $config['password_required'] ?? 1;
 
 // Determine if user is authenticated
 $authenticated = false;
-if ($password_required == 0 || (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)) {
+if ($password_required == 0) {
     $authenticated = true;
+} else if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true) {
+    $authenticated = true;
+    // Reset session authentication token so every subsequent page refresh requires entering the password again
+    $_SESSION['authenticated'] = false;
 }
 
 if (!$authenticated) {

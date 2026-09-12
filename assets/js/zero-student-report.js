@@ -387,7 +387,7 @@ function handleAddEntry() {
     const ccEmails = filterCcForFaculty(facultyEmail, facInitNormalized, rawCcEmails);
 
     // 5. Submit to Google Sheet via secure backend proxy
-    fetch('proxy-sheets?target=zero', {
+    fetch('proxy-sheets.php?target=zero', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(sheetsPayload)
@@ -406,7 +406,7 @@ function handleAddEntry() {
             }
 
             // 6. Send Email Notification (only if not duplicate!)
-            fetch('send-email', {
+            fetch('send-email.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1700,7 +1700,7 @@ async function handleBatchImport() {
             `;
 
             // Submit sheet
-            const sheetRes = await fetch('proxy-sheets?target=zero', {
+            const sheetRes = await fetch('proxy-sheets.php?target=zero', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(sheetsPayload)
@@ -1746,7 +1746,7 @@ async function handleBatchImport() {
 
             // Send email (catch any connection reset/close errors locally so sheet write success is kept)
             try {
-                await fetch('send-email', {
+                await fetch('send-email.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

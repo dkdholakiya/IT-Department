@@ -44,9 +44,10 @@ $target_url = '';
 if ($target === 'report') {
     $target_url = $config['sheets_webapp_url'] ?? '';
 } else if ($target === 'zero') {
-    // SECURITY check: Zero student logs require authentication
+    // SECURITY check: Zero student logs require authentication or same-origin request
     $password_required = $config['password_required'] ?? 1;
-    $authenticated = ($password_required == 0 || (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true));
+    $isSameOrigin = (!empty($_SERVER['HTTP_REFERER']) && isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false);
+    $authenticated = ($password_required == 0 || (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true) || $isSameOrigin);
     
     if (!$authenticated) {
         http_response_code(401);

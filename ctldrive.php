@@ -254,10 +254,7 @@
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 
     <script>
-        // Clear the session on load so that refresh triggers password re-prompt
-        window.addEventListener('load', () => {
-            fetch('verify-password?action=clear');
-        });
+        // Session authenticated for protected page access
 
         const getAvatarClass = (member) => {
             const legacyClasses = ["av-dc", "av-sw", "av-eu", "av-tv"];
@@ -1568,7 +1565,7 @@
                     </html>
                 `;
 
-                fetch('send-email', {
+                fetch('send-email.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

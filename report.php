@@ -3507,7 +3507,7 @@ Department of CE & IT`;
             const ccSelect = document.getElementById("ccEmails");
             const selectedCcEmails = ccSelect ? Array.from(ccSelect.selectedOptions).map(option => option.value) : [];
 
-            fetch("send-email", {
+            fetch("send-email.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -4185,7 +4185,7 @@ Department of CE & IT`;
                         }
                     }
 
-                    return fetch("send-email", {
+                    return fetch("send-email.php", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -4602,7 +4602,7 @@ Department of CE & IT`;
             };
 
             // ── POST to Backend Sheets Proxy ──
-            fetch('proxy-sheets?target=report', {
+            fetch('proxy-sheets.php?target=report', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)

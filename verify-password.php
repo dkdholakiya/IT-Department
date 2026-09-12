@@ -16,6 +16,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+// Configure secure session cookies before starting session
+ini_set('session.cookie_httponly', 1);
+ini_set('session.use_only_cookies', 1);
+$isHttps = (
+    (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] == 1)) ||
+    (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
+    (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+);
+if ($isHttps) {
+    ini_set('session.cookie_secure', 1);
+}
+
 // Start PHP Session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
