@@ -260,9 +260,14 @@ function quickSyncSheet(e, targetType, providedPassword) {
     });
 }
 
-// ── Auto-Sync Background Scheduler (60 Seconds) ──
+// ── Auto-Sync Background Scheduler ──
 (function initAutoSyncTimer() {
-    const autoSyncIntervalMs = 60000; // 60 seconds interval
+    const autoSyncEnabled = (typeof window.AUTO_SYNC_ENABLED !== 'undefined') ? window.AUTO_SYNC_ENABLED : true;
+    if (!autoSyncEnabled) return;
+
+    const autoSyncIntervalMs = (typeof window.AUTO_SYNC_INTERVAL !== 'undefined' && window.AUTO_SYNC_INTERVAL > 0)
+        ? window.AUTO_SYNC_INTERVAL 
+        : 60000; // default 60 seconds interval
     
     setInterval(function() {
         fetch('sync-timetables?action=sync_all&auto=1', {

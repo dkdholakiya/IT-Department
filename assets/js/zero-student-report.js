@@ -382,8 +382,9 @@ function handleAddEntry() {
         }
     };
 
-    // Extract CC email recipients
-    const ccEmails = getCcEmails("entry-cc");
+    // Extract CC email recipients and filter based on entry faculty (DRC, SBC, EHU rules)
+    const rawCcEmails = getCcEmails("entry-cc");
+    const ccEmails = filterCcForFaculty(facultyEmail, facInitNormalized, rawCcEmails);
 
     // 5. Submit to Google Sheet via secure backend proxy
     fetch('proxy-sheets?target=zero', {
@@ -714,15 +715,59 @@ function syncImportModalCcRecipients() {
     const itHodEmail = "sbchauhan@gmiu.edu.in";
     const ceHodEmail = "ehunagar@gmiu.edu.in";
 
-    let requiredEmails = [dhavalEmail, itHodEmail, ceHodEmail];
+    // Inspect selected rows in the import modal (or pdfParsedData)
+    let rowsToInspect = [];
+    const checkedBoxes = document.querySelectorAll(".pdf-row-checkbox:checked");
+    if (checkedBoxes.length > 0 && typeof pdfParsedData !== "undefined") {
+        rowsToInspect = Array.from(checkedBoxes).map(cb => pdfParsedData[parseInt(cb.getAttribute("data-index"), 10)]).filter(Boolean);
+    } else if (typeof pdfParsedData !== "undefined" && pdfParsedData.length > 0) {
+        rowsToInspect = pdfParsedData;
+    }
+
+    const hasDrc = rowsToInspect.some(r => {
+        const init = (r.resolvedFaculty || r.faculty || "").toUpperCase().trim();
+        const email = (r.facultyEmail || "").toLowerCase().trim();
+        return init === "DRC" || init === "DC" || email === dhavalEmail;
+    });
+
+    const hasSbc = rowsToInspect.some(r => {
+        const init = (r.resolvedFaculty || r.faculty || "").toUpperCase().trim();
+        const email = (r.facultyEmail || "").toLowerCase().trim();
+        return init === "SBC" || init === "SW" || email === itHodEmail;
+    });
+
+    const hasEhu = rowsToInspect.some(r => {
+        const init = (r.resolvedFaculty || r.faculty || "").toUpperCase().trim();
+        const email = (r.facultyEmail || "").toLowerCase().trim();
+        return init === "EHU" || init === "EU" || email === ceHodEmail;
+    });
+
+    // Rule 1: If DRC is in the imported list, remove ALL from CC input
+    if (hasDrc) {
+        importCcInput.value = "";
+        return;
+    }
+
+    // Build base required emails (excluding SBC if SBC is in list, excluding EHU if EHU is in list)
+    let requiredEmails = [dhavalEmail];
+    if (!hasSbc) requiredEmails.push(itHodEmail);
+    if (!hasEhu) requiredEmails.push(ceHodEmail);
 
     let currentText = importCcInput.value.trim();
     let existingParts = currentText ? currentText.split(/[\s,;]+/).map(e => e.trim()).filter(Boolean) : [];
 
-    let customEmails = existingParts.filter(email => !requiredEmails.includes(email));
+    // Filter existing parts so SBC/EHU/DRC are removed if present according to rules
+    let customEmails = existingParts.filter(email => {
+        const eLower = email.toLowerCase();
+        if (eLower === dhavalEmail) return false;
+        if (hasSbc && eLower === itHodEmail) return false;
+        if (hasEhu && eLower === ceHodEmail) return false;
+        if (requiredEmails.includes(email)) return false;
+        return true;
+    });
 
     let finalCc = [...requiredEmails, ...customEmails];
-    importCcInput.value = Array.from(new Set(finalCc)).join(", ") + ", ";
+    importCcInput.value = Array.from(new Set(finalCc)).join(", ") + (finalCc.length > 0 ? ", " : "");
 }
 
 // ── Personal Timetable Matching Utility ──
@@ -1696,7 +1741,8 @@ async function handleBatchImport() {
             } else {
                 combinedCc = combinedCc.filter(e => e !== ceHodEmail);
             }
-            const rowCcEmails = Array.from(new Set(combinedCc));
+            const rawRowCcEmails = Array.from(new Set(combinedCc));
+            const rowCcEmails = filterCcForFaculty(row.facultyEmail, row.resolvedFaculty, rawRowCcEmails);
 
             // Send email (catch any connection reset/close errors locally so sheet write success is kept)
             try {
@@ -1922,6 +1968,37 @@ function getActiveBranchList() {
 }
 
 // ── CC Email Helper & Autocomplete ──
+function filterCcForFaculty(toEmail, facInitials, ccList) {
+    if (!ccList || !Array.isArray(ccList)) return [];
+
+    const normInit = (facInitials || "").toUpperCase().trim();
+    const normTo = (toEmail || "").toLowerCase().trim();
+
+    // Rule 1: If faculty is DRC (Dr. Dhaval Chandarana), remove ALL CC recipients
+    if (normInit === "DRC" || normInit === "DC" || normTo === "drchandarana@gmiu.edu.in") {
+        return [];
+    }
+
+    let filtered = [...ccList];
+
+    // Rule 2: If faculty is SBC (Prof. Shwetaba Chauhan), do not add SBC to CC
+    if (normInit === "SBC" || normInit === "SW" || normTo === "sbchauhan@gmiu.edu.in") {
+        filtered = filtered.filter(e => e.toLowerCase().trim() !== "sbchauhan@gmiu.edu.in");
+    }
+
+    // Rule 3: If faculty is EHU (Prof. Ekta Unagar), do not add EHU to CC
+    if (normInit === "EHU" || normInit === "EU" || normTo === "ehunagar@gmiu.edu.in") {
+        filtered = filtered.filter(e => e.toLowerCase().trim() !== "ehunagar@gmiu.edu.in");
+    }
+
+    // Rule 4: Strip recipient's own email from CC list to prevent duplicate delivery
+    if (normTo) {
+        filtered = filtered.filter(e => e.toLowerCase().trim() !== normTo);
+    }
+
+    return Array.from(new Set(filtered));
+}
+
 function getDefaultCcForDept(dept) {
     const dhavalEmail = "drchandarana@gmiu.edu.in";
     const itHodEmail = "sbchauhan@gmiu.edu.in";

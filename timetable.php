@@ -312,6 +312,14 @@ $jsDataExists = file_exists($jsDataFile);
     <!-- Timetable Data and Logic -->
     <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
     <script src="<?php echo v_asset('assets/js/timetableData.js'); ?>"></script>
+    <?php 
+    $config_file = __DIR__ . '/config.php';
+    $config = file_exists($config_file) ? include $config_file : [];
+    ?>
+    <script>
+        window.AUTO_SYNC_ENABLED = <?php echo json_encode(($config['auto_sync_enabled'] ?? 1) == 1); ?>;
+        window.AUTO_SYNC_INTERVAL = <?php echo json_encode(((int)($config['auto_sync_interval'] ?? 60)) * 1000); ?>;
+    </script>
     <script src="<?php echo v_asset('assets/js/timetableSync.js'); ?>"></script>
     <style>
         @keyframes spin { to { transform: rotate(360deg); } }

@@ -909,6 +909,14 @@ $ftSize = $ftCurrentFile ? number_format(filesize($ftDir . $ftCurrentFile) / 102
         </div>
     </div>
 
+    <?php 
+    $configFile = __DIR__ . '/config.php';
+    $config = file_exists($configFile) ? include $configFile : [];
+    ?>
+    <script>
+        window.AUTO_SYNC_ENABLED = <?php echo json_encode(($config['auto_sync_enabled'] ?? 1) == 1); ?>;
+        window.AUTO_SYNC_INTERVAL = <?php echo json_encode(((int)($config['auto_sync_interval'] ?? 60)) * 1000); ?>;
+    </script>
     <script src="<?php echo v_asset('assets/js/timetableSync.js'); ?>"></script>
     <script>
         function runSync(actionType, providedPassword) {
