@@ -138,7 +138,12 @@ function fetchDirectFromAppsScript(webappUrl, targetType, providedPassword, call
     
     fetch(url, { cache: 'no-store' })
     .then(res => {
-        if (!res.ok) throw new Error('Apps Script Web App HTTP ' + res.status);
+        if (!res.ok) {
+            if (res.status === 404) {
+                throw new Error('Apps Script Web App HTTP 404. The configured Web App URL in config.php is invalid, deleted, or access is set to Private. Please re-deploy Apps Script and update config.php on the server.');
+            }
+            throw new Error('Apps Script Web App HTTP ' + res.status);
+        }
         return res.json();
     })
     .then(json => {
