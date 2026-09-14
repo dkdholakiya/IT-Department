@@ -31,7 +31,7 @@ return [
 
     // Auto-Sync Configuration (Background Google Sheets Live Sync)
     'student_timetable_webapp_url' => 'https://script.google.com/macros/s/AKfycby5yeTrt5piGKzvwV0UCoV5eHkzvuBETo9mCn5YWSL0W-mt_06jq3BgmVV0l69rBHM/exec', // Google Apps Script Web App URL for Student Timetable
-    'faculty_timetable_webapp_url' => 'https://script.google.com/macros/s/AKfycbzQX2jaQ2BQEFkKefKdSurJK6etBRmfZXrj7zg1-5TOOOyeV-m6dx4MYfP3_zBaP08CuA/exec', // Google Apps Script Web App URL for Faculty Timetable
+    'faculty_timetable_webapp_url' => 'https://script.google.com/macros/s/AKfycbzQX2jaQ2BQEFkKefKdSurJK6etBRmfZXrj7zg1-5TOOOyeV-m6dx4MYfP3_zBaP08CuA/exec', //  Google Apps Script Web App URL for Faculty Timetable
 
     'auto_sync_enabled' => 1, // Toggle: 1 to enable automatic background live sheet sync, 0 to disable
     'auto_sync_interval' => 300, // Auto-sync interval in seconds (default: 60)
