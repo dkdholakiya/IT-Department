@@ -121,7 +121,7 @@ $active_page = isset($active_page) ? $active_page : 'home';
         const activePage = fabNav ? fabNav.getAttribute('data-active-page') : 'home';
         
         // Define which pages are inherently common pages
-        const isCommonPage = (activePage === 'report' || activePage === 'ctldrive' || activePage === 'ctlactivity');
+        const isCommonPage = (activePage === 'report' || activePage === 'ctldrive' || activePage === 'ctldrive2' || activePage === 'ctlactivity');
 
         if (isCommonPage) {
             document.body.classList.remove('ce-active');

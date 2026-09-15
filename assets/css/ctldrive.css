@@ -169,17 +169,47 @@ body {
 .status {
     padding: 14px 18px;
     border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px dashed var(--border);
+    background: rgba(4, 8, 22, 0.85);
+    border: 1px solid var(--border);
     color: var(--text-muted);
-    font-size: 13.5px;
-    font-family: 'Fira Code', monospace;
+    font-size: 12.5px;
+    font-family: 'Fira Code', 'Consolas', monospace;
     margin: 20px 0;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+    max-height: 260px;
+    min-height: 60px;
+    overflow-y: auto;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    scroll-behavior: smooth;
 }
 
 .scanner-col-left .status {
     margin: 0;
+}
+
+.status-line {
+    line-height: 1.45;
+    word-break: break-word;
+    font-weight: 400;
+}
+
+.status-line.info { color: #38bdf8; }
+.status-line.folder { color: #fbbf24; }
+.status-line.success { color: #34d399; }
+.status-line.file { color: #c084fc; }
+.status-line.warn { color: #f87171; }
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spin-icon {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+    transform-origin: center center;
 }
 
 /* ── Section Titles ── */
@@ -619,4 +649,1225 @@ body {
 .av-theme-pink {
     background: linear-gradient(145deg, #4c0519, #881337) !important;
     border-color: rgba(244, 63, 94, 0.4) !important;
+}
+
+/* ── Department Presets & 1-Click Scan Controls ── */
+.dept-tabs-wrapper {
+    background: rgba(13, 22, 45, 0.6);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 6px;
+}
+
+.dept-tabs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.dept-tabs-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: 'Share Tech', monospace;
+}
+
+.dept-tabs {
+    display: inline-flex;
+    background: rgba(6, 10, 28, 0.8);
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dept-tab-btn {
+    background: transparent !important;
+    border: none !important;
+    padding: 6px 14px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: var(--text-muted) !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+    transition: all 0.2s ease !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dept-tab-btn:hover {
+    color: var(--text-primary) !important;
+}
+
+.dept-tab-btn.active {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(29, 78, 216, 0.4) 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+}
+
+.browse-modal-trigger-btn {
+    background: rgba(192, 57, 43, 0.15) !important;
+    border: 1px solid rgba(192, 57, 43, 0.35) !important;
+    color: #fca5a5 !important;
+    font-size: 11.5px !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease !important;
+}
+
+.browse-modal-trigger-btn:hover {
+    background: rgba(192, 57, 43, 0.28) !important;
+    border-color: rgba(192, 57, 43, 0.6) !important;
+    color: #ffffff !important;
+}
+
+.tab-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.it-dot {
+    background-color: #ef4444;
+    box-shadow: 0 0 6px #ef4444;
+}
+
+.ce-dot {
+    background-color: #3b82f6;
+    box-shadow: 0 0 6px #3b82f6;
+}
+
+.dept-presets-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    max-height: 240px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.preset-chip-card {
+    background: var(--bg-card, rgba(6, 10, 28, 0.55));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+    border-radius: 8px;
+    padding: 6px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1 1 calc(50% - 8px);
+    min-width: 140px;
+    max-width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.preset-chip-card:hover {
+    background: rgba(37, 99, 235, 0.15);
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateY(-1px);
+}
+
+.preset-chip-card.selected {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.chip-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10.5px;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+    font-family: 'Share Tech', monospace;
+}
+
+.chip-main-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    flex: 1;
+    min-width: 0;
+}
+
+.chip-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.chip-sub {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.chip-scan-btn {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    padding: 4px 8px !important;
+    font-size: 10.5px !important;
+    border-radius: 5px !important;
+    box-shadow: 0 2px 5px rgba(37, 99, 235, 0.25) !important;
+    white-space: nowrap;
+    gap: 3px !important;
+    flex-shrink: 0;
+}
+
+.preset-chip-card:hover .chip-scan-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.35) !important;
+}
+
+.sub-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+/* ── Drive Links Popup Modal (facultyData.js) ── */
+.drive-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(4, 8, 20, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.drive-modal-container {
+    background: rgba(11, 18, 40, 0.95);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    animation: modalPop 0.25s ease-out forwards;
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.drive-modal-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(6, 10, 28, 0.5);
+}
+
+.drive-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.drive-modal-close {
+    background: none !important;
+    border: none !important;
+    font-size: 24px;
+    color: var(--text-muted);
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 !important;
+    transition: color 0.2s;
+}
+
+.drive-modal-close:hover {
+    color: #ef4444 !important;
+}
+
+.drive-modal-body {
+    padding: 20px 22px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.drive-modal-search-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.modal-search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 240px;
+}
+
+#modalDriveSearch {
+    width: 100%;
+    padding: 10px 14px 10px 38px !important;
+    background: rgba(6, 10, 28, 0.8) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 6px !important;
+    font-size: 13.5px !important;
+    color: var(--text-primary) !important;
+}
+
+.modal-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.modal-dept-pills {
+    display: inline-flex;
+    background: rgba(6, 10, 28, 0.8);
+    padding: 3px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modal-pill {
+    background: transparent !important;
+    border: none !important;
+    padding: 5px 12px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    color: var(--text-muted) !important;
+    border-radius: 4px !important;
+    cursor: pointer;
+    transition: all 0.2s ease !important;
+}
+
+.modal-pill.active {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    color: white !important;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+}
+
+.modal-drive-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.modal-drive-item {
+    background: rgba(6, 10, 28, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-drive-item:hover {
+    background: rgba(37, 99, 235, 0.12);
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateX(3px);
+}
+
+.modal-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12.5px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.modal-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.modal-item-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-item-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.modal-item-email {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.modal-item-link {
+    font-size: 11px;
+    color: #60a5fa;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+
+.modal-item-scan-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    padding: 6px 12px !important;
+    font-size: 11.5px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3) !important;
+    white-space: nowrap;
+    gap: 5px !important;
+}
+
+.modal-drive-item:hover .modal-item-scan-btn {
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5) !important;
+    transform: scale(1.03);
+}
+
+.drive-modal-footer {
+    padding: 14px 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(6, 10, 28, 0.5);
+}
+
+.modal-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.modal-close-btn {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: var(--text-primary) !important;
+    padding: 6px 16px !important;
+    font-size: 12.5px !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+}
+
+.modal-no-results {
+    padding: 30px 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13.5px;
+}
+
+/* ── Master Department Quick Scan Cards (1-Click) ── */
+.master-scan-card {
+    background: rgba(13, 22, 45, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+    width: 100%;
+    color: var(--text-primary);
+}
+
+.master-scan-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.master-card-it {
+    border-left: 4px solid #ef4444 !important;
+}
+
+.master-card-it:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(185, 28, 28, 0.25) 100%) !important;
+    border-color: rgba(239, 68, 68, 0.5) !important;
+}
+
+.master-card-ce {
+    border-left: 4px solid #3b82f6 !important;
+}
+
+.master-card-ce:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18) 0%, rgba(29, 78, 216, 0.25) 100%) !important;
+    border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+.master-card-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.master-card-it .master-card-icon {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+.master-card-ce .master-card-icon {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+}
+
+.master-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.master-card-heading {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    font-family: 'Playfair Display', serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.master-card-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Share Tech', monospace;
+}
+
+.master-chip-tag {
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    text-transform: uppercase;
+    font-family: 'Share Tech', monospace;
+    white-space: nowrap;
+}
+
+.master-chip-tag.ce-tag {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════
+   Comprehensive Mobile & Small Screen Responsiveness (320px - 768px)
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Tablet & Small Laptops (max-width: 992px) ── */
+@media (max-width: 992px) {
+    .scanner-grid {
+        flex-direction: column;
+        gap: 28px;
+    }
+
+    .scanner-col-left, .scanner-col-right {
+        max-width: 100% !important;
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+
+    .rp-main, .rp-header {
+        width: 96% !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+}
+
+/* ── Mobile Devices (max-width: 640px) ── */
+@media (max-width: 640px) {
+    /* Reset all elements to avoid horizontal scrolling/clipping */
+    html, body {
+        width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Page Layout & Container */
+    .rp-page {
+        width: 100% !important;
+        max-width: 100vw !important;
+        padding: 0 4px 30px !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    .rp-header {
+        width: 100% !important;
+        padding: 12px 8px !important;
+        margin-bottom: 12px !important;
+        box-sizing: border-box !important;
+    }
+
+    .rp-header-inner {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .rp-header-center {
+        width: 100%;
+        text-align: left;
+    }
+
+    .rp-title {
+        font-size: 19px !important;
+    }
+
+    .rp-main {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 4px 20px !important;
+        box-sizing: border-box !important;
+    }
+
+    .rp-form {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 14px 8px !important;
+        border-radius: 10px !important;
+        box-shadow: none !important;
+        box-sizing: border-box !important;
+    }
+
+    .rp-form input[type="text"] {
+        min-width: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .rp-form-header {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+    }
+
+    .rp-form-header h2 {
+        font-size: 17px !important;
+    }
+
+    .rp-form-header p {
+        font-size: 12px !important;
+        line-height: 1.4;
+    }
+
+    .scanner-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 18px !important;
+        box-sizing: border-box !important;
+    }
+
+    .scanner-col-left, .scanner-col-right {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Target Directory Section 2 & Inputs */
+    #scan-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    .custom-id-wrapper {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .custom-id-wrapper div {
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    #folder-id-input {
+        width: 100% !important;
+        min-width: 0 !important;
+        font-size: 11.5px !important;
+        padding: 9px 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    #scan-btn {
+        width: 100% !important;
+        min-width: 0 !important;
+        justify-content: center !important;
+        padding: 9px 12px !important;
+        font-size: 12px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Department Selector Tabs & Presets Box */
+    .dept-tabs-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 10px 6px !important;
+        box-sizing: border-box !important;
+        border-radius: 8px !important;
+    }
+
+    .dept-tabs-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    .dept-tabs-title {
+        font-size: 11px !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    .browse-modal-trigger-btn {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 7px 8px !important;
+        font-size: 11px !important;
+        box-sizing: border-box !important;
+    }
+
+    .dept-tabs {
+        width: 100% !important;
+        display: flex !important;
+        box-sizing: border-box !important;
+        padding: 2px !important;
+    }
+
+    .dept-tab-btn {
+        flex: 1 1 50% !important;
+        width: 50% !important;
+        justify-content: center !important;
+        padding: 7px 4px !important;
+        font-size: 11px !important;
+        box-sizing: border-box !important;
+        gap: 4px !important;
+    }
+
+    .dept-presets-list {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 300px !important;
+        gap: 6px !important;
+        padding-right: 2px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .preset-chip-card {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 6px 8px !important;
+        box-sizing: border-box !important;
+        gap: 6px !important;
+    }
+
+    .chip-avatar {
+        width: 24px !important;
+        height: 24px !important;
+        min-width: 24px !important;
+        font-size: 10px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .chip-main-info {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .chip-title {
+        font-size: 11.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .chip-sub {
+        font-size: 9.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .chip-scan-btn {
+        padding: 4px 7px !important;
+        font-size: 10px !important;
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+    }
+
+    /* Drive Links Popup Modal (320px - 640px Screen Fit) */
+    .drive-modal-overlay {
+        padding: 6px !important;
+    }
+
+    .drive-modal-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 94vh !important;
+        border-radius: 8px !important;
+        box-sizing: border-box !important;
+    }
+
+    .drive-modal-header {
+        padding: 10px 12px !important;
+    }
+
+    .drive-modal-title {
+        font-size: 14px !important;
+        gap: 6px !important;
+    }
+
+    .drive-modal-title svg {
+        width: 15px !important;
+        height: 15px !important;
+    }
+
+    .drive-modal-body {
+        padding: 10px 8px !important;
+        gap: 10px !important;
+    }
+
+    .drive-modal-search-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+    }
+
+    .modal-search-wrap {
+        min-width: 100% !important;
+        width: 100% !important;
+    }
+
+    #modalDriveSearch {
+        padding: 8px 10px 8px 30px !important;
+        font-size: 12px !important;
+    }
+
+    .modal-dept-pills {
+        width: 100% !important;
+        display: flex !important;
+    }
+
+    .modal-pill {
+        flex: 1 !important;
+        text-align: center !important;
+        justify-content: center !important;
+        padding: 5px 3px !important;
+        font-size: 10.5px !important;
+    }
+
+    .modal-drive-list {
+        max-height: 52vh !important;
+        gap: 6px !important;
+        padding-right: 2px !important;
+    }
+
+    .modal-drive-item {
+        padding: 8px 10px !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .modal-avatar {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 10px !important;
+    }
+
+    .modal-item-info {
+        flex: 1 1 60% !important;
+        min-width: 0 !important;
+    }
+
+    .modal-item-name {
+        font-size: 12px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .modal-item-badge {
+        font-size: 8.5px !important;
+        padding: 1px 4px !important;
+    }
+
+    .modal-item-email {
+        font-size: 10.5px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .modal-item-link {
+        font-size: 9.5px !important;
+    }
+
+    .modal-item-scan-btn {
+        width: 100% !important;
+        justify-content: center !important;
+        margin-top: 4px !important;
+        padding: 6px 10px !important;
+        font-size: 10.5px !important;
+    }
+
+    .drive-modal-footer {
+        padding: 8px 12px !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        text-align: center !important;
+    }
+
+    .modal-hint {
+        font-size: 10.5px !important;
+    }
+
+    .modal-close-btn {
+        width: 100% !important;
+        padding: 7px 12px !important;
+    }
+
+    /* Results Column & Summary Card */
+    .summary-card {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+        padding: 8px !important;
+    }
+
+    .summary-stat-value {
+        font-size: 17px !important;
+    }
+
+    .summary-stat-label {
+        font-size: 9.5px !important;
+    }
+}
+
+/* ── Ultra Small Screens (max-width: 360px - e.g. 320px width) ── */
+@media (max-width: 360px) {
+    .rp-form {
+        padding: 12px 6px !important;
+    }
+
+    .dept-tabs-wrapper {
+        padding: 8px 4px !important;
+    }
+
+    .preset-chip-card {
+        padding: 5px 6px !important;
+    }
+
+    .chip-avatar {
+        width: 22px !important;
+        height: 22px !important;
+        min-width: 22px !important;
+        font-size: 9.5px !important;
+    }
+
+    .dept-tab-btn {
+        font-size: 10px !important;
+        padding: 5px 2px !important;
+    }
+
+    .modal-item-name {
+        font-size: 11px !important;
+    }
+
+    .summary-card {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ── Live Scanner Console Popup Modal Overlay ── */
+.scan-console-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(3, 7, 18, 0.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 16px;
+    animation: fadeInModal 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scan-console-modal-card {
+    background: rgba(13, 17, 34, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 760px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(37, 99, 235, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.scan-console-modal-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.scan-console-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: #f3f4f6;
+    font-size: 15px;
+    font-family: 'Merriweather Sans', sans-serif;
+}
+
+.live-pulse-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #10b981;
+    display: inline-block;
+    box-shadow: 0 0 10px #10b981;
+    animation: pulseDot 1.2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.3); }
+}
+
+.scan-console-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: color 0.2s;
+}
+
+.scan-console-modal-close:hover {
+    color: #ef4444;
+}
+
+/* Modal active scroll lock */
+body.modal-open,
+html.modal-open {
+    overflow: hidden !important;
+}
+
+.scan-console-modal-body {
+    padding: 16px;
+    flex: 1;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    background: rgba(5, 8, 20, 0.95);
+    min-height: 300px;
+    max-height: 60vh;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+.scan-console-modal-body::-webkit-scrollbar,
+.scan-console-modal-body .status::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.scan-console-modal-body .status {
+    max-height: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+.scan-console-modal-footer {
+    padding: 12px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.modal-hint-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'Fira Code', monospace;
+}
+
+.scan-console-modal-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-primary);
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.scan-console-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Responsive adjustments for Scan Console Modal across all screen sizes ── */
+@media (max-width: 768px) {
+    .scan-console-modal-overlay {
+        padding: 8px !important;
+    }
+
+    .scan-console-modal-card {
+        max-width: 100% !important;
+        width: 100% !important;
+        border-radius: 10px !important;
+    }
+
+    .scan-console-modal-header {
+        padding: 10px 14px !important;
+    }
+
+    .scan-console-modal-title {
+        font-size: 13.5px !important;
+        gap: 8px !important;
+    }
+
+    .scan-console-modal-body {
+        padding: 12px 10px !important;
+        min-height: 240px !important;
+        max-height: 65vh !important;
+    }
+
+    .scan-console-modal-footer {
+        padding: 10px 12px !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        align-items: stretch !important;
+    }
+
+    .modal-hint-text {
+        font-size: 11px !important;
+        text-align: center !important;
+        word-break: break-word !important;
+    }
+
+    .scan-console-modal-btn {
+        width: 100% !important;
+        text-align: center !important;
+        padding: 7px 10px !important;
+        font-size: 11.5px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .scan-console-modal-title span {
+        font-size: 12px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .scan-console-modal-body {
+        padding: 8px 6px !important;
+        min-height: 200px !important;
+        max-height: 70vh !important;
+    }
+
+    .scan-console-modal-body .status-line {
+        font-size: 11px !important;
+    }
 }

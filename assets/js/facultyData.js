@@ -11,7 +11,9 @@ const facultyData = [
         avatarClass: "av-theme-red",
         initials: "AIT",
         setting: "FF-38",
-        link: ""
+        link: "",
+        semClass: "I.T 2026-27 ODD Master Folder",
+        driveLink: "https://drive.google.com/drive/folders/1m2_s4hPYSs4L6LmnNfzS17Geor7Eknh5?usp=sharing"
     },
     {
         id: "admince",
@@ -24,7 +26,9 @@ const facultyData = [
         avatarClass: "av-theme-blue",
         initials: "ACE",
         setting: "FF-38",
-        link: ""
+        link: "",
+        semClass: "CE 2026-27 ODD Master Folder",
+        driveLink: "https://drive.google.com/drive/folders/1sjsQIKq8Ty8Ka-4OWU_ttcf2gJi3ll5X?usp=sharing"
     },
     {
         id: "dc",
@@ -37,7 +41,8 @@ const facultyData = [
         avatarClass: "av-dc",
         initials: "DRC",
         setting: "FF-38",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "sw",
@@ -50,7 +55,8 @@ const facultyData = [
         avatarClass: "av-sw",
         initials: "SBC",
         setting: "FF-38",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "eu",
@@ -63,7 +69,8 @@ const facultyData = [
         avatarClass: "av-eu",
         initials: "EHU",
         setting: "FF-37",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "tv",
@@ -79,7 +86,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=943&type=1&activity=0&cumulative=0",
         semClass: "Diploma 5th Sem - B (IT)",
         dept: "IT",
-        sem: "sem5"
+        sem: "sem5",
+        driveLink: "https://drive.google.com/drive/folders/1qwQTxC2_gM-kepgN-eKe7PnsDhYCG9n_?usp=sharing"
     },
     {
         id: "sc",
@@ -92,7 +100,8 @@ const facultyData = [
         avatarClass: "av-sc",
         initials: "SHC",
         setting: "FF-37",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "pk",
@@ -108,7 +117,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=783&type=8&activity=0&cumulative=0",
         semClass: "Diploma 1st Sem - C (CE)",
         dept: "CE",
-        sem: "sem1"
+        sem: "sem1",
+        driveLink: "https://drive.google.com/drive/folders/18GKN5l_942nopGokJ0X4eDRUQwmxD2ZI?usp=sharing"
     },
     {
         id: "svb",
@@ -124,7 +134,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=586&type=1&activity=0&cumulative=0",
         semClass: "Diploma 3rd Sem - B (IT)",
         dept: "IT",
-        sem: "sem3"
+        sem: "sem3",
+        driveLink: "https://drive.google.com/drive/folders/1Z42E9Bxl9CBN6KpyqvggUfjMiPlG5qIx?usp=sharing"
     },
     {
         id: "jm",
@@ -140,7 +151,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=593&type=8&activity=0&cumulative=0",
         semClass: "Diploma 3rd Sem - PREMIUM",
         dept: "IT",
-        sem: "sem3"
+        sem: "sem3",
+        driveLink: "https://drive.google.com/drive/folders/1KEZyRwRjXlop5_Y_laIKyccSlWiMwYIC?usp=sharing"
     },
     {
         id: "db",
@@ -156,13 +168,14 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=801&type=1&activity=0&cumulative=0",
         semClass: "Degree 7th Sem - Z (IT)",
         dept: "IT",
-        sem: "sem5"
+        sem: "sem5",
+        driveLink: "https://drive.google.com/drive/folders/1YoHys1WsR8FzNDHzCXkq1PsVSlqKL0fk?usp=sharing"
     },
     {
         id: "ks",
         name: "Prof. Krupali Solanki",
         designation: "Lecturer",
-        department: "Information Technology",
+        department: "Computer Engineering",
         empId: "#10373",
         email: "kbsolanki@gmiu.edu.in",
         phone: "63534 26013",
@@ -172,7 +185,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=918&type=1&activity=0&cumulative=0",
         semClass: "Diploma 5th Sem - A (CE)",
         dept: "CE",
-        sem: "sem5"
+        sem: "sem5",
+        driveLink: "https://drive.google.com/drive/folders/1hxCWA1sSn2MIUrTmzPLRQfmHCoHzL1MY?usp=sharing"
     },
     {
         id: "bss",
@@ -185,7 +199,8 @@ const facultyData = [
         avatarClass: "av-bs",
         initials: "BSS",
         setting: "FF-37",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "vs",
@@ -198,7 +213,8 @@ const facultyData = [
         avatarClass: "av-vs",
         initials: "VBS",
         setting: "FF-37",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "srp",
@@ -211,7 +227,8 @@ const facultyData = [
         avatarClass: "av-sp",
         initials: "SRP",
         setting: "FF-38",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "pr",
@@ -224,7 +241,8 @@ const facultyData = [
         avatarClass: "av-pr",
         initials: "PVP",
         setting: "FF-01",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "sv",
@@ -240,7 +258,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=572&type=1&activity=0&cumulative=0",
         semClass: "Diploma 5th Sem - C (IT)",
         dept: "IT",
-        sem: "sem5"
+        sem: "sem5",
+        driveLink: "https://drive.google.com/drive/folders/1s3jva53IgXluX5r8V1AC-6CQ_KnNzmlg?usp=sharing"
     },
     {
         id: "sg",
@@ -256,7 +275,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=537&type=1&activity=0&cumulative=0",
         semClass: "Degree 7th Sem - C (IT)",
         dept: "IT",
-        sem: "sem7"
+        sem: "sem7",
+        driveLink: "https://drive.google.com/drive/folders/1YYB-XNHO7TvsTKB-OWWvEv8a_2wZpRZV?usp=sharing"
     },
     {
         id: "dk",
@@ -269,7 +289,8 @@ const facultyData = [
         avatarClass: "av-dk",
         initials: "DKD",
         setting: "FF-38",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "rc",
@@ -285,7 +306,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=329&type=1&activity=0&cumulative=0",
         semClass: "Diploma 3rd Sem - A",
         dept: "CE",
-        sem: "sem3"
+        sem: "sem3",
+        driveLink: "https://drive.google.com/drive/folders/1cFzQ0RTQu4r0OYJ7YkjhrgRAsiPkLTLp?usp=sharing"
     },
     // {
     //     id: "jv",
@@ -317,7 +339,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=569&type=1&activity=0&cumulative=0",
         semClass: "Degree 5th Sem - X1 (CSE)",
         dept: "CE",
-        sem: "sem5"
+        sem: "sem5",
+        driveLink: "https://drive.google.com/drive/folders/1hSKP7ZE9Xyc8KETxNjLseBpvfx-xoTzC?usp=sharing"
     },
     {
         id: "km",
@@ -333,7 +356,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=802&type=1&activity=0&cumulative=0",
         semClass: "Degree 5th Sem - X2 (CSE)",
         dept: "CE",
-        sem: "sem5"
+        sem: "sem5",
+        driveLink: "https://drive.google.com/drive/folders/1JcbxBsfiFBxZ--AxBUBDQMF4Mdn6sBOv?usp=sharing"
     },
     {
         id: "dch",
@@ -349,7 +373,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=356&type=1&activity=0&cumulative=0",
         semClass: "Degree 5th Sem - Y1 (CE)",
         dept: "CE",
-        sem: "sem5"
+        sem: "sem5",
+        driveLink: "https://drive.google.com/drive/folders/1VWr3OmYzwtvMRMoRYe4nXzhQockCJsn3?usp=sharing"
     },
     {
         id: "dg",
@@ -365,7 +390,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=880&type=1&activity=0&cumulative=0",
         semClass: "Degree 5th Sem - Y2 (CE/CSE)",
         dept: "CE",
-        sem: "sem5"
+        sem: "sem5",
+        driveLink: "https://drive.google.com/drive/folders/19_ZgYHoxy6g-CS2OEs-ssUiTjZieEcRr?usp=sharing"
     },
     {
         id: "ag",
@@ -381,7 +407,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=330&type=1&activity=0&cumulative=0",
         semClass: "Degree 7th Sem - A (CE)",
         dept: "CE",
-        sem: "sem7"
+        sem: "sem7",
+        driveLink: "https://drive.google.com/drive/folders/1Bije20qYwfAAU4Xd91euTig49fxXB4IJ?usp=sharing"
     },
     {
         id: "bm",
@@ -397,7 +424,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=328&type=1&activity=0&cumulative=0",
         semClass: "Degree 7th Sem - B (CE)",
         dept: "CE",
-        sem: "sem7"
+        sem: "sem7",
+        driveLink: "https://drive.google.com/drive/folders/1YjdooQqAUFUuYNsK-uAwYyfwkgVtgz-j?usp=sharing"
     },
     {
         id: "pdc",
@@ -413,7 +441,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=322&type=8&activity=0&cumulative=0",
         semClass: "Diploma 1st Sem - A (CSE)",
         dept: "CE",
-        sem: "sem1"
+        sem: "sem1",
+        driveLink: "https://drive.google.com/drive/folders/15disgDeKB2NIlAmjg4jebm1e3NHMRFZA?usp=sharing"
     },
     {
         id: "VDV",
@@ -429,7 +458,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=325&type=8&activity=0&cumulative=0",
         semClass: "Degree 3rd Sem D2D - X2 (CE)",
         dept: "CE",
-        sem: "sem3"
+        sem: "sem3",
+        driveLink: "https://drive.google.com/drive/folders/1g6qdhpsngwx9YLv5k1LgQnkPnYOJ3Kl_?usp=sharing"
     },
     {
         id: "TDO",
@@ -445,7 +475,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=327&type=8&activity=0&cumulative=0",
         semClass: "Diploma 1st Sem - B (IT)",
         dept: "IT",
-        sem: "sem1"
+        sem: "sem1",
+        driveLink: "https://drive.google.com/drive/folders/1FS5H1PloQjl8dw4ZclnWz3kJ05cgCjSe?usp=sharing"
     },
     {
         id: "mkc",
@@ -458,7 +489,8 @@ const facultyData = [
         avatarClass: "av-mkc",
         initials: "MKC",
         setting: "FF-38",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "mcs",
@@ -474,7 +506,8 @@ const facultyData = [
         link: "http://erp.gmiu.edu.in/admin/activity/report?teacher=897&type=8&activity=0&cumulative=0",
         semClass: "Degree 5th Sem - PREMIUM",
         dept: "CE",
-        sem: "sem5"
+        sem: "sem5",
+        driveLink: "https://drive.google.com/drive/folders/1hjjT8g6xC_pUqS0ozJGlF_cdypCaL2fK?usp=sharing"
     },
     {
         id: "pmb",
@@ -490,7 +523,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=920&type=8&activity=0&cumulative=0",
         semClass: "Degree 1st Sem - X1 (CSE)",
         dept: "CE",
-        sem: "sem1"
+        sem: "sem1",
+        driveLink: "https://drive.google.com/drive/folders/11_i1W3OA7vmNe0hzfWSXKsYGTqorP17W?usp=sharing"
     },
     {
         id: "nrj",
@@ -503,7 +537,8 @@ const facultyData = [
         avatarClass: "av-nrj",
         initials: "NRJ",
         setting: "FF-24",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "rpj",
@@ -519,7 +554,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=955&type=8&activity=0&cumulative=0",
         semClass: "Degree 3rd Sem - CSE",
         dept: "CE",
-        sem: "sem3"
+        sem: "sem3",
+        driveLink: "https://drive.google.com/drive/folders/162PvwaIQ0T9jMYB97mgbCB-iFyy8OCgs?usp=sharing"
     },
     {
         id: "jam",
@@ -532,7 +568,8 @@ const facultyData = [
         avatarClass: "av-jam",
         initials: "JAM",
         setting: "FF-38",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "jbs",
@@ -545,7 +582,8 @@ const facultyData = [
         avatarClass: "av-jbs",
         initials: "JBS",
         setting: "FF-22",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "dpz",
@@ -561,7 +599,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1190&type=8&activity=0&cumulative=0",
         semClass: "Degree 1st Sem - X2 (CE)",
         dept: "CE",
-        sem: "sem1"
+        sem: "sem1",
+        driveLink: "https://drive.google.com/drive/folders/14SpGkDsVooOKwuNbDH1bhclTeOVvcH01?usp=sharing"
     },
     {
         id: "dbv",
@@ -577,7 +616,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1181&type=8&activity=0&cumulative=0",
         semClass: "Degree 3rd Sem D2D - X1 (CSE)",
         dept: "CE",
-        sem: "sem3"
+        sem: "sem3",
+        driveLink: "https://drive.google.com/drive/folders/1FFhVbs3YsuPvJ6YbI-BQNdq6KmckujTX?usp=sharing"
     },
     {
         id: "iap",
@@ -590,7 +630,8 @@ const facultyData = [
         avatarClass: "av-iap",
         initials: "IAP",
         setting: "FF-38",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "rfd",
@@ -606,7 +647,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1193&type=8&activity=0&cumulative=0",
         semClass: "Degree 3rd Sem D2D - Y1 (IT)",
         dept: "IT",
-        sem: "sem3"
+        sem: "sem3",
+        driveLink: "https://drive.google.com/drive/folders/1savpu2JbiM-PrQx7iVzXTAoFQGpctgHg?usp=sharing"
     },
     {
         id: "hpg",
@@ -619,7 +661,8 @@ const facultyData = [
         avatarClass: "av-hpg",
         initials: "HPG",
         setting: "FF-25",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "hds",
@@ -632,7 +675,8 @@ const facultyData = [
         avatarClass: "av-hds",
         initials: "HDS",
         setting: "FF-01",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "knr",
@@ -645,7 +689,8 @@ const facultyData = [
         avatarClass: "av-knr",
         initials: "KNR",
         setting: "FF-01",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "hag",
@@ -658,7 +703,8 @@ const facultyData = [
         avatarClass: "av-hag",
         initials: "HAG",
         setting: "FF-28",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "srm",
@@ -671,7 +717,8 @@ const facultyData = [
         avatarClass: "av-srm",
         initials: "SRM",
         setting: "FF-01",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "hpj",
@@ -684,7 +731,8 @@ const facultyData = [
         avatarClass: "av-hpj",
         initials: "HPJ",
         setting: "",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "aps",
@@ -697,7 +745,8 @@ const facultyData = [
         avatarClass: "av-aps",
         initials: "APS",
         setting: "GF-38",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "hpd",
@@ -710,7 +759,8 @@ const facultyData = [
         avatarClass: "av-hpd",
         initials: "HPD",
         setting: "",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "ygl",
@@ -726,7 +776,8 @@ const facultyData = [
         link: "https://erp.gmiu.edu.in/admin/activity/report?teacher=1203&type=8&activity=0&cumulative=0",
         semClass: "Degree 3rd Sem D2D - Y2 (IT)",
         dept: "IT",
-        sem: "sem3"
+        sem: "sem3",
+        driveLink: "https://drive.google.com/drive/folders/17ra7zWRUaPFzJAHaJPgl_iyQVk8ycXze?usp=sharing"
     },
     {
         id: "dyv",
@@ -739,7 +790,8 @@ const facultyData = [
         avatarClass: "av-dyv",
         initials: "DYV",
         setting: "FF-01",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "pmm",
@@ -752,7 +804,8 @@ const facultyData = [
         avatarClass: "av-pmm",
         initials: "PMM",
         setting: "FF-01",
-        link: ""
+        link: "",
+        driveLink: "https://drive.google.com/drive/folders/1pC_V4erIjTQwmKwbCPabIDyC8ykrYmMq?usp=sharing"
     },
     {
         id: "kkb",
@@ -765,7 +818,8 @@ const facultyData = [
         avatarClass: "av-kkb",
         initials: "KKB",
         setting: "",
-        link: ""
+        link: "",
+        driveLink: ""
     },
     {
         id: "blv",
@@ -778,7 +832,8 @@ const facultyData = [
         avatarClass: "av-blv",
         initials: "BLV",
         setting: "",
-        link: ""
+        link: "",
+        driveLink: ""
     }
 ];
 

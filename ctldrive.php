@@ -105,19 +105,57 @@
                         </div>
 
                         <div style="margin-bottom: 20px;">
-                            <label class="scanner-label">2. Target Directory</label>
+                            <label class="scanner-label">2. Target Directory & Presets</label>
                             <div id="scan-container" class="controls"
-                                style="display: none; flex-direction: column; align-items: stretch; gap: 12px; width: 100%;">
-                                <input type="text" id="folder-id-input" placeholder="Enter Parent Folder ID or Link..."
-                                    value="1zbvK-y8MMVOfE6KIRikRstae2LN0iGFq">
-                                <button id="scan-btn" onclick="startScan()" style="width: 100%;">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                                        viewBox="0 0 24 24">
-                                        <circle cx="11" cy="11" r="8" />
-                                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                    </svg>
-                                    Scan Folders
-                                </button>
+                                style="display: none; flex-direction: column; align-items: stretch; gap: 14px; width: 100%;">
+                                
+                                <!-- Department Selector Tabs & Presets -->
+                                <div class="dept-tabs-wrapper">
+                                    <div class="dept-tabs-header">
+                                        <span class="dept-tabs-title">Faculty & Subject Presets:</span>
+                                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                            <button type="button" class="browse-modal-trigger-btn" onclick="openDriveLinksModal()" title="View popup box with all Drive links from facultyData.js">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                                </svg>
+                                                <span>facultyData.js Links</span>
+                                            </button>
+                                            <div class="dept-tabs">
+                                                <button type="button" class="dept-tab-btn active" id="tab-dept-it" onclick="switchDeptTab('IT')">
+                                                    <span class="tab-dot it-dot"></span>
+                                                    IT Department
+                                                </button>
+                                                <button type="button" class="dept-tab-btn" id="tab-dept-ce" onclick="switchDeptTab('CE')">
+                                                    <span class="tab-dot ce-dot"></span>
+                                                    CE Department
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Department Quick Presets List (1-Click Scan) -->
+                                    <div id="dept-presets-container" class="dept-presets-list">
+                                        <!-- Dynamically populated via JS -->
+                                    </div>
+                                </div>
+
+                                <div class="custom-id-wrapper" style="margin-top: 4px;">
+                                    <label class="sub-label">Parent Folder Link / ID:</label>
+                                    <div style="display: flex; gap: 8px; width: 100%;">
+                                        <input type="text" id="folder-id-input" placeholder="Enter Parent Folder ID or Link..."
+                                            value="1m2_s4hPYSs4L6LmnNfzS17Geor7Eknh5">
+                                        <button id="scan-btn" onclick="startScan()" style="white-space: nowrap;">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="11" cy="11" r="8" />
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                            </svg>
+                                            Scan Folders
+                                        </button>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -179,7 +217,9 @@
 
                         <div>
                             <label class="scanner-label">Console Logs</label>
-                            <div id="status" class="status">Please authorize to begin.</div>
+                            <div id="inline-console-wrapper">
+                                <div id="status" class="status">Please authorize to begin.</div>
+                            </div>
                         </div>
                     </div>
 
@@ -236,6 +276,70 @@
         $footer_class = 'rp-footer';
         include 'footer.php'; 
         ?>
+
+    <!-- Live Folder Scanner Console Popup Modal (Blurred Backdrop) -->
+    <div id="scanConsoleModal" class="scan-console-modal-overlay" style="display: none;">
+        <div class="scan-console-modal-card">
+            <div class="scan-console-modal-header">
+                <div class="scan-console-modal-title">
+                    <span class="live-pulse-dot"></span>
+                    <svg class="spin-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                    </svg>
+                    <span>Live Google Drive Recursive Scanner</span>
+                </div>
+                <button type="button" class="scan-console-modal-close" onclick="closeScanConsoleModal()" title="Minimize to Page">&times;</button>
+            </div>
+            <div id="scan-console-modal-body" class="scan-console-modal-body">
+                <!-- #status element moves here during active scanning -->
+            </div>
+            <div class="scan-console-modal-footer">
+                <span id="scan-console-modal-hint" class="modal-hint-text">⚡ Real-time line-by-line scanning in progress...</span>
+                <button type="button" class="scan-console-modal-btn" onclick="closeScanConsoleModal()">Minimize to Page</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drive Links Popup Modal (facultyData.js) -->
+    <div id="driveLinksModal" class="drive-modal-overlay" style="display: none;">
+        <div class="drive-modal-container">
+            <div class="drive-modal-header">
+                <div class="drive-modal-title">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>Faculty & Department Drive Links</span>
+                </div>
+                <button type="button" class="drive-modal-close" onclick="closeDriveLinksModal()">&times;</button>
+            </div>
+
+            <div class="drive-modal-body">
+                <div class="drive-modal-search-row">
+                    <div class="modal-search-wrap">
+                        <input type="text" id="modalDriveSearch" placeholder="Search faculty name, department, or initials..." autocomplete="off" oninput="filterModalDriveLinks()">
+                        <svg class="modal-search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </div>
+                    <div class="modal-dept-pills">
+                        <button type="button" class="modal-pill active" id="modal-pill-all" onclick="filterModalByDept('ALL')">All</button>
+                        <button type="button" class="modal-pill" id="modal-pill-it" onclick="filterModalByDept('IT')">IT Dept</button>
+                        <button type="button" class="modal-pill" id="modal-pill-ce" onclick="filterModalByDept('CE')">CE Dept</button>
+                    </div>
+                </div>
+
+                <div id="modalDriveLinksList" class="modal-drive-list">
+                    <!-- Dynamically rendered list from facultyData.js -->
+                </div>
+            </div>
+
+            <div class="drive-modal-footer">
+                <span class="modal-hint">Click any faculty/department folder link to populate & start 1-Click scan.</span>
+                <button type="button" class="modal-close-btn" onclick="closeDriveLinksModal()">Close</button>
+            </div>
+        </div>
+    </div>
 
     </div><!-- /rp-page -->
 
@@ -318,6 +422,174 @@
             maybeEnableButtons();
         }
 
+        // -------------------------------------------------------------
+        // Department Presets & 1-Click Handlers (Loads from facultyData.js)
+        // -------------------------------------------------------------
+        let currentDeptPreset = (localStorage.getItem("portal_dept") === "CE") ? "CE" : "IT";
+
+        document.addEventListener("DOMContentLoaded", function() {
+            renderDeptPresets(currentDeptPreset);
+        });
+
+        function renderDeptPresets(dept) {
+            currentDeptPreset = dept;
+            const container = document.getElementById("dept-presets-container");
+            if (!container) return;
+
+            const tabIT = document.getElementById("tab-dept-it");
+            const tabCE = document.getElementById("tab-dept-ce");
+            if (tabIT) tabIT.classList.toggle("active", dept === "IT");
+            if (tabCE) tabCE.classList.toggle("active", dept === "CE");
+
+            if (typeof facultyData === "undefined") {
+                container.innerHTML = `<div style="color: var(--text-muted); padding: 10px; font-size: 12px;">Loading faculty data...</div>`;
+                return;
+            }
+
+            // Filter faculty/admin items matching the department that have a NON-EMPTY driveLink property
+            const deptItems = facultyData.filter(m => {
+                const d = m.department || "";
+                const driveLinkVal = (m.driveLink || "").trim();
+                if (!driveLinkVal) return false;
+
+                if (dept === "IT") {
+                    return (d === "Information Technology" || d.includes("IT") || m.id === "adminit" || m.id === "dc" || m.id === "sw");
+                } else {
+                    return (d === "Computer Engineering" || d.includes("CE") || m.id === "admince" || m.id === "dc" || m.id === "eu");
+                }
+            });
+
+            // Sort department master admin item to the top
+            const targetAdminId = (dept === "CE") ? "admince" : "adminit";
+            deptItems.sort((a, b) => {
+                if (a.id === targetAdminId) return -1;
+                if (b.id === targetAdminId) return 1;
+                return 0;
+            });
+
+            const currentVal = document.getElementById("folder-id-input") ? document.getElementById("folder-id-input").value.trim() : "";
+
+            if (deptItems.length === 0) {
+                container.innerHTML = `
+                    <div class="no-presets-msg" style="padding: 14px; text-align: center; color: var(--text-muted); font-size: 12.5px; background: rgba(6, 10, 28, 0.4); border: 1px dashed rgba(255,255,255,0.08); border-radius: 8px;">
+                        No Drive links configured in <code>facultyData.js</code> for ${dept} Department.<br><span style="opacity: 0.85; font-size: 11.5px;">Please enter a Folder ID or Link in the input box below.</span>
+                    </div>`;
+                return;
+            }
+
+            let html = "";
+            deptItems.forEach(m => {
+                const linkVal = (m.driveLink || "").trim();
+                const isSelected = (currentVal === linkVal || extractFolderId(currentVal) === extractFolderId(linkVal));
+                const safeName = (m.name || "").replace(/'/g, "\\'");
+                const initials = m.initials || "IT";
+                const isMasterAdmin = (m.id === "adminit" || m.id === "admince");
+
+                if (isMasterAdmin) {
+                    const isMasterCe = (m.id === "admince");
+                    const masterTitle = m.semClass || (isMasterCe ? "CE 2026-27 ODD Master Folder" : "I.T 2026-27 ODD Master Folder");
+                    html += `
+                        <div class="preset-chip-card master-preset-card ${isSelected ? 'selected' : ''}" 
+                             onclick="selectAndScanPreset('${linkVal}', '${m.id}', '${safeName}')" 
+                             id="preset-card-${m.id}" 
+                             title="${m.name} - ${masterTitle}"
+                             style="flex: 1 1 100%; width: 100%; margin-bottom: 4px; border: 1px solid ${isMasterCe ? 'rgba(59, 130, 246, 0.45)' : 'rgba(239, 68, 68, 0.45)'}; background: ${isMasterCe ? 'rgba(37, 99, 235, 0.14)' : 'rgba(239, 68, 68, 0.14)'};">
+                            <div class="chip-avatar" style="background: ${isMasterCe ? 'linear-gradient(135deg, #2563eb, #1d4ed8)' : 'linear-gradient(135deg, #ef4444, #b91c1c)'} !important; width: 28px; height: 28px; font-size: 11px; flex-shrink: 0;">⚡</div>
+                            <div class="chip-main-info" style="flex: 1; min-width: 0;">
+                                <div class="chip-title" style="color: #ffffff; font-weight: 800; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${masterTitle}</div>
+                                <div class="chip-sub" style="color: ${isMasterCe ? '#93c5fd' : '#fca5a5'}; font-size: 10px; font-weight: 600;">⚡ Scan Whole ${dept} Department Folder</div>
+                            </div>
+                            <button type="button" class="chip-scan-btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35) !important;" title="1-Click Scan Whole Department">
+                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                                <span>Master Scan</span>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    const subText = m.semClass ? m.semClass.replace("Diploma ", "").replace("Degree ", "") : (m.designation || "Faculty");
+                    html += `
+                        <div class="preset-chip-card ${isSelected ? 'selected' : ''}" onclick="selectAndScanPreset('${linkVal}', '${m.id}', '${safeName}')" id="preset-card-${m.id}" title="${m.name} (${initials}) - ${subText}">
+                            <div class="chip-avatar ${getAvatarClass(m)}">${initials}</div>
+                            <div class="chip-main-info">
+                                <div class="chip-title">${initials}</div>
+                                <div class="chip-sub">${subText}</div>
+                            </div>
+                            <button type="button" class="chip-scan-btn" title="1-Click Scan">
+                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                                <span>Scan</span>
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        function switchDeptTab(dept) {
+            currentDeptPreset = dept;
+            renderDeptPresets(dept);
+
+            if (typeof facultyData !== "undefined") {
+                const adminMember = facultyData.find(m => m.id === (dept === "CE" ? "admince" : "adminit") && (m.driveLink || "").trim() !== "") 
+                    || facultyData.find(m => m.id === "dc" && (m.driveLink || "").trim() !== "");
+                if (adminMember && (adminMember.driveLink || "").trim() !== "") {
+                    const inputEl = document.getElementById("folder-id-input");
+                    if (inputEl) inputEl.value = adminMember.driveLink.trim();
+                }
+            }
+        }
+
+        function selectAndScanPreset(link, memberId, facultyName) {
+            const inputEl = document.getElementById("folder-id-input");
+            if (inputEl) {
+                inputEl.value = link;
+            }
+
+            document.querySelectorAll(".preset-chip-card").forEach(card => card.classList.remove("selected"));
+            const activeCard = document.getElementById(`preset-card-${memberId}`);
+            if (activeCard) {
+                activeCard.classList.add("selected");
+            }
+
+            if (typeof facultyData !== "undefined" && facultyName) {
+                const member = facultyData.find(m => m.name === facultyName);
+                if (member && document.getElementById("facultySearch")) {
+                    document.getElementById("facultySearch").value = member.name;
+                    document.getElementById("preparedBy").value = member.name;
+                    if (document.getElementById("facultyEmail")) document.getElementById("facultyEmail").value = member.email;
+                    if (document.getElementById("facultyPhone")) document.getElementById("facultyPhone").value = "+91 " + member.phone;
+                }
+            }
+
+            startScan();
+        }
+
+        function selectAndScanMaster(link, dept) {
+            const inputEl = document.getElementById("folder-id-input");
+            if (inputEl) {
+                inputEl.value = link;
+            }
+
+            switchDeptTab(dept);
+
+            if (typeof facultyData !== "undefined") {
+                const adminMember = facultyData.find(m => m.id === (dept === "CE" ? "admince" : "adminit"));
+                if (adminMember && document.getElementById("facultySearch")) {
+                    document.getElementById("facultySearch").value = adminMember.name;
+                    document.getElementById("preparedBy").value = adminMember.name;
+                    if (document.getElementById("facultyEmail")) document.getElementById("facultyEmail").value = adminMember.email;
+                    if (document.getElementById("facultyPhone")) document.getElementById("facultyPhone").value = "+91 " + adminMember.phone;
+                }
+            }
+
+            startScan();
+        }
+
         function maybeEnableButtons() {
             if (gapiInited && gisInited) {
                 const savedToken = localStorage.getItem('gmiu_drive_token');
@@ -329,6 +601,7 @@
                     document.getElementById('auth-btn').style.display = 'none';
                     document.getElementById('signout-btn').style.display = 'inline-block';
                     document.getElementById('scan-container').style.display = 'flex';
+                    renderDeptPresets(currentDeptPreset);
                     document.getElementById('status').innerText = 'Connected to Google Drive (Active session). Ready to scan.';
                 } else {
                     if (savedToken) {
@@ -358,6 +631,7 @@
                 document.getElementById('auth-btn').style.display = 'none';
                 document.getElementById('signout-btn').style.display = 'inline-block';
                 document.getElementById('scan-container').style.display = 'flex';
+                renderDeptPresets(currentDeptPreset);
                 document.getElementById('status').innerText = 'Authorization successful (Session active for 24h). Ready to scan.';
             };
 
@@ -413,6 +687,120 @@
             reportData = [];
             scannedFoldersData = [];
             scannedRootFolderName = '';
+        }
+
+        // -------------------------------------------------------------
+        // Drive Links Popup Modal (facultyData.js) JS Handlers
+        // -------------------------------------------------------------
+        let modalDeptFilter = "ALL";
+
+        function openDriveLinksModal() {
+            const modal = document.getElementById("driveLinksModal");
+            if (modal) {
+                modal.style.display = "flex";
+                renderModalDriveLinks();
+            }
+        }
+
+        function closeDriveLinksModal() {
+            const modal = document.getElementById("driveLinksModal");
+            if (modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function filterModalByDept(dept) {
+            modalDeptFilter = dept;
+            document.querySelectorAll(".modal-pill").forEach(p => p.classList.remove("active"));
+            const activePill = document.getElementById(`modal-pill-${dept.toLowerCase()}`);
+            if (activePill) activePill.classList.add("active");
+            renderModalDriveLinks();
+        }
+
+        function filterModalDriveLinks() {
+            renderModalDriveLinks();
+        }
+
+        function renderModalDriveLinks() {
+            const container = document.getElementById("modalDriveLinksList");
+            if (!container || typeof facultyData === "undefined") return;
+
+            const searchInput = document.getElementById("modalDriveSearch");
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
+            const items = facultyData.filter(member => {
+                const memberDept = member.department || "";
+                const driveLinkVal = (member.driveLink || "").trim();
+                if (!driveLinkVal) return false;
+
+                if (modalDeptFilter === "IT" && memberDept !== "Information Technology" && memberDept !== " IT & CE " && memberDept !== "Both") {
+                    return false;
+                }
+                if (modalDeptFilter === "CE" && memberDept !== "Computer Engineering" && memberDept !== " IT & CE " && memberDept !== "Both") {
+                    return false;
+                }
+
+                if (query) {
+                    const matchName = (member.name || "").toLowerCase().includes(query);
+                    const matchInitials = (member.initials || "").toLowerCase().includes(query);
+                    const matchEmail = (member.email || "").toLowerCase().includes(query);
+                    const matchDesg = (member.designation || "").toLowerCase().includes(query);
+                    return matchName || matchInitials || matchEmail || matchDesg;
+                }
+                return true;
+            });
+
+            if (items.length === 0) {
+                container.innerHTML = `<div class="modal-no-results">No drive links found for current search/filter.</div>`;
+                return;
+            }
+
+            let html = "";
+            items.forEach(member => {
+                const linkVal = (member.driveLink || "").trim();
+                const isDeptAdmin = (member.designation || "").includes("Admin") || (member.designation || "").includes("HOD");
+                const badgeText = isDeptAdmin ? ((member.department || "").includes("Computer") ? "CE Dept" : "IT Dept") : (member.semClass ? member.semClass : (member.designation || "Faculty"));
+
+                const safeName = (member.name || "").replace(/'/g, "\\'");
+                html += `
+                    <div class="modal-drive-item" onclick="selectModalDriveLink('${linkVal}', '${safeName}')">
+                        <div class="modal-avatar ${getAvatarClass(member)}">${member.initials}</div>
+                        <div class="modal-item-info">
+                            <div class="modal-item-name">${member.name} <span class="modal-item-badge">${badgeText}</span></div>
+                            <div class="modal-item-email">${member.email} &nbsp;·&nbsp; ${member.designation}</div>
+                            <div class="modal-item-link font-mono">${linkVal}</div>
+                        </div>
+                        <button type="button" class="modal-item-scan-btn">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                            <span>Scan Link</span>
+                        </button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function selectModalDriveLink(linkVal, facultyName) {
+            closeDriveLinksModal();
+            const inputEl = document.getElementById("folder-id-input");
+            if (inputEl) {
+                inputEl.value = linkVal;
+            }
+
+            if (typeof facultyData !== "undefined") {
+                const member = facultyData.find(m => m.name === facultyName);
+                if (member && document.getElementById("facultySearch")) {
+                    document.getElementById("facultySearch").value = member.name;
+                    document.getElementById("preparedBy").value = member.name;
+                    if (document.getElementById("facultyEmail")) document.getElementById("facultyEmail").value = member.email;
+                    if (document.getElementById("facultyPhone")) document.getElementById("facultyPhone").value = "+91 " + member.phone;
+                }
+            }
+
+            startScan();
         }
 
         function extractFolderId(input) {
@@ -483,6 +871,95 @@
             return finalName;
         }
 
+        // Console logger helper for real-time line-by-line feedback with automatic bottom scrolling
+        function logConsole(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            if (!statusEl) return;
+            const line = document.createElement('div');
+            line.className = `status-line ${type}`;
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            line.innerHTML = `<span style="opacity: 0.55; font-size: 11px; margin-right: 6px;">[${timeStr}]</span> ${message}`;
+            statusEl.appendChild(line);
+
+            // Auto-scroll both #status container and modal body container to the bottom
+            statusEl.scrollTop = statusEl.scrollHeight;
+            const modalBody = document.getElementById('scan-console-modal-body');
+            if (modalBody) {
+                modalBody.scrollTop = modalBody.scrollHeight;
+            }
+            if (statusEl.parentElement) {
+                statusEl.parentElement.scrollTop = statusEl.parentElement.scrollHeight;
+            }
+
+            try {
+                line.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            } catch (e) {
+                // Fallback
+            }
+        }
+
+        function openScanConsoleModal() {
+            const modal = document.getElementById('scanConsoleModal');
+            const modalBody = document.getElementById('scan-console-modal-body');
+            const statusEl = document.getElementById('status');
+            if (modal && modalBody && statusEl) {
+                modalBody.appendChild(statusEl);
+                modal.style.display = 'flex';
+                document.body.classList.add('modal-open');
+                document.documentElement.classList.add('modal-open');
+                document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
+                statusEl.scrollTop = statusEl.scrollHeight;
+                modalBody.scrollTop = modalBody.scrollHeight;
+            }
+        }
+
+        function closeScanConsoleModal() {
+            const modal = document.getElementById('scanConsoleModal');
+            const inlineContainer = document.getElementById('inline-console-wrapper');
+            const statusEl = document.getElementById('status');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            document.body.classList.remove('modal-open');
+            document.documentElement.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+            if (inlineContainer && statusEl && statusEl.parentElement !== inlineContainer) {
+                inlineContainer.appendChild(statusEl);
+                statusEl.scrollTop = statusEl.scrollHeight;
+            }
+        }
+
+        function setScanButtonScanning(isScanning) {
+            const scanBtn = document.getElementById('scan-btn');
+            if (!scanBtn) return;
+            scanBtn.disabled = isScanning;
+            if (isScanning) {
+                scanBtn.innerHTML = `
+                    <svg class="spin-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                    </svg>
+                    <span id="scan-btn-text">Scanning...</span>
+                `;
+            } else {
+                scanBtn.innerHTML = `
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <span>Scan Folders</span>
+                `;
+            }
+        }
+
+        function updateScanButtonText(text) {
+            const btnTextEl = document.getElementById('scan-btn-text');
+            if (btnTextEl) {
+                btnTextEl.innerText = text;
+            }
+        }
+
         async function startScan() {
             clearResults();
             const inputVal = document.getElementById('folder-id-input').value;
@@ -493,8 +970,15 @@
                 return;
             }
 
-            document.getElementById('status').innerText = 'Initializing recursive scan...';
-            document.getElementById('scan-btn').disabled = true;
+            const statusEl = document.getElementById('status');
+            if (statusEl) statusEl.innerHTML = '';
+            setScanButtonScanning(true);
+            openScanConsoleModal();
+
+            // Show summary card immediately so user sees live metric updates line-by-line
+            document.getElementById('summary-card').style.display = 'grid';
+
+            logConsole('🚀 Initializing Google Drive recursive folder scanner...', 'info');
 
             let totalDocs = 0;
             let totalActivityFolders = 0;
@@ -525,16 +1009,19 @@
 
                 // If we reached target depth or this is a leaf folder before target depth
                 if (depth === targetClassDepth || subfolders.length === 0) {
+                    const folderName = currentPath || rootName;
                     classFolders.push({
                         id: folderId,
-                        name: currentPath || rootName
+                        name: folderName
                     });
+                    logConsole(`🎯 Target directory identified: "${folderName}"`, 'success');
                     return;
                 }
 
                 // Recurse into subfolders
                 for (const subfolder of subfolders) {
                     const nextPath = currentPath ? `${currentPath} > ${subfolder.name}` : subfolder.name;
+                    logConsole(`📁 Discovering structure: "${nextPath}"`, 'folder');
                     await findClassFolders(subfolder.id, nextPath, depth + 1);
                 }
             }
@@ -570,6 +1057,9 @@
                     filesInFolder = filesInFolder.concat(fileBatch);
                     filePageToken = fileResponse.result.nextPageToken;
                 } while (filePageToken);
+
+                const subName = relativePath || "Main Folder";
+                logConsole(`   ↳ Checked "${subName}" — Found ${filesInFolder.length} file(s)`, filesInFolder.length > 0 ? 'file' : 'warn');
 
                 // If this is a subfolder of the class (depth 4 or more)
                 if (relativePath) {
@@ -609,6 +1099,7 @@
             }
 
             try {
+                logConsole(`📡 Connecting to parent Google Drive ID: ${parentFolderId}...`, 'info');
                 // Fetch root folder metadata
                 const rootMeta = await gapi.client.drive.files.get({
                     fileId: parentFolderId,
@@ -616,6 +1107,8 @@
                 });
                 rootName = rootMeta.result.name || "Root";
                 scannedRootFolderName = rootName;
+
+                logConsole(`🏷️ Scanned Root Directory Name: "${rootName}"`, 'info');
 
                 // Dynamically adjust target class depth based on root folder name
                 const rootNameLower = rootName.toLowerCase();
@@ -627,21 +1120,24 @@
                     targetClassDepth = 0;
                 }
 
-                // Find class folders
-                document.getElementById('status').innerText = 'Locating class folders...';
+                logConsole(`🔍 Scanning folder structure (Target Depth level = ${targetClassDepth})...`, 'info');
                 await findClassFolders(parentFolderId, "", 0);
 
                 if (classFolders.length === 0) {
-                    document.getElementById('status').innerText = 'No class folders found inside this directory.';
-                    document.getElementById('scan-btn').disabled = false;
+                    logConsole(`⚠️ No class folders found inside this directory.`, 'warn');
+                    setScanButtonScanning(false);
                     return;
                 }
 
-                document.getElementById('status').innerText = `Found ${classFolders.length} class folders. Scanning contents...`;
+                logConsole(`📦 Found ${classFolders.length} class folder(s). Executing content inspection...`, 'info');
 
                 for (let i = 0; i < classFolders.length; i++) {
                     const classFolder = classFolders[i];
-                    document.getElementById('status').innerText = `Scanning class (${i + 1}/${classFolders.length}): ${classFolder.name}...`;
+                    updateScanButtonText(`Scanning (${i + 1}/${classFolders.length})...`);
+                    const hintEl = document.getElementById('scan-console-modal-hint');
+                    if (hintEl) hintEl.innerText = `Scanning (${i + 1}/${classFolders.length}): ${classFolder.name}...`;
+
+                    logConsole(`🔍 [${i + 1}/${classFolders.length}] Inspecting "${classFolder.name}"...`, 'info');
 
                     const classData = {
                         id: classFolder.id,
@@ -663,8 +1159,16 @@
                     totalEmptyActivityFolders += emptyAct;
                     classFolderCount++;
 
-                    // Render in the HTML UI
+                    // Live update UI summary counter metrics immediately after each folder finishes
+                    document.getElementById('total-folders-val').innerText = totalActivityFolders;
+                    document.getElementById('total-docs-val').innerText = totalDocs;
+                    document.getElementById('non-empty-folders-val').innerText = totalNonEmptyActivityFolders;
+                    document.getElementById('empty-folders-val').innerText = totalEmptyActivityFolders;
+
+                    // Render card in the HTML UI immediately
                     renderClassResult(classFolder.name, classData.activities);
+
+                    logConsole(`✅ [${i + 1}/${classFolders.length}] Finished "${classFolder.name}" — ${docsCount} docs, ${filledAct}/${totalAct} subfolders filled`, 'success');
 
                     // Store class data for Excel generation
                     scannedFoldersData.push(classData);
@@ -681,13 +1185,6 @@
                         "File Names": activitiesSummary
                     });
                 }
-
-                // Show summary metrics in HTML UI (Subfolders / Activities total metrics)
-                document.getElementById('total-folders-val').innerText = totalActivityFolders;
-                document.getElementById('total-docs-val').innerText = totalDocs;
-                document.getElementById('non-empty-folders-val').innerText = totalNonEmptyActivityFolders;
-                document.getElementById('empty-folders-val').innerText = totalEmptyActivityFolders;
-                document.getElementById('summary-card').style.display = 'grid';
 
                 // Append summary data directly to the end of reportData for Excel sheet
                 reportData.push({
@@ -739,7 +1236,9 @@
                     resetCCEmailsToDefault();
                 }
 
-                document.getElementById('status').innerText = 'Scan Complete! You can now download the Excel report or send it via email.';
+                logConsole('🎉 Scan Complete! You can now download the Excel report or send it via email.', 'success');
+                const hintEl = document.getElementById('scan-console-modal-hint');
+                if (hintEl) hintEl.innerText = '🎉 Scan Complete! Closing popup modal...';
                 document.getElementById('download-btn').style.display = 'inline-block';
 
             } catch (err) {
@@ -751,13 +1250,14 @@
                     document.getElementById('auth-btn').style.display = 'inline-block';
                     document.getElementById('signout-btn').style.display = 'none';
                     document.getElementById('scan-container').style.display = 'none';
-                    document.getElementById('status').innerText = 'Session expired. Please click Authorize & Connect to reconnect.';
+                    logConsole('❌ Session expired. Please click Authorize & Connect to reconnect.', 'warn');
                 } else {
-                    document.getElementById('status').innerText = 'Error processing request. Check console log or API Permissions.';
+                    logConsole('❌ Error processing request. Check console log or API Permissions.', 'warn');
                 }
+            } finally {
+                setScanButtonScanning(false);
+                setTimeout(closeScanConsoleModal, 1200);
             }
-
-            document.getElementById('scan-btn').disabled = false;
         }
 
         function renderClassResult(className, activities) {
@@ -1143,9 +1643,9 @@
         const defaultCCEmails = [
             "drchandarana@gmiu.edu.in", // HOD (Prof. Dhaval Chandarana)
             "sbchauhan@gmiu.edu.in",    // Incharge HOD IT (Prof. Shwetaba Chauhan)
-            "ehunagar@gmiu.edu.in",     // Incharge HOD CE (Prof. Ekta Unagar)
-            "tmvyas@gmiu.edu.in",       // Sub Incharge HOD IT (Prof. Tarjanee Vyas)
-            "phkaneijya@gmiu.edu.in"    // Sub Incharge HOD CE (Prof. Pragnesh Kanejiya)
+            "ehunagar@gmiu.edu.in"     // Incharge HOD CE (Prof. Ekta Unagar)
+            //"tmvyas@gmiu.edu.in",       // Sub Incharge HOD IT (Prof. Tarjanee Vyas)
+            //"phkaneijya@gmiu.edu.in"    // Sub Incharge HOD CE (Prof. Pragnesh Kanejiya)
         ];
         let selectedCCEmails = [...defaultCCEmails];
 

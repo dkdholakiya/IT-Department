@@ -3172,8 +3172,14 @@ html[data-theme="light"] .zs-progress-bar-bg {
    ══════════════════════════════════════════════════════════ */
 
 /* Scrollbar in light mode */
-html[data-theme="light"] .syl-page ::-webkit-scrollbar-track { background: #f1f5f9 !important; }
-html[data-theme="light"] .syl-page ::-webkit-scrollbar-thumb { background: rgba(192,57,43,0.3) !important; border-color: #f1f5f9 !important; }
+html[data-theme="light"] .syl-page ::-webkit-scrollbar-track {
+    background: #f1f5f9 !important;
+}
+
+html[data-theme="light"] .syl-page ::-webkit-scrollbar-thumb {
+    background: rgba(192, 57, 43, 0.3) !important;
+    border-color: #f1f5f9 !important;
+}
 
 /* Header */
 html[data-theme="light"] .rp-dept-badge {
@@ -3220,8 +3226,13 @@ html[data-theme="light"] .syl-input-card {
     box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.03) !important;
 }
 
-html[data-theme="light"] .syl-input-card-title { color: #0f172a !important; }
-html[data-theme="light"] .syl-input-card-desc  { color: #475569 !important; }
+html[data-theme="light"] .syl-input-card-title {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .syl-input-card-desc {
+    color: #475569 !important;
+}
 
 html[data-theme="light"] .syl-url-input {
     background: #ffffff !important;
@@ -3230,7 +3241,9 @@ html[data-theme="light"] .syl-url-input {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
 }
 
-html[data-theme="light"] .syl-url-input::placeholder { color: #94a3b8 !important; }
+html[data-theme="light"] .syl-url-input::placeholder {
+    color: #94a3b8 !important;
+}
 
 html[data-theme="light"] .syl-url-input:hover {
     border-color: rgba(192, 57, 43, 0.4) !important;
@@ -3243,9 +3256,17 @@ html[data-theme="light"] .syl-url-input:focus {
     background: #ffffff !important;
 }
 
-html[data-theme="light"] .syl-url-icon { color: #94a3b8 !important; }
-html[data-theme="light"] .syl-url-clear { color: #94a3b8 !important; }
-html[data-theme="light"] .syl-url-clear:hover { color: #c0392b !important; }
+html[data-theme="light"] .syl-url-icon {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="light"] .syl-url-clear {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="light"] .syl-url-clear:hover {
+    color: #c0392b !important;
+}
 
 /* Stat Cards */
 html[data-theme="light"] .stat-card {
@@ -3259,8 +3280,13 @@ html[data-theme="light"] .stat-card:hover {
     box-shadow: 0 10px 30px rgba(192, 57, 43, 0.08), 0 2px 8px rgba(15, 23, 42, 0.05) !important;
 }
 
-html[data-theme="light"] .stat-card-val { color: #c0392b !important; }
-html[data-theme="light"] .stat-card-lbl { color: #64748b !important; }
+html[data-theme="light"] .stat-card-val {
+    color: #c0392b !important;
+}
+
+html[data-theme="light"] .stat-card-lbl {
+    color: #64748b !important;
+}
 
 html[data-theme="light"] .syl-export-btn {
     background: #ecfdf5 !important;
@@ -3308,7 +3334,9 @@ html[data-theme="light"] .syl-table-card-head {
     background: #f8fafc !important;
 }
 
-html[data-theme="light"] .syl-table-card-title { color: #0f172a !important; }
+html[data-theme="light"] .syl-table-card-title {
+    color: #0f172a !important;
+}
 
 html[data-theme="light"] .syl-count-badge {
     background: #ecfdf5 !important;
@@ -3343,9 +3371,17 @@ html[data-theme="light"] .code-pill:hover {
     border-color: #93c5fd !important;
 }
 
-html[data-theme="light"] .credit-num { color: #c0392b !important; }
-html[data-theme="light"] .subj-name  { color: #0f172a !important; }
-html[data-theme="light"] .subj-short { color: #64748b !important; }
+html[data-theme="light"] .credit-num {
+    color: #c0392b !important;
+}
+
+html[data-theme="light"] .subj-name {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .subj-short {
+    color: #64748b !important;
+}
 
 /* Loading & Alert */
 html[data-theme="light"] .syl-loading {
@@ -3354,8 +3390,13 @@ html[data-theme="light"] .syl-loading {
     box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
 }
 
-html[data-theme="light"] .syl-loading-title { color: #0f172a !important; }
-html[data-theme="light"] .syl-loading-desc  { color: #475569 !important; }
+html[data-theme="light"] .syl-loading-title {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .syl-loading-desc {
+    color: #475569 !important;
+}
 
 html[data-theme="light"] .syl-alert {
     background: #fef2f2 !important;
@@ -3363,8 +3404,13 @@ html[data-theme="light"] .syl-alert {
     color: #991b1b !important;
 }
 
-html[data-theme="light"] .syl-alert-title { color: #991b1b !important; }
-html[data-theme="light"] .syl-alert-msg   { color: #b91c1c !important; }
+html[data-theme="light"] .syl-alert-title {
+    color: #991b1b !important;
+}
+
+html[data-theme="light"] .syl-alert-msg {
+    color: #b91c1c !important;
+}
 
 /* Filter bar in light mode */
 html[data-theme="light"] .syl-filter-wrap .zs-segment-control {
@@ -3441,9 +3487,203 @@ html[data-theme="light"] .sync-auth-error {
 
 /* Light Theme Autofill overrides */
 html[data-theme="light"] input:-webkit-autofill,
-html[data-theme="light"] input:-webkit-autofill:hover, 
-html[data-theme="light"] input:-webkit-autofill:focus, 
+html[data-theme="light"] input:-webkit-autofill:hover,
+html[data-theme="light"] input:-webkit-autofill:focus,
 html[data-theme="light"] input:-webkit-autofill:active {
     -webkit-text-fill-color: #0f172a !important;
     -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+}
+
+/* ── Drive Scanner Presets & Modal Light Theme Overrides ── */
+html[data-theme="light"] .dept-tabs-wrapper {
+    background: #ffffff !important;
+    border: 1px solid rgba(203, 213, 225, 0.8) !important;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04) !important;
+}
+
+html[data-theme="light"] .dept-tabs-title {
+    color: #475569 !important;
+}
+
+html[data-theme="light"] .dept-tabs {
+    background: #f1f5f9 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html[data-theme="light"] .dept-tab-btn {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .dept-tab-btn.active {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
+    border: none !important;
+}
+
+html[data-theme="light"] .browse-modal-trigger-btn {
+    background: rgba(192, 57, 43, 0.08) !important;
+    border: 1px solid rgba(192, 57, 43, 0.25) !important;
+    color: #991b1b !important;
+}
+
+html[data-theme="light"] .browse-modal-trigger-btn:hover {
+    background: rgba(192, 57, 43, 0.15) !important;
+    color: #7f1d1d !important;
+}
+
+html[data-theme="light"] .preset-chip-card {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-theme="light"] .preset-chip-card:hover {
+    background: #eff6ff !important;
+    border-color: #93c5fd !important;
+}
+
+html[data-theme="light"] .preset-chip-card.selected {
+    background: #ecfdf5 !important;
+    border-color: #34d399 !important;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.25) !important;
+}
+
+html[data-theme="light"] .chip-title {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .chip-sub {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .drive-modal-overlay {
+    background: rgba(15, 23, 42, 0.5) !important;
+}
+
+html[data-theme="light"] .drive-modal-container {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15) !important;
+}
+
+html[data-theme="light"] .drive-modal-header,
+html[data-theme="light"] .drive-modal-footer {
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+}
+
+html[data-theme="light"] .drive-modal-title {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] #modalDriveSearch {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .modal-dept-pills {
+    background: #f1f5f9 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html[data-theme="light"] .modal-pill {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .modal-pill.active {
+    background: #2563eb !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] .modal-drive-item {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] .modal-drive-item:hover {
+    background: #eff6ff !important;
+    border-color: #93c5fd !important;
+}
+
+html[data-theme="light"] .modal-item-name {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .modal-item-email {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .modal-item-link {
+    color: #2563eb !important;
+}
+
+/* ── Live Scanner Console Popup Modal in Light Theme ── */
+html[data-theme="light"] .scan-console-modal-overlay {
+    background: rgba(15, 23, 42, 0.55) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+}
+
+html[data-theme="light"] .scan-console-modal-card {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.22), 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .scan-console-modal-header {
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] .scan-console-modal-title {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+}
+
+html[data-theme="light"] .scan-console-modal-close {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .scan-console-modal-close:hover {
+    color: #ef4444 !important;
+}
+
+html[data-theme="light"] .scan-console-modal-body {
+    background: #090e24 !important;
+    border-top: 1px solid #1e293b !important;
+    border-bottom: 1px solid #1e293b !important;
+}
+
+html[data-theme="light"] .scan-console-modal-footer {
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+html[data-theme="light"] .modal-hint-text {
+    color: #475569 !important;
+    font-weight: 600 !important;
+}
+
+html[data-theme="light"] .scan-console-modal-btn {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #334155 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-theme="light"] .scan-console-modal-btn:hover {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border-color: #94a3b8 !important;
+}
+
+/* Console Terminal Box inside Light Theme */
+html[data-theme="light"] .status {
+    background: #090e24 !important;
+    border: 1px solid #1e293b !important;
+    color: #f1f5f9 !important;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4) !important;
 }
