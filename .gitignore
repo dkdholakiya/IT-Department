@@ -1,1 +1,26 @@
+# Temporary & Scratch files
 scratch/
+
+# Uploaded Excel schedules and generated cache files
+uploads/**/*.xlsx
+uploads/**/*.xls
+uploads/**/*.json
+uploads/student_timetable/*
+uploads/timetable/*
+!uploads/student_timetable/.gitkeep
+!uploads/timetable/.gitkeep
+
+# Auto-compiled JS timetable database
+assets/js/timetableData.js
+
+# Logs and temporary files
+*.log
+error_log
+
+# System & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.tmp
