@@ -46,18 +46,36 @@ function saveExcelFromBase64($targetType, $base64Data) {
     if ($targetType === 'student') {
         $dir = __DIR__ . '/uploads/student_timetable/';
         if (!is_dir($dir)) @mkdir($dir, 0777, true);
+        
+        $targetFile = $dir . 'student_timetable.xlsx';
+        $cacheFile = $dir . 'student_timetable_cache.json';
+        $isChanged = true;
+        if (file_exists($targetFile) && file_exists($cacheFile)) {
+            if (md5_file($targetFile) === md5($binary)) {
+                $isChanged = false;
+            }
+        }
+
+        if (!$isChanged) {
+            return [
+                'success' => true,
+                'updated' => false,
+                'message' => 'Student Timetable is up-to-date (No changes in Google Sheet).',
+                'file' => 'uploads/student_timetable/student_timetable.xlsx',
+                'size' => number_format(strlen($binary) / 1024, 1) . ' KB'
+            ];
+        }
+
         $oldFiles = glob($dir . '*.{xlsx,xls,XLSX,XLS}', GLOB_BRACE);
         if ($oldFiles) {
             foreach ($oldFiles as $f) @unlink($f);
         }
-        @unlink($dir . 'student_timetable_cache.json');
+        @unlink($cacheFile);
         
-        $targetFile = $dir . 'student_timetable.xlsx';
         if (file_put_contents($targetFile, $binary) === false) {
             return ['success' => false, 'message' => 'Failed to save downloaded Student Excel file to server.'];
         }
         
-        $cacheFile = $dir . 'student_timetable_cache.json';
         $parseRes = parseExcelToTtCache($targetFile, $cacheFile);
         
         if (!$parseRes || !file_exists($cacheFile)) {
@@ -66,6 +84,7 @@ function saveExcelFromBase64($targetType, $base64Data) {
         
         return [
             'success' => true,
+            'updated' => true,
             'message' => 'Student Timetable updated & cache rebuilt successfully!',
             'file' => 'uploads/student_timetable/student_timetable.xlsx',
             'size' => number_format(strlen($binary) / 1024, 1) . ' KB'
@@ -73,12 +92,31 @@ function saveExcelFromBase64($targetType, $base64Data) {
     } else {
         $dir = __DIR__ . '/uploads/timetable/';
         if (!is_dir($dir)) @mkdir($dir, 0777, true);
+        
+        $targetFile = $dir . 'timetable.xlsx';
+        $compiledFile = __DIR__ . '/assets/js/timetableData.js';
+        $isChanged = true;
+        if (file_exists($targetFile) && file_exists($compiledFile)) {
+            if (md5_file($targetFile) === md5($binary)) {
+                $isChanged = false;
+            }
+        }
+
+        if (!$isChanged) {
+            return [
+                'success' => true,
+                'updated' => false,
+                'message' => 'Faculty Timetable is up-to-date (No changes in Google Sheet).',
+                'file' => 'uploads/timetable/timetable.xlsx',
+                'size' => number_format(strlen($binary) / 1024, 1) . ' KB'
+            ];
+        }
+
         $oldFiles = glob($dir . '*.{xlsx,xls,XLSX,XLS}', GLOB_BRACE);
         if ($oldFiles) {
             foreach ($oldFiles as $f) @unlink($f);
         }
         
-        $targetFile = $dir . 'timetable.xlsx';
         if (file_put_contents($targetFile, $binary) === false) {
             return ['success' => false, 'message' => 'Failed to save downloaded Faculty Excel file to server.'];
         }
@@ -93,6 +131,7 @@ function saveExcelFromBase64($targetType, $base64Data) {
         
         return [
             'success' => true,
+            'updated' => true,
             'message' => 'Faculty Timetable downloaded & compiled successfully! (' . ($compileRes['count'] ?? 0) . ' faculty members)',
             'file' => 'uploads/timetable/timetable.xlsx',
             'size' => number_format(strlen($binary) / 1024, 1) . ' KB',
@@ -322,6 +361,25 @@ function syncStudentTimetable($sheetId = null) {
         @mkdir($dir, 0777, true);
     }
     
+    $targetFile = $dir . 'student_timetable.xlsx';
+    $cacheFile = $dir . 'student_timetable_cache.json';
+    $isChanged = true;
+    if (file_exists($targetFile) && file_exists($cacheFile)) {
+        if (md5_file($targetFile) === md5($download['data'])) {
+            $isChanged = false;
+        }
+    }
+
+    if (!$isChanged) {
+        return [
+            'success' => true,
+            'updated' => false,
+            'message' => 'Student Timetable is up-to-date (No changes in Google Sheet).',
+            'file' => 'uploads/student_timetable/student_timetable.xlsx',
+            'size' => number_format($download['size'] / 1024, 1) . ' KB'
+        ];
+    }
+
     // 1. Remove all old Excel files in uploads/student_timetable/
     $oldFiles = glob($dir . '*.{xlsx,xls,XLSX,XLS}', GLOB_BRACE);
     if ($oldFiles) {
@@ -329,16 +387,14 @@ function syncStudentTimetable($sheetId = null) {
             @unlink($f);
         }
     }
-    @unlink($dir . 'student_timetable_cache.json');
+    @unlink($cacheFile);
     
     // 2. Save new file as student_timetable.xlsx
-    $targetFile = $dir . 'student_timetable.xlsx';
     if (file_put_contents($targetFile, $download['data']) === false) {
         return ['success' => false, 'message' => 'Failed to save downloaded Student Excel file to server.'];
     }
     
     // 3. Rebuild JSON cache immediately to prevent mismatch
-    $cacheFile = $dir . 'student_timetable_cache.json';
     $parseRes = parseExcelToTtCache($targetFile, $cacheFile);
     
     if (!$parseRes || !file_exists($cacheFile)) {
@@ -347,6 +403,7 @@ function syncStudentTimetable($sheetId = null) {
     
     return [
         'success' => true,
+        'updated' => true,
         'message' => 'Student Timetable updated & cache rebuilt successfully!',
         'file' => 'uploads/student_timetable/student_timetable.xlsx',
         'size' => number_format($download['size'] / 1024, 1) . ' KB'
@@ -372,6 +429,25 @@ function syncFacultyTimetable($sheetId = null) {
         @mkdir($dir, 0777, true);
     }
     
+    $targetFile = $dir . 'timetable.xlsx';
+    $compiledFile = __DIR__ . '/assets/js/timetableData.js';
+    $isChanged = true;
+    if (file_exists($targetFile) && file_exists($compiledFile)) {
+        if (md5_file($targetFile) === md5($download['data'])) {
+            $isChanged = false;
+        }
+    }
+
+    if (!$isChanged) {
+        return [
+            'success' => true,
+            'updated' => false,
+            'message' => 'Faculty Timetable is up-to-date (No changes in Google Sheet).',
+            'file' => 'uploads/timetable/timetable.xlsx',
+            'size' => number_format($download['size'] / 1024, 1) . ' KB'
+        ];
+    }
+
     // 1. Remove all old Excel files in uploads/timetable/
     $oldFiles = glob($dir . '*.{xlsx,xls,XLSX,XLS}', GLOB_BRACE);
     if ($oldFiles) {
@@ -381,7 +457,6 @@ function syncFacultyTimetable($sheetId = null) {
     }
     
     // 2. Save new file as timetable.xlsx
-    $targetFile = $dir . 'timetable.xlsx';
     if (file_put_contents($targetFile, $download['data']) === false) {
         return ['success' => false, 'message' => 'Failed to save downloaded Faculty Excel file to server.'];
     }
@@ -397,6 +472,7 @@ function syncFacultyTimetable($sheetId = null) {
     
     return [
         'success' => true,
+        'updated' => true,
         'message' => 'Faculty Timetable downloaded & compiled successfully! (' . ($compileRes['count'] ?? 0) . ' faculty members)',
         'file' => 'uploads/timetable/timetable.xlsx',
         'size' => number_format($download['size'] / 1024, 1) . ' KB',

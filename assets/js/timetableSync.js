@@ -128,11 +128,13 @@ function promptSyncPasswordModal(onSuccessCallback) {
     pwdInput.focus();
 }
 
-function fetchDirectFromAppsScript(webappUrl, targetType, providedPassword, callback) {
+function fetchDirectFromAppsScript(webappUrl, targetType, providedPassword, callback, isSilent = false) {
     const btnTexts = document.querySelectorAll('.quick-sync-text');
     const icons = document.querySelectorAll('.quick-sync-icon');
     
-    btnTexts.forEach(el => el.textContent = 'Browser Downloading Sheet...');
+    if (!isSilent) {
+        btnTexts.forEach(el => el.textContent = 'Browser Downloading Sheet...');
+    }
     
     const url = webappUrl + (webappUrl.includes('?') ? '&' : '?') + 'target=' + encodeURIComponent(targetType) + '&_t=' + Date.now();
     
@@ -148,10 +150,13 @@ function fetchDirectFromAppsScript(webappUrl, targetType, providedPassword, call
     })
     .then(json => {
         if (json.success && json.base64) {
-            btnTexts.forEach(el => el.textContent = 'Saving Sheet...');
+            if (!isSilent) {
+                btnTexts.forEach(el => el.textContent = 'Saving Sheet...');
+            }
             
             let postBody = 'action=save_base64&target=' + encodeURIComponent(targetType) +
                            '&password=' + encodeURIComponent(providedPassword || '') +
+                           '&auto=1' +
                            '&base64=' + encodeURIComponent(json.base64);
                            
             return fetch('sync-timetables.php?action=save_base64', {
@@ -165,26 +170,45 @@ function fetchDirectFromAppsScript(webappUrl, targetType, providedPassword, call
             })
             .then(res => res.json())
             .then(saveRes => {
-                icons.forEach(el => el.style.animation = 'none');
+                if (!isSilent) {
+                    icons.forEach(el => el.style.animation = 'none');
+                }
                 if (saveRes.success) {
-                    btnTexts.forEach(el => el.textContent = '✓ Updated!');
+                    if (!isSilent) {
+                        btnTexts.forEach(el => el.textContent = '✓ Updated!');
+                    }
+                    if (saveRes.updated !== false) {
+                        try { sessionStorage.clear(); } catch(e) {}
+                    }
                     if (callback) callback(saveRes);
-                    else setTimeout(() => location.reload(), 500);
+                    else if (!isSilent) setTimeout(() => location.reload(), 500);
                 } else {
-                    btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
-                    alert("⚠️ Save Error: " + (saveRes.message || 'Failed to save base64 binary.'));
+                    if (!isSilent) {
+                        btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
+                        alert("⚠️ Save Error: " + (saveRes.message || 'Failed to save base64 binary.'));
+                    } else {
+                        console.warn('[AutoSync] Direct save error:', saveRes.message);
+                    }
                 }
             });
         } else {
-            icons.forEach(el => el.style.animation = 'none');
-            btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
-            alert("⚠️ Google Apps Script Error: " + (json.error || 'Failed to fetch spreadsheet.'));
+            if (!isSilent) {
+                icons.forEach(el => el.style.animation = 'none');
+                btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
+                alert("⚠️ Google Apps Script Error: " + (json.error || 'Failed to fetch spreadsheet.'));
+            } else {
+                console.warn('[AutoSync] Direct fetch script error:', json.error);
+            }
         }
     })
     .catch(err => {
-        icons.forEach(el => el.style.animation = 'none');
-        btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
-        alert("⚠️ Direct Sync Error: " + err.message);
+        if (!isSilent) {
+            icons.forEach(el => el.style.animation = 'none');
+            btnTexts.forEach(el => el.textContent = 'Sync Live Sheet');
+            alert("⚠️ Direct Sync Error: " + err.message);
+        } else {
+            console.warn('[AutoSync] Direct fetch network error:', err.message);
+        }
     });
 }
 
@@ -251,6 +275,7 @@ function quickSyncSheet(e, targetType, providedPassword) {
 
         if (data.success) {
             btnTexts.forEach(el => el.textContent = '✓ Updated!');
+            try { sessionStorage.clear(); } catch(e) {}
             setTimeout(() => location.reload(), 500);
         } else {
             let errMsg = 'Failed to sync Google Sheet.';
@@ -277,7 +302,7 @@ function quickSyncSheet(e, targetType, providedPassword) {
         ? window.AUTO_SYNC_INTERVAL 
         : 60000; // default 60 seconds interval
     
-    setInterval(function() {
+    function performAutoSync() {
         fetch('sync-timetables.php?action=sync_all&auto=1', {
             method: 'POST',
             headers: {
@@ -290,11 +315,47 @@ function quickSyncSheet(e, targetType, providedPassword) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                console.log('[AutoSync] Background Google Sheets live sync completed cleanly at ' + new Date().toLocaleTimeString());
+                let hasChanges = false;
+                if (data.results) {
+                    Object.keys(data.results).forEach(k => {
+                        if (data.results[k] && data.results[k].updated === true) {
+                            hasChanges = true;
+                        }
+                    });
+                }
+                if (hasChanges) {
+                    console.log('[AutoSync] New Google Sheets timetable updates detected and saved at ' + new Date().toLocaleTimeString());
+                    try { sessionStorage.clear(); } catch(e) {}
+                    setTimeout(() => location.reload(), 500);
+                } else {
+                    console.log('[AutoSync] Live sync check completed at ' + new Date().toLocaleTimeString() + ' (No changes found)');
+                }
+            } else if (data.results) {
+                // Handle client direct fallback if server outbound cURL failed on local server
+                let handledFallback = false;
+                ['faculty', 'student'].forEach(key => {
+                    const resObj = data.results[key];
+                    if (!handledFallback && resObj && resObj.client_fallback && resObj.webapp_url) {
+                        handledFallback = true;
+                        console.log('[AutoSync] Server cURL restricted. Attempting silent browser direct sync for ' + key + '...');
+                        fetchDirectFromAppsScript(resObj.webapp_url, resObj.target, '', function(saveRes) {
+                            if (saveRes && saveRes.updated === true) {
+                                console.log('[AutoSync] Silent direct sync downloaded new changes. Refreshing page...');
+                                try { sessionStorage.clear(); } catch(e) {}
+                                setTimeout(() => location.reload(), 500);
+                            } else {
+                                console.log('[AutoSync] Silent direct sync completed at ' + new Date().toLocaleTimeString() + ' (No changes found)');
+                            }
+                        }, true);
+                    }
+                });
             }
         })
         .catch(err => {
             console.warn('[AutoSync] Background sync check skipped:', err);
         });
-    }, autoSyncIntervalMs);
+    }
+
+    setInterval(performAutoSync, autoSyncIntervalMs);
 })();
+
