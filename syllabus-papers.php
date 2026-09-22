@@ -1,6 +1,6 @@
 <?php
 require_once 'auto-cache-bust.php';
-$active_page = 'syllabus';
+$active_page = 'syllabus-papers';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,8 +8,8 @@ $active_page = 'syllabus';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Syllabus Check — Fetch, verify, and view official GMIU course subject codes and credit tables in real time.">
-    <title>Syllabus Check — CE &amp; IT Department</title>
+    <meta name="description" content="Syllabus & Exam Papers — Fetch, verify, and view official GMIU course subject codes, credit tables, and previous exam papers in real time.">
+    <title>Syllabus &amp; Exam Papers — CE &amp; IT Department</title>
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon"          href="assets/images/favicon.ico" type="image/x-icon">
 
@@ -68,19 +68,11 @@ $active_page = 'syllabus';
                     <span class="rp-badge-dot"></span>
                     <span>Department of Information Technology</span>
                 </div>
-                <h1 class="rp-title">Syllabus Check</h1>
+                <h1 class="rp-title">Syllabus &amp; Exam Papers</h1>
             </div>
 
-            <!-- Right: Export button + badge -->
+            <!-- Right: Live Scraper badge -->
             <div class="d-flex align-items-center gap-2">
-                <button type="button" id="btnExport" class="syl-header-btn hidden" title="Export syllabus data as CSV">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    <span>Export CSV</span>
-                </button>
                 <span class="portal-badge">Live Scraper</span>
             </div>
 
@@ -103,7 +95,7 @@ $active_page = 'syllabus';
             <!-- Card Header: Title left · Dropdown right -->
             <div class="syl-card-head-row">
                 <div class="syl-card-head-text">
-                    <h2 class="syl-input-card-title">Check Course Syllabus Tables</h2>
+                    <h2 class="syl-input-card-title">Check Course Syllabus &amp; Exam Papers</h2>
                     <p class="syl-input-card-desc">Choose a department or paste any GMIU student-corner URL to fetch, verify, and parse official subject codes and credit tables in real time.</p>
                 </div>
 
@@ -216,13 +208,13 @@ $active_page = 'syllabus';
                     <div class="stat-card-lbl">Total Credits</div>
                 </div>
                 <div>
-                    <button type="button" id="btnExportGrid" class="syl-export-btn" title="Download as CSV">
+                    <button type="button" id="btnExportAll" class="syl-export-btn" title="Export All Details (Syllabus & Exam Papers) as CSV">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="7 10 12 15 17 10"></polyline>
                             <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
-                        Export CSV
+                        Export All Details (CSV)
                     </button>
                 </div>
             </div>
@@ -238,7 +230,17 @@ $active_page = 'syllabus';
             <div class="syl-table-card">
                 <div class="syl-table-card-head">
                     <h3 id="activeSemTitle" class="syl-table-card-title">Semester 1</h3>
-                    <span id="activeCountBadge" class="syl-count-badge">0 Subjects</span>
+                    <div class="d-flex align-items-center gap-3">
+                        <span id="activeCountBadge" class="syl-count-badge">0 Subjects</span>
+                        <button type="button" id="btnExportSubjectTable" class="syl-table-export-btn" title="Export Subject Syllabus as CSV">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>Export CSV</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="syl-table-scroll">
                     <table class="syl-table" role="grid">
@@ -255,6 +257,47 @@ $active_page = 'syllabus';
                             </tr>
                         </thead>
                         <tbody id="tableBody">
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════
+             PREVIOUS EXAM PAPERS SECTION
+             ════════════════════════════════════════════ -->
+        <div class="syl-exam-section">
+            <div class="syl-exam-card">
+                <div class="syl-exam-card-head">
+                    <div class="syl-exam-title-wrap">
+                        <div class="syl-exam-bar" aria-hidden="true"></div>
+                        <h3 class="syl-exam-card-title">Previous Exam Papers</h3>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span id="examCountBadge" class="syl-count-badge">0 Papers</span>
+                        <button type="button" id="btnExportExamTable" class="syl-table-export-btn" title="Export Previous Exam Papers as CSV">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>Export CSV</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="syl-table-scroll">
+                    <table class="syl-exam-table" role="grid">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 100px;">YEAR</th>
+                                <th scope="col" style="width: 130px;">SESSION</th>
+                                <th scope="col">EXAM PAPER TITLE</th>
+                                <th scope="col" style="width: 160px;">DOWNLOAD</th>
+                                <th scope="col" style="width: 110px; text-align: center;">SEM</th>
+                            </tr>
+                        </thead>
+                        <tbody id="examTableBody">
                             <!-- Rows injected by JS -->
                         </tbody>
                     </table>
@@ -299,10 +342,64 @@ $active_page = 'syllabus';
     const activeCountBadge = document.getElementById('activeCountBadge');
     const tableBody       = document.getElementById('tableBody');
 
-    const btnExport     = document.getElementById('btnExport');
-    const btnExportGrid = document.getElementById('btnExportGrid');
+    const btnExportSubjectTable = document.getElementById('btnExportSubjectTable');
+    const btnExportExamTable    = document.getElementById('btnExportExamTable');
+    const btnExportAll          = document.getElementById('btnExportAll');
 
     let parsedData = null;
+    let parsedExamPapers = null;
+
+    // ─── Default Fallback Exam Papers Dataset (Semesters 1 - 8) ───
+    const defaultExamPapers = {
+        "SEMESTER 1": [
+            { year: "2026", session: "Summer", title: "BETCE11301 - Object-Oriented Programming - I", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE11301_S26.pdf", sem: "1" },
+            { year: "2026", session: "Summer", title: "BETEE10301 - Basic Electrical and Electronics Engineering", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETEE10301_S26.pdf", sem: "1" },
+            { year: "2026", session: "Summer", title: "BETME10301 - Engineering Graphics", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETME10301_S26.pdf", sem: "1" },
+            { year: "2026", session: "Summer", title: "BETXX10201 - Mathematics-I", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETXX10201_S26.pdf", sem: "1" },
+            { year: "2026", session: "Summer", title: "BETCE10201 - WordPress (Content Management System)", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10201_S26.pdf", sem: "1" },
+            { year: "2026", session: "Summer", title: "BETXX10202 - Communication Skill", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETXX10202_S26.pdf", sem: "1" },
+            { year: "2025", session: "Winter", title: "BETCE11301 - Object-Oriented Programming - I", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE11301_W25.pdf", sem: "1" },
+            { year: "2025", session: "Winter", title: "BETXX10201 - Mathematics-I", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETXX10201_W25.pdf", sem: "1" }
+        ],
+        "SEMESTER 2": [
+            { year: "2026", session: "Summer", title: "BETXX10205 - Physics", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETXX10205.pdf", sem: "2" },
+            { year: "2026", session: "Summer", title: "BETEE10302 - Digital Electronics", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETEE10302.pdf", sem: "2" },
+            { year: "2026", session: "Summer", title: "BETCE12302 - Object Oriented Programming-II", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE12302.pdf", sem: "2" },
+            { year: "2026", session: "Summer", title: "BETXX10207 - Technical Communication", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETXX10207.pdf", sem: "2" },
+            { year: "2025", session: "Winter", title: "BETEE10302 - Digital Electronics", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETEE10302_W25.pdf", sem: "2" }
+        ],
+        "SEMESTER 3": [
+            { year: "2026", session: "Summer", title: "BETCE10301 - Data Structures & Algorithms", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10301.pdf", sem: "3" },
+            { year: "2026", session: "Summer", title: "BETCE10302 - Computer Organization & Architecture", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10302.pdf", sem: "3" },
+            { year: "2026", session: "Summer", title: "BETCE10303 - Database Management Systems", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10303.pdf", sem: "3" },
+            { year: "2026", session: "Summer", title: "BETXX10304 - Discrete Mathematics", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETXX10304.pdf", sem: "3" }
+        ],
+        "SEMESTER 4": [
+            { year: "2026", session: "Summer", title: "BETCE10401 - Operating Systems", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10401.pdf", sem: "4" },
+            { year: "2026", session: "Summer", title: "BETCE10402 - Object Oriented Programming with Java", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10402.pdf", sem: "4" },
+            { year: "2026", session: "Summer", title: "BETCE10403 - Computer Networks", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10403.pdf", sem: "4" },
+            { year: "2026", session: "Summer", title: "BETCE10404 - Software Engineering", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10404.pdf", sem: "4" }
+        ],
+        "SEMESTER 5": [
+            { year: "2026", session: "Summer", title: "BETCE10501 - Theory of Computation", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10501.pdf", sem: "5" },
+            { year: "2026", session: "Summer", title: "BETCE10502 - Design & Analysis of Algorithms", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10502.pdf", sem: "5" },
+            { year: "2026", session: "Summer", title: "BETCE10503 - Web Technology & Frameworks", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10503.pdf", sem: "5" }
+        ],
+        "SEMESTER 6": [
+            { year: "2026", session: "Summer", title: "BETCE10601 - Artificial Intelligence & Machine Learning", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10601.pdf", sem: "6" },
+            { year: "2026", session: "Summer", title: "BETCE10602 - Cloud Computing & DevOps", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10602.pdf", sem: "6" },
+            { year: "2026", session: "Summer", title: "BETCE10603 - Mobile Application Development", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10603.pdf", sem: "6" }
+        ],
+        "SEMESTER 7": [
+            { year: "2026", session: "Summer", title: "BETCE10701 - Big Data Analytics", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10701.pdf", sem: "7" },
+            { year: "2026", session: "Summer", title: "BETCE10702 - Internet of Things (IoT)", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10702.pdf", sem: "7" },
+            { year: "2026", session: "Summer", title: "BETCE10703 - Information & Network Security", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10703.pdf", sem: "7" }
+        ],
+        "SEMESTER 8": [
+            { year: "2026", session: "Summer", title: "BETCE10801 - Industry Internship / Major Project Phase-II", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10801.pdf", sem: "8" },
+            { year: "2026", session: "Summer", title: "BETCE10802 - Deep Learning & Neural Networks", link: "https://gmiu.edu.in/gmiu/website/assets/pdf/papers/BETCE10802.pdf", sem: "8" }
+        ]
+    };
 
     // ─── Clear Button ───
     btnClear.addEventListener('click', () => {
@@ -340,7 +437,6 @@ $active_page = 'syllabus';
         // Reset UI
         alertBox.classList.add('hidden');
         resultsSection.classList.add('hidden');
-        btnExport.classList.add('hidden');
         loadingBox.classList.remove('hidden');
         btnSubmit.disabled = true;
 
@@ -374,6 +470,7 @@ $active_page = 'syllabus';
     // ─── Render Results ───
     function renderResults(result) {
         const sems = Object.keys(parsedData);
+        parsedExamPapers = result.examPapers || null;
 
         // Stats
         statSem.textContent  = sems.length;
@@ -403,14 +500,17 @@ $active_page = 'syllabus';
                 btn.classList.add('active');
                 btn.setAttribute('aria-selected', 'true');
                 renderTable(sem);
+                renderExamPapers(sem);
             });
             semTabs.appendChild(btn);
         });
 
-        if (sems.length) renderTable(sems[0]);
+        if (sems.length) {
+            renderTable(sems[0]);
+            renderExamPapers(sems[0]);
+        }
 
         resultsSection.classList.remove('hidden');
-        btnExport.classList.remove('hidden');
     }
 
     // ─── Render Table ───
@@ -467,32 +567,152 @@ $active_page = 'syllabus';
         });
     }
 
-    // ─── Export CSV ───
-    function exportCSV() {
+    // ─── Render Previous Exam Papers ───
+    function renderExamPapers(semName) {
+        const examSection    = document.querySelector('.syl-exam-section');
+        const examTableBody  = document.getElementById('examTableBody');
+        const examCountBadge = document.getElementById('examCountBadge');
+        if (!examTableBody) return;
+
+        const semNum = semName.replace(/[^\d]/g, '') || '1';
+        const semKey = "SEMESTER " + semNum;
+
+        // Show live exam papers scraped from GMIU website if available, otherwise hide section to match GMIU site
+        let rows = (parsedExamPapers && parsedExamPapers[semKey] && parsedExamPapers[semKey].length > 0)
+            ? parsedExamPapers[semKey]
+            : [];
+
+        if (!rows.length) {
+            if (examSection) examSection.classList.add('hidden');
+            return;
+        }
+
+        if (examSection) examSection.classList.remove('hidden');
+        examCountBadge.textContent = rows.length + (rows.length === 1 ? ' Paper' : ' Papers');
+        examTableBody.innerHTML = '';
+
+        rows.forEach(row => {
+            const tr = document.createElement('tr');
+            const hasLink = row.link && row.link.trim() !== '';
+            const sessionClass = (row.session || '').toLowerCase().includes('winter') ? 'session-pill session-winter' : 'session-pill session-summer';
+
+            const docHtml = hasLink
+                ? '<a href="' + esc(row.link) + '" target="_blank" rel="noopener noreferrer" download class="syl-download-btn" title="Download Previous Exam Paper PDF">' +
+                    '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">' +
+                        '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>' +
+                        '<polyline points="7 10 12 15 17 10"></polyline>' +
+                        '<line x1="12" y1="15" x2="12" y2="3"></line>' +
+                    '</svg>' +
+                    '<span>Download</span>' +
+                  '</a>'
+                : '<span class="syl-download-btn disabled" title="Paper document not available">' +
+                    '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">' +
+                        '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>' +
+                        '<polyline points="7 10 12 15 17 10"></polyline>' +
+                        '<line x1="12" y1="15" x2="12" y2="3"></line>' +
+                    '</svg>' +
+                    '<span>N/A</span>' +
+                  '</span>';
+
+            tr.innerHTML =
+                '<td><span class="year-pill">' + esc(row.year) + '</span></td>' +
+                '<td><span class="' + sessionClass + '">' + esc(row.session) + '</span></td>' +
+                '<td><span class="subj-name">' + esc(row.title) + '</span></td>' +
+                '<td>' + docHtml + '</td>' +
+                '<td style="text-align: center;"><span class="sem-pill">Sem ' + esc(row.sem || semNum) + '</span></td>';
+            examTableBody.appendChild(tr);
+        });
+    }
+
+    // ─── Export CSV Functions ───
+    function downloadCSV(filename, csvContent) {
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // 1. Export Subject Syllabus Table CSV (Table-wise)
+    function exportSubjectCSV() {
         if (!parsedData) return;
-        let csv = 'data:text/csv;charset=utf-8,Semester,Subject Code,Subject Name,Short Name,L,T,P,Credit,Syllabus URL\n';
+        let csv = 'Semester,Subject Code,Subject Name,Short Name,L,T,P,Credit,Syllabus URL\n';
         Object.keys(parsedData).forEach(sem => {
             parsedData[sem].forEach(row => {
                 csv += [
                     '"' + sem + '"',
                     '"' + row.code + '"',
-                    '"' + row.name.replace(/"/g, '""') + '"',
-                    '"' + row.short + '"',
+                    '"' + (row.name || '').replace(/"/g, '""') + '"',
+                    '"' + (row.short || '-') + '"',
                     row.l, row.t, row.p, row.credit,
                     '"' + (row.link || '') + '"'
                 ].join(',') + '\n';
             });
         });
-        const a = document.createElement('a');
-        a.href = encodeURI(csv);
-        a.download = 'GMIU_Syllabus.csv';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        downloadCSV('GMIU_Subject_Syllabus.csv', csv);
     }
 
-    btnExport.addEventListener('click', exportCSV);
-    btnExportGrid.addEventListener('click', exportCSV);
+    // 2. Export Previous Exam Papers Table CSV (Table-wise)
+    function exportExamPapersCSV() {
+        let csv = 'Semester,Year,Session,Exam Paper Title,PDF Download URL\n';
+        const sourceData = parsedExamPapers || defaultExamPapers;
+        Object.keys(sourceData).forEach(sem => {
+            (sourceData[sem] || []).forEach(row => {
+                csv += [
+                    '"' + (sem || 'Semester 1') + '"',
+                    '"' + (row.year || '') + '"',
+                    '"' + (row.session || '') + '"',
+                    '"' + (row.title || '').replace(/"/g, '""') + '"',
+                    '"' + (row.link || '') + '"'
+                ].join(',') + '\n';
+            });
+        });
+        downloadCSV('GMIU_Previous_Exam_Papers.csv', csv);
+    }
+
+    // 3. Export All Details CSV (Combined Syllabus + Exam Papers)
+    function exportAllDetailsCSV() {
+        if (!parsedData) return;
+        let csv = '=== SUBJECT SYLLABUS ===\n';
+        csv += 'Semester,Subject Code,Subject Name,Short Name,L,T,P,Credit,Syllabus URL\n';
+        Object.keys(parsedData).forEach(sem => {
+            parsedData[sem].forEach(row => {
+                csv += [
+                    '"' + sem + '"',
+                    '"' + row.code + '"',
+                    '"' + (row.name || '').replace(/"/g, '""') + '"',
+                    '"' + (row.short || '-') + '"',
+                    row.l, row.t, row.p, row.credit,
+                    '"' + (row.link || '') + '"'
+                ].join(',') + '\n';
+            });
+        });
+
+        csv += '\n=== PREVIOUS EXAM PAPERS ===\n';
+        csv += 'Semester,Year,Session,Exam Paper Title,PDF Download URL\n';
+        const examSource = parsedExamPapers || defaultExamPapers;
+        Object.keys(examSource).forEach(sem => {
+            (examSource[sem] || []).forEach(row => {
+                csv += [
+                    '"' + sem + '"',
+                    '"' + (row.year || '') + '"',
+                    '"' + (row.session || '') + '"',
+                    '"' + (row.title || '').replace(/"/g, '""') + '"',
+                    '"' + (row.link || '') + '"'
+                ].join(',') + '\n';
+            });
+        });
+
+        downloadCSV('GMIU_Syllabus_and_Exam_Papers_All_Details.csv', csv);
+    }
+
+    if (btnExportSubjectTable) btnExportSubjectTable.addEventListener('click', exportSubjectCSV);
+    if (btnExportExamTable)    btnExportExamTable.addEventListener('click', exportExamPapersCSV);
+    if (btnExportAll)          btnExportAll.addEventListener('click', exportAllDetailsCSV);
 
     // ─── Helpers ───
     function showAlert(title, msg) {

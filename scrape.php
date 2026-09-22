@@ -116,12 +116,74 @@ $xpath = new DOMXPath($dom);
 $tables = $xpath->query('//table');
 
 $semGroups = [];
+$examPapersGroups = [];
 $tableIndex = 0;
 $totalSubjects = 0;
+$totalExamPapers = 0;
 
 foreach ($tables as $table) {
     $tableText = $table->textContent;
     
+    // Check if table contains Previous Exam Papers
+    $isExamTable = preg_match('/PREVIOUS\s*EXAM\s*PAPERS/i', $tableText) ||
+                   (preg_match('/YEAR/i', $tableText) && preg_match('/SESSION/i', $tableText) && (preg_match('/DOCUMENT/i', $tableText) || preg_match('/TITLE/i', $tableText)));
+
+    if ($isExamTable) {
+        $trNodes = $xpath->query('.//tr', $table);
+        foreach ($trNodes as $tr) {
+            $cellNodes = $xpath->query('.//td | .//th', $tr);
+            $cells = [];
+            foreach ($cellNodes as $cell) {
+                $cells[] = trim(preg_replace('/\s+/', ' ', $cell->textContent));
+            }
+            if (count($cells) < 4) continue;
+
+            $c0 = strtoupper($cells[0]);
+            $c1 = strtoupper($cells[1]);
+            $c2 = strtoupper($cells[2]);
+
+            // Skip table header row
+            if (str_contains($c0, 'YEAR') || str_contains($c1, 'SESSION') || str_contains($c2, 'TITLE')) {
+                continue;
+            }
+
+            $year    = $cells[0] ?? date('Y');
+            $session = $cells[1] ?? 'Summer';
+            $title   = $cells[2] ?? '';
+            $rawSem  = isset($cells[4]) ? $cells[4] : (isset($cells[3]) && is_numeric($cells[3]) ? $cells[3] : '1');
+
+            // Find link
+            $link = '';
+            foreach ($cellNodes as $cNode) {
+                $aNodes = $xpath->query('.//a[@href]', $cNode);
+                if ($aNodes->length > 0) {
+                    $rawHref = trim($aNodes->item(0)->getAttribute('href'));
+                    if (!empty($rawHref) && $rawHref !== '#') {
+                        $link = rel2abs($rawHref, $url);
+                        break;
+                    }
+                }
+            }
+
+            if (!empty($title) && $title !== 'N/A') {
+                $semNum = preg_replace('/[^\d]/', '', $rawSem) ?: '1';
+                $semKey = "SEMESTER {$semNum}";
+                if (!isset($examPapersGroups[$semKey])) {
+                    $examPapersGroups[$semKey] = [];
+                }
+                $examPapersGroups[$semKey][] = [
+                    'year'    => $year,
+                    'session' => $session,
+                    'title'   => $title,
+                    'link'    => $link,
+                    'sem'     => $semNum
+                ];
+                $totalExamPapers++;
+            }
+        }
+        continue;
+    }
+
     // Check if table contains syllabus signature keywords
     if (!preg_match('/SUBJECT\s*CODE/i', $tableText) && 
         !preg_match('/SUB\s*CODE/i', $tableText) && 
@@ -224,9 +286,11 @@ foreach ($tables as $table) {
 }
 
 echo json_encode([
-    'success'        => true,
-    'url'            => $url,
-    'totalSemesters' => count($semGroups),
-    'totalSubjects'  => $totalSubjects,
-    'data'           => $semGroups
+    'success'         => true,
+    'url'             => $url,
+    'totalSemesters'  => count($semGroups),
+    'totalSubjects'   => $totalSubjects,
+    'totalExamPapers' => $totalExamPapers,
+    'data'            => $semGroups,
+    'examPapers'      => $examPapersGroups
 ]);
