@@ -844,7 +844,7 @@ const facultyData = [
         email: "krathod@gmiu.edu.in",
         phone: "9904988555",
         avatarClass: "av-kr",
-        initials: "KRR",
+        initials: "KRA",
         setting: "",
         link: "",
         driveLink: ""
