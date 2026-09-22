@@ -834,6 +834,21 @@ const facultyData = [
         setting: "",
         link: "",
         driveLink: ""
+    },
+    {
+        id: "kr",
+        name: "Prof. Kruti Rathod",
+        designation: "Assistant Professor",
+        department: "Computer Engineering",
+        empId: "#10748",
+        email: "krathod@gmiu.edu.in",
+        phone: "9904988555",
+        avatarClass: "av-kr",
+        initials: "KRR",
+        setting: "",
+        link: "",
+        driveLink: ""
     }
 ];
+
 
