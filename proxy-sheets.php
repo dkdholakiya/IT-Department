@@ -70,30 +70,57 @@ if (empty($target_url)) {
 // Read the incoming JSON body
 $payload = file_get_contents('php://input');
 
-// Forward the request to Google Apps Script Web App using cURL
-$ch = curl_init($target_url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Content-Type: application/json'
-]);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Extremely important for Google Apps Script redirects
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-curl_setopt($ch, CURLOPT_TIMEOUT, 6);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1); // Force HTTP/1.1 to avoid Google HTTP/2 protocol errors
+// Execute POST request to Google Apps Script with automatic 3-pass retry logic
+$response = false;
+$http_code = 0;
+$last_error = '';
 
+$max_attempts = 3;
+for ($attempt = 1; $attempt <= $max_attempts; $attempt++) {
+    $ch = curl_init($target_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json'
+    ]);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Follow Google Apps Script redirects
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 12);   // 12s connect timeout
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);          // 25s execution timeout per attempt
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1); // Force HTTP/1.1 for Google compatibility
 
-$response = curl_exec($ch);
-$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$error = curl_error($ch);
-curl_close($ch);
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $last_error = curl_error($ch);
+    curl_close($ch);
 
-if ($response === false) {
-    http_response_code(502);
-    echo json_encode(["success" => false, "error" => "Failed to communicate with Google Sheets.", "details" => $error]);
+    // If Google Apps Script returned a valid JSON response body with success or duplicate indicator
+    if (!empty($response)) {
+        $decoded = json_decode($response, true);
+        if (is_array($decoded) && (isset($decoded['success']) || isset($decoded['duplicate']) || isset($decoded['message']))) {
+            $http_code = 200; // Force 200 OK since Apps Script executed and returned structured JSON result
+            break;
+        }
+    }
+
+    if ($response !== false && $http_code >= 200 && $http_code < 400) {
+        break; // Success!
+    }
+
+    if ($attempt < $max_attempts) {
+        usleep($attempt * 400000); // 400ms, 800ms progressive backoff
+    }
+}
+
+if ($response === false || $http_code >= 400) {
+    http_response_code($http_code > 0 ? $http_code : 502);
+    echo json_encode([
+        "success" => false,
+        "error" => "Failed to communicate with Google Sheets.",
+        "details" => $last_error ?: "Target Google Apps Script returned HTTP status {$http_code}"
+    ]);
 } else {
     http_response_code($http_code);
     echo $response;

@@ -1218,7 +1218,7 @@ async function parseExcelFile(file) {
                     const semVal = colMapping.semester !== -1 ? cleanStr(row[colMapping.semester]) : cleanStr(row[8]);
                     const timeInVal = colMapping.timeIn !== -1 ? cleanStr(row[colMapping.timeIn]) : cleanStr(row[9]);
                     const timeOutVal = colMapping.timeOut !== -1 ? cleanStr(row[colMapping.timeOut]) : cleanStr(row[10]);
-                    
+
                     const remarksVal = colMapping.remarks !== -1 ? cleanStr(row[colMapping.remarks]) : cleanStr(row[11]);
                     const studentsVal = colMapping.students !== -1 ? cleanStr(row[colMapping.students]) : cleanStr(row[12]);
                     const convenerVal = colMapping.convenerRemarks !== -1 ? cleanStr(row[colMapping.convenerRemarks]) : cleanStr(row[13]);
@@ -1585,15 +1585,24 @@ async function handleBatchImport() {
         const row = pdfParsedData[index];
         const tr = document.getElementById(`pdf-row-${index}`);
 
+        // Re-verify that checkbox exists and is checked (strictly skip unchecked rows)
+        if (tr) {
+            const cb = tr.querySelector(".pdf-row-checkbox");
+            if (!cb || !cb.checked) {
+                continue;
+            }
+            cb.disabled = true;
+        }
+
+        // Add 600ms delay between batch requests to prevent Google Apps Script concurrency rate-limits/404s
+        if (i > 0) {
+            await new Promise(resolve => setTimeout(resolve, 600));
+        }
+
         const progress = Math.round((i / total) * 100);
         progressBarFill.style.width = `${progress}%`;
         progressPercent.innerText = `${progress}%`;
         progressText.innerText = `Importing: ${i + 1} of ${total} (${row.subject} by ${row.faculty})`;
-
-        if (tr) {
-            const cb = tr.querySelector(".pdf-row-checkbox");
-            if (cb) cb.disabled = true;
-        }
 
         try {
             // Get selected department from the dropdown of the current row
@@ -1699,25 +1708,24 @@ async function handleBatchImport() {
                 </html>
             `;
 
-            // Submit sheet
+            // Submit sheet via proxy
             const sheetRes = await fetch('proxy-sheets.php?target=zero', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(sheetsPayload)
             });
 
-            if (!sheetRes.ok) {
-                let errMsg = 'Google sheet proxy write failed';
-                try {
-                    const errData = await sheetRes.json();
-                    if (errData && errData.error) {
-                        errMsg = errData.error + (errData.details ? " (" + errData.details + ")" : "");
-                    }
-                } catch (e) { }
+            let sheetData = {};
+            try {
+                sheetData = await sheetRes.json();
+            } catch (jsonErr) { }
+
+            if (!sheetRes.ok && !sheetData.success && !sheetData.duplicate) {
+                let errMsg = sheetData.error || 'Google sheet proxy write failed';
+                if (sheetData.details) errMsg += ` (${sheetData.details})`;
                 throw new Error(errMsg);
             }
 
-            const sheetData = await sheetRes.json();
             if (sheetData.duplicate) {
                 duplicateCount++;
                 if (tr) {
@@ -1744,7 +1752,7 @@ async function handleBatchImport() {
             const rawRowCcEmails = Array.from(new Set(combinedCc));
             const rowCcEmails = filterCcForFaculty(row.facultyEmail, row.resolvedFaculty, rawRowCcEmails);
 
-            // Send email (catch any connection reset/close errors locally so sheet write success is kept)
+            // Send email
             try {
                 await fetch('send-email.php', {
                     method: 'POST',
@@ -1766,7 +1774,10 @@ async function handleBatchImport() {
             if (tr) {
                 tr.className = "imported-row";
                 const cb = tr.querySelector(".pdf-row-checkbox");
-                if (cb) cb.checked = false;
+                if (cb) {
+                    cb.checked = false;
+                    cb.disabled = true;
+                }
             }
         } catch (error) {
             console.error(`Import failed for index ${index}: `, error);
