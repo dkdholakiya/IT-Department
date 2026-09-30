@@ -4439,189 +4439,214 @@ Department of CE & IT`;
         //  Reads SHEETS_CONFIG from assets/js/sheetsConfig.js
         // ═══════════════════════════════════════════════════════════
         function appendToGoogleSheet() {
+            try {
+                // ── Collect form data ──
+                const facultyName = document.getElementById('facultySearch')?.value || '';
+                const empId = document.getElementById('facultyEmpId')?.value || '';
+                const designation = document.getElementById('facultyDesignation')?.value || '';
+                const facultyEmail = document.getElementById('facultyEmail')?.value || '';
+                const academicYear = document.getElementById('academicYear')?.value || '';
 
-            // ── Collect form data ──
-            const facultyName = document.getElementById('facultySearch').value || '';
-            const empId = document.getElementById('facultyEmpId').value || '';
-            const designation = document.getElementById('facultyDesignation').value || '';
-            const facultyEmail = document.getElementById('facultyEmail').value || '';
-            const academicYear = document.getElementById('academicYear').value || '';
+                // Report type label
+                const reportSelect = document.getElementById('reportType');
+                let reportTypeLabel = reportSelect?.options[reportSelect.selectedIndex]?.text || '';
+                if (reportSelect?.value === 'other') {
+                    const customType = document.getElementById('customReportType')?.value?.trim() || '';
+                    if (customType) reportTypeLabel = `Other (${customType})`;
+                }
 
-            // Report type label
-            const reportSelect = document.getElementById('reportType');
-            let reportTypeLabel = reportSelect.options[reportSelect.selectedIndex]?.text || '';
-            if (reportSelect.value === 'other') {
-                const customType = document.getElementById('customReportType').value.trim();
-                if (customType) reportTypeLabel = `Other (${customType})`;
-            }
+                const reportTitle = document.getElementById('reportTitle')?.value || '';
+                const activityDate = document.getElementById('activityDate')?.value || '';
+                const startTime = document.getElementById('startTime')?.value || '';
+                const endTime = document.getElementById('endTime')?.value || '';
+                const venue = document.getElementById('venue')?.value || '';
 
-            const reportTitle = document.getElementById('reportTitle').value || '';
-            const activityDate = document.getElementById('activityDate').value || '';
-            const startTime = document.getElementById('startTime').value || '';
-            const endTime = document.getElementById('endTime').value || '';
-            const venue = document.getElementById('venue').value || '';
+                // Programmes
+                const progs = [];
+                document.querySelectorAll('.prog-checkbox:checked').forEach(cb => progs.push(cb.value));
 
-            // Programmes
-            const progs = [];
-            document.querySelectorAll('.prog-checkbox:checked').forEach(cb => progs.push(cb.value));
+                const semester = document.getElementById('semester')?.value || '';
+                const division = document.getElementById('divisionClass')?.value || '';
+                const participants = document.getElementById('participantsCount')?.value || '';
+                const coordinators = document.getElementById('coordinators')?.value || '';
+                const objective = document.getElementById('briefObjective')?.value || '';
+                const driveLink = document.getElementById('driveLink')?.value || '';
 
-            const semester = document.getElementById('semester').value || '';
-            const division = document.getElementById('divisionClass').value || '';
-            const participants = document.getElementById('participantsCount').value || '';
-            const coordinators = document.getElementById('coordinators').value || '';
-            const objective = document.getElementById('briefObjective').value || '';
-            const driveLink = document.getElementById('driveLink').value || '';
+                // New fields for sheet
+                const batch = document.getElementById('batch')?.value || '';
+                const studentCoordinator = document.getElementById('studentCoordinator')?.value || '';
+                const publishWebsiteRaw = document.querySelector('input[name="publishWebsite"]:checked')?.value || '';
+                const publishWebsite = (publishWebsiteRaw.toLowerCase() === 'yes') ? '✅' : ((publishWebsiteRaw.toLowerCase() === 'no') ? '❌' : '-');
+                const pressNoteRaw = document.querySelector('input[name="pressNote"]:checked')?.value || '';
+                const pressNote = (pressNoteRaw.toLowerCase() === 'yes') ? '✅' : ((pressNoteRaw.toLowerCase() === 'no') ? '❌' : '-');
+                const placementActType = document.querySelector('input[name="placementActType"]:checked')?.value || '-';
 
-            // New fields for sheet
-            const batch = document.getElementById('batch').value || '';
-            const studentCoordinator = document.getElementById('studentCoordinator').value || '';
-            const publishWebsiteRaw = document.querySelector('input[name="publishWebsite"]:checked')?.value || '';
-            const publishWebsite = (publishWebsiteRaw.toLowerCase() === 'yes') ? '✅' : ((publishWebsiteRaw.toLowerCase() === 'no') ? '❌' : '-');
-            const pressNoteRaw = document.querySelector('input[name="pressNote"]:checked')?.value || '';
-            const pressNote = (pressNoteRaw.toLowerCase() === 'yes') ? '✅' : ((pressNoteRaw.toLowerCase() === 'no') ? '❌' : '-');
-            const placementActType = document.querySelector('input[name="placementActType"]:checked')?.value || '-';
-
-            // Compile dynamic activity-specific details
-            let activityDetails = '';
-            const activeSec = document.querySelector('.dynamic-report-section:not(.d-none)');
-            if (activeSec) {
-                if (reportSelect.value === 'training_placement') {
-                    const rlmRadio = document.getElementById('typeRLM');
-                    const plmRadio = document.getElementById('typePLM');
-                    let actVal = '';
-                    if (rlmRadio && rlmRadio.checked) {
-                        const rlmVal = document.getElementById('rlmActivity').value || '';
-                        if (rlmVal === 'other') {
-                            actVal = document.getElementById('customRlmActivity').value || '';
-                        } else {
-                            actVal = rlmVal;
-                        }
-                    } else if (plmRadio && plmRadio.checked) {
-                        const plmVal = document.getElementById('plmActivity').value || '';
-                        if (plmVal === 'other') {
-                            actVal = document.getElementById('customPlmActivity').value || '';
-                        } else {
-                            actVal = plmVal;
-                        }
-                    }
-                    
-                    const subTypeSelect = document.getElementById('placementSubType');
-                    let subTypeVal = subTypeSelect ? subTypeSelect.value : '';
-                    if (subTypeVal === 'Other') {
-                        subTypeVal = document.getElementById('customPlacementSubType').value || '';
-                    }
-                    
-                    const placementSpeaker = document.getElementById('placementSpeaker')?.value || '';
-                    const placementOutcomes = document.getElementById('placementOutcomes')?.value || '';
-                    activityDetails = `Activity: ${actVal}`;
-                    if (subTypeVal) {
-                        activityDetails += ` | Activity Sub-Type: ${subTypeVal}`;
-                    }
-                    if (placementSpeaker) {
-                        activityDetails += ` | Speaker: ${placementSpeaker}`;
-                    }
-                    if (placementOutcomes) {
-                        activityDetails += ` | Outcomes: ${placementOutcomes}`;
-                    }
-                } else {
-                    const detailsArr = [];
-                    const inputs = activeSec.querySelectorAll('input, select, textarea');
-                    inputs.forEach(input => {
-                        let isHidden = false;
-                        let p = input;
-                        while (p && p !== activeSec) {
-                            if (p.classList.contains('d-none')) {
-                                isHidden = true;
-                                break;
+                // Compile dynamic activity-specific details
+                let activityDetails = '';
+                const activeSec = document.querySelector('.dynamic-report-section:not(.d-none)');
+                if (activeSec && reportSelect) {
+                    if (reportSelect.value === 'training_placement') {
+                        const rlmRadio = document.getElementById('typeRLM');
+                        const plmRadio = document.getElementById('typePLM');
+                        let actVal = '';
+                        if (rlmRadio && rlmRadio.checked) {
+                            const rlmVal = document.getElementById('rlmActivity')?.value || '';
+                            if (rlmVal === 'other') {
+                                actVal = document.getElementById('customRlmActivity')?.value || '';
+                            } else {
+                                actVal = rlmVal;
                             }
-                            p = p.parentElement;
+                        } else if (plmRadio && plmRadio.checked) {
+                            const plmVal = document.getElementById('plmActivity')?.value || '';
+                            if (plmVal === 'other') {
+                                actVal = document.getElementById('customPlmActivity')?.value || '';
+                            } else {
+                                actVal = plmVal;
+                            }
                         }
-                        if (isHidden) return;
+                        
+                        const subTypeSelect = document.getElementById('placementSubType');
+                        let subTypeVal = subTypeSelect ? subTypeSelect.value : '';
+                        if (subTypeVal === 'Other') {
+                            subTypeVal = document.getElementById('customPlacementSubType')?.value || '';
+                        }
+                        
+                        const placementSpeaker = document.getElementById('placementSpeaker')?.value || '';
+                        const placementOutcomes = document.getElementById('placementOutcomes')?.value || '';
+                        activityDetails = `Activity: ${actVal}`;
+                        if (subTypeVal) {
+                            activityDetails += ` | Activity Sub-Type: ${subTypeVal}`;
+                        }
+                        if (placementSpeaker) {
+                            activityDetails += ` | Speaker: ${placementSpeaker}`;
+                        }
+                        if (placementOutcomes) {
+                            activityDetails += ` | Outcomes: ${placementOutcomes}`;
+                        }
+                    } else {
+                        const detailsArr = [];
+                        const inputs = activeSec.querySelectorAll('input, select, textarea');
+                        inputs.forEach(input => {
+                            let isHidden = false;
+                            let p = input;
+                            while (p && p !== activeSec) {
+                                if (p.classList.contains('d-none')) {
+                                    isHidden = true;
+                                    break;
+                                }
+                                p = p.parentElement;
+                            }
+                            if (isHidden) return;
 
-                        if (input.type === 'radio') {
-                            if (input.checked) {
-                                const parentLabel = input.closest('.col-md-12')?.querySelector('.form-label')?.innerText || 'Activity Type';
-                                const label = parentLabel.replace('*', '').trim();
-                                const val = input.value;
+                            if (input.type === 'radio') {
+                                if (input.checked) {
+                                    const parentLabel = input.closest('.col-md-12')?.querySelector('.form-label')?.innerText || 'Activity Type';
+                                    const label = String(parentLabel).replace('*', '').trim();
+                                    const val = input.value;
+                                    detailsArr.push(`${label}: ${val}`);
+                                }
+                            } else {
+                                const parentText = input.previousElementSibling ? (input.previousElementSibling.innerText || '') : '';
+                                const label = String(parentText || 'Field').replace('*', '').trim();
+                                const val = input.value || '-';
                                 detailsArr.push(`${label}: ${val}`);
                             }
-                        } else {
-                            const label = (input.previousElementSibling ? input.previousElementSibling.innerText : 'Field').replace('*', '').trim();
-                            const val = input.value || '-';
-                            detailsArr.push(`${label}: ${val}`);
-                        }
-                    });
-                    activityDetails = detailsArr.join(' | ');
-                }
-            }
-
-            const enableDeadline = document.getElementById("enableDeadline")?.checked;
-            const deadlineVal = document.getElementById("deadlineVal")?.value;
-            let deadline = "-";
-            if (enableDeadline && deadlineVal) {
-                const dateObj = new Date(deadlineVal);
-                if (!isNaN(dateObj)) {
-                    const dd = String(dateObj.getDate()).padStart(2, '0');
-                    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-                    const yyyy = dateObj.getFullYear();
-                    let hours = dateObj.getHours();
-                    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-                    const ampm = hours >= 12 ? 'PM' : 'AM';
-                    hours = hours % 12;
-                    hours = hours ? hours : 12;
-                    const hh = String(hours).padStart(2, '0');
-                    deadline = `${dd}/${mm}/${yyyy} ${hh}:${minutes} ${ampm}`;
-                }
-            }
-
-            const payload = {
-                facultyName,
-                empId,
-                designation,
-                facultyEmail,
-                academicYear,
-                reportType: reportTypeLabel,
-                reportTitle,
-                activityDate,
-                startTime,
-                endTime,
-                venue,
-                programmes: progs.join(', '),
-                semester,
-                division,
-                participants,
-                coordinators,
-                driveLink,
-                batch,
-                studentCoordinator,
-                publishWebsite,
-                pressNote,
-                placementActType,
-                activityDetails,
-                deadline
-            };
-
-            // ── POST to Backend Sheets Proxy ──
-            fetch('proxy-sheets.php?target=report', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-                .then(res => {
-                    if (!res.ok) throw new Error('Network response not ok');
-                    return res.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        console.info('[GMIU Sheets] Data logged to sheet successfully.');
-                        showToast('✔ Report data logged to Department Sheet.');
-                    } else {
-                        console.warn('[GMIU Sheets] Failed to log:', data.error);
+                        });
+                        activityDetails = detailsArr.join(' | ');
                     }
+                }
+
+                const enableDeadline = document.getElementById("enableDeadline")?.checked;
+                const deadlineVal = document.getElementById("deadlineVal")?.value;
+                let deadline = "-";
+                if (enableDeadline && deadlineVal) {
+                    const dateObj = new Date(deadlineVal);
+                    if (!isNaN(dateObj)) {
+                        const dd = String(dateObj.getDate()).padStart(2, '0');
+                        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                        const yyyy = dateObj.getFullYear();
+                        let hours = dateObj.getHours();
+                        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        hours = hours % 12;
+                        hours = hours ? hours : 12;
+                        const hh = String(hours).padStart(2, '0');
+                        deadline = `${dd}/${mm}/${yyyy} ${hh}:${minutes} ${ampm}`;
+                    }
+                }
+
+                const payload = {
+                    facultyName,
+                    empId,
+                    designation,
+                    facultyEmail,
+                    academicYear,
+                    reportType: reportTypeLabel,
+                    reportTitle,
+                    activityDate,
+                    startTime,
+                    endTime,
+                    venue,
+                    programmes: progs.join(', '),
+                    semester,
+                    division,
+                    participants,
+                    coordinators,
+                    driveLink,
+                    batch,
+                    studentCoordinator,
+                    publishWebsite,
+                    pressNote,
+                    placementActType,
+                    activityDetails,
+                    deadline
+                };
+
+                const directScriptUrl = 'https://script.google.com/macros/s/AKfycbzgEUHcbbF7k5gp8RyEJxwzPiUeTeu6wLIZOPbNn-ALnsGPPzyNEKVx9q5ZnHKESHEUxA/exec';
+
+                // Direct client fallback to Google Apps Script Web App
+                const sendDirectToSheet = (dataPayload) => {
+                    fetch(directScriptUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: JSON.stringify(dataPayload)
+                    })
+                    .then(() => {
+                        console.info('[GMIU Sheets] Sent via direct fallback to Google Apps Script.');
+                        showToast('✔ Report data logged to Department Sheet.');
+                    })
+                    .catch(err => {
+                        console.error('[GMIU Sheets Direct Fallback Error]:', err);
+                    });
+                };
+
+                // ── POST to Backend Sheets Proxy (with direct Google Apps Script fallback if proxy fails) ──
+                fetch('proxy-sheets.php?target=report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 })
-                .catch(err => {
-                    console.warn('[GMIU Sheets] Failed to write to Google Sheet:', err);
-                });
+                    .then(res => {
+                        if (!res.ok) throw new Error('Proxy HTTP status ' + res.status);
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data && (data.success || data.row)) {
+                            console.info('[GMIU Sheets] Data logged to sheet successfully via proxy.');
+                            showToast('✔ Report data logged to Department Sheet.');
+                        } else {
+                            console.warn('[GMIU Sheets] Proxy non-success, sending via direct fallback...', data?.error);
+                            sendDirectToSheet(payload);
+                        }
+                    })
+                    .catch(err => {
+                        console.warn('[GMIU Sheets] Proxy fetch failed, triggering direct fallback:', err);
+                        sendDirectToSheet(payload);
+                    });
+            } catch (err) {
+                console.error('[GMIU Sheets appendToGoogleSheet Error]:', err);
+            }
         }
 
         // ── Custom Toast Helper ──

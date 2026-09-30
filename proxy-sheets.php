@@ -111,6 +111,7 @@ for ($attempt = 1; $attempt <= $max_attempts; $attempt++) {
         'Content-Type: application/json'
     ]);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Follow Google Apps Script redirects
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 12);   // 12s connect timeout
     curl_setopt($ch, CURLOPT_TIMEOUT, 25);          // 25s execution timeout per attempt
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
