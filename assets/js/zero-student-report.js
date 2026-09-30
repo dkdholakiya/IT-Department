@@ -1408,7 +1408,14 @@ function processParsedExcelRows(allRows) {
         row.autoDept = autoDept;
         row.selectedDept = autoDept;
 
-        const uniqueKey = `${row.date}|${row.srNo}|${row.room}|${row.subject}|${row.resolvedFaculty}|${row.branch}|${row.semester}|${row.timeInStr}-${row.timeOutStr}`;
+        // Canonical deduplication key using Date, Room, Subject, Faculty, Time In & Time Out
+        const normDate = (row.formattedDate || row.date || "").toUpperCase().trim();
+        const normRoom = (row.room || "").toUpperCase().trim();
+        const normSub = (row.subject || "").toUpperCase().trim();
+        const normFac = (row.resolvedFaculty || "").toUpperCase().trim();
+        const normTimeIn = (row.timeIn || row.timeInStr || "").toUpperCase().trim();
+        const normTimeOut = (row.timeOut || row.timeOutStr || "").toUpperCase().trim();
+        const uniqueKey = `${normDate}|${normRoom}|${normSub}|${normFac}|${normTimeIn}|${normTimeOut}`;
         if (seenKeys.has(uniqueKey)) return;
         seenKeys.add(uniqueKey);
 

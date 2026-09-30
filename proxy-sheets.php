@@ -70,6 +70,32 @@ if (empty($target_url)) {
 // Read the incoming JSON body
 $payload = file_get_contents('php://input');
 
+// Deduplicate identical Zero Student requests submitted within 60 seconds (prevents double insertion)
+if ($target === 'zero') {
+    $payload_data = json_decode($payload, true);
+    if (is_array($payload_data) && !empty($payload_data['date']) && !empty($payload_data['room'])) {
+        $date_norm = strtoupper(trim($payload_data['date']));
+        $room_norm = strtoupper(trim($payload_data['room']));
+        $sub_norm  = strtoupper(trim($payload_data['subject'] ?? ''));
+        $fac_norm  = strtoupper(trim($payload_data['faculty'] ?? ''));
+        $tIn_norm  = strtoupper(trim($payload_data['timeIn'] ?? ''));
+        $tOut_norm = strtoupper(trim($payload_data['timeOut'] ?? ''));
+
+        $req_key = 'zs_dedup_' . md5("{$date_norm}|{$room_norm}|{$sub_norm}|{$fac_norm}|{$tIn_norm}|{$tOut_norm}");
+        
+        if (isset($_SESSION[$req_key]) && (time() - $_SESSION[$req_key]) < 60) {
+            echo json_encode([
+                "success" => true,
+                "duplicate" => true,
+                "message" => "Duplicate entry prevented by server proxy."
+            ]);
+            exit;
+        }
+        $_SESSION[$req_key] = time();
+        session_write_close(); // Release session file lock for concurrent batch requests
+    }
+}
+
 // Execute POST request to Google Apps Script with automatic 3-pass retry logic
 $response = false;
 $http_code = 0;
