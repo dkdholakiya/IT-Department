@@ -264,14 +264,14 @@
                                         </div>
                                         <div class="invalid-feedback">End Time is required.</div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label class="form-label" for="venue">Venue <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="venue"
                                             placeholder="e.g., FF-11, Auditorium..." required>
                                         <div class="invalid-feedback">Venue is required.</div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label class="form-label">Programme <span class="text-danger">*</span></label>
                                         <div class="d-flex flex-wrap gap-3 mt-2">
                                             <div class="form-check">
@@ -332,21 +332,43 @@
                                         <div class="text-danger d-none rp-error-text" id="progError">Select at least one
                                             programme.</div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label" for="semester">Semester <span
-                                                class="text-danger">*</span></label>
-                                        <select class="form-select" id="semester" required>
-                                            <option value="" disabled selected>Select Semester...</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                        </select>
-                                        <div class="invalid-feedback">Please select a semester.</div>
+                                    <div class="col-md-12">
+                                        <label class="form-label">Semester(s) <span class="text-danger">*</span></label>
+                                        <div class="d-flex flex-wrap gap-3 mt-2" id="semCheckboxGroup">
+                                            <div class="form-check">
+                                                <input class="form-check-input sem-checkbox" type="checkbox" value="1" id="sem1">
+                                                <label class="form-check-label text-light" for="sem1">Sem 1</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input sem-checkbox" type="checkbox" value="2" id="sem2">
+                                                <label class="form-check-label text-light" for="sem2">Sem 2</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input sem-checkbox" type="checkbox" value="3" id="sem3">
+                                                <label class="form-check-label text-light" for="sem3">Sem 3</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input sem-checkbox" type="checkbox" value="4" id="sem4">
+                                                <label class="form-check-label text-light" for="sem4">Sem 4</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input sem-checkbox" type="checkbox" value="5" id="sem5">
+                                                <label class="form-check-label text-light" for="sem5">Sem 5</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input sem-checkbox" type="checkbox" value="6" id="sem6">
+                                                <label class="form-check-label text-light" for="sem6">Sem 6</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input sem-checkbox" type="checkbox" value="7" id="sem7">
+                                                <label class="form-check-label text-light" for="sem7">Sem 7</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input sem-checkbox" type="checkbox" value="8" id="sem8">
+                                                <label class="form-check-label text-light" for="sem8">Sem 8</label>
+                                            </div>
+                                        </div>
+                                        <div class="text-danger d-none rp-error-text" id="semError">Select at least one semester.</div>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label" for="divisionClass">Division/Class <span
@@ -373,12 +395,9 @@
                                         </select>
                                         <div class="invalid-feedback">Batch is required.</div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-12">
                                         <label class="form-label" for="studentCoordinator">Student Coordinator</label>
                                         <input type="text" class="form-control" id="studentCoordinator" placeholder="Enter student coordinator name...">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <!-- Spacer grid to keep layout balanced -->
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label text-light">Report is published on Website? <span class="text-danger">*</span></label>
@@ -2401,6 +2420,12 @@
             }
         }
 
+        function getSelectedSemesters() {
+            const sems = [];
+            document.querySelectorAll(".sem-checkbox:checked").forEach(cb => sems.push(cb.value));
+            return sems.join(", ");
+        }
+
         // ── Wizard Sequential Navigation Handlers ──
         function unlockSection(stepNum) {
             const itemIds = ["", "secItemOne", "secItemTwo", "secItemThree", "secItemFive"];
@@ -2474,6 +2499,17 @@
                     return;
                 } else {
                     progError.classList.add("d-none");
+                }
+
+                // Validate semester checkboxes
+                const semChecked = container.querySelectorAll(".sem-checkbox:checked");
+                const semError = document.getElementById("semError");
+                if (semChecked.length === 0) {
+                    if (semError) semError.classList.remove("d-none");
+                    if (semError) semError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                } else {
+                    if (semError) semError.classList.add("d-none");
                 }
 
                 // Check ZIP, Drive or Email validation
@@ -2637,7 +2673,7 @@
             document.querySelectorAll(".prog-checkbox:checked").forEach(cb => progs.push(cb.value.toUpperCase()));
             const programmes = progs.length > 0 ? progs.join(", ") : "-";
 
-            const semester = (document.getElementById("semester").value || "-").toUpperCase();
+            const semester = (getSelectedSemesters() || "-").toUpperCase();
             const division = (document.getElementById("divisionClass").value || "-").toUpperCase();
             const participants = (document.getElementById("participantsCount").value || "-").toUpperCase();
             const coordinators = (document.getElementById("coordinators").value || "-").toUpperCase();
@@ -2813,7 +2849,7 @@
             document.querySelectorAll(".prog-checkbox:checked").forEach(cb => progs.push(cb.value.toUpperCase()));
             const programmes = progs.length > 0 ? progs.join(", ") : "-";
 
-            const semester = (document.getElementById("semester").value || "-").toUpperCase();
+            const semester = (getSelectedSemesters() || "-").toUpperCase();
             const division = (document.getElementById("divisionClass").value || "-").toUpperCase();
             const participants = (document.getElementById("participantsCount").value || "-").toUpperCase();
             const coordinators = (document.getElementById("coordinators").value || "-").toUpperCase();
@@ -3115,6 +3151,18 @@ Department of CE & IT`;
                 jumpToSection(2);
                 return false;
             }
+
+            // Check Semester Checkboxes
+            const semChecked = document.querySelectorAll(".sem-checkbox:checked");
+            const semError = document.getElementById("semError");
+            if (semChecked.length === 0) {
+                if (semError) semError.classList.remove("d-none");
+                isValid = false;
+                jumpToSection(2);
+                return false;
+            } else {
+                if (semError) semError.classList.add("d-none");
+            }
             // Check ZIP, Drive or Email validation
             const photoMethod = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
             const photosInput = document.getElementById("activityPhotos");
@@ -3257,7 +3305,8 @@ Department of CE & IT`;
                         endTime: document.getElementById("endTime").value,
                         venue: document.getElementById("venue").value,
                         programmes: Array.from(document.querySelectorAll('.prog-checkbox:checked')).map(cb => cb.id),
-                        semester: document.getElementById("semester").value,
+                        semesters: Array.from(document.querySelectorAll('.sem-checkbox:checked')).map(cb => cb.value),
+                        semester: getSelectedSemesters(),
                         divisionClass: document.getElementById("divisionClass").value,
                         participantsCount: document.getElementById("participantsCount").value,
                         coordinators: document.getElementById("coordinators").value,
@@ -3347,8 +3396,17 @@ Department of CE & IT`;
                         document.getElementById("startTime").value = draft.startTime || "";
                         document.getElementById("endTime").value = draft.endTime || "";
                         document.getElementById("venue").value = draft.venue || "";
-                        document.getElementById("semester").value = draft.semester || "";
                         document.getElementById("divisionClass").value = draft.divisionClass || "";
+                        if (draft.semesters && Array.isArray(draft.semesters)) {
+                            document.querySelectorAll(".sem-checkbox").forEach(cb => {
+                                cb.checked = draft.semesters.includes(cb.value);
+                            });
+                        } else if (draft.semester) {
+                            const sems = String(draft.semester).split(',').map(s => s.trim());
+                            document.querySelectorAll(".sem-checkbox").forEach(cb => {
+                                cb.checked = sems.includes(cb.value);
+                            });
+                        }
                         document.getElementById("participantsCount").value = draft.participantsCount || "";
                         document.getElementById("briefObjective").value = draft.briefObjective || "";
                         document.getElementById("driveLink").value = draft.driveLink || "";
@@ -3558,7 +3616,7 @@ Department of CE & IT`;
             const startTime = document.getElementById("startTime").value;
             const endTime = document.getElementById("endTime").value;
             const venue = document.getElementById("venue").value;
-            const semester = document.getElementById("semester").value;
+            const semester = getSelectedSemesters();
             const divisionClass = document.getElementById("divisionClass").value;
             const participantsCount = document.getElementById("participantsCount").value;
             const coordinators = document.getElementById("coordinators").value;
@@ -3639,6 +3697,7 @@ Department of CE & IT`;
             // Sync details to Printable Area
             syncPrintReportArea();
 
+            const photoMethod = document.querySelector('input[name="photoMethod"]:checked')?.value || "drive";
             const photoMethodText = document.getElementById("pPhotoMethod")?.innerText || "Google Drive Link";
             const photoZipText = document.getElementById("pPhotoZip")?.innerText || "Not Uploaded";
             const driveLinkText = document.getElementById("pDriveLink")?.innerText || "Not Provided";
@@ -3746,7 +3805,7 @@ Department of CE & IT`;
             const startTime = document.getElementById("startTime")?.value || "";
             const endTime = document.getElementById("endTime")?.value || "";
             const venue = document.getElementById("venue")?.value || "-";
-            const semester = document.getElementById("semester")?.value || "-";
+            const semester = getSelectedSemesters() || "-";
             const divisionClass = document.getElementById("divisionClass")?.value || "-";
             const participantsCount = document.getElementById("participantsCount")?.value || "-";
             const coordinators = document.getElementById("coordinators")?.value || "-";
@@ -4335,6 +4394,9 @@ Department of CE & IT`;
             if (placementOutcomes) placementOutcomes.value = "";
 
             // Reset dynamic placement activities visibility/required state
+            document.querySelectorAll(".sem-checkbox").forEach(cb => cb.checked = false);
+            const semError = document.getElementById("semError");
+            if (semError) semError.classList.add("d-none");
             togglePlacementActType();
             toggleDepartmentalCustomSubType();
             togglePlacementCustomSubType();
@@ -4465,7 +4527,7 @@ Department of CE & IT`;
                 const progs = [];
                 document.querySelectorAll('.prog-checkbox:checked').forEach(cb => progs.push(cb.value));
 
-                const semester = document.getElementById('semester')?.value || '';
+                const semester = getSelectedSemesters();
                 const division = document.getElementById('divisionClass')?.value || '';
                 const participants = document.getElementById('participantsCount')?.value || '';
                 const coordinators = document.getElementById('coordinators')?.value || '';
