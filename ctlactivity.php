@@ -673,8 +673,7 @@
             "drchandarana@gmiu.edu.in", // HOD (Prof. Dhaval Chandarana)
             "sbchauhan@gmiu.edu.in",    // Incharge HOD IT (Prof. Shwetaba Chauhan)
             "ehunagar@gmiu.edu.in",     // Incharge HOD CE (Prof. Ekta Unagar)
-            "tmvyas@gmiu.edu.in",       // Sub Incharge HOD IT (Prof. Tarjanee Vyas)
-            "phkaneijya@gmiu.edu.in"    // Sub Incharge HOD CE (Prof. Pragnesh Kanejiya)
+            "tmvyas@gmiu.edu.in"       // Sub Incharge HOD IT (Prof. Tarjanee Vyas)
         ];
         let selectedCCEmails = [...defaultCCEmails];
 

@@ -70,7 +70,7 @@ if (empty($target_url)) {
 // Read the incoming JSON body
 $payload = file_get_contents('php://input');
 
-// Deduplicate identical Zero Student requests submitted within 60 seconds (prevents double insertion)
+// Deduplicate identical Zero Student requests submitted within 120 seconds (prevents double insertion)
 if ($target === 'zero') {
     $payload_data = json_decode($payload, true);
     if (is_array($payload_data) && !empty($payload_data['date']) && !empty($payload_data['room'])) {
@@ -81,9 +81,33 @@ if ($target === 'zero') {
         $tIn_norm  = strtoupper(trim($payload_data['timeIn'] ?? ''));
         $tOut_norm = strtoupper(trim($payload_data['timeOut'] ?? ''));
 
-        $req_key = 'zs_dedup_' . md5("{$date_norm}|{$room_norm}|{$sub_norm}|{$fac_norm}|{$tIn_norm}|{$tOut_norm}");
+        $req_hash = md5("{$date_norm}|{$room_norm}|{$sub_norm}|{$fac_norm}|{$tIn_norm}|{$tOut_norm}");
+        $req_key  = 'zs_dedup_' . $req_hash;
         
-        if (isset($_SESSION[$req_key]) && (time() - $_SESSION[$req_key]) < 60) {
+        // 1. Session check
+        $is_session_dup = isset($_SESSION[$req_key]) && (time() - $_SESSION[$req_key]) < 120;
+
+        // 2. Persistent file cache check (cross-session & cross-browser)
+        $cache_file = __DIR__ . '/uploads/.zs_dedup_cache.json';
+        $cache_data = [];
+        if (file_exists($cache_file)) {
+            $raw_cache = @file_get_contents($cache_file);
+            if (!empty($raw_cache)) {
+                $cache_data = json_decode($raw_cache, true) ?: [];
+            }
+        }
+        
+        // Purge expired cache items (> 120s old)
+        $now = time();
+        foreach ($cache_data as $k => $ts) {
+            if (($now - $ts) > 120) {
+                unset($cache_data[$k]);
+            }
+        }
+
+        $is_file_dup = isset($cache_data[$req_hash]) && ($now - $cache_data[$req_hash]) < 120;
+
+        if ($is_session_dup || $is_file_dup) {
             echo json_encode([
                 "success" => true,
                 "duplicate" => true,
@@ -91,17 +115,23 @@ if ($target === 'zero') {
             ]);
             exit;
         }
-        $_SESSION[$req_key] = time();
+
+        // Save hash to session & file cache
+        $_SESSION[$req_key] = $now;
+        $cache_data[$req_hash] = $now;
+        @file_put_contents($cache_file, json_encode($cache_data), LOCK_EX);
         session_write_close(); // Release session file lock for concurrent batch requests
     }
 }
 
-// Execute POST request to Google Apps Script with automatic 3-pass retry logic
+// Execute POST request to Google Apps Script
 $response = false;
 $http_code = 0;
 $last_error = '';
 
-$max_attempts = 3;
+// For target=zero (mutating POST), execute single request without retrying POST to avoid duplicate row insertion
+$max_attempts = ($target === 'zero') ? 1 : 3;
+
 for ($attempt = 1; $attempt <= $max_attempts; $attempt++) {
     $ch = curl_init($target_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -137,7 +167,7 @@ for ($attempt = 1; $attempt <= $max_attempts; $attempt++) {
     }
 
     if ($attempt < $max_attempts) {
-        usleep($attempt * 400000); // 400ms, 800ms progressive backoff
+        usleep($attempt * 400000); // 400ms progressive backoff
     }
 }
 

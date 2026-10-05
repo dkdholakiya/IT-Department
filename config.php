@@ -22,7 +22,7 @@ return [
     'mail_enabled' => 1, // Toggle: 1 to enable email system, 0 to disable
     'zero_mail_enabled' => 1, // Toggle: 1 to enable email for zero student report, 0 to disable
     'otp_enabled' => 1, // Toggle: 1 to require 6-digit email OTP verification before submitting report, 0 to bypass
-    'ctl_excel_server_error' => 1, // Toggle: 1 to simulate Server Error after Excel upload in CTL activity, 0 to process normally
+    'ctl_excel_server_error' => 0, // Toggle: 1 to simulate Server Error after Excel upload in CTL activity, 0 to process normally
 
     // Google Sheets Apps Script Web App URLs 
     'sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbzgEUHcbbF7k5gp8RyEJxwzPiUeTeu6wLIZOPbNn-ALnsGPPzyNEKVx9q5ZnHKESHEUxA/exec',

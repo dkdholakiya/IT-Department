@@ -152,7 +152,12 @@ function handleAddEntry() {
     const studentsInput = document.getElementById("entry-students");
     const submitBtn = document.getElementById("add-entry-btn");
 
+    if (!submitBtn || submitBtn.disabled) return;
+
     if (!dateInput || !roomInput || !subjectInput || !facultyInput || !branchInput || !semInput || !timeInInput || !timeOutInput) return;
+
+    // Lock button immediately to prevent double-click dual submissions
+    submitBtn.disabled = true;
 
     // Simple validation
     let isValid = true;
@@ -168,6 +173,7 @@ function handleAddEntry() {
     });
 
     if (!isValid) {
+        submitBtn.disabled = false;
         showToast("Please fill in all required fields.", "error");
         return;
     }
@@ -216,8 +222,15 @@ function handleAddEntry() {
             return facInitNormalized.includes(cleanName) || facInitNormalized.includes(f.initials.toUpperCase());
         });
     }
-    const deptName = matchedFaculty && matchedFaculty.department !== "Both" ? (matchedFaculty.department || currentDepartment) : currentDepartment;
-    const deptAbbr = (deptName === "Computer Engineering") ? "CE" : "IT";
+    let targetDeptName = currentDepartment;
+    const branchUpper = branchVal.toUpperCase();
+    if (branchUpper.includes("COMPUTER") || branchUpper.includes("(CE)") || branchUpper.includes("CSE")) {
+        targetDeptName = "Computer Engineering";
+    } else if (branchUpper.includes("INFORMATION") || branchUpper.includes("(IT)") || branchUpper.includes("ICT")) {
+        targetDeptName = "Information Technology";
+    }
+
+    const deptAbbr = (targetDeptName === "Computer Engineering") ? "CE" : "IT";
     const facultyName = matchedFaculty ? matchedFaculty.name : "Prof. " + facultyInitials;
     const facultyEmail = matchedFaculty ? matchedFaculty.email : (deptAbbr === "CE" ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
 
@@ -526,9 +539,6 @@ function initFacultyAutocomplete() {
             item.addEventListener("click", () => {
                 input.value = member.initials;
                 dropdown.classList.remove("show");
-                if (member.department && member.department !== "Both") {
-                    setDepartment(member.department);
-                }
             });
             dropdown.appendChild(item);
         });
@@ -1071,11 +1081,40 @@ function checkStudentTimetableMatch(row) {
                 if (!cellVal) continue;
 
                 const cellUpper = cellVal.toUpperCase();
-                const hasFacMatch = facInit && (cellUpper.includes(`(${facInit})`) || cellUpper.includes(`(${facInit} `) || cellUpper.includes(` ${facInit})`));
-                const cleanCellVal = cellUpper.replace(/[\s\-]/g, "");
-                const hasSubMatch = recSubNorm && cleanCellVal.includes(recSubNorm);
+                const hasFacMatch = facInit && (
+                    cellUpper.includes(`(${facInit})`) ||
+                    cellUpper.includes(`(${facInit} `) ||
+                    cellUpper.includes(` ${facInit})`) ||
+                    cellUpper.includes(`/${facInit}/`) ||
+                    cellUpper.includes(`/${facInit})`) ||
+                    cellUpper.includes(`(${facInit}/`) ||
+                    cellUpper.includes(` ${facInit} `)
+                );
 
-                if (hasFacMatch || hasSubMatch) {
+                const cleanCellVal = cellUpper.replace(/[\s\-]/g, "");
+
+                // Strict boundary check for subject matching
+                let hasSubMatch = false;
+                if (recSubNorm && recSubNorm.length >= 2) {
+                    if (recSubNorm.length <= 3) {
+                        // For short subjects like CS, AI, SE, IP, WT, use word boundary check so it doesn't match CSE, RECESS, CLASS, ACCESS
+                        const subRegex = new RegExp(`(?:^|[^A-Z0-9])${recSubNorm}(?:[^A-Z0-9]|$)`, "i");
+                        hasSubMatch = subRegex.test(cellUpper);
+                    } else {
+                        hasSubMatch = cleanCellVal.includes(recSubNorm);
+                    }
+                }
+
+                // If faculty initials are provided (e.g. DJB), Student TT match MUST match the faculty initials!
+                // Matching ONLY subject without faculty initials caused short codes like "CS" to match unrelated classes/recess slots.
+                let isMatch = false;
+                if (facInit) {
+                    isMatch = hasFacMatch;
+                } else {
+                    isMatch = hasSubMatch;
+                }
+
+                if (isMatch) {
                     matchedSheet = sheetName;
                     matchedSlotInfo = cellVal.replace(/\r\n|\r|\n/g, " ");
                     break;
@@ -1346,55 +1385,37 @@ function processParsedExcelRows(allRows) {
         const facultyDept = matchedFaculty.department ? matchedFaculty.department.trim() : "";
         const facultyName = matchedFaculty.name;
 
-        // 3. Auto-detect department (CE/CSE vs IT vs Skip for Civil/Mech/Electrical)
+        // 3. Auto-detect department (CE/CSE vs IT) perfectly based on Faculty Department & Branch Context
         let autoDept = "";
+
+        const facDeptNorm = (facultyDept || "").toUpperCase();
+        const isFacIt = facDeptNorm.includes("INFORMATION") || facDeptNorm.includes("IT") || (matchedFaculty.dept && matchedFaculty.dept.toUpperCase() === "IT");
+        const isFacCe = facDeptNorm.includes("COMPUTER") || facDeptNorm.includes("CE") || (matchedFaculty.dept && matchedFaculty.dept.toUpperCase() === "CE");
+
         if (clean) {
             const cleanLower = clean.toLowerCase();
 
-            const isOtherDeptBranch = cleanLower.includes("civil") ||
-                cleanLower.includes("mechanical") ||
-                cleanLower.includes("mech") ||
-                cleanLower.includes("electrical") ||
-                cleanLower.includes("elect") ||
-                cleanLower.includes("chemical") ||
-                cleanLower.includes("automobile") ||
-                cleanLower.includes("auto");
+            const isExplicitItBranch = (cleanLower.includes("b.tech(it)") || cleanLower.includes("diploma(it)") || (cleanLower.includes("it") && !cleanLower.includes("ce") && !cleanLower.includes("cse")));
+            const isExplicitCeBranch = (cleanLower.includes("b.tech(ce)") || cleanLower.includes("diploma(ce)") || (cleanLower.includes("computer engineering") && !cleanLower.includes("it")));
 
-            if (!isOtherDeptBranch) {
-                const isItBranch = cleanLower.includes("it") ||
-                    cleanLower.includes("info") ||
-                    cleanLower.includes("information") ||
-                    cleanLower.includes("ict");
-
-                const isCeOrCse = cleanLower.includes("computer") ||
-                    cleanLower.includes("cse") ||
-                    cleanLower.includes("ce") ||
-                    cleanLower.includes("science");
-
-                if (isCeOrCse && !isItBranch) {
-                    autoDept = "Computer Engineering";
-                } else if (isItBranch && !isCeOrCse) {
-                    autoDept = "Information Technology";
-                } else if (isItBranch && isCeOrCse) {
-                    if (facultyDept.includes("Computer") || facultyDept.includes("CE")) {
-                        autoDept = "Computer Engineering";
-                    } else {
-                        autoDept = "Information Technology";
-                    }
-                }
-            }
-        }
-
-        // If branch is ambiguous or not explicit, check faculty's department from facultyData.js
-        if (!autoDept && facultyDept && !isNonCeItBranch) {
-            if (facultyDept.includes("Computer") || facultyDept.includes("CE")) {
-                autoDept = "Computer Engineering";
-            } else if (facultyDept.includes("Information") || facultyDept.includes("IT")) {
+            if (isExplicitItBranch) {
                 autoDept = "Information Technology";
+            } else if (isExplicitCeBranch) {
+                autoDept = "Computer Engineering";
             }
         }
 
-        if (!autoDept && !isNonCeItBranch) {
+        // If branch is shared/ambiguous (e.g. "B TECH CE & CSE CLASS-X1 PLM") or branch didn't explicitly override, rely on Faculty's official Department
+        if (!autoDept) {
+            if (isFacIt) {
+                autoDept = "Information Technology";
+            } else if (isFacCe) {
+                autoDept = "Computer Engineering";
+            }
+        }
+
+        // Fallback to active portal department context
+        if (!autoDept) {
             autoDept = currentDepartment || "Information Technology";
         }
 
