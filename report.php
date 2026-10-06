@@ -749,6 +749,7 @@
                                                 <option value="Industrial Visit">Industrial Visit</option>
                                                 <option value="Seminar">Seminar</option>
                                                 <option value="Flip Class">Flip Class</option>
+                                                <option value="Cultural Event">Cultural Event</option>
                                                 <option value="Other">Other</option>
                                             </select>
                                             
