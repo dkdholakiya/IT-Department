@@ -394,8 +394,18 @@
             ceBtn.addEventListener('click', () => updateDepartmentContent(true));
         }
 
-        // Always default to IT department on page load
-        updateDepartmentContent(false);
+        // Auto-alternate department on every page load / refresh (F5)
+        const lastDept = localStorage.getItem('portal_dept');
+        if (lastDept === 'IT') {
+            // Toggle to Computer Engineering on this refresh
+            updateDepartmentContent(true);
+        } else if (lastDept === 'CE') {
+            // Toggle to Information Technology on this refresh
+            updateDepartmentContent(false);
+        } else {
+            // First time visit -> default to Information Technology
+            updateDepartmentContent(false);
+        }
 
         // ── 3D Mouse-Tilt on Terminal Card ──
         const card = document.getElementById('terminalCard');

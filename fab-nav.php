@@ -127,8 +127,12 @@ $active_page = isset($active_page) ? $active_page : 'home';
             document.body.classList.remove('ce-active');
             document.body.classList.add('common-active');
         } else {
-            // Always default to IT theme (red) on load for non-common pages
-            document.body.classList.remove('ce-active');
+            const savedDept = localStorage.getItem('portal_dept');
+            if (savedDept === 'CE') {
+                document.body.classList.add('ce-active');
+            } else {
+                document.body.classList.remove('ce-active');
+            }
             document.body.classList.remove('common-active');
         }
 

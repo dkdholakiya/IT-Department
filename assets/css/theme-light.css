@@ -194,12 +194,36 @@ html[data-theme="light"] .segment-btn.active {
 }
 
 html[data-theme="light"] body.ce-active .segment-btn.active,
-html[data-theme="light"] .segment-btn.active[data-dept="CE"] {
+html[data-theme="light"] .segment-btn.active[data-dept="CE"],
+html[data-theme="light"] .segment-btn.active[data-dept="Computer Engineering"] {
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
     color: #ffffff !important;
     font-weight: 700 !important;
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
     border: none !important;
+}
+
+/* CE Mode CTA Buttons in Light Mode: Official Website = Blue, ERP Portal = Red */
+html[data-theme="light"] body.ce-active .cta-btn-website {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 60%, #1d4ed8 100%) !important;
+    box-shadow: 0 6px 28px rgba(37, 99, 235, 0.35), 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] body.ce-active .cta-btn-website:hover {
+    box-shadow: 0 14px 42px rgba(37, 99, 235, 0.5), 0 4px 14px rgba(0, 0, 0, 0.18) !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] body.ce-active .cta-btn-erp {
+    background: linear-gradient(135deg, #dc2626 0%, #c0392b 60%, #991b1b 100%) !important;
+    box-shadow: 0 6px 28px rgba(220, 38, 38, 0.35), 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] body.ce-active .cta-btn-erp:hover {
+    box-shadow: 0 14px 42px rgba(220, 38, 38, 0.5), 0 4px 14px rgba(0, 0, 0, 0.18) !important;
+    color: #ffffff !important;
 }
 
 html[data-theme="light"] .dept-count {
