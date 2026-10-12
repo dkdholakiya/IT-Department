@@ -4260,7 +4260,7 @@ Department of CE & IT`;
                                 },
                                 {
                                     to: adminEmail,
-                                    cc: selectedCcEmails,
+                                    cc: [],
                                     subject: `Make New Report : ${reportTitle} (Faculty Copy)${subjectDeadlineSuffix}`,
                                     html: htmlMessageAdmin
                                 }
