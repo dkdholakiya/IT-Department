@@ -10,8 +10,9 @@ $active_page = 'syllabus-papers';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Syllabus & Exam Papers — Fetch, verify, and view official GMIU course subject codes, credit tables, and previous exam papers in real time.">
     <title>Syllabus &amp; Exam Papers — CE &amp; IT Department</title>
-    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <link rel="icon"          href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="icon"          href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="apple-touch-icon" href="<?php echo v_asset('assets/images/apple-touch-icon.png'); ?>">
 
     <!-- Google Fonts -->
     <link rel="dns-prefetch"  href="//fonts.googleapis.com">

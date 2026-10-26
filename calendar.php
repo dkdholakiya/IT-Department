@@ -1,3 +1,4 @@
+<?php require_once 'auto-cache-bust.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,8 +8,9 @@
     <meta name="description"
         content="Department of CE & IT — Academic Calendar showing Public Holidays, Reserved Holidays, and Departmental Events.">
     <title>Academic Calendar — CE & IT Department</title>
-    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="apple-touch-icon" href="<?php echo v_asset('assets/images/apple-touch-icon.png'); ?>">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

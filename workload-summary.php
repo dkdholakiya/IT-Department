@@ -18,8 +18,9 @@ $jsDataExists = file_exists($jsDataFile);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Faculty Workload & Timetable Audit Summary — Department of CE & IT">
     <title>Faculty Workload Summary — CE & IT Department</title>
-    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="apple-touch-icon" href="<?php echo v_asset('assets/images/apple-touch-icon.png'); ?>">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

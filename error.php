@@ -1,4 +1,5 @@
 <?php
+require_once 'auto-cache-bust.php';
 // Retrieve error code
 $status = $_SERVER['REDIRECT_STATUS'] ?? $_GET['code'] ?? 404;
 $status = (int)$status;
@@ -39,8 +40,9 @@ $base_dir = ($base_dir === '//') ? '/' : $base_dir;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $status; ?> <?php echo htmlspecialchars($title); ?> — Faculty Portal</title>
-    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="apple-touch-icon" href="<?php echo v_asset('assets/images/apple-touch-icon.png'); ?>">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

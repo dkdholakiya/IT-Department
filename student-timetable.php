@@ -74,8 +74,9 @@ if ($excelExists) {
     <meta name="description"
         content="Department of CE & IT — Student Class Timetable Viewer for weekly academic schedules.">
     <title>Student Timetable — CE & IT Department</title>
-    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="apple-touch-icon" href="<?php echo v_asset('assets/images/apple-touch-icon.png'); ?>">
 
     <!-- Google Fonts & Preconnect for Fast Loading -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">

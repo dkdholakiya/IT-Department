@@ -8,8 +8,9 @@
     <meta name="description"
         content="Faculty Directory — Meet our academic mentors, researchers, and creators shaping the future of IT.">
     <title>Faculty Directory — CE & IT Department</title>
-    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <link class="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
+    <link rel="apple-touch-icon" href="<?php echo v_asset('assets/images/apple-touch-icon.png'); ?>">
 
     <!-- Google Fonts & Preconnect Optimization -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
