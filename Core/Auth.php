@@ -14,7 +14,7 @@ class Auth
      */
     public static function check(string $pageLabel = 'this protected resource'): bool
     {
-        $passwordRequired = (int)app_config('password_required', 1);
+        $passwordRequired = (int)app_config('password_required', 0);
 
         $authenticated = false;
         if ($passwordRequired === 0) {
@@ -47,7 +47,7 @@ class Auth
      */
     public static function isAuthenticated(): bool
     {
-        $passwordRequired = (int)app_config('password_required', 1);
+        $passwordRequired = (int)app_config('password_required', 0);
         if ($passwordRequired === 0) {
             return true;
         }

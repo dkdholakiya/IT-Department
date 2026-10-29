@@ -21,7 +21,7 @@ class AuthController extends Controller
             exit(0);
         }
 
-        $passwordRequired = (int)app_config('password_required', 1);
+        $passwordRequired = (int)app_config('password_required', 0);
         $correctPassword  = app_config('correct_password', '');
 
         // Action: Clear session
