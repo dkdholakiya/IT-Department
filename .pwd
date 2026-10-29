@@ -1,0 +1,716 @@
+# ==============================================================================
+# 🎓 GMIU CE & IT DEPARTMENT — PROJECT WALKTHROUGH & ARCHITECTURE DOCUMENT (.pwd)
+# ==============================================================================
+# Document Name: .pwd (Project Walkthrough, Module Connections & Architecture Plan)
+# Project Name : GMIU CE & IT Department Academic & Faculty Management Portal
+# Version      : 2.4.0 (Production Stable)
+# Platform     : Apache / XAMPP / PHP 8.x / Google Apps Script / Vanilla ES6+ JS
+# Author       : DK Dholakiya (Faculty & Lead Developer)
+# Organization : Department of Information Technology & Computer Engineering
+# Institution  : Gyanmanjari Innovative University (GMIU), Bhavnagar, Gujarat, India
+# Head of Dept : Prof. Dhaval Chandarana
+# Target Root  : c:\xampp\htdocs\IT\
+# ==============================================================================
+
+---
+
+## 📌 TABLE OF CONTENTS
+1. [Executive System Summary](#1-executive-system-summary)
+2. [Complete Project Structure](#2-complete-project-structure)
+3. [System Architecture & Design Patterns](#3-system-architecture--design-patterns)
+4. [Module-by-Module Technical Breakdown](#4-module-by-module-technical-breakdown)
+   - 4.1. Core Portal & Department Switcher (`index.php`, `fab-nav.php`, `footer.php`)
+   - 4.2. Daily Faculty Workload & CTL Report (`report.php`, `assets/js/otp-verify.js`)
+   - 4.3. 6-Digit Email OTP Verification Engine (`otp-service.php`, `assets/js/otp-verify.js`)
+   - 4.4. Zero-Student Attendance Incident Reporting (`zero-student-report.php`, `zero-student-report.js`)
+   - 4.5. Transactional SMTP Email Service (`send-email.php`)
+   - 4.6. Timetable System & Background Live Sync (`timetable.php`, `student-timetable.php`, `sync-timetables.php`, `timetable-compiler.php`, `student-timetable-parser.php`)
+   - 4.7. CTL Activity & Google Drive Scanner (`ctlactivity.php`, `ctldrive.php`)
+   - 4.8. Faculty Directory & Workload Summary Analytics (`faculty.php`, `workload-summary.php`)
+   - 4.9. Academic Calendar & Syllabus/Exam Paper Hub (`calendar.php`, `syllabus-papers.php`, `scrape.php`)
+   - 4.10. Security, Authentication & Configuration (`config.php`, `auth-check.php`, `auth-login-page.php`, `verify-password.php`)
+   - 4.11. Google Apps Script Proxy & Integration Layer (`proxy-sheets.php`, `assets/js/google-apps-script*.js`)
+5. [How All Modules Are Connected (End-to-End Data Flows)](#5-how-all-modules-are-connected-end-to-end-data-flows)
+   - 5.1. Flow 1: Faculty Daily Workload Submission Pipeline
+   - 5.2. Flow 2: Zero-Student Attendance Incident Alert Pipeline
+   - 5.3. Flow 3: Live Timetable Cloud Sync Pipeline
+   - 5.4. Flow 4: Session Security & Authentication Pipeline
+   - 5.5. Flow 5: Headless Syllabus & Exam Papers Scraping Pipeline
+6. [Master Configuration Matrix (`config.php`)](#6-master-configuration-matrix-configphp)
+7. [Database & Google Sheets Data Schemas](#7-database--google-sheets-data-schemas)
+8. [Comprehensive Deployment & Operational Plan](#8-comprehensive-deployment--operational-plan)
+   - 8.1. Local Development Setup (XAMPP / Apache)
+   - 8.2. Google Apps Script Cloud Deployment Step-by-Step
+   - 8.3. Production Hardening & Security Best Practices
+   - 8.4. Maintenance, Backup & Log Rotation Routine
+   - 8.5. Troubleshooting Matrix & Failure Recovery
+   - 8.6. Future Architecture Roadmap
+
+---
+
+## 1. EXECUTIVE SYSTEM SUMMARY
+
+The **GMIU CE & IT Department Portal** is an enterprise-grade academic management web application engineered for the Department of **Information Technology (IT)** and **Computer Engineering (CE)** at **Gyanmanjari Innovative University (GMIU)**.
+
+### Core Objectives:
+1. **Academic Accountability**: Record and audit daily faculty classroom lectures, practical lab sessions, syllabus completion, student attendance counts, and Continuous Teaching & Learning (CTL) activities.
+2. **Instant Incident Escalation**: Enable real-time logging and immediate administrator notification when zero students attend a scheduled class (`zero-student-report.php`).
+3. **Automated Live Timetable Distribution**: Stream dynamic faculty and student timetables with one-click background synchronization directly from cloud Google Sheets to local high-speed JSON/JS matrix caches.
+4. **Hybrid Serverless Cloud Storage**: Combine the speed of local Apache/PHP web hosting with the collaborative power and zero-maintenance database features of **Google Sheets** and **Google Drive** using Google Apps Script Web Apps.
+5. **Secure Transactional Communications**: Enforce 6-digit email OTP verification before submitting sensitive departmental reports, dispatching branded HTML summary emails via Gmail SMTP.
+
+---
+
+## 2. COMPLETE PROJECT STRUCTURE
+
+```text
+c:\xampp\htdocs\IT\
+│
+├── .htaccess                             # Apache routing, URL rewrite engine, security guards & Gzip compression
+├── .pwd                                  # This Architecture, Module Connection & Planning Document
+├── README.md                             # Repository introductory overview & quick setup guide
+├── config.php                            # Protected master configuration (Credentials, toggles, Web App endpoints)
+│
+├── index.php                             # Master Landing Portal (IT & CE dual-department toggle & 3D preview)
+├── report.php                            # Daily Faculty Workload & CTL Activity Reporting Form
+├── zero-student-report.php               # Zero-Student Attendance Incident Reporting Interface
+├── timetable.php                         # Interactive Faculty Timetable Viewer & Matrix Explorer
+├── student-timetable.php                 # Interactive Student Timetable Viewer (Semester/Division/Batch)
+├── workload-summary.php                  # Departmental Workload Analytics, Audit Grid & Print View
+├── faculty.php                           # Department Faculty Directory, Cabins & Contact Profiles
+├── calendar.php                          # Academic Calendar, Holidays & University Event Planner
+├── syllabus-papers.php                   # Course Syllabus Explorer & Real-Time Exam Paper Downloader
+├── ctlactivity.php                       # Continuous Teaching & Learning (CTL) Activity Logger & Tracker
+├── ctldrive.php                          # Academic Google Drive Resource Scanner & File Manager
+│
+├── auth-check.php                        # Server-side authorization gatekeeper (Included in protected views)
+├── auth-login-page.php                   # Glassmorphic portal password challenge screen
+├── verify-password.php                   # Password verification REST API (Bcrypt hash validator)
+├── otp-service.php                       # 6-Digit Email OTP generation, rate-limiting & SMTP delivery backend
+├── send-email.php                        # PHPMailer / Gmail SMTP transactional email engine
+├── proxy-sheets.php                      # Backend proxy for Google Sheets Apps Script (Anti-CORS & Deduplication)
+├── sync-timetables.php                   # Background & manual Google Sheets timetable synchronization handler
+├── timetable-compiler.php                # Native OpenXML parser & JS matrix compiler (timetable.xlsx -> timetableData.js)
+├── student-timetable-parser.php          # OpenXML parser for student timetable (xlsx -> student_timetable_cache.json)
+├── update-timetable.php                  # Webhook & UI endpoint for triggering timetable re-compilation
+├── scrape.php                            # Headless cURL scraper proxy for university syllabus & exam papers
+├── auto-cache-bust.php                   # Automatic filemtime-based asset cache-busting helper (v_asset())
+├── theme-toggle.php                      # Theme switcher component (Dark Glassmorphism <-> Light Mode)
+├── fab-nav.php                           # Global Floating Action Button navigation overlay
+├── footer.php                            # Unified footer template
+├── error.php                             # Dynamic HTTP error template (400, 401, 403, 404, 500, 503)
+│
+├── assets/
+│   ├── css/
+│   │   ├── portal.css                    # Core portal glassmorphism styles, typography, particles & navbar
+│   │   ├── style.css                     # Primary report form styles, inputs, cards & modal design
+│   │   ├── theme-light.css               # Comprehensive Light Mode design token overrides
+│   │   ├── timetable.css                 # Timetable grid layout, slot badges & filter controls
+│   │   ├── zero-student-report.css       # Zero Student Incident interface specific styling
+│   │   ├── ctlactivity.css               # CTL Activity dashboard, charts & metric styling
+│   │   ├── ctldrive.css                  # Drive scanner tables, folder trees & drive action buttons
+│   │   ├── faculty.css                   # Faculty card grid, avatar badges & contact modal styles
+│   │   ├── calendar.css                  # Academic calendar grid, holiday cards & month filter styles
+│   │   └── syllabus.css                  # Syllabus table, branch filter & paper list styling
+│   │
+│   ├── js/
+│   │   ├── facultyData.js                # Master JavaScript database of faculty profiles, cabins & drive links
+│   │   ├── timetableData.js              # Auto-compiled matrix of weekly faculty timetables (Generated by compiler)
+│   │   ├── calendarData.js               # Academic calendar events, public holidays & semester dates
+│   │   ├── timetableSync.js              # Client-side 1-click sync handler, background polling & password modal
+│   │   ├── otp-verify.js                 # Responsive 6-digit OTP verification modal & countdown timer
+│   │   ├── zero-student-report.js        # Zero student form controller, Flatpickr setup & submission logic
+│   │   ├── google-apps-script.js         # Apps Script deployment code for Faculty Daily Workload Sheet
+│   │   ├── google-apps-script-zero.js    # Apps Script deployment code for Zero Student Incident Sheet
+│   │   ├── google-apps-script-faculty-timetable.js  # Apps Script code for Live Faculty Timetable streaming
+│   │   ├── google-apps-script-student-timetable.js  # Apps Script code for Live Student Timetable streaming
+│   │   └── google-apps-script-email-tracker.js      # Apps Script code for Email Audit Logging Sheet
+│   │
+│   ├── images/                           # University logos, department emblems, favicons & apple touch icons
+│   └── vendor/                           # Localized vendor libraries (Bootstrap 5, XLSX, Bootstrap Icons)
+│
+├── uploads/                              # Server-side storage for Excel spreadsheets & uploaded resources
+│   ├── timetable/                        # Master faculty timetable spreadsheet storage (timetable.xlsx)
+│   ├── student_timetable/                # Master student timetable spreadsheet & JSON cache storage
+│   └── .zs_dedup_cache.json              # Persistent 120-second incident deduplication cache file
+│
+└── scratch/                              # Temporary working directory for unzipping Excel OpenXML archives
+    ├── temp_timetable.zip
+    └── unzipped_timetable/
+```
+
+---
+
+## 3. SYSTEM ARCHITECTURE & DESIGN PATTERNS
+
+```
++---------------------------------------------------------------------------------------+
+|                                    CLIENT BROWSER                                     |
+|  [IT / CE Portal]  <--->  [Report Form]  <--->  [Timetable Grid]  <--->  [Drive Scanner] |
+|         |                      |                       |                      |       |
+|  (LocalStorage)          (OTP Modal JS)         (Live Sync JS)          (Theme Toggle)|
++---------|----------------------|-----------------------|----------------------|-------+
+          |                      |                       |                      |
+          |                      v HTTP POST (JSON)      |                      |
+          |           +----------------------+           |                      |
+          +---------> |     Apache Server    | <---------+----------------------+
+                      | (c:\xampp\htdocs\IT) |
+                      +----------------------+
+                                 |
+        +------------------------+------------------------+
+        |                        |                        |
+        v                        v                        v
++----------------+      +------------------+     +------------------+
+| auth-check.php |      |  send-email.php  |     | proxy-sheets.php |
+| (Session Guard)|      |  otp-service.php |     | sync-timetables  |
++----------------+      +------------------+     +------------------+
+        |                        |                        |
+        | Bcrypt / Sessions      | Gmail SMTP (SSL 465)   | cURL / JSON POST
+        v                        v                        v
+[Admin Lockout Screen]  [Faculty / Admin Inbox]   [Google Apps Script]
+                                (HTML Report / OTP)       |
+                                                          v
+                                                 [Google Sheets Cloud]
+                                                 - Workload Sheet
+                                                 - Zero Student Log
+                                                 - Live Timetables
+```
+
+### 3.1. Architectural Highlights:
+1. **Dual-Department Unified Single-Codebase**: Supports both **Information Technology** and **Computer Engineering** dynamically without duplicated code. Department context is passed via query params or session state, adjusting branding, colors, recipient email addresses (`smtp_email` vs `smtp_email_ce`), and subject dropdowns.
+2. **Hybrid Serverless Persistence**: Eliminates the overhead of managing a traditional relational SQL server for departmental forms. Google Sheets serves as the secure, collaborative, multi-user cloud spreadsheet database.
+3. **Smart Client-Side Caching with Zero-Stale Cache-Busting**: `auto-cache-bust.php` automatically queries the file's last modified timestamp via `filemtime()` (`v_asset('assets/css/style.css') -> assets/css/style.css?v=1785567890`), ensuring users receive the latest styles and scripts immediately without manual hard reloads (`Ctrl + Shift + R`).
+4. **Native Zero-Dependency OpenXML Parser**: `timetable-compiler.php` and `student-timetable-parser.php` parse complex multi-sheet `.xlsx` Excel spreadsheets directly by reading internal XML (`xl/sharedStrings.xml` and `xl/worksheets/sheet*.xml`) using PHP's native `ZipArchive` or Windows PowerShell `Expand-Archive`, avoiding heavy third-party PHP libraries like PhpSpreadsheet.
+5. **Multi-Tier Security & Access Guard**:
+   - `.htaccess` blocks direct browser requests to `.pwd`, `config.php`, `.git`, and dotfiles.
+   - `SECURE_ACCESS` PHP constant check blocks unauthorized execution of helper files when called directly.
+   - Bcrypt password protection (`$2y$10$...`) on sensitive management modules (`ctlactivity.php`, `ctldrive.php`, `zero-student-report.php`).
+   - Open-relay prevention restricts all outgoing emails to official `@gmiu.edu.in` recipients.
+
+---
+
+## 4. MODULE-BY-MODULE TECHNICAL BREAKDOWN
+
+### 4.1. Core Portal & Department Switcher
+- **Primary Files**: `index.php`, `fab-nav.php`, `footer.php`, `theme-toggle.php`, `assets/css/portal.css`.
+- **Functionality**:
+  - Acts as the central navigation springboard for the entire university department portal.
+  - Features an interactive 3D mouse-tilt terminal interface showing departmental programs (B.Tech, Diploma, ICT), vision, mission, and HOD leadership details.
+  - Provides a toggle between **Information Technology** (Red Theme Accent) and **Computer Engineering** (Blue Theme Accent).
+  - Floating Action Button (`fab-nav.php`) gives one-click sticky access to all sub-modules from any page.
+  - Unified theme switcher (`theme-toggle.php`) enables switching between dark glassmorphism and light mode with instant CSS custom property reconfiguration.
+
+### 4.2. Daily Faculty Workload & CTL Report
+- **Primary Files**: `report.php`, `assets/css/style.css`, `assets/js/otp-verify.js`.
+- **Functionality**:
+  - Detailed web form enabling faculty members to log daily lectures, labs, seminar sessions, and academic achievements.
+  - Captures: Academic Year, Date, Faculty Name/Email, Report Type, Title, Time Duration, Venue, Program, Semester, Division, Batch, Attendance Count, Topics Covered, and Google Drive attachments.
+  - **Auto-Save & Draft Recovery**: Real-time `localStorage` autosave prevents data loss in the event of accidental browser close, power failure, or network disruption.
+  - **Submission Verification**: If `otp_enabled = 1` in `config.php`, the form triggers a modal 6-digit OTP challenge to the faculty's verified `@gmiu.edu.in` email before allowing final submission.
+  - **Simultaneous Dual Delivery**: Upon verification, the form dispatches an HTML summary email to the department admin and streams the record to Google Sheets via `proxy-sheets.php?target=report`.
+
+### 4.3. 6-Digit Email OTP Verification Engine
+- **Primary Files**: `otp-service.php`, `assets/js/otp-verify.js`.
+- **Functionality**:
+  - High-security cryptographic one-time password system protecting report submissions from impersonation.
+  - Validates recipient domain (`@gmiu.edu.in` required).
+  - Enforces a 15-second resend cooldown to prevent email bombing.
+  - Generates a 6-digit integer via `random_int(100000, 999999)`.
+  - Stores OTP code, generation timestamp, and expiration (`time() + 300`, 5-minute validity) inside `$_SESSION['otp_store'][$email]`.
+  - Dispatches custom-styled HTML email via Gmail SMTP using department-specific sender credentials.
+  - Returns JSON status codes for clean client-side feedback in the responsive digit-by-digit OTP modal.
+
+### 4.4. Zero-Student Attendance Incident Reporting
+- **Primary Files**: `zero-student-report.php`, `assets/js/zero-student-report.js`, `assets/css/zero-student-report.css`, `assets/js/google-apps-script-zero.js`.
+- **Functionality**:
+  - Specialized, high-priority reporting tool for classes where zero students attend as per the official timetable.
+  - Captures: Incident Date, Start/End Time, Room No., Branch/Program, Semester, Division, Subject, Faculty Name, and Reason/Remarks.
+  - **120-Second Anti-Duplicate Filter**: Integrates server-side deduplication via session hash and `uploads/.zs_dedup_cache.json`. Submitting identical reports within 2 minutes is blocked to prevent accidental double-clicks or browser reload duplication.
+  - Dispatches an emergency incident alert email to department heads and logs the record to the `Zero Student Log` Google Sheet.
+
+### 4.5. Transactional SMTP Email Service
+- **Primary Files**: `send-email.php`, `assets/js/google-apps-script-email-tracker.js`.
+- **Functionality**:
+  - Native PHP replacement for legacy Node.js mailers, running asynchronously with `ignore_user_abort(true)` and `set_time_limit(0)`.
+  - **Domain Whitelist / Open-Relay Guard**: Strictly verifies that all `to` and `cc` recipients end with `@gmiu.edu.in`. Requests containing external domains are immediately rejected with HTTP 403 Forbidden.
+  - **Department Routing**: Dynamically chooses credentials from `config.php`:
+    - IT Department: Uses `smtp_email` (`adminit@gmiu.edu.in`) and `smtp_password`.
+    - CE Department: Uses `smtp_email_ce` (`admincecse@gmiu.edu.in`) and `smtp_password_ce`.
+  - Generates email layouts with responsive HTML tables, badges, timestamp headers, and university branding.
+  - Asynchronously pings `mail_tracking_webapp_url` to keep an immutable Google Sheet audit log of all emails sent.
+
+### 4.6. Timetable System & Background Live Sync
+- **Primary Files**:
+  - `timetable.php` (Faculty timetable viewer)
+  - `student-timetable.php` (Student timetable viewer)
+  - `sync-timetables.php` (Core Google Sheets synchronizer)
+  - `timetable-compiler.php` (Faculty OpenXML to JS compiler)
+  - `student-timetable-parser.php` (Student OpenXML to JSON parser)
+  - `update-timetable.php` (Webhook / manual sync runner)
+  - `assets/js/timetableSync.js` (Client-side auto-sync poller)
+  - `assets/js/timetableData.js` (Compiled faculty database)
+- **Functionality**:
+  - **Faculty Viewer**: Interactive schedule matrix allowing filtering by faculty name, day of week, room number, or subject. Includes weekly workload totals and empty-slot indicators.
+  - **Student Viewer**: Filterable timetable by Semester (Sem 1 to Sem 8), Division (Class A, B, C), and Practical Batch.
+  - **Cloud Synchronization (`sync-timetables.php`)**:
+    - Connects to Google Apps Script endpoints to fetch the latest Excel binaries via Base64 or direct stream.
+    - Validates file integrity (`PK\x03\x04` zip header).
+    - Compares MD5 checksums to skip redundant compilation if the spreadsheet hasn't changed.
+    - Compiles `uploads/timetable/timetable.xlsx` into `assets/js/timetableData.js`.
+    - Compiles `uploads/student_timetable/student_timetable.xlsx` into `student_timetable_cache.json`.
+  - **Background Polling (`timetableSync.js`)**:
+    - Automatically checks for timetable changes every `auto_sync_interval` seconds (default: 300s).
+    - Prompts an authentication password modal when an admin initiates a manual cloud sync.
+
+### 4.7. CTL Activity & Google Drive Scanner
+- **Primary Files**: `ctlactivity.php`, `ctldrive.php`, `assets/css/ctlactivity.css`, `assets/css/ctldrive.css`.
+- **Functionality**:
+  - Protected behind `auth-check.php` password barrier.
+  - **CTL Activity Dashboard (`ctlactivity.php`)**: Continuous Teaching & Learning monitor tracking syllabus progression, unit plans, and student performance. Supports client-side Excel upload and real-time parsing with SheetJS (`xlsx.full.min.js`).
+  - **Drive Folder Scanner (`ctldrive.php`)**: Administrative tool mapping Google Drive shared drives, subject resource folders, lab manuals, and faculty course files.
+
+### 4.8. Faculty Directory & Workload Summary Analytics
+- **Primary Files**: `faculty.php`, `workload-summary.php`, `assets/js/facultyData.js`, `assets/css/faculty.css`.
+- **Functionality**:
+  - **Faculty Directory (`faculty.php`)**: Interactive roster of all department professors, assistant professors, and technical staff, displaying cabin numbers, phone extensions, official emails, designations, and personal Google Drive resource folders.
+  - **Workload Summary (`workload-summary.php`)**: Computes total lecture hours, lab hours, and weekly commitment per faculty member from the compiled timetable. Features a clean, ink-friendly black-and-white print stylesheet (`@media print`) for official university submissions.
+
+### 4.9. Academic Calendar & Syllabus/Exam Paper Hub
+- **Primary Files**: `calendar.php`, `syllabus-papers.php`, `scrape.php`, `assets/js/calendarData.js`.
+- **Functionality**:
+  - **Academic Calendar (`calendar.php`)**: Monthly visual schedule displaying university holidays, reserved holidays, term start/end dates, mid-semester exam dates, and cultural festivals.
+  - **Syllabus & Exam Papers (`syllabus-papers.php`)**: Searchable index of official GMIU course codes, credit distribution tables, and past exam question papers.
+  - **CORS Scraper Proxy (`scrape.php`)**: A secure server-side cURL crawler that queries official university examination portals, bypasses CORS restrictions, parses HTML responses, and returns structured JSON to the frontend.
+
+### 4.10. Security, Authentication & Configuration
+- **Primary Files**: `config.php`, `auth-check.php`, `auth-login-page.php`, `verify-password.php`.
+- **Functionality**:
+  - **Master Configuration (`config.php`)**: Houses all sensitive parameters, SMTP app passwords, Google Apps Script URLs, and feature toggles.
+  - **Authentication Guard (`auth-check.php`)**: Inspects `$_SESSION['authenticated']`. If locked or expired, renders `auth-login-page.php` with HTTP security headers (`X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff`).
+  - **Verification API (`verify-password.php`)**: Accepts POST JSON requests with submitted passwords. Validates using `password_verify($password, $hash)` (Bcrypt) and sets session tokens upon success.
+
+### 4.11. Google Apps Script Proxy & Integration Layer
+- **Primary Files**: `proxy-sheets.php`, `assets/js/google-apps-script*.js`.
+- **Functionality**:
+  - Bridges browser AJAX calls with Google Apps Script Web Apps.
+  - Shields confidential Google Apps Script deployment URLs from being exposed in browser source code.
+  - Implements server-side cURL with follow-redirects (`CURLOPT_FOLLOWLOCATION`) to seamlessly handle Google's 302 redirects to `script.googleusercontent.com`.
+
+---
+
+## 5. HOW ALL MODULES ARE CONNECTED (END-TO-END DATA FLOWS)
+
+```
+========================================================================================
+5.1. FACULTY DAILY WORKLOAD SUBMISSION LIFECYCLE
+========================================================================================
+
+ [Faculty Member]
+        |
+        | 1. Fills form (Faculty name, lecture details, attendance, topics)
+        v
+  [report.php]
+        |
+        | 2. Autosaves inputs continuously in browser LocalStorage
+        | 3. User clicks "Submit Report"
+        v
+  [otp-verify.js]  <------ Checks config.php (otp_enabled == 1?)
+        |
+        +-----> POST otp-service.php?action=send_otp
+        |              |
+        |              | 4. Generates 6-digit cryptographic code
+        |              | 5. Sends email via Gmail SMTP (send_otp_smtp_mail)
+        |              v
+        |       [Faculty Email Inbox (@gmiu.edu.in)]
+        |              |
+        |              | 5b. Faculty enters 6-digit code in modal
+        v              v
+  [otp-verify.js] ----> POST otp-service.php?action=verify_otp
+        |
+        | 6. Code verified successfully (verified == true)
+        v
+  [report.php Form Dispatcher]
+        |
+        +====================================+====================================+
+        |                                                                         |
+        v HTTP POST JSON                                                          v HTTP POST JSON
+  [proxy-sheets.php?target=report]                                         [send-email.php]
+        |                                                                         |
+        | 7. Reads sheets_webapp_url from config.php                              | 8. Verifies recipient domain
+        | 8. Executes cURL to Google Script Web App                               | 9. Connects to Gmail SMTP:465
+        v                                                                         v
+  [Google Apps Script (Code.gs)]                                           [GMIU Mail Servers]
+        |                                                                         |
+        | 9. Appends new row into "2026-27 ODD"                                   | 10. Delivers HTML report to
+        v                                                                         |     Department HOD & Admin
+  [Google Sheets Master Database]                                                 v
+                                                                           [Admin Inbox (@gmiu.edu.in)]
+```
+
+```
+========================================================================================
+5.2. ZERO-STUDENT ATTENDANCE INCIDENT REPORTING LIFECYCLE
+========================================================================================
+
+ [Faculty Member] (Class is empty at scheduled lecture time)
+        |
+        v
+  [zero-student-report.php]
+        |
+        | 1. Selects Room, Subject, Faculty, Time Slot & Reason
+        | 2. Submits Incident Alert
+        v
+  [zero-student-report.js]
+        |
+        v HTTP POST JSON
+  [proxy-sheets.php?target=zero]
+        |
+        | 3. Security Guard: Verifies same-origin or authenticated session
+        | 4. Deduplication Check:
+        |    - Generates MD5 hash: md5(Date|Room|Subject|Faculty|TimeIn|TimeOut)
+        |    - Checks session & uploads/.zs_dedup_cache.json
+        |    - Rejects if submitted < 120 seconds ago (HTTP 429 Duplicate)
+        | 5. cURL dispatches to zero_sheets_webapp_url
+        v
+  [Google Apps Script (google-apps-script-zero.js)]
+        |
+        +-----------------------------------+------------------------------------+
+        |                                                                        |
+        v                                                                        v
+  [Google Sheets: "Zero Student Log"]                                     [Emergency Email Notification]
+  - Appends record with timestamp                                         - Instant alert sent to HOD
+  - Marks status as "PENDING REVIEW"                                      - Includes Room No. & Faculty name
+```
+
+```
+========================================================================================
+5.3. LIVE TIMETABLE CLOUD SYNCHRONIZATION LIFECYCLE
+========================================================================================
+
+ [Department Admin / Scheduler] updates master timetable in Google Sheets
+        |
+        +-----------------------------------+------------------------------------+
+        |                                                                        |
+ (A) Automated Polling (Every 300s)                                (B) Manual 1-Click Sync
+  [timetableSync.js in browser]                                     Admin clicks "Sync Now"
+        |                                                                        |
+        v                                                                        v
+  [sync-timetables.php?action=check]                                [timetableSync.js Modal]
+        |                                                                        |
+        |                                                           Prompts for Master Password
+        |                                                           Validates via verify-password.php
+        |                                                                        |
+        +-----------------------------------+------------------------------------+
+                                            |
+                                            v
+                                 [sync-timetables.php]
+                                            |
+                                            | 1. Fetches Excel from Apps Script Web App
+                                            | 2. Validates PK\x03\x04 binary zip header
+                                            | 3. Checks MD5 hash against existing file
+                                            v
+                                [Has file changed?]
+                                   /           \
+                           YES    /             \   NO
+                                 v               v
+                [Save binary to uploads/]     [Return JSON: "Already up-to-date"]
+                         |
+                         +-----------------------------+
+                         |                             |
+                         v                             v
+           (For Faculty Timetable)          (For Student Timetable)
+          [timetable-compiler.php]         [student-timetable-parser.php]
+                         |                             |
+          - Unzips Excel in scratch/       - Unzips Excel in scratch/
+          - Extracts sharedStrings.xml     - Extracts XML cell values
+          - Compiles JS Data Matrix        - Compiles JSON cache
+                         |                             |
+                         v                             v
+           [assets/js/timetableData.js]   [student_timetable_cache.json]
+                         |                             |
+                         +--------------+--------------+
+                                        |
+                                        v
+                 [auto-cache-bust.php: updates v_asset timestamp]
+                                        |
+                                        v
+                 [Browser auto-refreshes views with fresh data]
+```
+
+```
+========================================================================================
+5.4. SESSION SECURITY & AUTHENTICATION LIFECYCLE
+========================================================================================
+
+ [User Accesses Protected Route] (e.g. ctlactivity.php, ctldrive.php, sync-timetables)
+        |
+        v
+  [auth-check.php]
+        |
+        | 1. Checks config.php (password_required == 1?)
+        | 2. Checks $_SESSION['authenticated'] === true?
+        |
+        +-----> YES: Grants access to target page
+        |
+        +-----> NO: Halts execution, sets HTTP security headers,
+                    and renders [auth-login-page.php]
+                           |
+                           | 3. User enters master password
+                           v
+                    [auth-login-page.php JS]
+                           |
+                           v POST JSON { password: "..." }
+                    [verify-password.php]
+                           |
+                           | 4. Reads correct_password hash from config.php
+                           | 5. password_verify($password, $correct_password)
+                           |
+                           +-----> SUCCESS: Sets $_SESSION['authenticated'] = true
+                           |                Returns { success: true }
+                           |                Page automatically reloads and unlocks
+                           |
+                           +-----> FAILURE: Returns HTTP 401 Unauthorized
+                                            Displays "Invalid Password" error shake
+```
+
+```
+========================================================================================
+5.5. HEADLESS SYLLABUS & EXAM PAPERS SCRAPING LIFECYCLE
+========================================================================================
+
+ [Student / Faculty] enters Subject Code or Subject Name
+        |
+        v
+  [syllabus-papers.php]
+        |
+        v GET JSON /scrape.php?url=https://gmiu.edu.in/exam-portal/...
+  [scrape.php]
+        |
+        | 1. Validates URL integrity and scheme
+        | 2. Initializes cURL with modern browser headers & user agent
+        | 3. Bypasses CORS restrictions on external server
+        | 4. Retrieves HTML document from university examination repository
+        | 5. Extracts exam paper PDF download links and syllabus tables
+        v
+  [JSON Response returned to syllabus-papers.php]
+        |
+        v
+  [Frontend renders interactive subject cards & direct PDF download links]
+```
+
+---
+
+## 6. MASTER CONFIGURATION MATRIX (`config.php`)
+
+All environmental, credential, and feature toggles are centralized in `config.php`:
+
+| Configuration Key | Data Type | Default Value | Security Role & Impact |
+| :--- | :--- | :--- | :--- |
+| `smtp_email` | `string` | `adminit@gmiu.edu.in` | IT Department Gmail SMTP sender email address |
+| `smtp_password` | `string` | *(16-char App Password)* | IT Department Google App Password (2FA bypass) |
+| `smtp_email_ce` | `string` | `admincecse@gmiu.edu.in` | CE Department Gmail SMTP sender email address |
+| `smtp_password_ce` | `string` | *(16-char App Password)* | CE Department Google App Password (2FA bypass) |
+| `mail_enabled` | `int (0/1)` | `1` | Global email toggle. Set to `0` for offline testing |
+| `zero_mail_enabled` | `int (0/1)` | `1` | Toggles email alerts specifically for Zero Student reports |
+| `otp_enabled` | `int (0/1)` | `1` | Enforces 6-digit OTP verification for report submissions |
+| `ctl_excel_server_error`| `int (0/1)` | `0` | Debug switch: `1` simulates server error after Excel upload |
+| `sheets_webapp_url` | `string` | *(Google Script URL)* | Endpoint for appending Faculty Daily Workload records |
+| `zero_sheets_webapp_url`| `string` | *(Google Script URL)* | Endpoint for appending Zero Student Incident records |
+| `mail_tracking_webapp_url`| `string` | *(Google Script URL)* | Endpoint for audit logging all outgoing SMTP emails |
+| `student_timetable_webapp_url` | `string` | *(Google Script URL)* | Endpoint providing Student Timetable Excel stream |
+| `faculty_timetable_webapp_url` | `string` | *(Google Script URL)* | Endpoint providing Faculty Timetable Excel stream |
+| `auto_sync_enabled` | `int (0/1)` | `1` | Enables background periodic timetable sync |
+| `auto_sync_interval`| `int` | `300` | Auto-sync polling interval in seconds (5 minutes) |
+| `password_required` | `int (0/1)` | `1` | Master portal password lock for protected dashboards |
+| `correct_password` | `string` | *(Bcrypt Hash)* | Bcrypt hash (`$2y$10$...`) for master portal unlock |
+
+---
+
+## 7. DATABASE & GOOGLE SHEETS DATA SCHEMAS
+
+The system uses Google Sheets as a structured, tabular cloud database.
+
+### 7.1. Faculty Daily Workload Sheet (`2026-27 ODD`)
+Script: `assets/js/google-apps-script.js`
+
+| Col # | Column Header | Data Type | Sample Value / Description |
+| :---: | :--- | :--- | :--- |
+| **A** | Sr. No. | Integer | `1`, `2`, `3` (Auto-incremented) |
+| **B** | Submitted On | Timestamp | `2026-10-29 10:15:00` |
+| **C** | Faculty Name | String | `Prof. Dhaval Chandarana` |
+| **D** | Faculty Email | Email | `drchandarana@gmiu.edu.in` |
+| **E** | Academic Year | String | `2026-27` |
+| **F** | Report Type | String | `Classroom Lecture` / `Lab Session` |
+| **G** | Report Title | String | `Unit 3: Relational Algebra & SQL Joins` |
+| **H** | Activity Date | Date | `2026-10-29` |
+| **I** | Start Time | Time | `09:15 AM` |
+| **J** | End Time | Time | `10:15 AM` |
+| **K** | Venue | String | `FF-28` / `Computer Center Lab 2` |
+| **L** | Programme(s) | String | `B.Tech (IT)` |
+| **M** | Semester | String | `Semester 5` |
+| **N** | Division / Class | String | `Class A` |
+| **O** | No. of Participants | Integer | `58` (Students Present) |
+| **P** | Faculty Coordinator(s)| String | `Prof. Dhaval Chandarana` |
+| **Q** | Google Drive Link | URL | `https://drive.google.com/drive/folders/...` |
+| **R** | Batch | String | `A1` / `All Batches` |
+| **S** | Student Coordinator | String | `Student Representative Name` |
+| **T** | Publish on Website | String | `Yes` / `No` |
+| **U** | Press Note | Text | Media summary of the session |
+| **V** | Placement Activity | String | `Technical Training` / `None` |
+| **W** | Activity Details | Text | Comprehensive topic breakdown |
+| **X** | Status | String | `Verified via OTP` |
+| **Y** | Deadline | Date | Administrative compliance date |
+
+### 7.2. Zero Student Incident Log Sheet (`Zero Student Log`)
+Script: `assets/js/google-apps-script-zero.js`
+
+| Col # | Column Header | Data Type | Sample Value / Description |
+| :---: | :--- | :--- | :--- |
+| **A** | Sr. No. | Integer | `101` |
+| **B** | Logged At | Timestamp | `2026-10-29 09:20:12` |
+| **C** | Incident Date | Date | `2026-10-29` |
+| **D** | Department | String | `Information Technology` / `Computer Eng.` |
+| **E** | Room No. | String | `FF-16` |
+| **F** | Branch / Program | String | `CLASS A B.TECH(IT)` |
+| **G** | Subject Code/Name| String | `C1 ADA (Analysis & Design of Algorithms)` |
+| **H** | Faculty Name | String | `Prof. Dhaval Chandarana` |
+| **I** | Scheduled Start | Time | `09:15 AM` |
+| **J** | Scheduled End | Time | `10:15 AM` |
+| **K** | Reason / Remarks | Text | `Students absent due to campus recruitment` |
+| **L** | Action Status | String | `PENDING REVIEW` / `RESOLVED` |
+
+### 7.3. Email Audit Log Sheet (`Audit Logs`)
+Script: `assets/js/google-apps-script-email-tracker.js`
+
+| Col # | Column Header | Data Type | Sample Value / Description |
+| :---: | :--- | :--- | :--- |
+| **A** | Timestamp | Timestamp | `2026-10-29 10:15:30` |
+| **B** | Event Type | String | `OTP_DISPATCH` / `REPORT_SUBMISSION` |
+| **C** | Sender Department| String | `IT Department` |
+| **D** | Sender Email | Email | `adminit@gmiu.edu.in` |
+| **E** | Recipient (To) | Email | `faculty@gmiu.edu.in` |
+| **F** | Carbon Copy (CC) | Text | `adminit@gmiu.edu.in, hod@gmiu.edu.in` |
+| **G** | Subject Line | Text | `Your OTP for IT Report Verification` |
+| **H** | Delivery Status | String | `SUCCESS (200)` / `FAILED (500)` |
+
+---
+
+## 8. COMPREHENSIVE DEPLOYMENT & OPERATIONAL PLAN
+
+### 8.1. Local Development Setup (XAMPP / Apache)
+1. **Directory Placement**:
+   Place the project files inside your local web root:
+   ```text
+   c:\xampp\htdocs\IT\
+   ```
+2. **Verify PHP Modules**:
+   Open `c:\xampp\php\php.ini` and confirm the following extensions are enabled:
+   ```ini
+   extension=curl
+   extension=openssl
+   extension=zip
+   extension=fileinfo
+   extension=mbstring
+   ```
+3. **Verify Apache Rewrite Module**:
+   Open `c:\xampp\apache\conf\httpd.conf` and ensure `mod_rewrite` is active:
+   ```apache
+   LoadModule rewrite_module modules/mod_rewrite.so
+   ```
+   Ensure directory permissions allow `.htaccess` overrides:
+   ```apache
+   <Directory "c:/xampp/htdocs">
+       AllowOverride All
+       Require all granted
+   </Directory>
+   ```
+4. **Access Portal**:
+   Launch Apache from the XAMPP Control Panel and navigate to:
+   ```text
+   http://localhost/IT/
+   ```
+
+### 8.2. Google Apps Script Cloud Deployment Step-by-Step
+To link Google Sheets with the portal:
+1. Create a new Google Spreadsheet for Faculty Workload.
+2. In Google Sheets, navigate to: `Extensions` → `Apps Script`.
+3. Clear existing code in `Code.gs` and paste the contents of:
+   ```text
+   assets/js/google-apps-script.js
+   ```
+4. Click **Deploy** → **New Deployment**.
+5. Select type: **Web App**.
+6. Set **Execute as**: `Me (your Google account)`.
+7. Set **Who has access**: `Anyone` (Required for server-to-server webhook POST requests).
+8. Copy the generated **Web App URL** and paste it into `config.php`:
+   ```php
+   'sheets_webapp_url' => 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
+   ```
+9. Repeat steps 1–8 for:
+   - `assets/js/google-apps-script-zero.js` → `zero_sheets_webapp_url`
+   - `assets/js/google-apps-script-email-tracker.js` → `mail_tracking_webapp_url`
+   - `assets/js/google-apps-script-faculty-timetable.js` → `faculty_timetable_webapp_url`
+   - `assets/js/google-apps-script-student-timetable.js` → `student_timetable_webapp_url`
+
+### 8.3. Production Hardening & Security Best Practices
+1. **Enforce HTTPS**:
+   Install a trusted SSL certificate (Let's Encrypt / Certbot). `auth-check.php` and `verify-password.php` automatically set `session.cookie_secure = 1` whenever HTTPS is detected.
+2. **Protect Credentials in `config.php`**:
+   The `.htaccess` file already denies all direct HTTP requests to `config.php`:
+   ```apache
+   <Files "config.php">
+       Require all denied
+   </Files>
+   ```
+3. **Rotate Master Password**:
+   Generate a new Bcrypt hash in PHP CLI:
+   ```php
+   php -r "echo password_hash('NewStrongPassword123!', PASSWORD_BCRYPT);"
+   ```
+   Update the `'correct_password'` value in `config.php`.
+4. **Gmail SMTP App Passwords**:
+   Never use personal Gmail account passwords. Always generate dedicated 16-character **Google Workspace App Passwords** with 2-Step Verification enabled.
+
+### 8.4. Maintenance, Backup & Log Rotation Routine
+
+| Frequency | Maintenance Task | Command / Procedure |
+| :--- | :--- | :--- |
+| **Daily** | Clear scratch directory | Purge temporary zip archives in `c:\xampp\htdocs\IT\scratch\` |
+| **Weekly** | Purge Zero-Student deduplication cache | Check `uploads/.zs_dedup_cache.json`. Expired hashes (>120s) auto-purge, but file can be safely reset if it grows large. |
+| **Monthly** | Archive Google Sheets data | Duplicate active sheet tabs (`2026-27 ODD`) to archive tabs before a new academic semester begins. |
+| **Monthly** | Timetable backup | Keep offline backups of `uploads/timetable/timetable.xlsx` and `uploads/student_timetable/student_timetable.xlsx`. |
+| **Quarterly** | Rotate SMTP App Passwords | Re-generate Google App Passwords for `adminit@gmiu.edu.in` and `admincecse@gmiu.edu.in`. |
+
+### 8.5. Troubleshooting Matrix & Failure Recovery
+
+#### Problem 1: "Configuration file not found" (HTTP 500)
+- **Cause**: `config.php` is missing or improperly named.
+- **Fix**: Check `c:\xampp\htdocs\IT\config.php`. Ensure file permissions allow Apache/PHP read access.
+
+#### Problem 2: Failed to deliver OTP email or report submission email
+- **Cause**: Invalid Gmail App Password, network timeout, or recipient domain restriction.
+- **Fix**:
+  1. Confirm recipient email ends with `@gmiu.edu.in`.
+  2. Verify outgoing port 465 (SSL) is not blocked by Windows Defender Firewall or local ISP.
+  3. Re-generate Google Workspace App Password in Google Account Security settings.
+
+#### Problem 3: Google Sheets not updating after report submission
+- **Cause**: Google Apps Script deployment permissions are not set to "Anyone", or Web App URL changed.
+- **Fix**:
+  1. Open Apps Script editor → Manage Deployments.
+  2. Verify **Who has access** is set to **Anyone**.
+  3. Test URL directly in browser with `GET` request; it should return: `{"success":true,"message":"GMIU IT Sheets API is running."}`.
+
+#### Problem 4: Timetable sync fails with "Invalid Excel binary payload"
+- **Cause**: Google Sheets Web App returned an HTML error page or login redirect instead of binary Excel content.
+- **Fix**: Re-authorize the Apps Script deployment and ensure the Sheet ID defined in `sync-timetables.php` is shared with "Anyone with the link can view".
+
+### 8.6. Future Architecture Roadmap
+1. **Phase 1: MariaDB / MySQL Migration Option**: Add a dual-write database adapter allowing records to write both to Google Sheets (for non-technical faculty view) and a local MySQL database for complex SQL reporting.
+2. **Phase 2: Role-Based Access Control (RBAC)**: Upgrade from a single master password to individual faculty/admin accounts with specific access privileges (HOD, Exam Coordinator, Faculty, Student).
+3. **Phase 3: Progressive Web App (PWA)**: Implement a service worker (`sw.js`) and web app manifest for offline access to timetables and calendar schedules on Android and iOS devices.
+
+---
+# ==============================================================================
+# END OF FILE: .pwd
+# ==============================================================================
