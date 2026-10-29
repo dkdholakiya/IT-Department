@@ -11,7 +11,6 @@ class ZeroStudentController extends Controller
      */
     public function index(): void
     {
-        Auth::check('Zero Student Report');
         $this->view('zero-student.index');
     }
 }

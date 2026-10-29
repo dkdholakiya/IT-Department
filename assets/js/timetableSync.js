@@ -215,13 +215,6 @@ function fetchDirectFromAppsScript(webappUrl, targetType, providedPassword, call
 function quickSyncSheet(e, targetType, providedPassword) {
     if (e) e.preventDefault();
 
-    if (!providedPassword) {
-        promptSyncPasswordModal((validPassword) => {
-            quickSyncSheet(null, targetType, validPassword);
-        });
-        return;
-    }
-
     const action = targetType === 'student' ? 'sync_student' : (targetType === 'faculty' ? 'sync_faculty' : 'sync_all');
     
     const btnTexts = document.querySelectorAll('.quick-sync-text');

@@ -11,7 +11,6 @@ class CtlDriveController extends Controller
      */
     public function index(): void
     {
-        Auth::check('Drive Folder Scanner');
         $this->view('ctldrive.index');
     }
 }

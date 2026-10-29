@@ -519,40 +519,6 @@ if (empty($action) && php_sapi_name() === 'cli' && isset($argv[1])) {
 }
 
 if (!empty($action) && in_array($action, ['sync_all', 'sync_student', 'sync_faculty', 'save_base64', 'cli'])) {
-    // Password authentication check (for Web requests when password_required is enabled)
-    if (php_sapi_name() !== 'cli') {
-        $configFile = $GLOBALS['CONFIG_FILE'];
-        $config = file_exists($configFile) ? include $configFile : [];
-        $password_required = $config['password_required'] ?? 1;
-        
-        if ($password_required == 1) {
-            $submittedPwd = $_REQUEST['password'] ?? '';
-            $isAutoSync = (!empty($_REQUEST['auto']) && !empty($config['auto_sync_enabled']) && $config['auto_sync_enabled'] == 1);
-            $isAuth = $isAutoSync;
-            
-            if (!$isAuth && !empty($submittedPwd)) {
-                $correct_password = $config['correct_password'] ?? '';
-                if (strpos($correct_password, '$2y$') === 0 && strlen($correct_password) === 60) {
-                    if (password_verify($submittedPwd, $correct_password)) {
-                        $isAuth = true;
-                    }
-                } else if ($submittedPwd === $correct_password) {
-                    $isAuth = true;
-                }
-            }
-            
-            if (!$isAuth) {
-                if (ob_get_length()) { ob_clean(); }
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'success' => false,
-                    'auth_required' => true,
-                    'message' => 'Password authentication required to sync Google Sheets.'
-                ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-                exit;
-            }
-        }
-    }
 
     if ($action === 'save_base64') {
         $targetType = $_REQUEST['target'] ?? 'faculty';

@@ -11,7 +11,6 @@ class CtlActivityController extends Controller
      */
     public function index(): void
     {
-        Auth::check('CTL Activity Dashboard');
         $this->view('ctlactivity.index');
     }
 }
