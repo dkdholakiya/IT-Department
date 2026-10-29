@@ -17,6 +17,10 @@ assets/js/timetableData.js
 *.log
 error_log
 
+# Composer
+vendor/
+tmp/
+
 # System & IDE files
 .DS_Store
 Thumbs.db

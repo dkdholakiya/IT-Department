@@ -1,10 +1,10 @@
-# Apache Configuration — GMIU IT Portal Live Server Readiness
+# Apache Configuration — GMIU IT Portal Live Server Readiness (FastRoute Architecture)
 
 # 1. Prevent Directory Indexing (Directory Browsing)
 Options -Indexes
 
-# 2. Block direct web access to sensitive config files
-<Files "config.php">
+# 2. Block direct web access to sensitive config files & internal formats
+<FilesMatch "(\.env|\.sql|\.lock|\.log|\.md|\.sh)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
@@ -12,42 +12,35 @@ Options -Indexes
         Order Deny,Allow
         Deny from all
     </IfModule>
-</Files>
+</FilesMatch>
 
-# Block hidden files (like .env, .git, etc.)
+# Block hidden files (.git, etc.)
 RedirectMatch 403 /\..*$
 
-# 3. URL Rewriting System
+# 3. URL Rewriting System (FastRoute Front Controller)
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Redirect explicit requests for index or index.php to the root / (only on production, skipped on localhost)
-    RewriteCond %{HTTP_HOST} !^localhost$ [NC]
-    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1$ [NC]
-    RewriteCond %{THE_REQUEST} \s/+([^/]+/)*index(\.php)?[\s?] [NC]
-    RewriteCond %{REQUEST_URI} ^(.*?)/?index(\.php)?$ [NC]
-    RewriteRule ^ %1/ [R=302,L]
+    # Block direct access to critical framework folders
+    RewriteRule ^(App|Core|config|routes|vendor)/ - [F,L]
 
-    # Redirect direct GET requests for *.php files to extensionless URLs
-    # Uses THE_REQUEST to avoid infinite redirection loops with internal rewrites
-    RewriteCond %{REQUEST_METHOD} GET [NC]
-    RewriteCond %{THE_REQUEST} \s/+(.+)\.php[\s?] [NC]
-    RewriteRule ^ /%1 [R=301,L]
+    # Allow direct access to existing static files (CSS, JS, images, fonts, uploads)
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{REQUEST_URI} \.(css|js|ico|png|jpe?g|gif|svg|webp|woff2?|ttf|eot|xlsx?|pdf|zip)$ [NC]
+    RewriteRule ^ - [L]
 
-    # Map extensionless URLs internally to .php files if they exist (subdirectory-safe)
+    # Route all other web requests through index.php
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME}.php -f
-    RewriteRule ^(.*)$ $1.php [NC,L]
+    RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>
 
 # 4. Custom Error Documents
-ErrorDocument 400 /it/error.php
-ErrorDocument 401 /it/error.php
-ErrorDocument 403 /it/error.php
-ErrorDocument 404 /it/error.php
-ErrorDocument 500 /it/error.php
-ErrorDocument 503 /it/error.php
+ErrorDocument 400 error
+ErrorDocument 401 error
+ErrorDocument 403 error
+ErrorDocument 404 error
+ErrorDocument 500 error
+ErrorDocument 503 error
 
 # 5. Live Server Speed Optimization: Gzip Compression
 <IfModule mod_deflate.c>

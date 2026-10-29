@@ -1,0 +1,2115 @@
+<?php
+$page_title = 'Drive Folder Scanner — CE & IT Department';
+$page_description = 'Google Drive Folder Scanner & Excel Reporter utility for academic event files.';
+$page_css = [
+    'assets/css/style.css',
+    'assets/css/ctldrive.css',
+];
+include 'head.php';
+?>
+
+    <!-- Background particles -->
+    <div class="rp-particles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- Glow orbs -->
+    <div class="rp-orb rp-orb-1" aria-hidden="true"></div>
+    <div class="rp-orb rp-orb-2" aria-hidden="true"></div>
+
+    <div class="rp-page">
+
+        <!-- ── Page Header ── -->
+        <header class="rp-header">
+            <div class="rp-header-inner">
+                <a href="<?php echo base_url('/'); ?>" class="back-btn">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                        viewBox="0 0 24 24">
+                        <path d="M19 12H5M12 5l-7 7 7 7" />
+                    </svg>
+                    Back to Portal
+                </a>
+
+                <div class="rp-header-center">
+                    <div class="rp-dept-badge">
+                        <span class="rp-badge-dot"></span>
+                        Department of CE & IT
+                    </div>
+                    <h1 class="rp-title">Drive Folder Scanner</h1>
+                </div>
+
+                <span class="portal-badge">Drive Tool</span>
+            </div>
+        </header>
+
+        <!-- ── Main Form Card ── -->
+        <main class="rp-main">
+            <div class="rp-form">
+                <div class="rp-form-header">
+                    <h2>Google Drive Scanner</h2>
+                    <p>Scan a parent folder, list all empty and non-empty subfolders along with their documents, and
+                        export the analysis to an `.xlsx` Excel sheet.</p>
+                </div>
+
+                <!-- Flex Grid Layout -->
+                <div class="scanner-grid">
+
+                    <!-- Left Column: Controls -->
+                    <div class="scanner-col-left">
+                        <div style="margin-bottom: 20px;">
+                            <label class="scanner-label">1. Connection Status</label>
+                            <div class="controls">
+                                <button id="auth-btn" onclick="handleAuthClick()">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M12 11c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z" />
+                                        <path d="M18 11c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z" />
+                                        <path d="M6 11c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z" />
+                                    </svg>
+                                    Authorize & Connect
+                                </button>
+                                <button id="signout-btn" onclick="handleSignoutClick()" style="display: none;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                        <polyline points="16 17 21 12 16 7" />
+                                        <line x1="21" y1="12" x2="9" y2="12" />
+                                    </svg>
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <label class="scanner-label">2. Target Directory & Presets</label>
+                            <div id="scan-container" class="controls"
+                                style="display: none; flex-direction: column; align-items: stretch; gap: 14px; width: 100%;">
+                                
+                                <!-- Department Selector Tabs & Presets -->
+                                <div class="dept-tabs-wrapper">
+                                    <div class="dept-tabs-header">
+                                        <span class="dept-tabs-title">Faculty & Subject Presets:</span>
+                                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                            <button type="button" class="browse-modal-trigger-btn" onclick="openDriveLinksModal()" title="View popup box with all Drive links from facultyData.js">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                                </svg>
+                                                <span>facultyData.js Links</span>
+                                            </button>
+                                            <div class="dept-tabs">
+                                                <button type="button" class="dept-tab-btn active" id="tab-dept-it" onclick="switchDeptTab('IT')">
+                                                    <span class="tab-dot it-dot"></span>
+                                                    IT Department
+                                                </button>
+                                                <button type="button" class="dept-tab-btn" id="tab-dept-ce" onclick="switchDeptTab('CE')">
+                                                    <span class="tab-dot ce-dot"></span>
+                                                    CE Department
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Department Quick Presets List (1-Click Scan) -->
+                                    <div id="dept-presets-container" class="dept-presets-list">
+                                        <!-- Dynamically populated via JS -->
+                                    </div>
+                                </div>
+
+                                <div class="custom-id-wrapper" style="margin-top: 4px;">
+                                    <label class="sub-label">Parent Folder Link / ID:</label>
+                                    <div style="display: flex; gap: 8px; width: 100%;">
+                                        <input type="text" id="folder-id-input" placeholder="Enter Parent Folder ID or Link..."
+                                            value="1m2_s4hPYSs4L6LmnNfzS17Geor7Eknh5">
+                                        <button id="scan-btn" onclick="startScan()" style="white-space: nowrap;">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="11" cy="11" r="8" />
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                            </svg>
+                                            Scan Folders
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- 3. Faculty Info (Email Report) -->
+                        <div id="email-section" style="margin-bottom: 20px; display: none;">
+                            <label class="scanner-label">3. Email Excel Report</label>
+                            <div class="controls"
+                                style="flex-direction: column; align-items: stretch; gap: 12px; width: 100%; margin-bottom: 0;">
+                                <div class="form-group" style="position: relative; width: 100%; margin-bottom: 14px;">
+                                    <label for="facultySearch" style="margin-bottom: 4px;">Faculty Name <span
+                                            class="req">*</span></label>
+                                    <div class="search-select-wrap">
+                                        <input type="text" id="facultySearch"
+                                            placeholder="Type to search faculty name..." autocomplete="off">
+                                        <input type="hidden" id="preparedBy" name="preparedBy" required>
+                                        <div class="search-dropdown-list" id="facultyDropdownList"></div>
+                                        <svg class="search-icon" width="16" height="16" fill="none"
+                                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <circle cx="11" cy="11" r="8" />
+                                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                        </svg>
+                                    </div>
+                                    <div id="facultyError" class="validation-error hidden">Please select a faculty
+                                        member from the dropdown.</div>
+                                </div>
+
+                                <div class="form-row" style="width: 100%; margin-bottom: 14px; gap: 12px;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="facultyEmail" style="margin-bottom: 4px;">Email Address</label>
+                                        <input type="text" id="facultyEmail" placeholder="Auto-filled..." readonly>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="facultyPhone" style="margin-bottom: 4px;">Mobile Number</label>
+                                        <input type="text" id="facultyPhone" placeholder="Auto-filled..." readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="position: relative; width: 100%; margin-bottom: 20px;">
+                                    <label for="ccSearch" style="margin-bottom: 4px;">CC Emails (Multi-select)</label>
+                                    <div class="cc-select-wrap">
+                                        <div class="cc-tags-container" id="ccTagsContainer"></div>
+                                        <input type="text" id="ccSearch"
+                                            placeholder="Type or click to select CC emails..." autocomplete="off">
+                                        <div class="search-dropdown-list" id="ccDropdownList"></div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="submit-btn" id="sendBtn"
+                                    style="width: 100%; gap: 8px; margin: 0;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <path d="M22 2L11 13" />
+                                        <path d="M22 2L15 22l-4-9-9-4 20-7z" />
+                                    </svg>
+                                    <span>Send Report via Email</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="scanner-label">Console Logs</label>
+                            <div id="inline-console-wrapper">
+                                <div id="status" class="status">Please authorize to begin.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Results -->
+                    <div class="scanner-col-right">
+                        <div class="section-title">
+                            <h2>Scan Results</h2>
+                            <button id="download-btn" onclick="downloadExcelReport()">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7 10 12 15 17 10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                                Download Excel Report
+                            </button>
+                        </div>
+
+                        <!-- Scan Summary Card -->
+                        <div id="summary-card" class="summary-card" style="display: none;">
+                            <div class="summary-stat-item">
+                                <span class="summary-stat-label">Folders Scanned</span>
+                                <span class="summary-stat-value" id="total-folders-val">0</span>
+                            </div>
+                            <div class="summary-stat-item">
+                                <span class="summary-stat-label">Total Documents</span>
+                                <span class="summary-stat-value" id="total-docs-val">0</span>
+                            </div>
+                            <div class="summary-stat-item">
+                                <span class="summary-stat-label">Non-Empty Folders</span>
+                                <span class="summary-stat-value" id="non-empty-folders-val">0</span>
+                            </div>
+                            <div class="summary-stat-item">
+                                <span class="summary-stat-label">Empty Folders</span>
+                                <span class="summary-stat-value" id="empty-folders-val">0</span>
+                            </div>
+                        </div>
+
+                        <div class="results-scroll-container">
+                            <h3 class="results-header empty-title">Empty Folders</h3>
+                            <ul id="empty-folders" class="folder-list"></ul>
+
+                            <h3 class="results-header non-empty-title">Non-Empty Folders</h3>
+                            <ul id="non-empty-folders" class="folder-list"></ul>
+                        </div>
+                    </div>
+
+                </div><!-- /scanner-grid -->
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <?php 
+        $footer_class = 'rp-footer';
+        include 'footer.php'; 
+        ?>
+
+    <!-- Live Folder Scanner Console Popup Modal (Blurred Backdrop) -->
+    <div id="scanConsoleModal" class="scan-console-modal-overlay" style="display: none;">
+        <div class="scan-console-modal-card">
+            <div class="scan-console-modal-header">
+                <div class="scan-console-modal-title">
+                    <span class="live-pulse-dot"></span>
+                    <svg class="spin-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                    </svg>
+                    <span>Live Google Drive Recursive Scanner</span>
+                </div>
+                <button type="button" class="scan-console-modal-close" onclick="closeScanConsoleModal()" title="Minimize to Page">&times;</button>
+            </div>
+            <div id="scan-console-modal-body" class="scan-console-modal-body">
+                <!-- #status element moves here during active scanning -->
+            </div>
+            <div class="scan-console-modal-footer">
+                <span id="scan-console-modal-hint" class="modal-hint-text">⚡ Real-time line-by-line scanning in progress...</span>
+                <button type="button" class="scan-console-modal-btn" onclick="closeScanConsoleModal()">Minimize to Page</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drive Links Popup Modal (facultyData.js) -->
+    <div id="driveLinksModal" class="drive-modal-overlay" style="display: none;">
+        <div class="drive-modal-container">
+            <div class="drive-modal-header">
+                <div class="drive-modal-title">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>Faculty & Department Drive Links</span>
+                </div>
+                <button type="button" class="drive-modal-close" onclick="closeDriveLinksModal()">&times;</button>
+            </div>
+
+            <div class="drive-modal-body">
+                <div class="drive-modal-search-row">
+                    <div class="modal-search-wrap">
+                        <input type="text" id="modalDriveSearch" placeholder="Search faculty name, department, or initials..." autocomplete="off" oninput="filterModalDriveLinks()">
+                        <svg class="modal-search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </div>
+                    <div class="modal-dept-pills">
+                        <button type="button" class="modal-pill active" id="modal-pill-all" onclick="filterModalByDept('ALL')">All</button>
+                        <button type="button" class="modal-pill" id="modal-pill-it" onclick="filterModalByDept('IT')">IT Dept</button>
+                        <button type="button" class="modal-pill" id="modal-pill-ce" onclick="filterModalByDept('CE')">CE Dept</button>
+                    </div>
+                </div>
+
+                <div id="modalDriveLinksList" class="modal-drive-list">
+                    <!-- Dynamically rendered list from facultyData.js -->
+                </div>
+            </div>
+
+            <div class="drive-modal-footer">
+                <span class="modal-hint">Click any faculty/department folder link to populate & start 1-Click scan.</span>
+                <button type="button" class="modal-close-btn" onclick="closeDriveLinksModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    </div><!-- /rp-page -->
+
+    <?php 
+    $active_page = 'ctldrive';
+    include 'fab-nav.php'; 
+    ?>
+
+    <script src="assets/vendor/xlsx/xlsx.full.min.js"></script>
+
+    <!-- Faculty Data -->
+    <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
+
+    <!-- Google APIs -->
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
+    <script>
+        // Session authenticated for protected page access
+
+        const getAvatarClass = (member) => {
+            const legacyClasses = ["av-dc", "av-sw", "av-eu", "av-tv"];
+            if (member.avatarClass && legacyClasses.includes(member.avatarClass)) {
+                return member.avatarClass;
+            }
+            const colors = [
+                'av-theme-red', 'av-theme-blue', 'av-theme-purple', 
+                'av-theme-teal', 'av-theme-green', 'av-theme-orange', 
+                'av-theme-indigo', 'av-theme-cyan', 'av-theme-pink'
+            ];
+            let hash = 0;
+            const name = member.name || "";
+            for (let i = 0; i < name.length; i++) {
+                hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            const index = Math.abs(hash) % colors.length;
+            return colors[index];
+        };
+
+        // -------------------------------------------------------------
+        // ENTER YOUR CONFIGURATION HERE
+        // -------------------------------------------------------------
+        const CLIENT_ID = '790619253351-7811pmcbuii0eq52ugkb6o9109q86t48.apps.googleusercontent.com';
+        const API_KEY = 'AIzaSyCAlvtUeBgCsj3KBxJx_6XQM00gwIG6HTE';
+        // -------------------------------------------------------------
+
+        const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
+        const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+
+        let tokenClient;
+        let gapiInited = false;
+        let gisInited = false;
+
+        let reportData = []; // Array to store report objects
+        let scannedFoldersData = []; // Array to store detailed folders and files
+        let scannedRootFolderName = ''; // Array/String to store scanned root folder name
+
+        document.getElementById('auth-btn').style.display = 'none';
+
+        function gapiLoaded() {
+            gapi.load('client', initializeGapiClient);
+        }
+
+        async function initializeGapiClient() {
+            await gapi.client.init({
+                apiKey: API_KEY,
+                discoveryDocs: [DISCOVERY_DOC],
+            });
+            gapiInited = true;
+            maybeEnableButtons();
+        }
+
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: '',
+            });
+            gisInited = true;
+            maybeEnableButtons();
+        }
+
+        // -------------------------------------------------------------
+        // Department Presets & 1-Click Handlers (Loads from facultyData.js)
+        // -------------------------------------------------------------
+        let currentDeptPreset = (localStorage.getItem("portal_dept") === "CE") ? "CE" : "IT";
+
+        document.addEventListener("DOMContentLoaded", function() {
+            renderDeptPresets(currentDeptPreset);
+        });
+
+        function renderDeptPresets(dept) {
+            currentDeptPreset = dept;
+            const container = document.getElementById("dept-presets-container");
+            if (!container) return;
+
+            const tabIT = document.getElementById("tab-dept-it");
+            const tabCE = document.getElementById("tab-dept-ce");
+            if (tabIT) tabIT.classList.toggle("active", dept === "IT");
+            if (tabCE) tabCE.classList.toggle("active", dept === "CE");
+
+            if (typeof facultyData === "undefined") {
+                container.innerHTML = `<div style="color: var(--text-muted); padding: 10px; font-size: 12px;">Loading faculty data...</div>`;
+                return;
+            }
+
+            // Filter faculty/admin items matching the department that have a NON-EMPTY driveLink property
+            const deptItems = facultyData.filter(m => {
+                const d = m.department || "";
+                const driveLinkVal = (m.driveLink || "").trim();
+                if (!driveLinkVal) return false;
+
+                if (dept === "IT") {
+                    return (d === "Information Technology" || d.includes("IT") || m.id === "adminit" || m.id === "dc" || m.id === "sw");
+                } else {
+                    return (d === "Computer Engineering" || d.includes("CE") || m.id === "admince" || m.id === "dc" || m.id === "eu");
+                }
+            });
+
+            // Sort department master admin item to the top
+            const targetAdminId = (dept === "CE") ? "admince" : "adminit";
+            deptItems.sort((a, b) => {
+                if (a.id === targetAdminId) return -1;
+                if (b.id === targetAdminId) return 1;
+                return 0;
+            });
+
+            const currentVal = document.getElementById("folder-id-input") ? document.getElementById("folder-id-input").value.trim() : "";
+
+            if (deptItems.length === 0) {
+                container.innerHTML = `
+                    <div class="no-presets-msg" style="padding: 14px; text-align: center; color: var(--text-muted); font-size: 12.5px; background: rgba(6, 10, 28, 0.4); border: 1px dashed rgba(255,255,255,0.08); border-radius: 8px;">
+                        No Drive links configured in <code>facultyData.js</code> for ${dept} Department.<br><span style="opacity: 0.85; font-size: 11.5px;">Please enter a Folder ID or Link in the input box below.</span>
+                    </div>`;
+                return;
+            }
+
+            let html = "";
+            deptItems.forEach(m => {
+                const linkVal = (m.driveLink || "").trim();
+                const isSelected = (currentVal === linkVal || extractFolderId(currentVal) === extractFolderId(linkVal));
+                const safeName = (m.name || "").replace(/'/g, "\\'");
+                const initials = m.initials || "IT";
+                const isMasterAdmin = (m.id === "adminit" || m.id === "admince");
+
+                if (isMasterAdmin) {
+                    const isMasterCe = (m.id === "admince");
+                    const masterTitle = m.semClass || (isMasterCe ? "CE 2026-27 ODD Master Folder" : "I.T 2026-27 ODD Master Folder");
+                    html += `
+                        <div class="preset-chip-card master-preset-card ${isSelected ? 'selected' : ''}" 
+                             onclick="selectAndScanPreset('${linkVal}', '${m.id}', '${safeName}')" 
+                             id="preset-card-${m.id}" 
+                             title="${m.name} - ${masterTitle}"
+                             style="flex: 1 1 100%; width: 100%; margin-bottom: 4px; border: 1px solid ${isMasterCe ? 'rgba(59, 130, 246, 0.45)' : 'rgba(239, 68, 68, 0.45)'}; background: ${isMasterCe ? 'rgba(37, 99, 235, 0.14)' : 'rgba(239, 68, 68, 0.14)'};">
+                            <div class="chip-avatar" style="background: ${isMasterCe ? 'linear-gradient(135deg, #2563eb, #1d4ed8)' : 'linear-gradient(135deg, #ef4444, #b91c1c)'} !important; width: 28px; height: 28px; font-size: 11px; flex-shrink: 0;">⚡</div>
+                            <div class="chip-main-info" style="flex: 1; min-width: 0;">
+                                <div class="chip-title" style="color: #ffffff; font-weight: 800; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${masterTitle}</div>
+                                <div class="chip-sub" style="color: ${isMasterCe ? '#93c5fd' : '#fca5a5'}; font-size: 10px; font-weight: 600;">⚡ Scan Whole ${dept} Department Folder</div>
+                            </div>
+                            <button type="button" class="chip-scan-btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35) !important;" title="1-Click Scan Whole Department">
+                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                                <span>Master Scan</span>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    const subText = m.semClass ? m.semClass.replace("Diploma ", "").replace("Degree ", "") : (m.designation || "Faculty");
+                    html += `
+                        <div class="preset-chip-card ${isSelected ? 'selected' : ''}" onclick="selectAndScanPreset('${linkVal}', '${m.id}', '${safeName}')" id="preset-card-${m.id}" title="${m.name} (${initials}) - ${subText}">
+                            <div class="chip-avatar ${getAvatarClass(m)}">${initials}</div>
+                            <div class="chip-main-info">
+                                <div class="chip-title">${initials}</div>
+                                <div class="chip-sub">${subText}</div>
+                            </div>
+                            <button type="button" class="chip-scan-btn" title="1-Click Scan">
+                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                                <span>Scan</span>
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        function switchDeptTab(dept) {
+            currentDeptPreset = dept;
+            renderDeptPresets(dept);
+
+            if (typeof facultyData !== "undefined") {
+                const adminMember = facultyData.find(m => m.id === (dept === "CE" ? "admince" : "adminit") && (m.driveLink || "").trim() !== "") 
+                    || facultyData.find(m => m.id === "dc" && (m.driveLink || "").trim() !== "");
+                if (adminMember && (adminMember.driveLink || "").trim() !== "") {
+                    const inputEl = document.getElementById("folder-id-input");
+                    if (inputEl) inputEl.value = adminMember.driveLink.trim();
+                }
+            }
+        }
+
+        function selectAndScanPreset(link, memberId, facultyName) {
+            const inputEl = document.getElementById("folder-id-input");
+            if (inputEl) {
+                inputEl.value = link;
+            }
+
+            document.querySelectorAll(".preset-chip-card").forEach(card => card.classList.remove("selected"));
+            const activeCard = document.getElementById(`preset-card-${memberId}`);
+            if (activeCard) {
+                activeCard.classList.add("selected");
+            }
+
+            if (typeof facultyData !== "undefined" && facultyName) {
+                const member = facultyData.find(m => m.name === facultyName);
+                if (member && document.getElementById("facultySearch")) {
+                    document.getElementById("facultySearch").value = member.name;
+                    document.getElementById("preparedBy").value = member.name;
+                    if (document.getElementById("facultyEmail")) document.getElementById("facultyEmail").value = member.email;
+                    if (document.getElementById("facultyPhone")) document.getElementById("facultyPhone").value = "+91 " + member.phone;
+                }
+            }
+
+            startScan();
+        }
+
+        function selectAndScanMaster(link, dept) {
+            const inputEl = document.getElementById("folder-id-input");
+            if (inputEl) {
+                inputEl.value = link;
+            }
+
+            switchDeptTab(dept);
+
+            if (typeof facultyData !== "undefined") {
+                const adminMember = facultyData.find(m => m.id === (dept === "CE" ? "admince" : "adminit"));
+                if (adminMember && document.getElementById("facultySearch")) {
+                    document.getElementById("facultySearch").value = adminMember.name;
+                    document.getElementById("preparedBy").value = adminMember.name;
+                    if (document.getElementById("facultyEmail")) document.getElementById("facultyEmail").value = adminMember.email;
+                    if (document.getElementById("facultyPhone")) document.getElementById("facultyPhone").value = "+91 " + adminMember.phone;
+                }
+            }
+
+            startScan();
+        }
+
+        function maybeEnableButtons() {
+            if (gapiInited && gisInited) {
+                const savedToken = localStorage.getItem('gmiu_drive_token');
+                const expiresAt = parseInt(localStorage.getItem('gmiu_token_expires_at') || '0', 10);
+
+                if (savedToken && Date.now() < expiresAt) {
+                    // Restore existing Google Drive session across page refreshes
+                    gapi.client.setToken({ access_token: savedToken });
+                    document.getElementById('auth-btn').style.display = 'none';
+                    document.getElementById('signout-btn').style.display = 'inline-block';
+                    document.getElementById('scan-container').style.display = 'flex';
+                    renderDeptPresets(currentDeptPreset);
+                    document.getElementById('status').innerText = 'Connected to Google Drive (Active session). Ready to scan.';
+                } else {
+                    if (savedToken) {
+                        localStorage.removeItem('gmiu_drive_token');
+                        localStorage.removeItem('gmiu_token_expires_at');
+                    }
+                    document.getElementById('auth-btn').style.display = 'inline-block';
+                    document.getElementById('signout-btn').style.display = 'none';
+                    document.getElementById('scan-container').style.display = 'none';
+                    document.getElementById('status').innerText = 'Ready to Authorize.';
+                }
+            }
+        }
+
+        function handleAuthClick() {
+            tokenClient.callback = async (resp) => {
+                if (resp.error !== undefined) {
+                    throw (resp);
+                }
+
+                // Save token to localStorage with 24-hour automatic logout timer
+                const hours24InMs = 24 * 60 * 60 * 1000;
+                localStorage.setItem('gmiu_drive_token', resp.access_token);
+                localStorage.setItem('gmiu_token_expires_at', (Date.now() + hours24InMs).toString());
+
+                gapi.client.setToken({ access_token: resp.access_token });
+                document.getElementById('auth-btn').style.display = 'none';
+                document.getElementById('signout-btn').style.display = 'inline-block';
+                document.getElementById('scan-container').style.display = 'flex';
+                renderDeptPresets(currentDeptPreset);
+                document.getElementById('status').innerText = 'Authorization successful (Session active for 24h). Ready to scan.';
+            };
+
+            if (gapi.client.getToken() === null) {
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            } else {
+                tokenClient.requestAccessToken({ prompt: '' });
+            }
+        }
+
+        function handleSignoutClick() {
+            const token = gapi.client.getToken();
+            const savedToken = localStorage.getItem('gmiu_drive_token') || (token ? token.access_token : null);
+
+            if (savedToken) {
+                try {
+                    google.accounts.oauth2.revoke(savedToken);
+                } catch (e) {
+                    console.warn("Token revoke error:", e);
+                }
+            }
+
+            gapi.client.setToken(null);
+            localStorage.removeItem('gmiu_drive_token');
+            localStorage.removeItem('gmiu_token_expires_at');
+
+            document.getElementById('auth-btn').style.display = 'inline-block';
+            document.getElementById('signout-btn').style.display = 'none';
+            document.getElementById('scan-container').style.display = 'none';
+            document.getElementById('download-btn').style.display = 'none';
+            document.getElementById('status').innerText = 'Signed out successfully.';
+            clearResults();
+        }
+
+        function clearResults() {
+            document.getElementById('empty-folders').innerHTML = '';
+            document.getElementById('non-empty-folders').innerHTML = '';
+            document.getElementById('download-btn').style.display = 'none';
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('total-folders-val').innerText = '0';
+            document.getElementById('total-docs-val').innerText = '0';
+            document.getElementById('non-empty-folders-val').innerText = '0';
+            document.getElementById('empty-folders-val').innerText = '0';
+
+            // Hide email form and reset CC selections back to defaults
+            document.getElementById('email-section').style.display = 'none';
+            if (typeof resetCCEmailsToDefault === 'function') {
+                resetCCEmailsToDefault();
+            }
+            const ccInput = document.getElementById('ccSearch');
+            if (ccInput) ccInput.value = '';
+
+            reportData = [];
+            scannedFoldersData = [];
+            scannedRootFolderName = '';
+        }
+
+        // -------------------------------------------------------------
+        // Drive Links Popup Modal (facultyData.js) JS Handlers
+        // -------------------------------------------------------------
+        let modalDeptFilter = "ALL";
+
+        function openDriveLinksModal() {
+            const modal = document.getElementById("driveLinksModal");
+            if (modal) {
+                modal.style.display = "flex";
+                renderModalDriveLinks();
+            }
+        }
+
+        function closeDriveLinksModal() {
+            const modal = document.getElementById("driveLinksModal");
+            if (modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function filterModalByDept(dept) {
+            modalDeptFilter = dept;
+            document.querySelectorAll(".modal-pill").forEach(p => p.classList.remove("active"));
+            const activePill = document.getElementById(`modal-pill-${dept.toLowerCase()}`);
+            if (activePill) activePill.classList.add("active");
+            renderModalDriveLinks();
+        }
+
+        function filterModalDriveLinks() {
+            renderModalDriveLinks();
+        }
+
+        function renderModalDriveLinks() {
+            const container = document.getElementById("modalDriveLinksList");
+            if (!container || typeof facultyData === "undefined") return;
+
+            const searchInput = document.getElementById("modalDriveSearch");
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
+            const items = facultyData.filter(member => {
+                const memberDept = member.department || "";
+                const driveLinkVal = (member.driveLink || "").trim();
+                if (!driveLinkVal) return false;
+
+                if (modalDeptFilter === "IT" && memberDept !== "Information Technology" && memberDept !== " IT & CE " && memberDept !== "Both") {
+                    return false;
+                }
+                if (modalDeptFilter === "CE" && memberDept !== "Computer Engineering" && memberDept !== " IT & CE " && memberDept !== "Both") {
+                    return false;
+                }
+
+                if (query) {
+                    const matchName = (member.name || "").toLowerCase().includes(query);
+                    const matchInitials = (member.initials || "").toLowerCase().includes(query);
+                    const matchEmail = (member.email || "").toLowerCase().includes(query);
+                    const matchDesg = (member.designation || "").toLowerCase().includes(query);
+                    return matchName || matchInitials || matchEmail || matchDesg;
+                }
+                return true;
+            });
+
+            if (items.length === 0) {
+                container.innerHTML = `<div class="modal-no-results">No drive links found for current search/filter.</div>`;
+                return;
+            }
+
+            let html = "";
+            items.forEach(member => {
+                const linkVal = (member.driveLink || "").trim();
+                const isDeptAdmin = (member.designation || "").includes("Admin") || (member.designation || "").includes("HOD");
+                const badgeText = isDeptAdmin ? ((member.department || "").includes("Computer") ? "CE Dept" : "IT Dept") : (member.semClass ? member.semClass : (member.designation || "Faculty"));
+
+                const safeName = (member.name || "").replace(/'/g, "\\'");
+                html += `
+                    <div class="modal-drive-item" onclick="selectModalDriveLink('${linkVal}', '${safeName}')">
+                        <div class="modal-avatar ${getAvatarClass(member)}">${member.initials}</div>
+                        <div class="modal-item-info">
+                            <div class="modal-item-name">${member.name} <span class="modal-item-badge">${badgeText}</span></div>
+                            <div class="modal-item-email">${member.email} &nbsp;·&nbsp; ${member.designation}</div>
+                            <div class="modal-item-link font-mono">${linkVal}</div>
+                        </div>
+                        <button type="button" class="modal-item-scan-btn">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                            <span>Scan Link</span>
+                        </button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function selectModalDriveLink(linkVal, facultyName) {
+            closeDriveLinksModal();
+            const inputEl = document.getElementById("folder-id-input");
+            if (inputEl) {
+                inputEl.value = linkVal;
+            }
+
+            if (typeof facultyData !== "undefined") {
+                const member = facultyData.find(m => m.name === facultyName);
+                if (member && document.getElementById("facultySearch")) {
+                    document.getElementById("facultySearch").value = member.name;
+                    document.getElementById("preparedBy").value = member.name;
+                    if (document.getElementById("facultyEmail")) document.getElementById("facultyEmail").value = member.email;
+                    if (document.getElementById("facultyPhone")) document.getElementById("facultyPhone").value = "+91 " + member.phone;
+                }
+            }
+
+            startScan();
+        }
+
+        function extractFolderId(input) {
+            const match = input.match(/folders\/([a-zA-Z0-9-_]+)/);
+            return match ? match[1] : input.trim();
+        }
+
+        // Utility to format file sizes
+        function formatBytes(bytes) {
+            if (bytes === undefined || bytes === null) return 'N/A';
+            const b = parseInt(bytes);
+            if (isNaN(b)) return 'N/A';
+            if (b === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(b) / Math.log(k));
+            return parseFloat((b / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Utility to format dates
+        function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return 'N/A';
+            return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Utility to format MIME type into a readable form
+        function formatMimetype(mimeType, name) {
+            if (!mimeType) return 'Unknown File';
+            if (mimeType.startsWith('application/vnd.google-apps.')) {
+                // Google formats
+                const type = mimeType.split('.').pop();
+                return 'Google ' + type.charAt(0).toUpperCase() + type.slice(1);
+            }
+            // Use extension if present
+            const dotIdx = name.lastIndexOf('.');
+            if (dotIdx !== -1 && dotIdx < name.length - 1) {
+                return name.substring(dotIdx + 1).toUpperCase() + ' File';
+            }
+            // Standard MIME mapping fallback
+            if (mimeType === 'application/pdf') return 'PDF Document';
+            if (mimeType.startsWith('image/')) return 'Image File';
+            if (mimeType.startsWith('video/')) return 'Video File';
+            if (mimeType.startsWith('audio/')) return 'Audio File';
+            if (mimeType.startsWith('text/')) return 'Text Document';
+            return mimeType;
+        }
+
+        // Utility to ensure unique, valid Excel sheet names (max 31 characters, no invalid chars)
+        function getUniqueSheetName(name, existingNames) {
+            // Excel sheet names cannot contain: \ / ? * [ ] :
+            let sanitized = name.replace(/[\\\/\?\*\[\]\:]/g, ' ');
+            // Truncate to 31 characters
+            sanitized = sanitized.substring(0, 31).trim();
+            if (!sanitized) {
+                sanitized = "Folder Sheet";
+            }
+            let finalName = sanitized;
+            let counter = 1;
+            while (existingNames.has(finalName.toLowerCase())) {
+                const suffix = ` (${counter})`;
+                const maxLen = 31 - suffix.length;
+                finalName = sanitized.substring(0, maxLen).trim() + suffix;
+                counter++;
+            }
+            existingNames.add(finalName.toLowerCase());
+            return finalName;
+        }
+
+        // Console logger helper for real-time line-by-line feedback with automatic bottom scrolling
+        function logConsole(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            if (!statusEl) return;
+            const line = document.createElement('div');
+            line.className = `status-line ${type}`;
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            line.innerHTML = `<span style="opacity: 0.55; font-size: 11px; margin-right: 6px;">[${timeStr}]</span> ${message}`;
+            statusEl.appendChild(line);
+
+            // Auto-scroll both #status container and modal body container to the bottom
+            statusEl.scrollTop = statusEl.scrollHeight;
+            const modalBody = document.getElementById('scan-console-modal-body');
+            if (modalBody) {
+                modalBody.scrollTop = modalBody.scrollHeight;
+            }
+            if (statusEl.parentElement) {
+                statusEl.parentElement.scrollTop = statusEl.parentElement.scrollHeight;
+            }
+
+            try {
+                line.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            } catch (e) {
+                // Fallback
+            }
+        }
+
+        function openScanConsoleModal() {
+            const modal = document.getElementById('scanConsoleModal');
+            const modalBody = document.getElementById('scan-console-modal-body');
+            const statusEl = document.getElementById('status');
+            if (modal && modalBody && statusEl) {
+                modalBody.appendChild(statusEl);
+                modal.style.display = 'flex';
+                document.body.classList.add('modal-open');
+                document.documentElement.classList.add('modal-open');
+                document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
+                statusEl.scrollTop = statusEl.scrollHeight;
+                modalBody.scrollTop = modalBody.scrollHeight;
+            }
+        }
+
+        function closeScanConsoleModal() {
+            const modal = document.getElementById('scanConsoleModal');
+            const inlineContainer = document.getElementById('inline-console-wrapper');
+            const statusEl = document.getElementById('status');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            document.body.classList.remove('modal-open');
+            document.documentElement.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+            if (inlineContainer && statusEl && statusEl.parentElement !== inlineContainer) {
+                inlineContainer.appendChild(statusEl);
+                statusEl.scrollTop = statusEl.scrollHeight;
+            }
+        }
+
+        function setScanButtonScanning(isScanning) {
+            const scanBtn = document.getElementById('scan-btn');
+            if (!scanBtn) return;
+            scanBtn.disabled = isScanning;
+            if (isScanning) {
+                scanBtn.innerHTML = `
+                    <svg class="spin-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                    </svg>
+                    <span id="scan-btn-text">Scanning...</span>
+                `;
+            } else {
+                scanBtn.innerHTML = `
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <span>Scan Folders</span>
+                `;
+            }
+        }
+
+        function updateScanButtonText(text) {
+            const btnTextEl = document.getElementById('scan-btn-text');
+            if (btnTextEl) {
+                btnTextEl.innerText = text;
+            }
+        }
+
+        async function startScan() {
+            clearResults();
+            const inputVal = document.getElementById('folder-id-input').value;
+            const parentFolderId = extractFolderId(inputVal);
+
+            if (!parentFolderId) {
+                alert('Please provide a valid Folder ID or URL');
+                return;
+            }
+
+            const statusEl = document.getElementById('status');
+            if (statusEl) statusEl.innerHTML = '';
+            setScanButtonScanning(true);
+            openScanConsoleModal();
+
+            // Show summary card immediately so user sees live metric updates line-by-line
+            document.getElementById('summary-card').style.display = 'grid';
+
+            logConsole('🚀 Initializing Google Drive recursive folder scanner...', 'info');
+
+            let totalDocs = 0;
+            let totalActivityFolders = 0;
+            let totalNonEmptyActivityFolders = 0;
+            let totalEmptyActivityFolders = 0;
+            let classFolderCount = 0;
+            let classFolders = [];
+
+            // 1. Determine Class Level target depth based on root parent folder name
+            let targetClassDepth = 3; // Default for root -> course -> semester -> class
+            let rootName = "Root";
+
+            async function findClassFolders(folderId, currentPath, depth) {
+                // Fetch subfolders of this folder
+                let subfolders = [];
+                let nextPageToken = null;
+                do {
+                    const response = await gapi.client.drive.files.list({
+                        q: `'${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+                        fields: 'nextPageToken, files(id, name)',
+                        pageSize: 100,
+                        pageToken: nextPageToken || undefined
+                    });
+                    const filesBatch = response.result.files || [];
+                    subfolders = subfolders.concat(filesBatch);
+                    nextPageToken = response.result.nextPageToken;
+                } while (nextPageToken);
+
+                // If we reached target depth or this is a leaf folder before target depth
+                if (depth === targetClassDepth || subfolders.length === 0) {
+                    const folderName = currentPath || rootName;
+                    classFolders.push({
+                        id: folderId,
+                        name: folderName
+                    });
+                    logConsole(`🎯 Target directory identified: "${folderName}"`, 'success');
+                    return;
+                }
+
+                // Recurse into subfolders
+                for (const subfolder of subfolders) {
+                    const nextPath = currentPath ? `${currentPath} > ${subfolder.name}` : subfolder.name;
+                    logConsole(`📁 Discovering structure: "${nextPath}"`, 'folder');
+                    await findClassFolders(subfolder.id, nextPath, depth + 1);
+                }
+            }
+
+            // Recursive function to scan subfolders and files inside a Class folder
+            async function scanClassContents(folderId, relativePath, classData) {
+                // Fetch subfolders of this directory
+                let subfolders = [];
+                let nextPageToken = null;
+                do {
+                    const response = await gapi.client.drive.files.list({
+                        q: `'${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+                        fields: 'nextPageToken, files(id, name)',
+                        pageSize: 100,
+                        pageToken: nextPageToken || undefined
+                    });
+                    const filesBatch = response.result.files || [];
+                    subfolders = subfolders.concat(filesBatch);
+                    nextPageToken = response.result.nextPageToken;
+                } while (nextPageToken);
+
+                // Fetch files of this directory
+                let filesInFolder = [];
+                let filePageToken = null;
+                do {
+                    const fileResponse = await gapi.client.drive.files.list({
+                        q: `'${folderId}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false`,
+                        fields: 'nextPageToken, files(id, name, mimeType, size, createdTime, webViewLink)',
+                        pageSize: 100,
+                        pageToken: filePageToken || undefined
+                    });
+                    const fileBatch = fileResponse.result.files || [];
+                    filesInFolder = filesInFolder.concat(fileBatch);
+                    filePageToken = fileResponse.result.nextPageToken;
+                } while (filePageToken);
+
+                const subName = relativePath || "Main Folder";
+                logConsole(`   ↳ Checked "${subName}" — Found ${filesInFolder.length} file(s)`, filesInFolder.length > 0 ? 'file' : 'warn');
+
+                // If this is a subfolder of the class (depth 4 or more)
+                if (relativePath) {
+                    classData.activities.push({
+                        name: relativePath,
+                        folderId: folderId,
+                        folderLink: `https://drive.google.com/drive/folders/${folderId}`,
+                        files: filesInFolder
+                    });
+                } else {
+                    // Direct files in the class folder itself
+                    if (filesInFolder.length > 0) {
+                        classData.activities.push({
+                            name: "Direct Files",
+                            folderId: folderId,
+                            folderLink: `https://drive.google.com/drive/folders/${folderId}`,
+                            files: filesInFolder
+                        });
+                    }
+                }
+
+                // If this is the class folder itself and it has no subfolders and no files
+                if (!relativePath && subfolders.length === 0 && filesInFolder.length === 0) {
+                    classData.activities.push({
+                        name: "Main Folder",
+                        folderId: folderId,
+                        folderLink: `https://drive.google.com/drive/folders/${folderId}`,
+                        files: []
+                    });
+                }
+
+                // Recurse into subfolders
+                for (const subfolder of subfolders) {
+                    const nextPath = relativePath ? `${relativePath} > ${subfolder.name}` : subfolder.name;
+                    await scanClassContents(subfolder.id, nextPath, classData);
+                }
+            }
+
+            try {
+                logConsole(`📡 Connecting to parent Google Drive ID: ${parentFolderId}...`, 'info');
+                // Fetch root folder metadata
+                const rootMeta = await gapi.client.drive.files.get({
+                    fileId: parentFolderId,
+                    fields: 'name'
+                });
+                rootName = rootMeta.result.name || "Root";
+                scannedRootFolderName = rootName;
+
+                logConsole(`🏷️ Scanned Root Directory Name: "${rootName}"`, 'info');
+
+                // Dynamically adjust target class depth based on root folder name
+                const rootNameLower = rootName.toLowerCase();
+                if (rootNameLower.includes("semester") || rootNameLower.includes("sem ")) {
+                    targetClassDepth = 1;
+                } else if (rootNameLower === "b.tech" || rootNameLower === "diploma" || rootNameLower === "btech") {
+                    targetClassDepth = 2;
+                } else if (rootNameLower.includes("clss") || rootNameLower.includes("class")) {
+                    targetClassDepth = 0;
+                }
+
+                logConsole(`🔍 Scanning folder structure (Target Depth level = ${targetClassDepth})...`, 'info');
+                await findClassFolders(parentFolderId, "", 0);
+
+                if (classFolders.length === 0) {
+                    logConsole(`⚠️ No class folders found inside this directory.`, 'warn');
+                    setScanButtonScanning(false);
+                    return;
+                }
+
+                logConsole(`📦 Found ${classFolders.length} class folder(s). Executing content inspection...`, 'info');
+
+                for (let i = 0; i < classFolders.length; i++) {
+                    const classFolder = classFolders[i];
+                    updateScanButtonText(`Scanning (${i + 1}/${classFolders.length})...`);
+                    const hintEl = document.getElementById('scan-console-modal-hint');
+                    if (hintEl) hintEl.innerText = `Scanning (${i + 1}/${classFolders.length}): ${classFolder.name}...`;
+
+                    logConsole(`🔍 [${i + 1}/${classFolders.length}] Inspecting "${classFolder.name}"...`, 'info');
+
+                    const classData = {
+                        id: classFolder.id,
+                        name: classFolder.name,
+                        activities: []
+                    };
+
+                    await scanClassContents(classFolder.id, "", classData);
+
+                    // Compute metrics for subfolders / activities
+                    const totalAct = classData.activities.length;
+                    const emptyAct = classData.activities.filter(a => a.files.length === 0).length;
+                    const filledAct = totalAct - emptyAct;
+                    const docsCount = classData.activities.reduce((acc, a) => acc + a.files.length, 0);
+
+                    totalDocs += docsCount;
+                    totalActivityFolders += totalAct;
+                    totalNonEmptyActivityFolders += filledAct;
+                    totalEmptyActivityFolders += emptyAct;
+                    classFolderCount++;
+
+                    // Live update UI summary counter metrics immediately after each folder finishes
+                    document.getElementById('total-folders-val').innerText = totalActivityFolders;
+                    document.getElementById('total-docs-val').innerText = totalDocs;
+                    document.getElementById('non-empty-folders-val').innerText = totalNonEmptyActivityFolders;
+                    document.getElementById('empty-folders-val').innerText = totalEmptyActivityFolders;
+
+                    // Render card in the HTML UI immediately
+                    renderClassResult(classFolder.name, classData.activities);
+
+                    logConsole(`✅ [${i + 1}/${classFolders.length}] Finished "${classFolder.name}" — ${docsCount} docs, ${filledAct}/${totalAct} subfolders filled`, 'success');
+
+                    // Store class data for Excel generation
+                    scannedFoldersData.push(classData);
+
+                    // Build formatted activities summary for legacy Excel & email table
+                    const activitiesSummary = classData.activities.map(a => 
+                        `${a.name}: ${a.files.length === 0 ? "Empty" : a.files.length + " Files"}`
+                    ).join(' | ') || 'No Activities';
+
+                    reportData.push({
+                        "Folder Name": classFolder.name,
+                        "Status": filledAct === 0 ? "Empty" : (emptyAct === 0 ? "Has Files" : "Partial"),
+                        "File Count": docsCount,
+                        "File Names": activitiesSummary
+                    });
+                }
+
+                // Append summary data directly to the end of reportData for Excel sheet
+                reportData.push({
+                    "Folder Name": "",
+                    "Status": "",
+                    "File Count": "",
+                    "File Names": ""
+                });
+                reportData.push({
+                    "Folder Name": "SUMMARY REPORT",
+                    "Status": "",
+                    "File Count": "",
+                    "File Names": ""
+                });
+                reportData.push({
+                    "Folder Name": "Total Classes Scanned",
+                    "Status": "",
+                    "File Count": classFolderCount,
+                    "File Names": ""
+                });
+                reportData.push({
+                    "Folder Name": "Total Activity Subfolders Scanned",
+                    "Status": "",
+                    "File Count": totalActivityFolders,
+                    "File Names": ""
+                });
+                reportData.push({
+                    "Folder Name": "Total Scanned Documents",
+                    "Status": "",
+                    "File Count": totalDocs,
+                    "File Names": ""
+                });
+                reportData.push({
+                    "Folder Name": "Non-Empty Activity Subfolders",
+                    "Status": "",
+                    "File Count": totalNonEmptyActivityFolders,
+                    "File Names": ""
+                });
+                reportData.push({
+                    "Folder Name": "Empty Activity Subfolders",
+                    "Status": "",
+                    "File Count": totalEmptyActivityFolders,
+                    "File Names": ""
+                });
+
+                // Show email section & render default CC tags
+                document.getElementById('email-section').style.display = 'block';
+                if (typeof resetCCEmailsToDefault === 'function') {
+                    resetCCEmailsToDefault();
+                }
+
+                logConsole('🎉 Scan Complete! You can now download the Excel report or send it via email.', 'success');
+                const hintEl = document.getElementById('scan-console-modal-hint');
+                if (hintEl) hintEl.innerText = '🎉 Scan Complete! Closing popup modal...';
+                document.getElementById('download-btn').style.display = 'inline-block';
+
+            } catch (err) {
+                console.error(err);
+                if (err.status === 401 || (err.result && err.result.error && err.result.error.code === 401)) {
+                    localStorage.removeItem('gmiu_drive_token');
+                    localStorage.removeItem('gmiu_token_expires_at');
+                    gapi.client.setToken(null);
+                    document.getElementById('auth-btn').style.display = 'inline-block';
+                    document.getElementById('signout-btn').style.display = 'none';
+                    document.getElementById('scan-container').style.display = 'none';
+                    logConsole('❌ Session expired. Please click Authorize & Connect to reconnect.', 'warn');
+                } else {
+                    logConsole('❌ Error processing request. Check console log or API Permissions.', 'warn');
+                }
+            } finally {
+                setScanButtonScanning(false);
+                setTimeout(closeScanConsoleModal, 1200);
+            }
+        }
+
+        function renderClassResult(className, activities) {
+            const emptyContainer = document.getElementById('empty-folders');
+            const nonEmptyContainer = document.getElementById('non-empty-folders');
+
+            const li = document.createElement('li');
+            li.className = 'folder-item';
+
+            const total = activities.length;
+            const emptyActCount = activities.filter(a => a.files.length === 0).length;
+            const filledCount = total - emptyActCount;
+
+            let activitiesHtml = '<ul class="activity-tree-list" style="list-style-type: none; padding-left: 0; margin-top: 10px;">';
+            activities.forEach(activity => {
+                const isActEmpty = activity.files.length === 0;
+                const bullet = isActEmpty ? '🔴' : '🟢';
+                const statusText = isActEmpty ? '(Empty)' : `(${activity.files.length} documents)`;
+                
+                activitiesHtml += `<li class="activity-item" style="margin-bottom: 8px; font-family: 'Merriweather Sans', sans-serif;">`;
+                activitiesHtml += `${bullet} <strong class="activity-name">${activity.name}</strong> <span class="activity-status">${statusText}</span>`;
+                
+                if (activity.files.length > 0) {
+                    activitiesHtml += '<ul class="activity-file-list" style="list-style-type: circle; padding-left: 20px; margin-top: 4px; font-size: 12.5px;">';
+                    activity.files.forEach(file => {
+                        activitiesHtml += `<li class="activity-file-item">${file.name}</li>`;
+                    });
+                    activitiesHtml += '</ul>';
+                }
+                activitiesHtml += '</li>';
+            });
+            activitiesHtml += '</ul>';
+
+            li.innerHTML = `
+                <div class="folder-name">${className}</div>
+                <div class="file-count" style="margin-top: 6px;">
+                    Activities: ${filledCount} / ${total} Filled &nbsp;·&nbsp; ${emptyActCount} Empty
+                </div>
+                ${activitiesHtml}
+            `;
+
+            if (filledCount === 0) {
+                li.className = 'folder-item empty';
+                emptyContainer.appendChild(li);
+            } else {
+                nonEmptyContainer.appendChild(li);
+            }
+        }
+
+        // Generate and download actual .xlsx file using SheetJS with folder-wise sheets
+        function downloadExcelReport() {
+            if (scannedFoldersData.length === 0) {
+                alert("No data to download. Please scan a folder first.");
+                return;
+            }
+
+            // Draw text-based progress bar chart
+            function drawProgressBar(value, total) {
+                if (total === 0) return "[░░░░░░░░░░] 0%";
+                const percentage = Math.round((value / total) * 100);
+                const filledBlocks = Math.round(percentage / 10);
+                const emptyBlocks = 10 - filledBlocks;
+                const bar = "█".repeat(filledBlocks) + "░".repeat(emptyBlocks);
+                return `[${bar}] ${percentage}%`;
+            }
+
+            // Create a new Excel Workbook
+            const workbook = XLSX.utils.book_new();
+
+            // 1. Add Summary Sheet (Overall Analysis dashboard)
+            const summaryRows = [];
+            summaryRows.push(["CE & IT DEPARTMENT - GOOGLE DRIVE FOLDER SCAN REPORT"]);
+            summaryRows.push(["Report Generated At:", new Date().toLocaleString()]);
+            summaryRows.push([]); // spacer row
+
+            // Extract metrics counts
+            const totalClassFolders = scannedFoldersData.length;
+            let totalActivityFolders = 0;
+            let totalNonEmptyActivityFolders = 0;
+            let totalEmptyActivityFolders = 0;
+            let totalDocs = 0;
+
+            scannedFoldersData.forEach(classFolder => {
+                const totalAct = classFolder.activities.length;
+                const emptyAct = classFolder.activities.filter(a => a.files.length === 0).length;
+                const filledAct = totalAct - emptyAct;
+                totalDocs += classFolder.activities.reduce((acc, a) => acc + a.files.length, 0);
+                totalActivityFolders += totalAct;
+                totalNonEmptyActivityFolders += filledAct;
+                totalEmptyActivityFolders += emptyAct;
+            });
+
+            summaryRows.push(["METRICS SUMMARY"]);
+            summaryRows.push(["Total Classes Scanned", totalClassFolders]);
+            summaryRows.push(["Total Subfolders Scanned", totalActivityFolders]);
+            summaryRows.push(["Total Scanned Documents", totalDocs]);
+            summaryRows.push(["Non-Empty Subfolders", totalNonEmptyActivityFolders]);
+            summaryRows.push(["Empty Subfolders (Action Required)", totalEmptyActivityFolders]);
+            summaryRows.push(["Overall Completion Rate", drawProgressBar(totalNonEmptyActivityFolders, totalActivityFolders)]);
+            summaryRows.push([]); // spacer row
+
+            summaryRows.push(["CLASS-WISE OVERALL STATUS LIST"]);
+            summaryRows.push(["S.No.", "Class Folder Path", "Status", "Activities Progress", "Total Docs", "Activities Detail Summary"]);
+
+            scannedFoldersData.forEach((classFolder, index) => {
+                const totalAct = classFolder.activities.length;
+                const emptyAct = classFolder.activities.filter(a => a.files.length === 0).length;
+                const filledAct = totalAct - emptyAct;
+                const docsCount = classFolder.activities.reduce((acc, a) => acc + a.files.length, 0);
+
+                let statusLabel = "🟢 FILLED";
+                if (filledAct === 0) statusLabel = "🔴 EMPTY";
+                else if (emptyAct > 0) statusLabel = "🟡 PARTIAL";
+
+                const detailSummary = classFolder.activities.map(a => 
+                    `${a.name}: ${a.files.length === 0 ? "🔴 Empty" : "🟢 " + a.files.length + " Docs"}`
+                ).join(' | ') || 'No Activities';
+
+                summaryRows.push([
+                    index + 1,
+                    classFolder.name,
+                    statusLabel,
+                    `${filledAct} / ${totalAct} Filled`,
+                    docsCount,
+                    detailSummary
+                ]);
+            });
+
+            const summarySheet = XLSX.utils.aoa_to_sheet(summaryRows);
+            summarySheet['!cols'] = [
+                { wch: 8 },  // S.No.
+                { wch: 45 }, // Class Folder Path
+                { wch: 15 }, // Status
+                { wch: 20 }, // Activities Progress
+                { wch: 12 }, // Total Docs
+                { wch: 65 }  // Activities Detail Summary
+            ];
+            XLSX.utils.book_append_sheet(workbook, summarySheet, "Overall Analysis");
+
+            // Track sheet names to ensure uniqueness (case-insensitive)
+            const existingNames = new Set(["overall analysis"]);
+
+            // 2. Add a detailed sheet for each Class Folder
+            scannedFoldersData.forEach(classFolder => {
+                const pathParts = classFolder.name.split(" > ");
+                const baseName = pathParts[pathParts.length - 1] || classFolder.name;
+                const sheetName = getUniqueSheetName(baseName, existingNames);
+                
+                const folderRows = [];
+
+                const totalAct = classFolder.activities.length;
+                const emptyAct = classFolder.activities.filter(a => a.files.length === 0).length;
+                const filledAct = totalAct - emptyAct;
+                const classDocsCount = classFolder.activities.reduce((acc, a) => acc + a.files.length, 0);
+
+                let statusLabel = "🟢 FILLED";
+                if (filledAct === 0) statusLabel = "🔴 EMPTY";
+                else if (emptyAct > 0) statusLabel = "🟡 PARTIAL";
+
+                // Metadata block
+                folderRows.push(["FOLDER ANALYSIS REPORT"]);
+                folderRows.push(["Class Folder Path:", classFolder.name]);
+                folderRows.push(["Status:", statusLabel]);
+                folderRows.push(["Activities Progress:", `${filledAct} / ${totalAct} Activities Filled`]);
+                folderRows.push(["Completion Bar:", drawProgressBar(filledAct, totalAct)]);
+                folderRows.push([]); // Empty spacer row
+
+                // Table Header
+                folderRows.push(["S.No.", "Activity / Subfolder Name", "Activity Status", "File Name", "MIME Type", "Size", "Uploaded Date", "Google Drive Link"]);
+
+                const dataRows = []; // Keep track of rows to add links
+
+                if (totalAct === 0) {
+                    folderRows.push([1, "Main Folder", "🔴 Empty", "No Files Uploaded", "-", "-", "-", "Open Folder"]);
+                    dataRows.push({
+                        linkUrl: `https://drive.google.com/drive/folders/${classFolder.id}`,
+                        linkText: "Open Folder"
+                    });
+                } else {
+                    let serialNo = 1;
+                    classFolder.activities.forEach(activity => {
+                        if (activity.files.length === 0) {
+                            folderRows.push([
+                                serialNo++,
+                                activity.name,
+                                "🔴 Empty",
+                                "No Files Uploaded",
+                                "-",
+                                "-",
+                                "-",
+                                "Open Folder"
+                            ]);
+                            dataRows.push({
+                                linkUrl: activity.folderLink,
+                                linkText: "Open Folder"
+                            });
+                        } else {
+                            activity.files.forEach(file => {
+                                folderRows.push([
+                                    serialNo++,
+                                    activity.name,
+                                    "🟢 Has Files",
+                                    file.name,
+                                    formatMimetype(file.mimeType, file.name),
+                                    formatBytes(file.size),
+                                    formatDate(file.createdTime),
+                                    "Open File"
+                                ]);
+                                dataRows.push({
+                                    linkUrl: file.webViewLink,
+                                    linkText: "Open File"
+                                });
+                            });
+                        }
+                    });
+                }
+
+                const ws = XLSX.utils.aoa_to_sheet(folderRows);
+
+                // Adjust column widths
+                ws['!cols'] = [
+                    { wch: 8 },  // S.No.
+                    { wch: 35 }, // Activity / Subfolder Name
+                    { wch: 15 }, // Activity Status
+                    { wch: 45 }, // File Name
+                    { wch: 25 }, // MIME Type
+                    { wch: 15 }, // Size
+                    { wch: 22 }, // Uploaded Date
+                    { wch: 15 }  // Link
+                ];
+
+                // Transform long URLs to clickable cell hyperlinks
+                dataRows.forEach((row, index) => {
+                    if (row.linkUrl) {
+                        const rowIndex = 7 + index; // Header is row index 6 (0-indexed)
+                        const cellRef = XLSX.utils.encode_cell({ r: rowIndex, c: 7 }); // Column H is index 7
+                        ws[cellRef] = {
+                            t: 's',
+                            v: row.linkText,
+                            l: { Target: row.linkUrl, Tooltip: row.linkText === 'Open Folder' ? 'Click to open folder' : 'Click to open file' }
+                        };
+                    }
+                });
+
+                XLSX.utils.book_append_sheet(workbook, ws, sheetName);
+            });
+
+            // Trigger the download of the .xlsx file
+            XLSX.writeFile(workbook, "Drive_Folder_Scan_Report.xlsx");
+        }
+
+        // ── Faculty Search Dropdown Logic ──
+        let selectedFaculty = null;
+
+        function initFacultySearch() {
+            const facultySearch = document.getElementById("facultySearch");
+            const preparedBy = document.getElementById("preparedBy");
+            const facultyDropdownList = document.getElementById("facultyDropdownList");
+            const facultyError = document.getElementById("facultyError");
+
+            const facultyEmail = document.getElementById("facultyEmail");
+            const facultyPhone = document.getElementById("facultyPhone");
+
+            // Initialize dropdown list
+            renderDropdown(facultyData);
+
+            facultySearch.addEventListener("focus", function () {
+                facultyDropdownList.classList.add("show");
+                filterFaculty();
+            });
+
+            facultySearch.addEventListener("input", function () {
+                facultyDropdownList.classList.add("show");
+                filterFaculty();
+
+                if (this.value.trim() === "") {
+                    clearSelection();
+                }
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!e.target.closest(".search-select-wrap")) {
+                    facultyDropdownList.classList.remove("show");
+                    validateSearchInput();
+                }
+            });
+
+            function filterFaculty() {
+                const query = facultySearch.value.toLowerCase().replace("prof.", "").replace("mr.", "").replace("dr.", "").trim();
+                const filtered = facultyData.filter(member =>
+                    member.name.toLowerCase().includes(query) ||
+                    member.initials.toLowerCase().includes(query) ||
+                    member.email.toLowerCase().includes(query) ||
+                    member.designation.toLowerCase().includes(query) ||
+                    member.empId.toLowerCase().includes(query)
+                );
+                renderDropdown(filtered);
+            }
+
+            function renderDropdown(list) {
+                facultyDropdownList.innerHTML = "";
+                if (list.length === 0) {
+                    facultyDropdownList.innerHTML = `<div class="no-results-item">No faculty members found</div>`;
+                    return;
+                }
+
+                list.forEach(member => {
+                    const item = document.createElement("div");
+                    item.className = "dropdown-item";
+                    item.innerHTML = `
+                        <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
+                        <div class="item-info">
+                            <div class="item-name">${member.name} <span style="opacity: 0.75; font-weight: normal; font-size: 0.9em;">(${member.initials})</span></div>
+                            <div class="item-desg">${member.email} &nbsp;·&nbsp; ${member.designation} &nbsp;·&nbsp; ${member.department || "Information Technology"}</div>
+                        </div>
+                    `;
+                    item.addEventListener("click", function () {
+                        selectFaculty(member);
+                    });
+                    facultyDropdownList.appendChild(item);
+                });
+            }
+
+            function selectFaculty(member) {
+                facultySearch.value = member.name;
+                preparedBy.value = member.name;
+                selectedFaculty = member;
+
+                facultyEmail.value = member.email;
+                facultyPhone.value = "+91 " + member.phone;
+
+                facultySearch.classList.remove("input-error");
+                facultyError.classList.add("hidden");
+
+                facultyDropdownList.classList.remove("show");
+
+                // Dynamically update document title based on selected faculty department
+                const isCe = (member.initials === "DRC" || member.name.includes("Dhaval Chandarana")) 
+                    ? (localStorage.getItem("portal_dept") === "CE") 
+                    : (member.department === "Computer Engineering");
+                document.title = isCe ? "Drive Folder Scanner — CE Department" : "Drive Folder Scanner — IT Department";
+            }
+
+            function clearSelection() {
+                preparedBy.value = "";
+                selectedFaculty = null;
+                facultyEmail.value = "";
+                facultyPhone.value = "";
+            }
+
+            function validateSearchInput() {
+                const val = facultySearch.value.trim();
+                if (val === "") {
+                    clearSelection();
+                    return;
+                }
+
+                const valLower = val.toLowerCase();
+                const match = facultyData.find(m => 
+                    m.name.toLowerCase() === valLower || 
+                    m.initials.toLowerCase() === valLower || 
+                    m.email.toLowerCase() === valLower
+                );
+                if (match) {
+                    selectFaculty(match);
+                } else {
+                    const partialMatches = facultyData.filter(m => 
+                        m.name.toLowerCase().includes(valLower) || 
+                        m.initials.toLowerCase().includes(valLower) || 
+                        m.email.toLowerCase().includes(valLower)
+                    );
+                    if (partialMatches.length === 1) {
+                        selectFaculty(partialMatches[0]);
+                    } else {
+                        clearSelection();
+                        facultySearch.value = "";
+                    }
+                }
+            }
+        }
+
+        // ── CC Emails Multi-Select Dropdown Logic ──
+        const defaultCCEmails = [
+            "drchandarana@gmiu.edu.in", // HOD (Prof. Dhaval Chandarana)
+            "sbchauhan@gmiu.edu.in",    // Incharge HOD IT (Prof. Shwetaba Chauhan)
+            "ehunagar@gmiu.edu.in"     // Incharge HOD CE (Prof. Ekta Unagar)
+            //"tmvyas@gmiu.edu.in",       // Sub Incharge HOD IT (Prof. Tarjanee Vyas)
+            //"phkaneijya@gmiu.edu.in"    // Sub Incharge HOD CE (Prof. Pragnesh Kanejiya)
+        ];
+        let selectedCCEmails = [...defaultCCEmails];
+
+        function getCompactDesignation(desg) {
+            if (!desg) return "";
+            const lower = desg.toLowerCase();
+            if (lower === "hod" || lower.includes("both")) return "HOD";
+            if (lower.includes("incharge hod it")) return "HOD IT";
+            if (lower.includes("incharge hod ce")) return "HOD CE";
+            if (lower.includes("sub incharge hod it")) return "Sub HOD IT";
+            if (lower.includes("sub incharge hod ce")) return "Sub HOD CE";
+            if (lower.includes("assistant professor")) return "Asst. Prof";
+            if (lower.includes("associate professor")) return "Assoc. Prof";
+            if (lower.includes("teaching assistant")) return "TA";
+            if (lower.includes("lecturer")) return "Lecturer";
+            return desg;
+        }
+
+        function updateCCTagsUI() {
+            const ccTagsContainer = document.getElementById("ccTagsContainer");
+            if (!ccTagsContainer) return;
+
+            ccTagsContainer.innerHTML = "";
+            selectedCCEmails.forEach(email => {
+                const member = (typeof facultyData !== "undefined") ? facultyData.find(m => m.email.toLowerCase() === email.toLowerCase()) : null;
+                let displayName = email;
+                let tooltipText = email;
+                if (member) {
+                    const shortDesg = getCompactDesignation(member.designation);
+                    displayName = shortDesg ? `${member.name} (${shortDesg})` : member.name;
+                    tooltipText = `${member.name} — ${member.designation || ''} (${email})`;
+                }
+
+                const tag = document.createElement("div");
+                tag.className = "cc-tag";
+                tag.title = tooltipText;
+                tag.innerHTML = `
+                    <span>${displayName}</span>
+                    <button type="button" class="cc-tag-remove" title="Remove">&times;</button>
+                `;
+                tag.querySelector(".cc-tag-remove").addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    removeCCTag(email);
+                });
+                ccTagsContainer.appendChild(tag);
+            });
+        }
+
+        function removeCCTag(email) {
+            selectedCCEmails = selectedCCEmails.filter(e => e !== email);
+            updateCCTagsUI();
+            const ccSearch = document.getElementById("ccSearch");
+            if (ccSearch) {
+                ccSearch.focus();
+                if (typeof filterCCEmails === "function") filterCCEmails();
+            }
+        }
+
+        function resetCCEmailsToDefault() {
+            selectedCCEmails = [...defaultCCEmails];
+            updateCCTagsUI();
+        }
+
+        let filterCCEmails = null;
+
+        function initCCEmailsSearch() {
+            const ccSearch = document.getElementById("ccSearch");
+            const ccDropdownList = document.getElementById("ccDropdownList");
+            const ccTagsContainer = document.getElementById("ccTagsContainer");
+            const ccSelectWrap = ccSearch.closest(".cc-select-wrap");
+
+            // Focus search input when clicking the wrapper container
+            ccSelectWrap.addEventListener("click", function (e) {
+                if (e.target === ccSelectWrap || e.target === ccTagsContainer) {
+                    ccSearch.focus();
+                }
+            });
+
+            // Set initial default CC tags UI
+            updateCCTagsUI();
+
+            // Populate all emails initially
+            renderCCDropdown(facultyData);
+
+            ccSearch.addEventListener("focus", function () {
+                ccDropdownList.classList.add("show");
+                filterCCEmails();
+            });
+
+            ccSearch.addEventListener("input", function () {
+                ccDropdownList.classList.add("show");
+                filterCCEmails();
+            });
+
+            // Backspace to remove last tag if input is empty
+            ccSearch.addEventListener("keydown", function (e) {
+                if (e.key === "Backspace" && ccSearch.value === "" && selectedCCEmails.length > 0) {
+                    removeCCTag(selectedCCEmails[selectedCCEmails.length - 1]);
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener("click", function (e) {
+                if (!e.target.closest(".cc-select-wrap")) {
+                    ccDropdownList.classList.remove("show");
+                    ccSearch.value = "";
+                }
+            });
+
+            filterCCEmails = function() {
+                const query = ccSearch.value.toLowerCase().replace("prof.", "").replace("mr.", "").replace("dr.", "").trim();
+                // Filter out already selected emails
+                const available = facultyData.filter(member => !selectedCCEmails.includes(member.email));
+
+                // Match by email, name, or initials
+                const filtered = available.filter(member =>
+                    member.email.toLowerCase().includes(query) ||
+                    member.name.toLowerCase().includes(query) ||
+                    member.initials.toLowerCase().includes(query)
+                );
+
+                renderCCDropdown(filtered);
+            };
+
+            function renderCCDropdown(list) {
+                ccDropdownList.innerHTML = "";
+                if (list.length === 0) {
+                    ccDropdownList.innerHTML = `<div class="no-results-item">No matching emails found</div>`;
+                    return;
+                }
+
+                list.forEach(member => {
+                    const item = document.createElement("div");
+                    item.className = "dropdown-item";
+                    item.innerHTML = `
+                        <div class="item-avatar ${getAvatarClass(member)}">${member.initials}</div>
+                        <div class="item-info">
+                            <div class="item-name">${member.email}</div>
+                            <div class="item-desg">${member.name} <span style="opacity: 0.75;">(${member.initials})</span> &nbsp;·&nbsp; ${member.department || "Information Technology"}</div>
+                        </div>
+                    `;
+                    item.addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        addCCTag(member.email);
+                    });
+                    ccDropdownList.appendChild(item);
+                });
+            }
+
+            function addCCTag(email) {
+                if (!selectedCCEmails.includes(email)) {
+                    selectedCCEmails.push(email);
+                    updateCCTagsUI();
+                }
+                ccSearch.value = "";
+                ccSearch.focus();
+                filterCCEmails();
+            }
+        }
+
+        // ── Email Send Submission ──
+        function getMemberDepartment() {
+            let member = selectedFaculty;
+            if (!member && typeof facultyData !== 'undefined') {
+                const facEmailVal = (document.getElementById("facultyEmail") ? document.getElementById("facultyEmail").value : "").toLowerCase().trim();
+                const preparedByVal = (document.getElementById("preparedBy") ? document.getElementById("preparedBy").value : "").toLowerCase().trim();
+                const facSearchVal = (document.getElementById("facultySearch") ? document.getElementById("facultySearch").value : "").toLowerCase().trim();
+
+                member = facultyData.find(m => 
+                    (facEmailVal && m.email.toLowerCase() === facEmailVal) ||
+                    (preparedByVal && m.name.toLowerCase() === preparedByVal) ||
+                    (facSearchVal && m.name.toLowerCase().includes(facSearchVal))
+                );
+            }
+
+            if (member) {
+                if (member.initials === "DRC" || member.name.includes("Dhaval Chandarana") || member.department === "Both") {
+                    return (localStorage.getItem("portal_dept") === "CE") ? "CE" : "IT";
+                }
+                if (member.department === "Computer Engineering") {
+                    return "CE";
+                }
+                if (member.department === "Information Technology") {
+                    return "IT";
+                }
+            }
+
+            return (localStorage.getItem("portal_dept") === "CE") ? "CE" : "IT";
+        }
+
+        function initEmailSend() {
+            const sendBtn = document.getElementById("sendBtn");
+            if (!sendBtn) return;
+
+            sendBtn.addEventListener("click", function () {
+                const preparedBy = document.getElementById("preparedBy").value;
+                if (!preparedBy) {
+                    const facultySearch = document.getElementById("facultySearch");
+                    const facultyError = document.getElementById("facultyError");
+                    facultySearch.classList.add("input-error");
+                    facultyError.classList.remove("hidden");
+                    facultySearch.focus();
+                    return;
+                }
+
+                if (reportData.length === 0) {
+                    alert("Please scan a folder first before sending the report.");
+                    return;
+                }
+
+                sendBtn.style.pointerEvents = "none";
+                sendBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    <span>Sending...</span>
+                `;
+
+                const activeDept = getMemberDepartment();
+                const isCe = (activeDept === "CE");
+
+                // Build HTML table for email showing one row per activity folder
+                let tableRowsHtml = "";
+                let index = 0;
+                let totalFolders = 0;
+                let emptyFolders = 0;
+                let nonEmptyFolders = 0;
+                let totalDocs = 0;
+
+                scannedFoldersData.forEach(classFolder => {
+                    const pathParts = classFolder.name.split(" > ");
+                    const classBaseName = pathParts[pathParts.length - 1] || classFolder.name;
+
+                    classFolder.activities.forEach(activity => {
+                        index++;
+                        totalFolders++;
+
+                        const bg = index % 2 === 0 ? '#ffffff' : '#f8fafc';
+                        const isActEmpty = activity.files.length === 0;
+                        const statusColor = isActEmpty ? "#ef4444" : "#10b981";
+                        const statusBg = isActEmpty ? "rgba(239, 68, 68, 0.08)" : "rgba(16, 185, 129, 0.08)";
+                        const statusText = isActEmpty ? "EMPTY" : "HAS FILES";
+
+                        if (isActEmpty) {
+                            emptyFolders++;
+                        } else {
+                            nonEmptyFolders++;
+                        }
+
+                        const fileCount = activity.files.length;
+                        totalDocs += fileCount;
+
+                        const filesListStr = activity.files.map(f => f.name).join(', ') || '-';
+                        const displayName = `${classBaseName} > ${activity.name}`;
+
+                        tableRowsHtml += `
+                            <tr style="background-color: ${bg};">
+                                <td style="padding: 12px 14px; text-align: center; border: 1px solid rgba(0,0,0,0.08); font-size: 13px; color: #64748b; font-family: 'Playfair Display', serif;">${index}</td>
+                                <td style="padding: 12px 14px; border: 1px solid rgba(0,0,0,0.08); font-size: 13.5px; font-weight: 600; color: #0f172a; font-family: 'Playfair Display', serif;">${displayName}</td>
+                                <td style="padding: 12px 14px; text-align: center; border: 1px solid rgba(0,0,0,0.08); font-size: 12px; font-family: 'Playfair Display', serif;">
+                                    <span style="display: inline-block; padding: 4px 10px; font-weight: 700; border-radius: 50px; background-color: ${statusBg}; color: ${statusColor}; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Playfair Display', serif;">${statusText}</span>
+                                </td>
+                                <td style="padding: 12px 14px; text-align: center; border: 1px solid rgba(0,0,0,0.08); font-size: 13.5px; font-weight: bold; color: #1e293b; font-family: 'Playfair Display', serif;">${fileCount}</td>
+                                <td style="padding: 12px 14px; border: 1px solid rgba(0,0,0,0.08); font-size: 13px; color: #475569; word-break: break-all; font-family: 'Playfair Display', serif;">${filesListStr}</td>
+                            </tr>
+                        `;
+                    });
+                });
+
+                const recipientEmail = document.getElementById("facultyEmail").value || (isCe ? "admincecse@gmiu.edu.in" : "adminit@gmiu.edu.in");
+
+                const rawGreeting = selectedFaculty ? selectedFaculty.name : preparedBy;
+                let formattedGreeting = rawGreeting ? rawGreeting.trim() : "Faculty Member";
+                if (!/^(Prof\.|Dr\.|Mr\.|Ms\.|Mrs\.)/i.test(formattedGreeting)) {
+                    formattedGreeting = "Prof. " + formattedGreeting;
+                }
+
+                const folderMentionText = scannedRootFolderName ? ` for <strong>${scannedRootFolderName}</strong>` : ``;
+                const emailSubject = `Google Drive Folder Scan Report` + (scannedRootFolderName ? ` - ${scannedRootFolderName}` : ``);
+
+                const emailHtml = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <link rel="preconnect" href="https://fonts.googleapis.com">
+                        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                        <!--[if !mso]><!-->
+                        <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap" rel="stylesheet">
+                        <!--<![endif]-->
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap');
+
+                            body, table, td, th, div, span, p, a, h1, h2 {
+                                font-family: 'Playfair Display', serif !important;
+                            }
+                            body { background-color: #f8fafc; margin: 0; padding: 0; color: #334155; }
+                            .email-container { max-width: 800px; margin: 20px auto; background: #ffffff; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+                            .header-banner { background: linear-gradient(135deg, #0b1530 0%, #0d1b38 100%); padding: 28px 24px; text-align: center; color: #ffffff; border-bottom: 4px solid #10b981; }
+                            .header-banner h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+                            .content-body { padding: 32px 30px; }
+                            .greeting { font-size: 19px; font-weight: 600; color: #0b1530; margin-bottom: 18px; }
+                            .message { font-size: 16.5px; line-height: 1.7; color: #475569; margin-bottom: 28px; }
+                            .metrics-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center; width: 25%; }
+                            .metrics-num { font-family: 'Share Tech', Courier, monospace !important; font-size: 20px; font-weight: 700; color: #1e293b; margin-top: 4px; }
+                            .metrics-label { font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+                            .results-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+                            .results-table th { background-color: #f1f5f9; color: #475569; padding: 10px 12px; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid #cbd5e1; }
+                            .footer-container { background-color: #f8fafc; padding: 24px 24px; border-top: 1px solid #cbd5e1; text-align: center; font-size: 14px; color: #64748b; line-height: 1.5; }
+
+                            /* Responsive Styles */
+                            @media only screen and (max-width: 600px) {
+                                .email-container {
+                                    padding: 12px 6px !important;
+                                    margin: 10px auto !important;
+                                }
+                                .content-body {
+                                    padding: 20px 14px !important;
+                                }
+                                .header-banner {
+                                    padding: 20px 14px !important;
+                                }
+                                .header-banner h1 {
+                                    font-size: 18px !important;
+                                }
+                                .metrics-table {
+                                    border-spacing: 0 !important;
+                                    margin: 0 !important;
+                                }
+                                .metrics-table tr, .metrics-table td {
+                                    display: block !important;
+                                    width: 100% !important;
+                                }
+                                .metrics-card {
+                                    width: auto !important;
+                                    margin-bottom: 12px !important;
+                                    box-sizing: border-box !important;
+                                }
+                                .table-responsive {
+                                    display: block !important;
+                                    width: 100% !important;
+                                    overflow-x: auto !important;
+                                    -webkit-overflow-scrolling: touch !important;
+                                }
+                                .results-table {
+                                    width: 100% !important;
+                                    min-width: 650px !important;
+                                }
+                                .footer-container {
+                                    padding: 16px 12px !important;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="email-container">
+                            <div class="header-banner">
+                                <h1>Google Drive Folder Scan Report</h1>
+                                ${scannedRootFolderName ? `<div style="font-size: 14px; margin-top: 6px; opacity: 0.85; font-weight: 500;">Scanned Directory: ${scannedRootFolderName}</div>` : ''}
+                            </div>
+                            <div class="content-body">
+                                <div class="greeting">Dear ${formattedGreeting},</div>
+                                <div class="message">
+                                    Please find the details of the latest <strong>Google Drive Folder Scan Report</strong>${folderMentionText} below, prepared by <strong>Mr. Dev K Dholakiya</strong>.<br><br>
+                                    Please upload the pending documents to the Google Drive as soon as possible.
+                                </div>
+                                
+                                <h2 style="font-size: 16px; color: #0b1530; margin: 0 0 12px; border-left: 4px solid #10b981; padding-left: 8px; line-height: 1.2;">Scan Summary Metrics</h2>
+                                <table class="metrics-table" style="width: 100%; border-collapse: separate; border-spacing: 10px 0; margin-bottom: 30px;">
+                                    <tr>
+                                        <td class="metrics-card" style="border-top: 4px solid #fbbf24;">
+                                            <div class="metrics-label">Folders Scanned</div>
+                                            <div class="metrics-num">${totalFolders}</div>
+                                        </td>
+                                        <td class="metrics-card" style="border-top: 4px solid #3b82f6;">
+                                            <div class="metrics-label">Total Documents</div>
+                                            <div class="metrics-num">${totalDocs}</div>
+                                        </td>
+                                        <td class="metrics-card" style="border-top: 4px solid #10b981;">
+                                            <div class="metrics-label">Non-Empty</div>
+                                            <div class="metrics-num">${nonEmptyFolders}</div>
+                                        </td>
+                                        <td class="metrics-card" style="border-top: 4px solid #ef4444;">
+                                            <div class="metrics-label">Empty</div>
+                                            <div class="metrics-num">${emptyFolders}</div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                <h2 style="font-size: 16px; color: #0b1530; margin: 24px 0 12px; border-left: 4px solid #10b981; padding-left: 8px; line-height: 1.2;">Scanned Folders List</h2>
+                                <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                                    <table class="results-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 40px;">#</th>
+                                                <th>Folder Name</th>
+                                                <th style="width: 100px;">Status</th>
+                                                <th style="width: 80px;">Files</th>
+                                                <th>File Names</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${tableRowsHtml}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Footer -->
+                            <div class="footer-container" style="background-color: #f8fafc; padding: 24px 24px; border-top: 1px solid #cbd5e1; text-align: center; font-family: 'Playfair Display', serif;">
+                                <p style="margin: 0; font-size: 14px; color: #64748b; line-height: 1.5; font-family: 'Playfair Display', serif;">THIS EMAIL WAS AUTOMATICALLY GENERATED BY THE <br><a href="https://engineering.gt.tc/" target="_blank" style="color: ${isCe ? '#2563eb' : '#c0392b'}; text-decoration: none; font-weight: 600;">${isCe ? 'CE DEPARTMENT' : 'IT DEPARTMENT'}</a>.</p>
+                                <p style="margin: 4px 0 0 0; font-size: 13px; color: #94a3b8; font-family: 'Playfair Display', serif;">&copy; 2026 ALL RIGHTS RESERVED.</p>
+                                <p style="margin: 6px 0 0 0; font-size: 12px; color: #64748b; font-family: 'Playfair Display', serif;"><a href="https://engineering.gt.tc/" target="_blank" style="color: ${isCe ? '#2563eb' : '#8c1d1d'}; text-decoration: underline; font-weight: 600; font-family: 'Playfair Display', serif;">https://engineering.gt.tc/</a></p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                `;
+
+                fetch('send-email.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        to: recipientEmail,
+                        cc: selectedCCEmails,
+                        subject: emailSubject,
+                        html: emailHtml,
+                        dept: activeDept
+                    })
+                })
+                    .then(response => response.json().then(data => {
+                        if (!response.ok) {
+                            throw new Error(data.error || `HTTP error ${response.status}`);
+                        }
+                        return data;
+                    }))
+                    .then(data => {
+                        if (data.success) {
+                            sendBtn.innerHTML = `
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Sent Successfully!</span>
+                        `;
+                            sendBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
+                            sendBtn.style.boxShadow = "0 6px 28px rgba(16, 185, 129, 0.4)";
+                        } else {
+                            throw new Error(data.error || 'Server reported error');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Email send failed:', err);
+                        alert("Email service is offline or returned an error! \n\nDetails: " + err.message);
+                        sendBtn.innerHTML = `
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        <span>Send Failed</span>
+                    `;
+                        sendBtn.style.background = "linear-gradient(135deg, #ef4444 0%, #991b1b 100%)";
+                        sendBtn.style.boxShadow = "0 6px 28px rgba(239, 68, 68, 0.4)";
+                    })
+                    .finally(() => {
+                        setTimeout(() => {
+                            sendBtn.style.pointerEvents = "auto";
+                            sendBtn.style.background = "";
+                            sendBtn.style.boxShadow = "";
+                            sendBtn.innerHTML = `
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M22 2L11 13" />
+                                <path d="M22 2L15 22l-4-9-9-4 20-7z" />
+                            </svg>
+                            <span>Send Report via Email</span>
+                        `;
+                        }, 4000);
+                    });
+            });
+        }
+
+        // ── Initialize searches and email sends ──
+        window.addEventListener('DOMContentLoaded', () => {
+            // Initialize faculty search, CC search, and email send
+            initFacultySearch();
+            initCCEmailsSearch();
+            initEmailSend();
+        });
+    </script>
+</body>
+
+</html>

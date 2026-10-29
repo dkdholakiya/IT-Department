@@ -1406,3 +1406,7 @@ html[data-theme="light"] body.ce-active .workload-summary-seg-btn:hover {
     background: rgba(37, 99, 235, 0.08) !important;
     color: #1d4ed8 !important;
 }
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

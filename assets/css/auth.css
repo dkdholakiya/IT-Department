@@ -1,0 +1,168 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
+    background: radial-gradient(circle at 30% 30%, rgba(11, 21, 48, 0.98) 0%, rgba(6, 13, 31, 0.99) 100%);
+    height: 100vh;
+}
+.auth-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Merriweather Sans', 'Segoe UI', sans-serif;
+    padding: 20px;
+}
+.auth-card {
+    background: rgba(11, 21, 48, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 40px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    text-align: center;
+    position: relative;
+}
+.auth-icon-container {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(192, 57, 43, 0.1);
+    border: 1px solid rgba(192, 57, 43, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    color: #ef4444;
+}
+.auth-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 10px 0;
+}
+.auth-subtitle {
+    font-size: 13.5px;
+    color: #94a3b8;
+    margin: 0 0 30px 0;
+    line-height: 1.5;
+}
+.auth-form-group {
+    margin-bottom: 24px;
+    text-align: left;
+}
+.auth-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.auth-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.auth-input {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 14px 44px 14px 16px;
+    color: #ffffff;
+    font-size: 15px;
+    font-family: monospace;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+    outline: none;
+    box-sizing: border-box;
+}
+.auth-input:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    background: rgba(15, 23, 42, 0.85);
+}
+.auth-toggle-pwd {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+.auth-toggle-pwd:hover {
+    color: #ffffff;
+}
+.auth-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #c0392b 0%, #962d22 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 14px 20px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(192, 57, 43, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(192, 57, 43, 0.5);
+}
+.auth-btn:disabled {
+    background: linear-gradient(135deg, #334155, #1e293b);
+    color: #64748b;
+    cursor: not-allowed;
+}
+.auth-error-msg {
+    background: rgba(192, 57, 43, 0.1);
+    border: 1px solid rgba(192, 57, 43, 0.25);
+    border-radius: 6px;
+    color: #fca5a5;
+    font-size: 12.5px;
+    padding: 10px 14px;
+    margin-top: 18px;
+    text-align: left;
+    display: none;
+    align-items: center;
+    gap: 8px;
+}
+.auth-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 24px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+}
+.auth-back-link:hover {
+    color: #ffffff;
+}
+@keyframes auth-spin { to { transform: rotate(360deg); } }
+.auth-spinner { animation: auth-spin 1s linear infinite; }
+@keyframes auth-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+}
+.auth-shake { animation: auth-shake 0.4s ease-in-out; }
