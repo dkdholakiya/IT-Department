@@ -98,6 +98,15 @@ $active_page = isset($active_page) ? $active_page : 'home';
             </svg>
             Zero Student Report
         </a>
+        <a href="<?php echo base_url('dashboard'); ?>" class="fab-link <?php echo ($active_page === 'dashboard') ? 'active' : ''; ?>" id="nav-dashboard">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+            </svg>
+            Dashboard
+        </a>
     </div>
 
     <button class="fab-btn" id="fabBtn" aria-label="Open Navigation">

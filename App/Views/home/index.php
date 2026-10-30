@@ -82,6 +82,13 @@ include 'head.php';
                             <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </a>
+                    <a href="<?php echo base_url('dashboard'); ?>" class="cta-btn" id="dashboardBtn" style="background: linear-gradient(135deg, #10b981 0%, #047857 100%); color: #ffffff; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);" title="Open Smart Management Dashboard">
+                        <span>📊 Dashboard</span>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </a>
                 </div>
 
             </div>

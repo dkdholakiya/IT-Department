@@ -23,6 +23,10 @@ $r->addRoute('GET', '/report.php', 'ReportController@index');
 $r->addRoute('GET', '/syllabus-papers', 'SyllabusController@index');
 $r->addRoute('GET', '/syllabus-papers.php', 'SyllabusController@index');
 
+// ── Smart Management Dashboard ──
+$r->addRoute('GET', '/dashboard', 'DashboardController@index');
+$r->addRoute('GET', '/dashboard.php', 'DashboardController@index');
+
 // ── Protected Pages ──
 $r->addRoute('GET', '/zero-student-report', 'ZeroStudentController@index');
 $r->addRoute('GET', '/zero-student-report.php', 'ZeroStudentController@index');
