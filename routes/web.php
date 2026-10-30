@@ -51,6 +51,8 @@ $r->addRoute('GET', '/update-timetable', 'TimetableController@updateTimetable');
 $r->addRoute('GET', '/update-timetable.php', 'TimetableController@updateTimetable');
 
 // ── Authentication & Password Check ──
+$r->addRoute(['GET', 'POST'], '/login', 'AuthController@login');
+$r->addRoute(['GET', 'POST'], '/login.php', 'AuthController@login');
 $r->addRoute(['GET', 'POST', 'OPTIONS'], '/verify-password', 'AuthController@verifyPassword');
 $r->addRoute(['GET', 'POST', 'OPTIONS'], '/verify-password.php', 'AuthController@verifyPassword');
 
