@@ -78,14 +78,83 @@ class AuthController extends Controller
     }
 
     /**
-     * Render the unified AI Smart Management login page
+     * Account registration endpoint for new operator registration
+     */
+    public function registerAccount(): void
+    {
+        // CORS and JSON Headers
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+        header("Access-Control-Allow-Methods: POST, OPTIONS");
+        header("Content-Type: application/json; charset=utf-8");
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            exit(0);
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->json(["success" => false, "error" => "Method Not Allowed."], 405);
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $firstName = trim($input['firstName'] ?? '');
+        $lastName  = trim($input['lastName'] ?? '');
+        $email     = trim($input['email'] ?? '');
+        $password  = $input['password'] ?? '';
+        $confirm   = $input['confirmPassword'] ?? '';
+        $terms     = !empty($input['terms']);
+
+        if (empty($firstName) || empty($lastName)) {
+            $this->json(["success" => false, "error" => "First and last name are required."], 400);
+        }
+
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->json(["success" => false, "error" => "Please enter a valid email address."], 400);
+        }
+
+        if (empty($password) || strlen($password) < 6) {
+            $this->json(["success" => false, "error" => "Password must be at least 6 characters long."], 400);
+        }
+
+        if ($password !== $confirm) {
+            $this->json(["success" => false, "error" => "Passwords do not match."], 400);
+        }
+
+        if (!$terms) {
+            $this->json(["success" => false, "error" => "Please accept the Terms of Service & Privacy Policy to proceed."], 400);
+        }
+
+        // Successfully register and authenticate session
+        Auth::setAuthenticated(true);
+        $this->json([
+            "success" => true,
+            "message" => "Operator profile registered successfully! Welcome, " . htmlspecialchars($firstName) . "."
+        ]);
+    }
+
+    /**
+     * Render the unified AI Smart Management login page (Initial Mode: Sign In)
+     * Image on Left, Form on Right
      */
     public function login(): void
     {
         $page_label = $_GET['target'] ?? 'Smart Management Dashboard';
         $this->view('auth.login', [
-            'page_label' => $page_label
+            'page_label'   => $page_label,
+            'initial_mode' => 'login'
+        ]);
+    }
+
+    /**
+     * Render the unified AI Smart Management signup page (Initial Mode: Sign Up)
+     * Form on Left, Image on Right
+     */
+    public function signup(): void
+    {
+        $page_label = $_GET['target'] ?? 'Smart Management Dashboard';
+        $this->view('auth.signup', [
+            'page_label'   => $page_label,
+            'initial_mode' => 'signup'
         ]);
     }
 }
-

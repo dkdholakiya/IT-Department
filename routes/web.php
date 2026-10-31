@@ -53,8 +53,18 @@ $r->addRoute('GET', '/update-timetable.php', 'TimetableController@updateTimetabl
 // ── Authentication & Password Check ──
 $r->addRoute(['GET', 'POST'], '/login', 'AuthController@login');
 $r->addRoute(['GET', 'POST'], '/login.php', 'AuthController@login');
+$r->addRoute(['GET', 'POST'], '/signin', 'AuthController@login');
+$r->addRoute(['GET', 'POST'], '/signin.php', 'AuthController@login');
+
+$r->addRoute(['GET', 'POST'], '/signup', 'AuthController@signup');
+$r->addRoute(['GET', 'POST'], '/signup.php', 'AuthController@signup');
+$r->addRoute(['GET', 'POST'], '/register', 'AuthController@signup');
+$r->addRoute(['GET', 'POST'], '/register.php', 'AuthController@signup');
+
 $r->addRoute(['GET', 'POST', 'OPTIONS'], '/verify-password', 'AuthController@verifyPassword');
 $r->addRoute(['GET', 'POST', 'OPTIONS'], '/verify-password.php', 'AuthController@verifyPassword');
+$r->addRoute(['POST', 'OPTIONS'], '/register-account', 'AuthController@registerAccount');
+$r->addRoute(['POST', 'OPTIONS'], '/register-account.php', 'AuthController@registerAccount');
 
 // ── Backend API & Services ──
 $r->addRoute(['GET', 'POST', 'OPTIONS'], '/otp-service', 'ApiController@otpService');

@@ -26,7 +26,7 @@ RedirectMatch 403 /\..*$
 
     # Allow direct access to existing static files (CSS, JS, images, fonts, uploads)
     RewriteCond %{REQUEST_FILENAME} -f
-    RewriteCond %{REQUEST_URI} \.(css|js|ico|png|jpe?g|gif|svg|webp|woff2?|ttf|eot|xlsx?|pdf|zip)$ [NC]
+    RewriteCond %{REQUEST_URI} \.(css|js|ico|png|jpe?g|gif|svg|webp|woff2?|ttf|eot|xlsx?|pdf|zip|mp4|webm|ogg|mov|m4v)$ [NC]
     RewriteRule ^ - [L]
 
     # Route all other web requests through index.php

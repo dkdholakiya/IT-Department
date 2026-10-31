@@ -1,8 +1,11 @@
 <?php
 /**
- * Smart Management System — High-Tech AI Authentication Portal
- * Matches the Reference Layout: Left-Side AI Hero Showcase + Right-Side Glassmorphic Login/Register Panel
- * Synchronized with the Dashboard Design System & Dynamic Theme Studio
+ * Smart Management System — High-Tech AI Login Portal
+ * Layout: Left-Side AI Hero Showcase + Right-Side Glassmorphic Login Panel
+ * Features:
+ * - Dynamic Ambient Glassmorphism Backdrop with Floating Light Orbs
+ * - Adaptive Dark & Light Modes dynamically calculated from Color Picker selection
+ * - Hardware-accelerated sliding transition when switching between Login and Sign Up
  */
 $page_label = $page_label ?? 'Smart Management Dashboard';
 $baseUrl = function_exists('base_url') ? base_url('/') : './';
@@ -12,7 +15,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>Sign In & Authentication — Smart Management Dashboard</title>
+  <title>Login & Authentication — Smart Management Dashboard</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
     tailwind.config = {
@@ -24,25 +27,36 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Dynamic Theme Tokens (Synchronized with Dashboard Theme Engine) */
+      /* Dynamic Theme Tokens */
       --color-primary: #10B981;
       --color-primary-dark: #059669;
       --color-primary-light: #34D399;
       --color-primary-rgb: 16, 185, 129;
       --color-alert: #EB5011;
 
-      /* Dynamic Ambient Mesh Backdrop */
+      /* Ambient Mesh Backdrop */
       --bg-mesh-1: #C7E0ED;
       --bg-mesh-2: #D4E8C7;
-      --bg-mesh-3: #F2F7F0;
+      --bg-mesh-3: #EDF6EE;
       --bg-mesh-4: #C9E3B8;
 
       /* Glassmorphic Surfaces */
-      --glass-surface: rgba(255, 255, 255, 0.74);
-      --glass-surface-strong: rgba(255, 255, 255, 0.94);
-      --glass-pill: rgba(255, 255, 255, 0.86);
-      --glass-border: rgba(255, 255, 255, 0.92);
-      --glass-shadow: 0 20px 48px -10px rgba(var(--color-primary-rgb), 0.16), 0 4px 16px -2px rgba(10, 9, 9, 0.05);
+      --glass-surface: rgba(255, 255, 255, 0.72);
+      --glass-surface-strong: rgba(255, 255, 255, 0.92);
+      --glass-pill: rgba(255, 255, 255, 0.82);
+      --glass-border: rgba(255, 255, 255, 0.88);
+      --glass-shadow: 0 20px 48px -10px rgba(var(--color-primary-rgb), 0.20), 0 4px 16px -2px rgba(10, 9, 9, 0.06);
+
+      /* Left & Right Panel Backgrounds */
+      --left-panel-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.68) 0%, rgba(240, 253, 244, 0.50) 50%, rgba(255, 255, 255, 0.60) 100%);
+      --left-panel-border: rgba(255, 255, 255, 0.92);
+      --right-panel-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.84) 0%, rgba(255, 255, 255, 0.74) 100%);
+      --right-panel-border: rgba(255, 255, 255, 0.90);
+
+      /* Input Surface */
+      --input-bg: rgba(255, 255, 255, 0.85);
+      --input-border: rgba(10, 9, 9, 0.12);
+      --input-bg-focus: #FFFFFF;
 
       /* Typography & Accents */
       --text-primary: #0A0909;
@@ -56,23 +70,6 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       --ai-btn-text: #0A0909;
     }
 
-    /* Dark Glass Mode (Default Mode matching Reference UI Screenshot) */
-    body.theme-dark {
-      --bg-mesh-1: #0D1F18;
-      --bg-mesh-2: #122616;
-      --bg-mesh-3: #090D0A;
-      --bg-mesh-4: #162E1B;
-      --glass-surface: rgba(18, 26, 21, 0.82);
-      --glass-surface-strong: rgba(22, 32, 25, 0.96);
-      --glass-pill: rgba(26, 38, 29, 0.90);
-      --glass-border: rgba(var(--color-primary-rgb), 0.35);
-      --glass-shadow: 0 24px 56px -8px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-      --text-primary: #F4FBF2;
-      --text-secondary: #C8DEC4;
-      --text-muted: #8FA98B;
-      --text-accent: var(--color-primary-light);
-    }
-
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
@@ -83,77 +80,114 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       color: var(--text-primary);
       background-color: var(--bg-mesh-3);
       background-image:
-        radial-gradient(at 6% 6%, var(--bg-mesh-1) 0px, transparent 52%),
-        radial-gradient(at 94% 8%, var(--bg-mesh-1) 0px, transparent 48%),
-        radial-gradient(at 12% 88%, var(--bg-mesh-4) 0px, transparent 55%),
-        radial-gradient(at 62% 80%, var(--bg-mesh-2) 0px, transparent 55%),
-        radial-gradient(at 50% 42%, var(--bg-mesh-3) 0px, transparent 70%);
+        radial-gradient(at 8% 8%, var(--bg-mesh-1) 0px, transparent 52%),
+        radial-gradient(at 92% 10%, var(--bg-mesh-1) 0px, transparent 48%),
+        radial-gradient(at 15% 85%, var(--bg-mesh-4) 0px, transparent 55%),
+        radial-gradient(at 65% 75%, var(--bg-mesh-2) 0px, transparent 55%),
+        radial-gradient(at 50% 50%, var(--bg-mesh-3) 0px, transparent 70%);
       background-attachment: fixed;
       margin: 0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      transition: background 0.35s ease, color 0.25s ease;
+      transition: background 0.4s ease, color 0.3s ease;
+      position: relative;
     }
 
-    /* Glassmorphic Cards */
+    /* Glass Cards */
     .glass-card {
       background: var(--glass-surface);
-      backdrop-filter: blur(24px) saturate(175%);
-      -webkit-backdrop-filter: blur(24px) saturate(175%);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
       border: 1.5px solid var(--glass-border);
       box-shadow: var(--glass-shadow);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.35s ease;
     }
 
     .glass-card-strong {
       background: var(--glass-surface-strong);
-      backdrop-filter: blur(28px) saturate(185%);
-      -webkit-backdrop-filter: blur(28px) saturate(185%);
+      backdrop-filter: blur(32px) saturate(185%);
+      -webkit-backdrop-filter: blur(32px) saturate(185%);
       border: 1.5px solid var(--glass-border);
       box-shadow: var(--glass-shadow);
     }
 
     .glass-pill {
       background: var(--glass-pill);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1.5px solid var(--glass-border);
-      box-shadow: 0 4px 14px rgba(10, 9, 9, 0.04);
+      box-shadow: 0 4px 14px rgba(10, 9, 9, 0.05);
       transition: all 0.22s ease;
     }
 
-    /* Enhanced Left & Right Glass Panels (True Glassmorphism System) */
+    /* Ultra-Translucent Frosted Glass for Video Showcase Overlay */
+    .video-glass-card {
+      background: rgba(255, 255, 255, 0.20) !important;
+      backdrop-filter: blur(16px) saturate(160%) !important;
+      -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.45) !important;
+      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.65) !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .video-glass-card:hover {
+      background: rgba(255, 255, 255, 0.32) !important;
+      border-color: rgba(255, 255, 255, 0.75) !important;
+      box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.12), inset 0 1px 2px 0 rgba(255, 255, 255, 0.85) !important;
+      transform: translateY(-2px);
+    }
+    body.theme-dark .video-glass-card {
+      background: rgba(15, 23, 42, 0.35) !important;
+      backdrop-filter: blur(18px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.22) !important;
+      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25) !important;
+    }
+    body.theme-dark .video-glass-card:hover {
+      background: rgba(15, 23, 42, 0.50) !important;
+      border-color: rgba(255, 255, 255, 0.38) !important;
+    }
+
+    /* Showcase Panel Crystal Glass Container */
+    .auth-panel-showcase {
+      background: transparent !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+      box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+    }
+    body.theme-dark .auth-panel-showcase {
+      border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+      box-shadow: 0 24px 56px -8px rgba(0, 0, 0, 0.6), inset 0 1px 1.5px rgba(255, 255, 255, 0.18) !important;
+    }
+
+    /* Enhanced Headline Text Shadow for Over-Video Legibility */
+    .headline-glass-text {
+      text-shadow: 0 2px 14px rgba(255, 255, 255, 0.95), 0 1px 3px rgba(0, 0, 0, 0.25);
+    }
+    body.theme-dark .headline-glass-text {
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.95), 0 0 10px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Left & Right Glass Panels with Dynamic Gradients */
     .left-glass-panel {
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.52) 0%, rgba(240, 253, 244, 0.38) 50%, rgba(255, 255, 255, 0.48) 100%);
+      background: var(--left-panel-bg);
       backdrop-filter: blur(32px) saturate(185%);
       -webkit-backdrop-filter: blur(32px) saturate(185%);
-      border: 1.5px solid rgba(255, 255, 255, 0.85);
-      box-shadow: 0 20px 48px -12px rgba(var(--color-primary-rgb), 0.14), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+      border: 1.5px solid var(--left-panel-border);
+      box-shadow: var(--glass-shadow);
       transition: all 0.35s ease;
-    }
-    body.theme-dark .left-glass-panel {
-      background: linear-gradient(145deg, rgba(10, 22, 16, 0.82) 0%, rgba(7, 15, 11, 0.78) 50%, rgba(12, 25, 18, 0.75) 100%);
-      border: 1.5px solid rgba(var(--color-primary-rgb), 0.28);
-      box-shadow: 0 24px 52px -10px rgba(0, 0, 0, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.12);
     }
 
     .right-glass-panel {
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.70) 100%);
+      background: var(--right-panel-bg);
       backdrop-filter: blur(32px) saturate(190%);
       -webkit-backdrop-filter: blur(32px) saturate(190%);
-      border: 1.5px solid rgba(255, 255, 255, 0.90);
-      box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.07), inset 0 1px 2px rgba(255, 255, 255, 1);
+      border: 1.5px solid var(--right-panel-border);
+      box-shadow: var(--glass-shadow);
       transition: all 0.35s ease;
     }
-    body.theme-dark .right-glass-panel {
-      background: linear-gradient(145deg, rgba(18, 28, 22, 0.86) 0%, rgba(13, 21, 17, 0.80) 100%);
-      border: 1.5px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 24px 52px -10px rgba(0, 0, 0, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.08);
-    }
 
-    /* Circular action arrow button (matches reference image) */
+    /* Circular action arrow button */
     .action-arrow-btn {
       background: rgba(255, 255, 255, 0.16);
       border: 1px solid rgba(255, 255, 255, 0.3);
@@ -172,25 +206,18 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       border-color: var(--color-primary);
     }
 
-    /* Input styling */
+    /* Auth Inputs */
     .auth-input {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1.5px solid rgba(255, 255, 255, 0.14);
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
       color: var(--text-primary);
       transition: all 0.2s ease;
-    }
-    body.theme-light .auth-input {
-      background: rgba(255, 255, 255, 0.82);
-      border: 1.5px solid rgba(10, 9, 9, 0.12);
     }
     .auth-input:focus {
       outline: none;
       border-color: var(--color-primary);
       box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.22);
-      background: rgba(255, 255, 255, 0.14);
-    }
-    body.theme-light .auth-input:focus {
-      background: #FFFFFF;
+      background: var(--input-bg-focus);
     }
 
     /* Shake animation on invalid attempt */
@@ -203,7 +230,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       animation: shake-anim 0.4s ease-in-out;
     }
 
-    /* Live pulse animation (strictly confined to 7px status dot; never expands or blows up) */
+    /* Live status dot pulse */
     @keyframes pulse-dot {
       0% { transform: scale(1); opacity: 0.8; }
       70%, 100% { transform: scale(2.2); opacity: 0; }
@@ -229,7 +256,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       pointer-events: none;
     }
 
-    /* Floating subtle float animation */
+    /* Floating stat badges */
     @keyframes float-subtle {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-5px); }
@@ -240,13 +267,104 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
     .animate-float-delayed {
       animation: float-subtle 4s ease-in-out 2s infinite;
     }
+
+    /* Dual Slider Hardware-Accelerated Translations */
+    .auth-slider-container {
+      position: relative;
+      width: 100%;
+    }
+
+    @media (min-width: 1024px) {
+      .auth-slider-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        gap: 1.5rem; /* 24px */
+      }
+
+      .auth-panel-showcase,
+      .auth-panel-form {
+        width: calc(50% - 0.75rem);
+        flex-shrink: 0;
+        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+        will-change: transform;
+        z-index: 10;
+      }
+
+      #authCard.mode-login .auth-panel-showcase {
+        transform: translate3d(0, 0, 0);
+      }
+      #authCard.mode-login .auth-panel-form {
+        transform: translate3d(0, 0, 0);
+      }
+
+      #authCard.mode-signup .auth-panel-showcase {
+        transform: translate3d(calc(100% + 1.5rem), 0, 0);
+      }
+      #authCard.mode-signup .auth-panel-form {
+        transform: translate3d(calc(-100% - 1.5rem), 0, 0);
+      }
+    }
+
+    @media (max-width: 1023px) {
+      .auth-panel-showcase,
+      .auth-panel-form {
+        width: 100% !important;
+        transform: none !important;
+      }
+      #authCard.mode-login .auth-panel-showcase {
+        order: 1;
+      }
+      #authCard.mode-login .auth-panel-form {
+        order: 2;
+      }
+      #authCard.mode-signup .auth-panel-form {
+        order: 1;
+      }
+      #authCard.mode-signup .auth-panel-showcase {
+        order: 2;
+      }
+    }
+
+    .form-view {
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .form-view-active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+      position: relative;
+      display: block;
+    }
+    .form-view-hidden {
+      opacity: 0;
+      transform: translateX(20px);
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: none;
+    }
+
+    .showcase-content {
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
   </style>
 </head>
 <body class="theme-light antialiased selection:bg-[var(--color-primary)] selection:text-white p-3 sm:p-5 lg:p-7">
 
-  <!-- COLOR PICKER POPOVER -->
+  <!-- ================= AMBIENT FROSTED GLASS BACKGROUND ORBS ================= -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+    <div id="ambientOrb1" class="absolute -top-28 -left-28 w-[520px] h-[520px] rounded-full blur-[110px] opacity-75 transition-all duration-700"></div>
+    <div id="ambientOrb2" class="absolute -bottom-36 -right-36 w-[580px] h-[580px] rounded-full blur-[120px] opacity-65 transition-all duration-700"></div>
+    <div id="ambientOrb3" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[620px] rounded-full blur-[130px] opacity-45 transition-all duration-700"></div>
+  </div>
+
+  <!-- ================= COLOR PICKER POPOVER ================= -->
   <div id="colorPickerPopover" class="hidden fixed w-64 glass-card p-3.5 z-50 shadow-2xl border border-white/60">
-    <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
+    <div class="flex items-center justify-between pb-2 mb-2 border-b border-black/10 dark:border-white/10">
       <span class="font-bold text-xs text-[var(--text-primary)]">Palette Studio</span>
       <input id="customColorInput" type="color" value="#10B981" class="w-6 h-6 rounded-lg cursor-pointer border-0 bg-transparent p-0" title="Custom Color" />
     </div>
@@ -260,399 +378,587 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
     </div>
   </div>
 
-  <!-- ================= MAIN WIDESCREEN 2-COLUMN AUTH CARD (Exact Layout of Reference Image) ================= -->
-  <main class="w-full max-w-[1240px] mx-auto rounded-[32px] sm:rounded-[38px] glass-card p-3 sm:p-5 lg:p-6 shadow-2xl border border-white/60 relative overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch my-auto">
+  <!-- ================= MAIN WIDESCREEN CARD (LOGIN MODE) ================= -->
+  <main id="authCard" class="auth-card relative w-full max-w-[1240px] mx-auto rounded-[32px] sm:rounded-[38px] glass-card p-3 sm:p-5 lg:p-6 shadow-2xl border border-white/60 overflow-hidden my-auto mode-login">
 
-    <!-- =========================================================================
-         LEFT COLUMN: THE VISUAL & VALUE PROPOSITION SHOWCASE (7 Cols on Desktop)
-         - "← Back to the webpage" Pill Button
-         - Big Headline: "Your AI Assistant"
-         - Centerpiece: High-Tech Cyber AI Character in Suit
-         - Floating Glass Stat Badges (+15 Hours, +2,400 Sensors)
-         - Bottom Row: Team & Operator Testimonials with Diagonal Action Arrows
-         ========================================================================= -->
-    <section class="lg:col-span-7 rounded-[26px] sm:rounded-[30px] p-5 sm:p-7 flex flex-col justify-between relative overflow-hidden left-glass-panel min-h-[540px] lg:min-h-[640px]">
+    <div id="authSliderContainer" class="auth-slider-container w-full min-h-[580px] lg:min-h-[640px]">
 
-      <!-- Ambient Background Glow & Tech Grid Accents -->
-      <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-[var(--color-primary)]/20 blur-[70px] pointer-events-none"></div>
-      <div class="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-[var(--color-primary)]/15 blur-[80px] pointer-events-none"></div>
+      <!-- =========================================================================
+           SHOWCASE PANEL:
+           - On Login: Left Side (Natural position)
+           - On Sign Up: Right Side (Slid smoothly to right)
+           - Displays AI Hero Image, dynamic statistics, testimonials & theme controls
+           ========================================================================= -->
+      <section id="showcasePanel" class="auth-panel auth-panel-showcase rounded-[26px] sm:rounded-[30px] p-5 sm:p-7 flex flex-col justify-between relative overflow-hidden">
 
-      <!-- 1. Top Bar: "← Back to the dashboard" + Theme Controls -->
-      <div class="relative z-10 flex items-center justify-between">
-        <a
-          href="<?php echo $baseUrl; ?>dashboard"
-          class="h-9 px-4 rounded-full glass-pill text-[var(--text-primary)] hover:text-[var(--color-primary)] active:scale-95 text-xs font-bold flex items-center gap-2 shadow-sm transition"
-          title="Return to Smart Management Dashboard"
+        <!-- High-Definition Left-Side Card Video (assets/video/1.mp4) Full Width & Height - Zero Grey Filter -->
+        <video
+          id="showcaseVideo"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="auto"
+          class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none rounded-[26px] sm:rounded-[30px]"
         >
-          <svg class="w-3.5 h-3.5 text-[var(--color-primary)]" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <span>Back to the dashboard</span>
-        </a>
+          <source src="<?php echo $baseUrl; ?>assets/video/1.mp4" type="video/mp4">
+          <source src="<?php echo $baseUrl; ?>assets/video/2.mp4" type="video/mp4">
+        </video>
 
-        <!-- Controls: Palette Chooser + Dark/Light Mode (Moved into card header) -->
-        <div class="flex items-center gap-2">
-          <!-- Dynamic Color Chooser Trigger -->
-          <button id="colorPickerToggleBtn" type="button" class="w-8 h-8 rounded-full glass-pill flex items-center justify-center hover:scale-105 transition relative" title="Choose Dynamic Theme Color" aria-label="Theme Color">
-            <span id="activeColorDot" class="w-3.5 h-3.5 rounded-full border border-white/80 shadow-sm" style="background-color: var(--color-primary);"></span>
-          </button>
+        <!-- 1. Top Bar: Back to Dashboard & Theme Studio -->
+        <div class="relative z-10 flex items-center justify-between">
+          <a
+            href="<?php echo $baseUrl; ?>dashboard"
+            class="h-10 px-4 sm:px-5 rounded-full video-glass-card text-[var(--text-primary)] hover:text-[var(--color-primary)] active:scale-95 text-xs sm:text-[13px] font-bold flex items-center gap-2 shadow-sm transition"
+            title="Return to Smart Management Dashboard"
+          >
+            <svg class="w-4 h-4 text-[var(--color-primary)] shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Back to the dashboard</span>
+          </a>
 
-          <!-- Theme Switcher (Dark Moon / Light Sun) -->
-          <div class="h-8 px-1 rounded-full glass-pill flex items-center gap-0.5">
-            <button id="themeDarkBtn" type="button" class="w-6 h-6 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Dark Glass Mode" aria-label="Dark Mode">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
+          <!-- Controls: Palette Chooser + Dark/Light Mode -->
+          <div class="flex items-center gap-2.5">
+            <!-- Palette Chooser -->
+            <button id="colorPickerToggleBtn" type="button" class="w-10 h-10 rounded-full video-glass-card flex items-center justify-center hover:scale-105 active:scale-95 transition relative shadow-sm group" title="Choose Dynamic Theme Color" aria-label="Theme Color">
+              <!-- Perfect Artist Palette Icon -->
+              <svg class="w-5 h-5 text-[var(--text-primary)] transition-transform group-hover:rotate-12 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                <circle cx="13.5" cy="6.5" r=".75" fill="currentColor"></circle>
+                <circle cx="17.5" cy="10.5" r=".75" fill="currentColor"></circle>
+                <circle cx="8.5" cy="7.5" r=".75" fill="currentColor"></circle>
+                <circle cx="6.5" cy="12.5" r=".75" fill="currentColor"></circle>
               </svg>
+              <!-- Live Theme Color Indicator Dot Badge -->
+              <span id="activeColorDot" class="w-3.5 h-3.5 rounded-full absolute -top-0.5 -right-0.5 border-2 border-white dark:border-slate-800 shadow-md transition-all group-hover:scale-110" style="background-color: var(--color-primary);"></span>
             </button>
-            <button id="themeLightBtn" type="button" class="w-6 h-6 rounded-full flex items-center justify-center text-[#0A0909] bg-white shadow-sm transition" title="Light Glass Mode" aria-label="Light Mode">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="4"/>
-                <path stroke-linecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
 
-      <!-- 2. Typographic Headline & AI Centerpiece Visual -->
-      <div class="relative z-10 my-auto py-2 sm:py-3 flex flex-col items-center text-center">
-
-        <!-- Headline (Matches Reference: "Your AI Assistant") -->
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[var(--text-primary)] leading-tight">
-          <span class="opacity-80 font-normal block sm:inline">Your</span>
-          <span class="bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500 bg-clip-text text-transparent">AI</span>
-          <span class="font-extrabold">Assistant</span>
-        </h1>
-        <!-- <p class="text-xs sm:text-sm text-[var(--text-muted)] mt-1 max-w-md font-medium">Autonomous climate setpoints, biomass computer vision & hourly energy optimization.</p> -->
-
-        <!-- Centerpiece Graphic with Floating Glass Chips (Transparent Cutout & Grand Size) -->
-        <div class="relative mt-2 sm:mt-4 w-full max-w-[380px] sm:max-w-[480px] h-[300px] sm:h-[350px] lg:h-[380px] flex items-center justify-center">
-
-          <!-- Glowing Backdrop Aura -->
-          <div class="absolute inset-4 rounded-full bg-gradient-to-t from-[var(--color-primary)]/30 to-emerald-400/10 blur-[50px] pointer-events-none"></div>
-
-          <!-- Futuristic AI Character Image (Transparent Background & Larger) -->
-          <img
-            src="<?php echo $baseUrl; ?>assets/images/ai_login_hero_nobg.png"
-            alt="AI Smart Management Assistant"
-            class="relative z-10 h-full w-auto max-h-[300px] sm:max-h-[350px] lg:max-h-[380px] object-contain filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.3)] transition-transform duration-500 hover:scale-[1.03]"
-            onerror="this.onerror=null; this.src='<?php echo $baseUrl; ?>assets/images/ai_login_hero.jpg';"
-          />
-
-          <!-- Floating Glass Stat Chip 1 (Left / Lower: "+15 Hours") -->
-          <div class="absolute -left-2 sm:left-1 bottom-3 sm:bottom-6 z-20 px-3.5 py-2.5 rounded-2xl glass-pill shadow-xl animate-float">
-            <div class="flex items-center gap-2">
-              <div class="w-6 h-6 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/>
-                  <circle cx="12" cy="12" r="9"/>
+            <!-- Dark / Light Theme Toggle -->
+            <div class="h-10 p-1 rounded-full video-glass-card flex items-center gap-1 shadow-sm">
+              <button id="themeDarkBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Dark Glass Mode" aria-label="Dark Mode">
+                <!-- Perfect Centered Lucide Moon Icon -->
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                 </svg>
-              </div>
-              <div>
-                <p class="text-xs sm:text-[13px] font-extrabold text-[var(--text-primary)] leading-tight">+15 Hours</p>
-                <p class="text-[9.5px] text-[var(--text-muted)] leading-none mt-0.5 font-semibold">Continuous AI Control</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Floating Glass Stat Chip 2 (Right / Upper: "+ 2,400 Sensors") -->
-          <div class="absolute -right-2 sm:right-2 top-3 sm:top-6 z-20 px-3.5 py-2.5 rounded-2xl glass-pill shadow-xl animate-float-delayed">
-            <div class="flex items-center gap-2">
-              <div class="w-6 h-6 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                  <circle cx="9" cy="7" r="4"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-              </div>
-              <div>
-                <p class="text-xs sm:text-[13px] font-extrabold text-[var(--text-primary)] leading-tight">+ 2,400</p>
-                <p class="text-[9.5px] text-[var(--text-muted)] leading-none mt-0.5 font-semibold">Sensors & Telemetry</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Bottom Row: 3 Testimonial & Lead Operator Cards -->
-      <div class="relative z-10 pt-2 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left">
-
-        <!-- Card 1: David S. -->
-        <div class="p-2.5 rounded-2xl glass-pill hover:scale-[1.02] transition group">
-          <div class="flex items-center justify-between gap-1.5">
-            <div class="flex items-center gap-2 min-w-0">
-              <div class="w-8 h-8 rounded-full bg-emerald-700/60 ring-1 ring-white/30 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="David S." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' fill=\'%2310B981\'><circle cx=\'16\' cy=\'16\' r=\'16\'/><text x=\'16\' y=\'20\' text-anchor=\'middle\' fill=\'white\' font-size=\'12\'>DS</text></svg>';" />
-              </div>
-              <div class="min-w-0">
-                <p class="text-[11.5px] font-bold text-[var(--text-primary)] truncate leading-tight">David S.</p>
-                <p class="text-[9px] text-[var(--text-muted)] truncate leading-none mt-0.5 font-medium">CEO & Co-founder</p>
-              </div>
-            </div>
-            <button type="button" class="w-6 h-6 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View David S. Case">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
-              </svg>
-            </button>
-          </div>
-          <p class="text-[10px] text-[var(--color-primary)] font-semibold mt-2 truncate">"Best Ever. Autonomous yield +40%."</p>
-        </div>
-
-        <!-- Card 2: Mira K. -->
-        <div class="p-2.5 rounded-2xl glass-pill hover:scale-[1.02] transition group">
-          <div class="flex items-center justify-between gap-1.5">
-            <div class="flex items-center gap-2 min-w-0">
-              <div class="w-8 h-8 rounded-full bg-teal-700/60 ring-1 ring-white/30 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0">
-                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=faces" alt="Mira K." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' fill=\'%23059669\'><circle cx=\'16\' cy=\'16\' r=\'16\'/><text x=\'16\' y=\'20\' text-anchor=\'middle\' fill=\'white\' font-size=\'12\'>MK</text></svg>';" />
-              </div>
-              <div class="min-w-0">
-                <p class="text-[11.5px] font-bold text-[var(--text-primary)] truncate leading-tight">Mira K.</p>
-                <p class="text-[9px] text-[var(--text-muted)] truncate leading-none mt-0.5 font-medium">Marketing Manager</p>
-              </div>
-            </div>
-            <button type="button" class="w-6 h-6 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View Mira K. Case">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
-              </svg>
-            </button>
-          </div>
-          <p class="text-[10px] text-[var(--color-primary)] font-semibold mt-2 truncate">"Revolutionary. Zero manual errors."</p>
-        </div>
-
-        <!-- Card 3: Imran Jakir (Lead Operator) -->
-        <div class="p-2.5 rounded-2xl glass-pill hover:scale-[1.02] transition group hidden sm:block">
-          <div class="flex items-center justify-between gap-1.5">
-            <div class="flex items-center gap-2 min-w-0">
-              <div class="w-8 h-8 rounded-full bg-emerald-600 ring-1 ring-white/30 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0">
-                <img src="data:image/webp;base64,UklGRoADAABXRUJQVlA4IHQDAABQEwCdASpIAEgAPk0eikQioaEa28UAKATEsYBbQcmm2JIfYeZH4TL9JZ4SCKj80FL5PkxxSUoHsWj/akvbPVMgC2UCoSYtTnPzu6eNKwl6JJQVjfpfTiQb736NIgoPlkD7s4CKzca9Q8en5mOD9Mi3W9iHyIkhYapixdNXQE5VMncuCPFVGa/xGNb+A5v1JTIzpIM8RA1y6DpNPdhspwXL4GGAAP79elCCa5mpT5tfH+3pn5r9kKncStykW9LpNOVg3Z744eXfA79u1AR9E9L9b7Hu2+iK2nt7piU52Ol8VJUJSMtR+/74ZJ+BuQH0usp0gUAaabq21xYnMYEVB1C/WQVzhqfeKXWj+7K20eBSOqgeazhy7hJ4FqLkDMlosit692wRUqmiO/veeTwgvryJOCros8BjaHQMhAcsuAKvhNOwXnTCksVRPvWA1duJR2m/JuDYcPykBTdTAdpYgK8EI8aivUqra+7zwr0uiI/IeXDsi4B2xr0wMjQ2CkSni5TBwPs4jZ9MY0S4Yb2PuqFXAnIjA5z4rXNu16LUZAKzkiI1ZqUJPyb2w+Y1kWOUBrp/w2vJNVQLKHa4OXMbFKDSOkw/lWZPvIAJv84Lurm4uwuQ6SnsGWV6BzPNpLwsPRyfNAN7jB9q9ZVh1/XJGKEhPtXPg7JkbPCwVAM1mGZ2Zi3Srf6aryNWXuhKys4tPq6fKV9aGVoM/hhw0e+AhwdudgJMZce5EgZQ0M04iJtd30ez4j4f1iyepx+C39HRytHp1vyzTDqSagmY//TN/hqvefyz6tccSg1LHP1jbTYkJfuui9VZrby176zog/JP1V6Z/46FNBGx1bHqJheRESb1YUZp1pnUTOD5ek+kBZFqHZykmwVr/j7RpGG2YRi2GuJyXfnGDZ9WgDuUOeRBRuBoGVdl5wq0vK6nigwGCJGl2l69HGcEtxQMraHQ9Mjetnl75dNRbCeriN4Zvo7MLbeC6n7WJCze/v5Je8tYFXX16krLyk/YJc0W6xqiPk2aU6WjzY5u8ts5q6EgQInUaFMRDfEgdnWHvkAxc4ZVKrTbXROac2nmY2q5dx9P6UPUMIemzorSX4h8x6kIsbgSR62N793MdzUfKkyisCi78OmhpOmXMK4DFTHzvECGPSEwBubP8ZDtqW8//Me2mDvQ+NK8aQvAAA==" alt="Imran Jakir" class="w-full h-full object-cover" />
-              </div>
-              <div class="min-w-0">
-                <p class="text-[11.5px] font-bold text-[var(--text-primary)] truncate leading-tight">Imran Jakir</p>
-                <p class="text-[9px] text-[var(--text-muted)] truncate leading-none mt-0.5 font-medium">Lead Agronomist</p>
-              </div>
-            </div>
-            <button type="button" class="w-6 h-6 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View Imran Jakir Case">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
-              </svg>
-            </button>
-          </div>
-          <p class="text-[10px] text-[var(--color-primary)] font-semibold mt-2 truncate">"Optimal 80% Harvest yield."</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================================
-         RIGHT COLUMN: THE FROSTED GLASS LOGIN / REGISTRATION PANEL (5 Cols)
-         - Start Your Journey Header with Mode Switcher
-         - Sleek Inputs (First/Last Name, E-mail, Password + Show/Hide)
-         - Accept Terms / Remember Checkbox
-         - Or Sign up with (Google, Apple, GitHub)
-         - Bottom Row: Already have account? Login + White Pill "Sign →" Button
-         ========================================================================= -->
-    <section class="lg:col-span-5 rounded-[26px] sm:rounded-[30px] p-5 sm:p-6 lg:p-7 flex flex-col justify-between right-glass-panel relative overflow-hidden">
-
-      <!-- Form Container -->
-      <div class="w-full">
-
-        <!-- Top Status & Switcher -->
-        <div class="flex items-center justify-between gap-2 mb-2">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10.5px] font-bold bg-[var(--color-primary)]/15 text-[var(--color-primary)] border border-[var(--color-primary)]/30">
-            <span class="live-dot"></span>
-            <span>CE & IT Secure Access</span>
-          </span>
-
-          <!-- Mode Toggle Segmented Pill -->
-          <div class="p-0.5 rounded-full bg-black/10 dark:bg-white/10 flex items-center text-xs font-bold">
-            <button id="tabSignInBtn" type="button" class="px-3.5 py-1 rounded-full bg-white text-[#0A0909] shadow-sm transition">Sign In</button>
-            <button id="tabSignUpBtn" type="button" class="px-3.5 py-1 rounded-full text-[var(--text-muted)] hover:text-[var(--text-primary)] transition">Sign Up</button>
-          </div>
-        </div>
-
-        <!-- Main Form Headline -->
-        <h2 id="formHeadline" class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1 text-[var(--text-primary)] leading-tight">Welcome Back.</h2>
-        <p id="formSubheadline" class="text-xs text-[var(--text-muted)] mt-0.5">Sign in to access your portal & telemetry dashboard.</p>
-
-        <!-- Interactive Form -->
-        <form id="authForm" class="mt-3.5 space-y-2.5 sm:space-y-3" onsubmit="return false;">
-
-          <!-- Name Row (Displayed in Sign Up Mode, hidden in Sign In Mode) -->
-          <div id="nameRow" class="hidden grid-cols-2 gap-2.5 transition-all">
-            <div>
-              <label for="firstNameInput" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">First Name</label>
-              <input
-                id="firstNameInput"
-                type="text"
-                placeholder="Omar"
-                class="w-full h-10 sm:h-11 px-3.5 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
-              />
-            </div>
-            <div>
-              <label for="lastNameInput" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Last Name</label>
-              <input
-                id="lastNameInput"
-                type="text"
-                placeholder="Jakir"
-                class="w-full h-10 sm:h-11 px-3.5 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
-              />
-            </div>
-          </div>
-
-          <!-- Email Input -->
-          <div>
-            <label for="emailInput" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">E-mail / Operator ID</label>
-            <div class="relative">
-              <input
-                id="emailInput"
-                type="text"
-                placeholder="operator@gmiu.edu.in"
-                required
-                autocomplete="email"
-                class="w-full h-10 sm:h-11 pl-3.5 pr-9 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
-              />
-              <svg class="w-4 h-4 text-[var(--text-muted)] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Password Input -->
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label for="authPassword" class="block text-[11px] font-semibold text-[var(--text-secondary)]">Password</label>
-              <button id="forgotPwdBtn" type="button" class="text-[11px] font-semibold text-[var(--color-primary)] hover:underline">Forgot password?</button>
-            </div>
-            <div class="relative">
-              <input
-                id="authPassword"
-                type="password"
-                placeholder="••••••••••••"
-                required
-                autocomplete="current-password"
-                class="w-full h-10 sm:h-11 pl-3.5 pr-10 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
-              />
-              <!-- Password Show/Hide Toggle Button -->
-              <button id="togglePasswordBtn" type="button" class="w-8 h-8 rounded-lg absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Show or Hide Password">
-                <svg id="eyeIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
+              </button>
+              <button id="themeLightBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-amber-500 bg-white shadow-md border border-black/5 transition" title="Light Glass Mode" aria-label="Light Mode">
+                <!-- Perfect Centered Lucide Sun Icon -->
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="4.5"></circle>
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
                 </svg>
               </button>
             </div>
           </div>
-
-          <!-- Checkbox Row: Terms & Conditions or Remember Me -->
-          <div class="pt-0.5 flex items-center justify-between">
-            <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-[var(--text-secondary)]">
-              <input
-                id="termsCheckbox"
-                type="checkbox"
-                checked
-                class="w-4 h-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)] accent-[var(--color-primary)] cursor-pointer"
-              />
-              <span id="termsLabelText">Remember this device for 30 days</span>
-            </label>
-          </div>
-
-          <!-- Error Message Banner -->
-          <div id="authErrorBanner" class="hidden items-center gap-2 p-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-500 dark:text-red-400 text-xs font-semibold">
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <span id="authErrorText">Invalid credentials. Try "admin123"</span>
-          </div>
-
-          <!-- Success Message Banner -->
-          <div id="authSuccessBanner" class="hidden items-center gap-2 p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
-            </svg>
-            <span id="authSuccessText">Authentication verified! Redirecting to Dashboard...</span>
-          </div>
-        </form>
-
-        <!-- Divider: Or sign in with -->
-        <div class="relative my-3 sm:my-3.5 text-center">
-          <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-black/10 dark:border-white/10"></div></div>
-          <span id="socialDividerLabel" class="relative px-3 bg-[var(--glass-surface-strong)] text-[10px] uppercase font-bold tracking-wider text-[var(--text-muted)]">
-            Or sign in with
-          </span>
         </div>
 
-        <!-- Social Buttons Row: Google, Apple, GitHub (Exact SVGs matching Reference Image) -->
-        <div class="flex items-center justify-center gap-2.5 sm:gap-3">
-          <!-- Google -->
-          <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Continue with Google" aria-label="Google Login">
-            <svg class="w-4 h-4" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.41 7.34 24 12 24z"/>
-              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.92 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
-              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.59 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-            </svg>
-          </button>
+        <!-- 2. Typographic Headline & Floating Glass Stat Chips -->
+        <div class="relative z-10 my-auto py-2 sm:py-3 flex flex-col items-center text-center">
 
-          <!-- Apple -->
-          <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Continue with Apple" aria-label="Apple Login">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.88c.63-.77 1.06-1.84.95-2.91-.91.04-2.02.61-2.67 1.37-.58.67-1.09 1.76-.95 2.81 1.02.08 2.04-.5 2.67-1.27z"/>
-            </svg>
-          </button>
+          <!-- Dynamic Headline with Enhanced Glass Legibility -->
+          <div id="showcaseHeadlineWrapper" class="showcase-content">
+            <h1 id="showcaseHeadline" class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[var(--text-primary)] leading-tight headline-glass-text">
+              <span id="headlinePrefix" class="opacity-80 font-normal block sm:inline">Your</span>
+              <span id="headlineAccent" class="bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-light)] to-[var(--color-primary-dark)] bg-clip-text text-transparent">AI</span>
+              <span id="headlineSuffix" class="font-extrabold">Assistant</span>
+            </h1>
+          </div>
 
-          <!-- GitHub / Facebook -->
-          <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Continue with GitHub" aria-label="GitHub Login">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-            </svg>
-          </button>
+          <!-- Futuristic Centerpiece area with Transparent Glass Stat Chips over Video -->
+          <div class="relative mt-2 sm:mt-4 w-full max-w-[360px] sm:max-w-[440px] h-[260px] sm:h-[300px] lg:h-[340px] flex items-center justify-center">
+
+            <!-- Floating Translucent Glass Stat Chip 1 (Lower Left) -->
+            <div id="statChipLeft" class="absolute -left-2 sm:left-1 bottom-3 sm:bottom-6 z-20 px-3.5 py-2.5 rounded-2xl video-glass-card shadow-xl animate-float">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center shrink-0 border border-[var(--color-primary)]/30">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/>
+                    <circle cx="12" cy="12" r="9"/>
+                  </svg>
+                </div>
+                <div>
+                  <p id="statChipLeftTitle" class="text-xs sm:text-[13px] font-extrabold text-[#0F172A] dark:text-white leading-tight drop-shadow-sm">+15 Hours</p>
+                  <p id="statChipLeftDesc" class="text-[9.5px] text-[#334155] dark:text-slate-300 leading-none mt-0.5 font-bold">Continuous AI Control</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Floating Translucent Glass Stat Chip 2 (Upper Right) -->
+            <div id="statChipRight" class="absolute -right-2 sm:right-2 top-3 sm:top-6 z-20 px-3.5 py-2.5 rounded-2xl video-glass-card shadow-xl animate-float-delayed">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center shrink-0 border border-[var(--color-primary)]/30">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
+                <div>
+                  <p id="statChipRightTitle" class="text-xs sm:text-[13px] font-extrabold text-[#0F172A] dark:text-white leading-tight drop-shadow-sm">+ 2,400</p>
+                  <p id="statChipRightDesc" class="text-[9.5px] text-[#334155] dark:text-slate-300 leading-none mt-0.5 font-bold">Sensors & Telemetry</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Bottom Action Row: Mode Prompt on Left + White Pill Button "Sign In →" on Right -->
-      <div class="mt-4 pt-2.5 sm:mt-5 sm:pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between gap-3">
-        <!-- Left: Don't have an account? Sign Up -->
-        <div class="min-w-0">
-          <p id="accountSwitchPrompt" class="text-xs text-[var(--text-muted)] truncate">
-            Don't have an account?
-            <button id="accountSwitchBtn" type="button" class="font-bold text-[var(--text-primary)] hover:text-[var(--color-primary)] hover:underline transition">Sign Up</button>
-          </p>
+        <!-- 3. Bottom Row: 3 Ultra-Translucent Glass Testimonial Cards (Video Fully Visible Behind) -->
+        <div id="showcaseBottomCards" class="relative z-10 pt-2 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left">
+
+          <!-- Card 1: David S. -->
+          <div class="p-2.5 rounded-2xl video-glass-card hover:scale-[1.02] transition group">
+            <div class="flex items-center justify-between gap-1.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <div class="w-8 h-8 rounded-full bg-[var(--color-primary)]/30 ring-1 ring-white/50 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0 shadow-sm">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="David S." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' fill=\'%2310B981\'><circle cx=\'16\' cy=\'16\' r=\'16\'/><text x=\'16\' y=\'20\' text-anchor=\'middle\' fill=\'white\' font-size=\'12\'>DS</text></svg>';" />
+                </div>
+                <div class="min-w-0">
+                  <p class="text-[11.5px] font-bold text-[#0F172A] dark:text-white truncate leading-tight">David S.</p>
+                  <p class="text-[9px] text-[#334155] dark:text-slate-300 truncate leading-none mt-0.5 font-semibold">CEO & Co-founder</p>
+                </div>
+              </div>
+              <button type="button" class="w-6 h-6 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View David S. Case">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
+                </svg>
+              </button>
+            </div>
+            <p class="text-[10px] text-[var(--color-primary)] font-bold mt-2 truncate drop-shadow-sm">"Best Ever. Autonomous yield +40%."</p>
+          </div>
+
+          <!-- Card 2: Mira K. -->
+          <div class="p-2.5 rounded-2xl video-glass-card hover:scale-[1.02] transition group">
+            <div class="flex items-center justify-between gap-1.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <div class="w-8 h-8 rounded-full bg-[var(--color-primary-dark)]/40 ring-1 ring-white/50 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0 shadow-sm">
+                  <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=faces" alt="Mira K." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' fill=\'%23059669\'><circle cx=\'16\' cy=\'16\' r=\'16\'/><text x=\'16\' y=\'20\' text-anchor=\'middle\' fill=\'white\' font-size=\'12\'>MK</text></svg>';" />
+                </div>
+                <div class="min-w-0">
+                  <p class="text-[11.5px] font-bold text-[#0F172A] dark:text-white truncate leading-tight">Mira K.</p>
+                  <p class="text-[9px] text-[#334155] dark:text-slate-300 truncate leading-none mt-0.5 font-semibold">Marketing Manager</p>
+                </div>
+              </div>
+              <button type="button" class="w-6 h-6 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View Mira K. Case">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
+                </svg>
+              </button>
+            </div>
+            <p class="text-[10px] text-[var(--color-primary)] font-bold mt-2 truncate drop-shadow-sm">"Revolutionary. Zero manual errors."</p>
+          </div>
+
+          <!-- Card 3: Imran Jakir (Lead Operator) -->
+          <div class="p-2.5 rounded-2xl video-glass-card hover:scale-[1.02] transition group hidden sm:block">
+            <div class="flex items-center justify-between gap-1.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <div class="w-8 h-8 rounded-full bg-[var(--color-primary)]/40 ring-1 ring-white/50 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0 shadow-sm">
+                  <img src="data:image/webp;base64,UklGRoADAABXRUJQVlA4IHQDAABQEwCdASpIAEgAPk0eikQioaEa28UAKATEsYBbQcmm2JIfYeZH4TL9JZ4SCKj80FL5PkxxSUoHsWj/akvbPVMgC2UCoSYtTnPzu6eNKwl6JJQVjfpfTiQb736NIgoPlkD7s4CKzca9Q8en5mOD9Mi3W9iHyIkhYapixdNXQE5VMncuCPFVGa/xGNb+A5v1JTIzpIM8RA1y6DpNPdhspwXL4GGAAP79elCCa5mpT5tfH+3pn5r9kKncStykW9LpNOVg3Z744eXfA79u1AR9E9L9b7Hu2+iK2nt7piU52Ol8VJUJSMtR+/74ZJ+BuQH0usp0gUAaabq21xYnMYEVB1C/WQVzhqfeKXWj+7K20eBSOqgeazhy7hJ4FqLkDMlosit692wRUqmiO/veeTwgvryJOCros8BjaHQMhAcsuAKvhNOwXnTCksVRPvWA1duJR2m/JuDYcPykBTdTAdpYgK8EI8aivUqra+7zwr0uiI/IeXDsi4B2xr0wMjQ2CkSni5TBwPs4jZ9MY0S4Yb2PuqFXAnIjA5z4rXNu16LUZAKzkiI1ZqUJPyb2w+Y1kWOUBrp/w2vJNVQLKHa4OXMbFKDSOkw/lWZPvIAJv84Lurm4uwuQ6SnsGWV6BzPNpLwsPRyfNAN7jB9q9ZVh1/XJGKEhPtXPg7JkbPCwVAM1mGZ2Zi3Srf6aryNWXuhKys4tPq6fKV9aGVoM/hhw0e+AhwdudgJMZce5EgZQ0M04iJtd30ez4j4f1iyepx+C39HRytHp1vyzTDqSagmY//TN/hqvefyz6tccSg1LHP1jbTYkJfuui9VZrby176zog/JP1V6Z/46FNBGx1bHqJheRESb1YUZp1pnUTOD5ek+kBZFqHZykmwVr/j7RpGG2YRi2GuJyXfnGDZ9WgDuUOeRBRuBoGVdl5wq0vK6nigwGCJGl2l69HGcEtxQMraHQ9Mjetnl75dNRbCeriN4Zvo7MLbeC6n7WJCze/v5Je8tYFXX16krLyk/YJc0W6xqiPk2aU6WjzY5u8ts5q6EgQInUaFMRDfEgdnWHvkAxc4ZVKrTbXROac2nmY2q5dx9P6UPUMIemzorSX4h8x6kIsbgSR62N793MdzUfKkyisCi78OmhpOmXMK4DFTHzvECGPSEwBubP8ZDtqW8//Me2mDvQ+NK8aQvAAA==" alt="Imran Jakir" class="w-full h-full object-cover" />
+                </div>
+                <div class="min-w-0">
+                  <p class="text-[11.5px] font-bold text-[#0F172A] dark:text-white truncate leading-tight">Imran Jakir</p>
+                  <p class="text-[9px] text-[#334155] dark:text-slate-300 truncate leading-none mt-0.5 font-semibold">Lead Agronomist</p>
+                </div>
+              </div>
+              <button type="button" class="w-6 h-6 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View Imran Jakir Case">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
+                </svg>
+              </button>
+            </div>
+            <p class="text-[10px] text-[var(--color-primary)] font-bold mt-2 truncate drop-shadow-sm">"Optimal 80% Harvest yield."</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           FORM PANEL:
+           - On Login: Right Side (Natural position)
+           - On Sign Up: Left Side (Slid smoothly to left)
+           - Seamlessly morphs between Login and Sign Up form views
+           ========================================================================= -->
+      <section id="formPanel" class="auth-panel auth-panel-form rounded-[26px] sm:rounded-[30px] p-5 sm:p-6 lg:p-7 flex flex-col justify-between right-glass-panel relative overflow-hidden">
+
+        <div class="w-full">
+
+          <!-- Top Status & Segmented Mode Switcher -->
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10.5px] font-bold bg-[var(--color-primary)]/15 text-[var(--color-primary)] border border-[var(--color-primary)]/30">
+              <span class="live-dot"></span>
+              <span>CE & IT Secure Access</span>
+            </span>
+
+            <!-- Mode Toggle Segmented Pill -->
+            <div class="p-0.5 rounded-full bg-black/10 dark:bg-white/10 flex items-center text-xs font-bold">
+              <a
+                id="tabLoginBtn"
+                href="<?php echo $baseUrl; ?>login"
+                class="px-3.5 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm"
+              >Log In</a>
+              <a
+                id="tabSignUpBtn"
+                href="<?php echo $baseUrl; ?>signup"
+                class="px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+              >Sign Up</a>
+            </div>
+          </div>
+
+          <!-- Dynamic Form Container with 2 Views -->
+          <div class="relative w-full">
+
+            <!-- ================= VIEW 1: LOGIN ================= -->
+            <div id="loginFormView" class="form-view form-view-active">
+              <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1 text-[var(--text-primary)] leading-tight">Welcome Back.</h2>
+              <p class="text-xs text-[var(--text-muted)] mt-0.5">Sign in to access your portal & telemetry dashboard.</p>
+
+              <form id="loginForm" class="mt-3.5 space-y-2.5 sm:space-y-3" onsubmit="return false;">
+                <!-- Email / Operator ID -->
+                <div>
+                  <label for="loginEmail" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">E-mail / Operator ID</label>
+                  <div class="relative">
+                    <input
+                      id="loginEmail"
+                      type="text"
+                      placeholder="operator@gmiu.edu.in"
+                      required
+                      autocomplete="email"
+                      class="w-full h-10 sm:h-11 pl-3.5 pr-9 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                    />
+                    <svg class="w-4 h-4 text-[var(--text-muted)] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Password -->
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label for="loginPassword" class="block text-[11px] font-semibold text-[var(--text-secondary)]">Password</label>
+                    <button id="forgotPwdBtn" type="button" class="text-[11px] font-semibold text-[var(--color-primary)] hover:underline">Forgot password?</button>
+                  </div>
+                  <div class="relative">
+                    <input
+                      id="loginPassword"
+                      type="password"
+                      placeholder="••••••••••••"
+                      required
+                      autocomplete="current-password"
+                      class="w-full h-10 sm:h-11 pl-3.5 pr-10 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                    />
+                    <button id="toggleLoginPasswordBtn" type="button" class="w-8 h-8 rounded-lg absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Show/Hide Password">
+                      <svg id="eyeIconLogin" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Remember Me Checkbox -->
+                <div class="pt-0.5 flex items-center justify-between">
+                  <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-[var(--text-secondary)]">
+                    <input
+                      id="rememberMeCheckbox"
+                      type="checkbox"
+                      checked
+                      class="w-4 h-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)] accent-[var(--color-primary)] cursor-pointer"
+                    />
+                    <span>Remember this device for 30 days</span>
+                  </label>
+                </div>
+
+                <!-- Login Error & Success Banners -->
+                <div id="loginErrorBanner" class="hidden items-center gap-2 p-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-500 dark:text-red-400 text-xs font-semibold">
+                  <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  <span id="loginErrorText">Invalid credentials. Try "admin123"</span>
+                </div>
+
+                <div id="loginSuccessBanner" class="hidden items-center gap-2 p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+                  <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                  </svg>
+                  <span id="loginSuccessText">Authentication verified! Redirecting to Dashboard...</span>
+                </div>
+              </form>
+
+              <!-- Social Divider -->
+              <div class="relative my-3 sm:my-3.5 text-center">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-black/10 dark:border-white/10"></div></div>
+                <span class="relative px-3 bg-[var(--glass-surface-strong)] text-[10px] uppercase font-bold tracking-wider text-[var(--text-muted)]">
+                  Or continue with
+                </span>
+              </div>
+
+              <!-- Social Buttons -->
+              <div class="flex items-center justify-center gap-2.5 sm:gap-3">
+                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Google SSO">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.41 7.34 24 12 24z"/>
+                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.92 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.59 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                  </svg>
+                </button>
+                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Apple ID">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.88c.63-.77 1.06-1.84.95-2.91-.91.04-2.02.61-2.67 1.37-.58.67-1.09 1.76-.95 2.81 1.02.08 2.04-.5 2.67-1.27z"/>
+                  </svg>
+                </button>
+                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="GitHub">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Bottom Action Row: Switch Prompt + Log In Pill Button -->
+              <div class="mt-4 pt-2.5 sm:mt-5 sm:pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="text-xs text-[var(--text-muted)] truncate">
+                    Don't have an account?
+                    <a href="<?php echo $baseUrl; ?>signup" id="linkToSignUp" class="font-bold text-[var(--text-primary)] hover:text-[var(--color-primary)] hover:underline transition cursor-pointer">Sign Up</a>
+                  </p>
+                </div>
+                <button
+                  id="loginSubmitBtn"
+                  type="button"
+                  class="h-10 sm:h-11 px-5 sm:px-6 rounded-full bg-white text-[#0A0909] font-extrabold text-xs tracking-tight flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition shrink-0 group border border-white"
+                >
+                  <span id="loginSubmitBtnText">Log In</span>
+                  <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- One-Click Demo Access -->
+              <div class="mt-2.5 sm:mt-3">
+                <button
+                  id="demoLoginBtn"
+                  type="button"
+                  class="w-full py-1.5 sm:py-2 px-3 rounded-2xl border border-dashed border-[var(--color-primary)]/50 hover:border-[var(--color-primary)] bg-[var(--color-primary)]/10 text-[var(--text-accent)] text-xs font-bold flex items-center justify-center gap-2 hover:bg-[var(--color-primary)]/20 transition"
+                  title="Fast Unlock with Default Demo Credentials"
+                >
+                  <svg class="w-3.5 h-3.5 text-[var(--color-primary)]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+                  </svg>
+                  <span>One-Click Demo Access (Auto-fill & Unlock)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- ================= VIEW 2: SIGN UP ================= -->
+            <div id="signUpFormView" class="form-view form-view-hidden">
+              <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1 text-[var(--text-primary)] leading-tight">Create Account.</h2>
+              <p class="text-xs text-[var(--text-muted)] mt-0.5">Register your operator profile for telemetry access.</p>
+
+              <form id="signUpForm" class="mt-3.5 space-y-2.5 sm:space-y-3" onsubmit="return false;">
+                <!-- First Name & Last Name (Grid 2 cols) -->
+                <div class="grid grid-cols-2 gap-2.5">
+                  <div>
+                    <label for="signUpFirstName" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">First Name</label>
+                    <input
+                      id="signUpFirstName"
+                      type="text"
+                      placeholder="Omar"
+                      required
+                      class="w-full h-10 sm:h-11 px-3.5 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                    />
+                  </div>
+                  <div>
+                    <label for="signUpLastName" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Last Name</label>
+                    <input
+                      id="signUpLastName"
+                      type="text"
+                      placeholder="Jakir"
+                      required
+                      class="w-full h-10 sm:h-11 px-3.5 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                    />
+                  </div>
+                </div>
+
+                <!-- Email Address -->
+                <div>
+                  <label for="signUpEmail" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">E-mail Address</label>
+                  <div class="relative">
+                    <input
+                      id="signUpEmail"
+                      type="email"
+                      placeholder="new.operator@gmiu.edu.in"
+                      required
+                      autocomplete="email"
+                      class="w-full h-10 sm:h-11 pl-3.5 pr-9 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                    />
+                    <svg class="w-4 h-4 text-[var(--text-muted)] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Password with Strength Meter -->
+                <div>
+                  <label for="signUpPassword" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Create Password</label>
+                  <div class="relative">
+                    <input
+                      id="signUpPassword"
+                      type="password"
+                      placeholder="Min 6 characters"
+                      required
+                      autocomplete="new-password"
+                      class="w-full h-10 sm:h-11 pl-3.5 pr-10 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                    />
+                    <button id="toggleSignUpPasswordBtn" type="button" class="w-8 h-8 rounded-lg absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Show/Hide Password">
+                      <svg id="eyeIconSignUp" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </div>
+                  <!-- Password Strength Bar -->
+                  <div class="mt-1.5">
+                    <div class="w-full bg-black/10 dark:bg-white/10 h-1.5 rounded-full overflow-hidden">
+                      <div id="passwordStrengthBar" class="h-full w-0 transition-all duration-300 rounded-full bg-red-500"></div>
+                    </div>
+                    <div class="flex justify-between items-center text-[10px] text-[var(--text-muted)] mt-1 font-semibold">
+                      <span>Security strength:</span>
+                      <span id="passwordStrengthText" class="font-bold text-[var(--text-muted)]">Too short</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                  <label for="signUpPasswordConfirm" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Confirm Password</label>
+                  <div class="relative">
+                    <input
+                      id="signUpPasswordConfirm"
+                      type="password"
+                      placeholder="Re-enter password"
+                      required
+                      autocomplete="new-password"
+                      class="w-full h-10 sm:h-11 pl-3.5 pr-10 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                    />
+                    <button id="toggleSignUpConfirmBtn" type="button" class="w-8 h-8 rounded-lg absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Show/Hide Confirm Password">
+                      <svg id="eyeIconConfirm" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </div>
+                  <div id="passwordMatchIndicator" class="hidden text-[10px] mt-1 font-semibold"></div>
+                </div>
+
+                <!-- Terms & Conditions Checkbox -->
+                <div class="pt-0.5 flex items-center justify-between">
+                  <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-[var(--text-secondary)]">
+                    <input
+                      id="signUpTerms"
+                      type="checkbox"
+                      checked
+                      class="w-4 h-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)] accent-[var(--color-primary)] cursor-pointer"
+                    />
+                    <span>Accept <a href="#" class="text-[var(--color-primary)] font-bold hover:underline">Terms of Service</a> & <a href="#" class="text-[var(--color-primary)] font-bold hover:underline">Privacy Policy</a></span>
+                  </label>
+                </div>
+
+                <!-- Sign Up Error & Success Banners -->
+                <div id="signUpErrorBanner" class="hidden items-center gap-2 p-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-500 dark:text-red-400 text-xs font-semibold">
+                  <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  <span id="signUpErrorText">Please review required fields</span>
+                </div>
+
+                <div id="signUpSuccessBanner" class="hidden items-center gap-2 p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+                  <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                  </svg>
+                  <span id="signUpSuccessText">Operator registration complete! Entering Dashboard...</span>
+                </div>
+              </form>
+
+              <!-- Social Divider -->
+              <div class="relative my-3 sm:my-3.5 text-center">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-black/10 dark:border-white/10"></div></div>
+                <span class="relative px-3 bg-[var(--glass-surface-strong)] text-[10px] uppercase font-bold tracking-wider text-[var(--text-muted)]">
+                  Or register with
+                </span>
+              </div>
+
+              <!-- Social Buttons -->
+              <div class="flex items-center justify-center gap-2.5 sm:gap-3">
+                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Google SSO">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.41 7.34 24 12 24z"/>
+                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.92 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.59 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                  </svg>
+                </button>
+                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Apple ID">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.88c.63-.77 1.06-1.84.95-2.91-.91.04-2.02.61-2.67 1.37-.58.67-1.09 1.76-.95 2.81 1.02.08 2.04-.5 2.67-1.27z"/>
+                  </svg>
+                </button>
+                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="GitHub">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Bottom Action Row: Switch Prompt + Create Account Pill Button -->
+              <div class="mt-4 pt-2.5 sm:mt-5 sm:pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="text-xs text-[var(--text-muted)] truncate">
+                    Already have an account?
+                    <a href="<?php echo $baseUrl; ?>login" id="linkToLogin" class="font-bold text-[var(--text-primary)] hover:text-[var(--color-primary)] hover:underline transition cursor-pointer">Log In</a>
+                  </p>
+                </div>
+                <button
+                  id="signUpSubmitBtn"
+                  type="button"
+                  class="h-10 sm:h-11 px-5 sm:px-6 rounded-full bg-white text-[#0A0909] font-extrabold text-xs tracking-tight flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition shrink-0 group border border-white"
+                >
+                  <span id="signUpSubmitBtnText">Create Account</span>
+                  <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- One-Click Demo Registration Auto-fill -->
+              <div class="mt-2.5 sm:mt-3">
+                <button
+                  id="demoSignUpBtn"
+                  type="button"
+                  class="w-full py-1.5 sm:py-2 px-3 rounded-2xl border border-dashed border-[var(--color-primary)]/50 hover:border-[var(--color-primary)] bg-[var(--color-primary)]/10 text-[var(--text-accent)] text-xs font-bold flex items-center justify-center gap-2 hover:bg-[var(--color-primary)]/20 transition"
+                  title="Auto-fill Demo Registration Information"
+                >
+                  <svg class="w-3.5 h-3.5 text-[var(--color-primary)]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                  </svg>
+                  <span>One-Click Demo Registration (Auto-fill & Submit)</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
         </div>
 
-        <!-- Right: Sleek White Pill Button: "Sign In →" -->
-        <button
-          id="authSubmitBtn"
-          type="button"
-          class="h-10 sm:h-11 px-5 sm:px-6 rounded-full bg-white text-[#0A0909] font-extrabold text-xs tracking-tight flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition shrink-0 group border border-white"
-        >
-          <span id="submitBtnText">Sign In</span>
-          <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-          </svg>
-        </button>
-      </div>
+      </section>
 
-      <!-- One-Click Quick Demo Unlock Button -->
-      <div class="mt-2.5 sm:mt-3">
-        <button
-          id="demoQuickAccessBtn"
-          type="button"
-          class="w-full py-1.5 sm:py-2 px-3 rounded-2xl border border-dashed border-[var(--color-primary)]/50 hover:border-[var(--color-primary)] bg-[var(--color-primary)]/10 text-[var(--text-accent)] text-xs font-bold flex items-center justify-center gap-2 hover:bg-[var(--color-primary)]/20 transition"
-          title="Fast Unlock with Default Demo Credentials"
-        >
-          <svg class="w-3.5 h-3.5 text-[var(--color-primary)]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
-          </svg>
-          <span>One-Click Demo Access (Auto-fill & Unlock)</span>
-        </button>
-      </div>
-
-    </section>
+    </div>
 
   </main>
 
   <!-- ================= FORGOT PASSWORD MODAL ================= -->
   <div id="forgotPwdModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-card-strong w-full max-w-sm p-6 rounded-3xl shadow-2xl relative text-left">
-      <div class="flex items-center justify-between pb-2 mb-3 border-b border-white/10">
+      <div class="flex items-center justify-between pb-2 mb-3 border-b border-black/10 dark:border-white/10">
         <div class="flex items-center gap-2">
           <div class="w-7 h-7 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -690,17 +996,26 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
     <span id="toastMessage">Action completed</span>
   </div>
 
-  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <!-- ================= JAVASCRIPT CONTROLLER ================= -->
   <script>
     (function () {
       // --- 1. APPLICATION STATE ---
       const state = {
-        mode: 'signin', // 'signin' | 'signup'
-        theme: 'light', // 'dark' | 'light'
-        primaryHex: '#10B981',
-        passwordVisible: false,
+        mode: 'login', // 'login' | 'signup'
+        theme: localStorage.getItem('portal_auth_theme') || 'light',
+        primaryHex: localStorage.getItem('portal_auth_color') || '#10B981',
+        loginPwdVisible: false,
+        signUpPwdVisible: false,
+        signUpConfirmVisible: false,
+        baseUrl: "<?php echo rtrim($baseUrl, '/'); ?>",
         targetUrl: "<?php echo !empty($_GET['target']) ? htmlspecialchars($_GET['target']) : $baseUrl . 'dashboard'; ?>"
       };
+
+      const authCard = document.getElementById('authCard');
+      const loginFormView = document.getElementById('loginFormView');
+      const signUpFormView = document.getElementById('signUpFormView');
+      const tabLoginBtn = document.getElementById('tabLoginBtn');
+      const tabSignUpBtn = document.getElementById('tabSignUpBtn');
 
       // Toast Notification Helper
       let toastTimer = null;
@@ -718,7 +1033,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         }, 3200);
       }
 
-      // --- 2. DYNAMIC COLOR COMBINATION & PALETTE ENGINE ---
+      // --- 2. THEME & COLOR PALETTE ENGINE ---
       function hexToRgb(hex) {
         const clean = hex.replace('#', '');
         const num = parseInt(clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean, 16);
@@ -762,6 +1077,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
 
       function applyCustomColorPalette(hexColor) {
         state.primaryHex = hexColor.toUpperCase();
+        localStorage.setItem('portal_auth_color', state.primaryHex);
         const rgb = hexToRgb(hexColor);
         const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
         const root = document.documentElement;
@@ -776,24 +1092,83 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         root.style.setProperty('--color-primary-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
         root.style.setProperty('--color-alert', (state.primaryHex === '#10B981' || state.primaryHex === '#729C51') ? '#EB5011' : complementaryPeak);
 
+        // Ambient Floating Orbs (Behind glass card)
+        const orb1 = document.getElementById('ambientOrb1');
+        const orb2 = document.getElementById('ambientOrb2');
+        const orb3 = document.getElementById('ambientOrb3');
+
         if (state.theme === 'dark') {
-          root.style.setProperty('--bg-mesh-1', hslToHex((hsl.h + 30) % 360, 45, 10));
-          root.style.setProperty('--bg-mesh-2', hslToHex(hsl.h, 50, 12));
-          root.style.setProperty('--bg-mesh-3', hslToHex(hsl.h, 35, 5));
-          root.style.setProperty('--bg-mesh-4', hslToHex(hsl.h, 55, 14));
-          root.style.setProperty('--text-primary', '#F4FBF2');
-          root.style.setProperty('--text-secondary', '#C8DEC4');
-          root.style.setProperty('--text-muted', '#8FA98B');
+          // Dynamic Dark Mode Colors derived directly from the Color Picker
+          const mesh1 = hslToHex((hsl.h + 25) % 360, 60, 11);
+          const mesh2 = hslToHex(hsl.h, 65, 13);
+          const mesh3 = hslToHex(hsl.h, 45, 6);
+          const mesh4 = hslToHex((hsl.h - 25 + 360) % 360, 55, 10);
+
+          root.style.setProperty('--bg-mesh-1', mesh1);
+          root.style.setProperty('--bg-mesh-2', mesh2);
+          root.style.setProperty('--bg-mesh-3', mesh3);
+          root.style.setProperty('--bg-mesh-4', mesh4);
+
+          // Glass Surfaces in Dark Mode
+          root.style.setProperty('--glass-surface', `hsla(${hsl.h}, 45%, 10%, 0.82)`);
+          root.style.setProperty('--glass-surface-strong', `hsla(${hsl.h}, 50%, 12%, 0.94)`);
+          root.style.setProperty('--glass-pill', `hsla(${hsl.h}, 40%, 15%, 0.86)`);
+          root.style.setProperty('--glass-border', `hsla(${hsl.h}, 75%, 65%, 0.28)`);
+          root.style.setProperty('--glass-shadow', `0 24px 56px -8px rgba(0, 0, 0, 0.72), 0 0 0 1px hsla(${hsl.h}, 70%, 60%, 0.15) inset`);
+
+          root.style.setProperty('--left-panel-bg', `linear-gradient(145deg, hsla(${(hsl.h + 15) % 360}, 50%, 12%, 0.85) 0%, hsla(${hsl.h}, 55%, 8%, 0.82) 100%)`);
+          root.style.setProperty('--left-panel-border', `hsla(${hsl.h}, 75%, 60%, 0.32)`);
+          root.style.setProperty('--right-panel-bg', `linear-gradient(145deg, hsla(${hsl.h}, 45%, 14%, 0.88) 0%, hsla(${hsl.h}, 40%, 10%, 0.82) 100%)`);
+          root.style.setProperty('--right-panel-border', `hsla(${hsl.h}, 40%, 70%, 0.18)`);
+
+          root.style.setProperty('--input-bg', `hsla(${hsl.h}, 35%, 16%, 0.6)`);
+          root.style.setProperty('--input-border', `hsla(${hsl.h}, 40%, 55%, 0.25)`);
+          root.style.setProperty('--input-bg-focus', `hsla(${hsl.h}, 35%, 20%, 0.8)`);
+
+          root.style.setProperty('--text-primary', '#F8FAFC');
+          root.style.setProperty('--text-secondary', hslToHex(hsl.h, 25, 82));
+          root.style.setProperty('--text-muted', hslToHex(hsl.h, 20, 65));
           root.style.setProperty('--text-accent', lightShade);
+
+          if (orb1) orb1.style.background = `radial-gradient(circle, hsla(${hsl.h}, 85%, 35%, 0.5) 0%, transparent 70%)`;
+          if (orb2) orb2.style.background = `radial-gradient(circle, hsla(${(hsl.h + 30) % 360}, 80%, 30%, 0.45) 0%, transparent 70%)`;
+          if (orb3) orb3.style.background = `radial-gradient(circle, hsla(${(hsl.h - 30 + 360) % 360}, 75%, 25%, 0.35) 0%, transparent 70%)`;
         } else {
-          root.style.setProperty('--bg-mesh-1', hslToHex((hsl.h + 45) % 360, 52, 86));
-          root.style.setProperty('--bg-mesh-2', hslToHex(hsl.h, 48, 85));
-          root.style.setProperty('--bg-mesh-3', hslToHex(hsl.h, 38, 95));
-          root.style.setProperty('--bg-mesh-4', hslToHex(hsl.h, 55, 82));
+          // Dynamic Light Mode Colors with Rich Ambient Coloration
+          const mesh1 = hslToHex((hsl.h + 35) % 360, 65, 86);
+          const mesh2 = hslToHex(hsl.h, 55, 88);
+          const mesh3 = hslToHex(hsl.h, 30, 96);
+          const mesh4 = hslToHex((hsl.h - 25 + 360) % 360, 65, 85);
+
+          root.style.setProperty('--bg-mesh-1', mesh1);
+          root.style.setProperty('--bg-mesh-2', mesh2);
+          root.style.setProperty('--bg-mesh-3', mesh3);
+          root.style.setProperty('--bg-mesh-4', mesh4);
+
+          // Glass Surfaces in Light Mode
+          root.style.setProperty('--glass-surface', `rgba(255, 255, 255, 0.72)`);
+          root.style.setProperty('--glass-surface-strong', `rgba(255, 255, 255, 0.92)`);
+          root.style.setProperty('--glass-pill', `rgba(255, 255, 255, 0.84)`);
+          root.style.setProperty('--glass-border', `rgba(255, 255, 255, 0.88)`);
+          root.style.setProperty('--glass-shadow', `0 20px 48px -10px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.20), 0 4px 16px -2px rgba(10, 9, 9, 0.06)`);
+
+          root.style.setProperty('--left-panel-bg', `linear-gradient(145deg, hsla(${hsl.h}, 65%, 97%, 0.74) 0%, hsla(${(hsl.h + 20) % 360}, 50%, 94%, 0.52) 50%, rgba(255, 255, 255, 0.65) 100%)`);
+          root.style.setProperty('--left-panel-border', `rgba(255, 255, 255, 0.92)`);
+          root.style.setProperty('--right-panel-bg', `linear-gradient(145deg, rgba(255, 255, 255, 0.86) 0%, hsla(${hsl.h}, 45%, 97%, 0.75) 100%)`);
+          root.style.setProperty('--right-panel-border', `rgba(255, 255, 255, 0.90)`);
+
+          root.style.setProperty('--input-bg', `rgba(255, 255, 255, 0.85)`);
+          root.style.setProperty('--input-border', `rgba(10, 9, 9, 0.12)`);
+          root.style.setProperty('--input-bg-focus', `#FFFFFF`);
+
           root.style.setProperty('--text-primary', '#0A0909');
-          root.style.setProperty('--text-secondary', '#2C3E28');
-          root.style.setProperty('--text-muted', '#5C6F58');
+          root.style.setProperty('--text-secondary', hslToHex(hsl.h, 35, 22));
+          root.style.setProperty('--text-muted', hslToHex(hsl.h, 20, 45));
           root.style.setProperty('--text-accent', darkShade);
+
+          if (orb1) orb1.style.background = `radial-gradient(circle, hsla(${hsl.h}, 85%, 68%, 0.55) 0%, transparent 70%)`;
+          if (orb2) orb2.style.background = `radial-gradient(circle, hsla(${(hsl.h + 35) % 360}, 80%, 72%, 0.50) 0%, transparent 70%)`;
+          if (orb3) orb3.style.background = `radial-gradient(circle, hsla(${(hsl.h - 30 + 360) % 360}, 75%, 65%, 0.35) 0%, transparent 70%)`;
         }
 
         const activeDot = document.getElementById('activeColorDot');
@@ -803,9 +1178,9 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         if (customInp && customInp.value.toUpperCase() !== state.primaryHex) customInp.value = state.primaryHex;
       }
 
-      // --- 3. THEME MODE SWITCHER (Light Glass / Dark Glass) ---
       function applyTheme(mode) {
         state.theme = mode;
+        localStorage.setItem('portal_auth_theme', mode);
         const body = document.body;
         const darkBtn = document.getElementById('themeDarkBtn');
         const lightBtn = document.getElementById('themeLightBtn');
@@ -813,13 +1188,13 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         if (mode === 'dark') {
           body.classList.add('theme-dark');
           body.classList.remove('theme-light');
-          if (darkBtn) darkBtn.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[var(--text-primary)] bg-white/20 shadow-sm transition';
-          if (lightBtn) lightBtn.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition';
+          if (darkBtn) darkBtn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-white bg-slate-800/90 shadow-md border border-white/25 transition';
+          if (lightBtn) lightBtn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white transition';
         } else {
           body.classList.remove('theme-dark');
           body.classList.add('theme-light');
-          if (lightBtn) lightBtn.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[#0A0909] bg-white shadow-sm transition';
-          if (darkBtn) darkBtn.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition';
+          if (lightBtn) lightBtn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-amber-500 bg-white shadow-md border border-black/5 transition';
+          if (darkBtn) darkBtn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition';
         }
         applyCustomColorPalette(state.primaryHex);
       }
@@ -862,114 +1237,272 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         customColorInput.addEventListener('input', (e) => applyCustomColorPalette(e.target.value));
       }
 
-      // --- 4. MODE SWITCHER: SIGN IN vs SIGN UP ---
-      const tabSignInBtn = document.getElementById('tabSignInBtn');
-      const tabSignUpBtn = document.getElementById('tabSignUpBtn');
-      const formHeadline = document.getElementById('formHeadline');
-      const formSubheadline = document.getElementById('formSubheadline');
-      const nameRow = document.getElementById('nameRow');
-      const termsLabelText = document.getElementById('termsLabelText');
-      const socialDividerLabel = document.getElementById('socialDividerLabel');
-      const accountSwitchPrompt = document.getElementById('accountSwitchPrompt');
-      const submitBtnText = document.getElementById('submitBtnText');
+      // --- 3. HARDWARE-ACCELERATED DUAL-SLIDER & MORPH ENGINE ---
+      const headlinePrefix = document.getElementById('headlinePrefix');
+      const headlineAccent = document.getElementById('headlineAccent');
+      const headlineSuffix = document.getElementById('headlineSuffix');
+      const statChipLeftTitle = document.getElementById('statChipLeftTitle');
+      const statChipLeftDesc = document.getElementById('statChipLeftDesc');
+      const statChipRightTitle = document.getElementById('statChipRightTitle');
+      const statChipRightDesc = document.getElementById('statChipRightDesc');
 
-      function setAuthMode(mode) {
-        state.mode = mode;
-        const authErrorBanner = document.getElementById('authErrorBanner');
-        if (authErrorBanner) authErrorBanner.classList.add('hidden');
+      function switchAuthMode(newMode, updateHistory = true) {
+        if (!authCard) return;
+        state.mode = newMode;
 
-        if (mode === 'signin') {
-          tabSignInBtn.className = 'px-3.5 py-1 rounded-full bg-white text-[#0A0909] shadow-sm transition';
-          tabSignUpBtn.className = 'px-3.5 py-1 rounded-full text-[var(--text-muted)] hover:text-[var(--text-primary)] transition';
+        document.getElementById('loginErrorBanner')?.classList.add('hidden');
+        document.getElementById('signUpErrorBanner')?.classList.add('hidden');
 
-          formHeadline.textContent = 'Welcome Back.';
-          formSubheadline.textContent = 'Sign in to access your portal & telemetry dashboard.';
-          nameRow.classList.add('hidden');
-          nameRow.classList.remove('grid');
+        if (newMode === 'signup') {
+          // 1. Slide panels: Showcase to Right, Form to Left
+          authCard.classList.remove('mode-login');
+          authCard.classList.add('mode-signup');
 
-          termsLabelText.textContent = 'Remember this device for 30 days';
-          socialDividerLabel.textContent = 'Or sign in with';
-          submitBtnText.textContent = 'Sign In';
-
-          accountSwitchPrompt.innerHTML = `Don't have an account? <button id="accountSwitchBtn" type="button" class="font-bold text-[var(--text-primary)] hover:text-[var(--color-primary)] hover:underline transition">Sign Up</button>`;
-        } else {
-          tabSignUpBtn.className = 'px-3.5 py-1 rounded-full bg-white text-[#0A0909] shadow-sm transition';
-          tabSignInBtn.className = 'px-3.5 py-1 rounded-full text-[var(--text-muted)] hover:text-[var(--text-primary)] transition';
-
-          formHeadline.textContent = 'Start Your Journey.';
-          formSubheadline.textContent = 'Create an operator profile or access existing telemetry bay.';
-          nameRow.classList.remove('hidden');
-          nameRow.classList.add('grid');
-
-          termsLabelText.innerHTML = `Accept <a href="#" class="text-[var(--color-primary)] hover:underline">terms and conditions</a>`;
-          socialDividerLabel.textContent = 'Or sign up with';
-          submitBtnText.textContent = 'Sign Up';
-
-          accountSwitchPrompt.innerHTML = `Already have an account? <button id="accountSwitchBtn" type="button" class="font-bold text-[var(--text-primary)] hover:text-[var(--color-primary)] hover:underline transition">Login</button>`;
-        }
-
-        // Reattach click listener to dynamic switch button
-        const accountSwitchBtn = document.getElementById('accountSwitchBtn');
-        if (accountSwitchBtn) {
-          accountSwitchBtn.addEventListener('click', () => {
-            setAuthMode(state.mode === 'signup' ? 'signin' : 'signup');
-          });
-        }
-      }
-
-      if (tabSignInBtn) tabSignInBtn.addEventListener('click', () => setAuthMode('signin'));
-      if (tabSignUpBtn) tabSignUpBtn.addEventListener('click', () => setAuthMode('signup'));
-
-      const accountSwitchBtn = document.getElementById('accountSwitchBtn');
-      if (accountSwitchBtn) {
-        accountSwitchBtn.addEventListener('click', () => {
-          setAuthMode(state.mode === 'signup' ? 'signin' : 'signup');
-        });
-      }
-
-      // --- 5. PASSWORD VISIBILITY TOGGLE ---
-      const authPassword = document.getElementById('authPassword');
-      const togglePasswordBtn = document.getElementById('togglePasswordBtn');
-      const eyeIcon = document.getElementById('eyeIcon');
-
-      if (togglePasswordBtn && authPassword && eyeIcon) {
-        togglePasswordBtn.addEventListener('click', () => {
-          state.passwordVisible = !state.passwordVisible;
-          authPassword.type = state.passwordVisible ? 'text' : 'password';
-          if (state.passwordVisible) {
-            eyeIcon.innerHTML = `
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
-            `;
-          } else {
-            eyeIcon.innerHTML = `
-              <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-            `;
+          // 2. Segmented tab pills active state
+          if (tabSignUpBtn && tabLoginBtn) {
+            tabSignUpBtn.className = 'px-3.5 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm';
+            tabLoginBtn.className = 'px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]';
           }
+
+          // 3. Smooth Form cross-fade
+          if (loginFormView && signUpFormView) {
+            loginFormView.classList.remove('form-view-active');
+            loginFormView.classList.add('form-view-hidden');
+            setTimeout(() => {
+              signUpFormView.classList.remove('form-view-hidden');
+              signUpFormView.classList.add('form-view-active');
+            }, 100);
+          }
+
+          // 4. Update Showcase text & badges
+          if (headlinePrefix) headlinePrefix.textContent = 'Join';
+          if (headlineAccent) headlineAccent.textContent = 'The Platform';
+          if (headlineSuffix) headlineSuffix.textContent = 'Network';
+          if (statChipLeftTitle) statChipLeftTitle.textContent = 'Instant Setup';
+          if (statChipLeftDesc) statChipLeftDesc.textContent = 'Zero Config Provision';
+          if (statChipRightTitle) statChipRightTitle.textContent = '99.98% Telemetry';
+          if (statChipRightDesc) statChipRightDesc.textContent = 'Real-Time Campus SLA';
+
+          // 5. Update browser history & title
+          document.title = 'Sign Up & Register — Smart Management Dashboard';
+          if (updateHistory) {
+            const signupUrl = state.baseUrl + '/signup';
+            window.history.pushState({ mode: 'signup' }, '', signupUrl);
+          }
+        } else {
+          // 1. Slide panels: Showcase to Left, Form to Right
+          authCard.classList.remove('mode-signup');
+          authCard.classList.add('mode-login');
+
+          // 2. Segmented tab pills active state
+          if (tabLoginBtn && tabSignUpBtn) {
+            tabLoginBtn.className = 'px-3.5 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm';
+            tabSignUpBtn.className = 'px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]';
+          }
+
+          // 3. Smooth Form cross-fade
+          if (signUpFormView && loginFormView) {
+            signUpFormView.classList.remove('form-view-active');
+            signUpFormView.classList.add('form-view-hidden');
+            setTimeout(() => {
+              loginFormView.classList.remove('form-view-hidden');
+              loginFormView.classList.add('form-view-active');
+            }, 100);
+          }
+
+          // 4. Update Showcase text & badges
+          if (headlinePrefix) headlinePrefix.textContent = 'Your';
+          if (headlineAccent) headlineAccent.textContent = 'AI';
+          if (headlineSuffix) headlineSuffix.textContent = 'Assistant';
+          if (statChipLeftTitle) statChipLeftTitle.textContent = '+15 Hours';
+          if (statChipLeftDesc) statChipLeftDesc.textContent = 'Continuous AI Control';
+          if (statChipRightTitle) statChipRightTitle.textContent = '+ 2,400';
+          if (statChipRightDesc) statChipRightDesc.textContent = 'Sensors & Telemetry';
+
+          // 5. Update browser history & title
+          document.title = 'Login & Authentication — Smart Management Dashboard';
+          if (updateHistory) {
+            const loginUrl = state.baseUrl + '/login';
+            window.history.pushState({ mode: 'login' }, '', loginUrl);
+          }
+        }
+      }
+
+      // Attach Event Listeners to Top Tabs & Footer Switch Links
+      if (tabLoginBtn) {
+        tabLoginBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchAuthMode('login');
+        });
+      }
+      if (tabSignUpBtn) {
+        tabSignUpBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchAuthMode('signup');
         });
       }
 
-      // --- 6. AUTHENTICATION & LOGIN DISPATCH ---
-      const authSubmitBtn = document.getElementById('authSubmitBtn');
-      const emailInput = document.getElementById('emailInput');
-      const authErrorBanner = document.getElementById('authErrorBanner');
-      const authErrorText = document.getElementById('authErrorText');
-      const authSuccessBanner = document.getElementById('authSuccessBanner');
-      const authSuccessText = document.getElementById('authSuccessText');
+      const linkToSignUp = document.getElementById('linkToSignUp');
+      if (linkToSignUp) {
+        linkToSignUp.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchAuthMode('signup');
+        });
+      }
 
-      async function submitAuthentication(passwordToVerify) {
-        const pwd = passwordToVerify !== undefined ? passwordToVerify : (authPassword ? authPassword.value : '');
+      const linkToLogin = document.getElementById('linkToLogin');
+      if (linkToLogin) {
+        linkToLogin.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchAuthMode('login');
+        });
+      }
 
-        authErrorBanner.classList.add('hidden');
-        authSuccessBanner.classList.add('hidden');
+      // Handle Browser Back and Forward Buttons (window.onpopstate)
+      window.addEventListener('popstate', (e) => {
+        const path = window.location.pathname.toLowerCase();
+        if (path.includes('signup') || path.includes('register')) {
+          switchAuthMode('signup', false);
+        } else {
+          switchAuthMode('login', false);
+        }
+      });
 
-        // Visual loading state
-        const originalText = submitBtnText.textContent;
-        submitBtnText.textContent = 'Verifying...';
-        authSubmitBtn.disabled = true;
+      // --- 4. PASSWORD VISIBILITY TOGGLES ---
+      // Login Password Toggle
+      const loginPassword = document.getElementById('loginPassword');
+      const toggleLoginPasswordBtn = document.getElementById('toggleLoginPasswordBtn');
+      const eyeIconLogin = document.getElementById('eyeIconLogin');
+
+      if (toggleLoginPasswordBtn && loginPassword && eyeIconLogin) {
+        toggleLoginPasswordBtn.addEventListener('click', () => {
+          state.loginPwdVisible = !state.loginPwdVisible;
+          loginPassword.type = state.loginPwdVisible ? 'text' : 'password';
+          eyeIconLogin.innerHTML = state.loginPwdVisible
+            ? `<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />`
+            : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+        });
+      }
+
+      // Sign Up Password Toggle
+      const signUpPassword = document.getElementById('signUpPassword');
+      const toggleSignUpPasswordBtn = document.getElementById('toggleSignUpPasswordBtn');
+      const eyeIconSignUp = document.getElementById('eyeIconSignUp');
+
+      if (toggleSignUpPasswordBtn && signUpPassword && eyeIconSignUp) {
+        toggleSignUpPasswordBtn.addEventListener('click', () => {
+          state.signUpPwdVisible = !state.signUpPwdVisible;
+          signUpPassword.type = state.signUpPwdVisible ? 'text' : 'password';
+          eyeIconSignUp.innerHTML = state.signUpPwdVisible
+            ? `<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />`
+            : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+        });
+      }
+
+      // Sign Up Confirm Password Toggle
+      const signUpPasswordConfirm = document.getElementById('signUpPasswordConfirm');
+      const toggleSignUpConfirmBtn = document.getElementById('toggleSignUpConfirmBtn');
+      const eyeIconConfirm = document.getElementById('eyeIconConfirm');
+
+      if (toggleSignUpConfirmBtn && signUpPasswordConfirm && eyeIconConfirm) {
+        toggleSignUpConfirmBtn.addEventListener('click', () => {
+          state.signUpConfirmVisible = !state.signUpConfirmVisible;
+          signUpPasswordConfirm.type = state.signUpConfirmVisible ? 'text' : 'password';
+          eyeIconConfirm.innerHTML = state.signUpConfirmVisible
+            ? `<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />`
+            : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+        });
+      }
+
+      // --- 5. PASSWORD STRENGTH & MATCH VALIDATION ---
+      const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+      const passwordStrengthText = document.getElementById('passwordStrengthText');
+      const passwordMatchIndicator = document.getElementById('passwordMatchIndicator');
+
+      function evaluatePasswordStrength(val) {
+        if (!val || val.length === 0) {
+          passwordStrengthBar.style.width = '0%';
+          passwordStrengthBar.className = 'h-full transition-all duration-300 rounded-full bg-red-500';
+          passwordStrengthText.textContent = 'Too short';
+          passwordStrengthText.className = 'font-bold text-[var(--text-muted)]';
+          return;
+        }
+
+        let score = 0;
+        if (val.length >= 6) score += 1;
+        if (val.length >= 8) score += 1;
+        if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score += 1;
+        if (/[0-9]/.test(val)) score += 1;
+        if (/[^A-Za-z0-9]/.test(val)) score += 1;
+
+        if (score <= 2) {
+          passwordStrengthBar.style.width = '33%';
+          passwordStrengthBar.className = 'h-full transition-all duration-300 rounded-full bg-red-500';
+          passwordStrengthText.textContent = 'Weak';
+          passwordStrengthText.className = 'font-bold text-red-500';
+        } else if (score <= 4) {
+          passwordStrengthBar.style.width = '66%';
+          passwordStrengthBar.className = 'h-full transition-all duration-300 rounded-full bg-amber-500';
+          passwordStrengthText.textContent = 'Good';
+          passwordStrengthText.className = 'font-bold text-amber-500';
+        } else {
+          passwordStrengthBar.style.width = '100%';
+          passwordStrengthBar.className = 'h-full transition-all duration-300 rounded-full bg-emerald-500';
+          passwordStrengthText.textContent = 'Strong ✓';
+          passwordStrengthText.className = 'font-bold text-emerald-500';
+        }
+      }
+
+      function evaluatePasswordMatch() {
+        if (!signUpPasswordConfirm || !signUpPassword) return;
+        const p1 = signUpPassword.value;
+        const p2 = signUpPasswordConfirm.value;
+
+        if (!p2) {
+          passwordMatchIndicator.classList.add('hidden');
+          return;
+        }
+        passwordMatchIndicator.classList.remove('hidden');
+        if (p1 === p2) {
+          passwordMatchIndicator.textContent = '✓ Passwords match';
+          passwordMatchIndicator.className = 'text-[10px] mt-1 font-semibold text-emerald-500';
+        } else {
+          passwordMatchIndicator.textContent = '✕ Passwords do not match';
+          passwordMatchIndicator.className = 'text-[10px] mt-1 font-semibold text-red-500';
+        }
+      }
+
+      if (signUpPassword) {
+        signUpPassword.addEventListener('input', (e) => {
+          evaluatePasswordStrength(e.target.value);
+          evaluatePasswordMatch();
+        });
+      }
+      if (signUpPasswordConfirm) {
+        signUpPasswordConfirm.addEventListener('input', evaluatePasswordMatch);
+      }
+
+      // --- 6. LOGIN DISPATCH ---
+      const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+      const loginSubmitBtnText = document.getElementById('loginSubmitBtnText');
+      const loginEmail = document.getElementById('loginEmail');
+      const loginErrorBanner = document.getElementById('loginErrorBanner');
+      const loginErrorText = document.getElementById('loginErrorText');
+      const loginSuccessBanner = document.getElementById('loginSuccessBanner');
+      const loginSuccessText = document.getElementById('loginSuccessText');
+
+      async function submitLogin(overridePassword) {
+        const pwd = (overridePassword !== undefined) ? overridePassword : (loginPassword ? loginPassword.value : '');
+
+        loginErrorBanner.classList.add('hidden');
+        loginSuccessBanner.classList.add('hidden');
+
+        const originalText = loginSubmitBtnText.textContent;
+        loginSubmitBtnText.textContent = 'Verifying...';
+        loginSubmitBtn.disabled = true;
 
         try {
-          const response = await fetch("<?php echo $baseUrl; ?>verify-password", {
+          const response = await fetch(state.baseUrl + "/verify-password", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ password: pwd })
@@ -978,9 +1511,9 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           const data = await response.json();
 
           if (data && data.success) {
-            authSuccessBanner.classList.remove('hidden');
-            authSuccessBanner.classList.add('flex');
-            authSuccessText.textContent = data.message || 'Authentication successful! Redirecting...';
+            loginSuccessBanner.classList.remove('hidden');
+            loginSuccessBanner.classList.add('flex');
+            loginSuccessText.textContent = data.message || 'Authentication successful! Entering Dashboard...';
             showToast('✓ Authentication verified. Welcome!');
 
             setTimeout(() => {
@@ -991,10 +1524,9 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             throw new Error((data && data.error) ? data.error : 'Invalid password.');
           }
         } catch (err) {
-          // If server returns error, or in demo environment where any password is accepted for testing:
           if (pwd === 'admin123' || pwd === 'admin' || pwd === 'gmiu2026') {
-            authSuccessBanner.classList.remove('hidden');
-            authSuccessBanner.classList.add('flex');
+            loginSuccessBanner.classList.remove('hidden');
+            loginSuccessBanner.classList.add('flex');
             showToast('✓ Operator access granted! Entering Dashboard...');
             setTimeout(() => {
               window.location.href = state.targetUrl;
@@ -1002,76 +1534,194 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             return;
           }
 
-          authErrorBanner.classList.remove('hidden');
-          authErrorBanner.classList.add('flex');
-          authErrorText.textContent = err.message || 'Invalid credentials. Try "admin123".';
+          loginErrorBanner.classList.remove('hidden');
+          loginErrorBanner.classList.add('flex');
+          loginErrorText.textContent = err.message || 'Invalid credentials. Try "admin123".';
 
-          // Trigger shake animation
-          const card = document.querySelector('main');
-          if (card) {
-            card.classList.remove('shake-error');
-            void card.offsetWidth;
-            card.classList.add('shake-error');
-          }
-          if (authPassword) authPassword.focus();
+          authCard.classList.remove('shake-error');
+          void authCard.offsetWidth;
+          authCard.classList.add('shake-error');
+          if (loginPassword) loginPassword.focus();
         } finally {
-          submitBtnText.textContent = originalText;
-          authSubmitBtn.disabled = false;
+          loginSubmitBtnText.textContent = originalText;
+          loginSubmitBtn.disabled = false;
         }
       }
 
-      if (authSubmitBtn) {
-        authSubmitBtn.addEventListener('click', () => submitAuthentication());
-      }
-
-      const authForm = document.getElementById('authForm');
-      if (authForm) {
-        authForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          submitAuthentication();
-        });
-      }
-
-      if (emailInput) {
-        emailInput.addEventListener('keydown', (e) => {
+      if (loginSubmitBtn) loginSubmitBtn.addEventListener('click', () => submitLogin());
+      if (loginEmail) {
+        loginEmail.addEventListener('keydown', (e) => {
           if (e.key === 'Enter') {
             e.preventDefault();
-            if (authPassword && !authPassword.value) {
-              authPassword.focus();
+            if (loginPassword && !loginPassword.value) {
+              loginPassword.focus();
             } else {
-              submitAuthentication();
+              submitLogin();
             }
           }
         });
       }
-
-      if (authPassword) {
-        authPassword.addEventListener('keydown', (e) => {
+      if (loginPassword) {
+        loginPassword.addEventListener('keydown', (e) => {
           if (e.key === 'Enter') {
             e.preventDefault();
-            submitAuthentication();
+            submitLogin();
           }
         });
       }
 
-      // --- 7. ONE-CLICK DEMO AUTO-FILL BUTTON ---
-      const demoQuickAccessBtn = document.getElementById('demoQuickAccessBtn');
-      if (demoQuickAccessBtn) {
-        demoQuickAccessBtn.addEventListener('click', () => {
-          if (emailInput) emailInput.value = 'operator.lead@gmiu.edu.in';
-          if (authPassword) authPassword.value = 'admin123';
+      // One-Click Demo Login Button
+      const demoLoginBtn = document.getElementById('demoLoginBtn');
+      if (demoLoginBtn) {
+        demoLoginBtn.addEventListener('click', () => {
+          if (loginEmail) loginEmail.value = 'operator.lead@gmiu.edu.in';
+          if (loginPassword) loginPassword.value = 'admin123';
           showToast('Auto-filled demo operator credentials. Verifying...');
-          submitAuthentication('admin123');
+          submitLogin('admin123');
         });
       }
 
-      // --- 8. SOCIAL LOGIN BUTTONS ---
+      // --- 7. SIGN UP DISPATCH ---
+      const signUpSubmitBtn = document.getElementById('signUpSubmitBtn');
+      const signUpSubmitBtnText = document.getElementById('signUpSubmitBtnText');
+      const signUpFirstName = document.getElementById('signUpFirstName');
+      const signUpLastName = document.getElementById('signUpLastName');
+      const signUpEmail = document.getElementById('signUpEmail');
+      const signUpTerms = document.getElementById('signUpTerms');
+      const signUpErrorBanner = document.getElementById('signUpErrorBanner');
+      const signUpErrorText = document.getElementById('signUpErrorText');
+      const signUpSuccessBanner = document.getElementById('signUpSuccessBanner');
+      const signUpSuccessText = document.getElementById('signUpSuccessText');
+
+      async function submitSignUp() {
+        signUpErrorBanner.classList.add('hidden');
+        signUpSuccessBanner.classList.add('hidden');
+
+        const firstName = signUpFirstName ? signUpFirstName.value.trim() : '';
+        const lastName = signUpLastName ? signUpLastName.value.trim() : '';
+        const email = signUpEmail ? signUpEmail.value.trim() : '';
+        const pwd = signUpPassword ? signUpPassword.value : '';
+        const pwdConfirm = signUpPasswordConfirm ? signUpPasswordConfirm.value : '';
+        const terms = signUpTerms ? signUpTerms.checked : false;
+
+        if (!firstName || !lastName) {
+          showSignUpError('Please enter both your first and last name.');
+          if (signUpFirstName && !firstName) signUpFirstName.focus();
+          return;
+        }
+        if (!email || !email.includes('@')) {
+          showSignUpError('Please enter a valid operator email address.');
+          if (signUpEmail) signUpEmail.focus();
+          return;
+        }
+        if (!pwd || pwd.length < 6) {
+          showSignUpError('Password must be at least 6 characters long.');
+          if (signUpPassword) signUpPassword.focus();
+          return;
+        }
+        if (pwd !== pwdConfirm) {
+          showSignUpError('Passwords do not match. Please re-confirm.');
+          if (signUpPasswordConfirm) signUpPasswordConfirm.focus();
+          return;
+        }
+        if (!terms) {
+          showSignUpError('Please accept the Terms of Service & Privacy Policy.');
+          return;
+        }
+
+        const originalText = signUpSubmitBtnText.textContent;
+        signUpSubmitBtnText.textContent = 'Registering...';
+        signUpSubmitBtn.disabled = true;
+
+        try {
+          const response = await fetch(state.baseUrl + "/register-account", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              firstName,
+              lastName,
+              email,
+              password: pwd,
+              confirmPassword: pwdConfirm,
+              terms
+            })
+          });
+
+          const data = await response.json();
+
+          if (data && data.success) {
+            signUpSuccessBanner.classList.remove('hidden');
+            signUpSuccessBanner.classList.add('flex');
+            signUpSuccessText.textContent = data.message || 'Operator profile registered successfully! Entering Dashboard...';
+            showToast('✓ Registration complete! Welcome aboard.');
+
+            setTimeout(() => {
+              window.location.href = state.targetUrl;
+            }, 800);
+            return;
+          } else {
+            throw new Error((data && data.error) ? data.error : 'Registration could not be completed.');
+          }
+        } catch (err) {
+          showSignUpError(err.message || 'Registration failed. Please check inputs.');
+        } finally {
+          signUpSubmitBtnText.textContent = originalText;
+          signUpSubmitBtn.disabled = false;
+        }
+      }
+
+      function showSignUpError(msg) {
+        signUpErrorBanner.classList.remove('hidden');
+        signUpErrorBanner.classList.add('flex');
+        signUpErrorText.textContent = msg;
+
+        authCard.classList.remove('shake-error');
+        void authCard.offsetWidth;
+        authCard.classList.add('shake-error');
+      }
+
+      if (signUpSubmitBtn) signUpSubmitBtn.addEventListener('click', submitSignUp);
+
+      // One-Click Demo Registration Button
+      const demoSignUpBtn = document.getElementById('demoSignUpBtn');
+      if (demoSignUpBtn) {
+        demoSignUpBtn.addEventListener('click', () => {
+          if (signUpFirstName) signUpFirstName.value = 'Rohan';
+          if (signUpLastName) signUpLastName.value = 'Patel';
+          if (signUpEmail) signUpEmail.value = 'rohan.patel@gmiu.edu.in';
+          if (signUpPassword) {
+            signUpPassword.value = 'SecurePass@2026';
+            evaluatePasswordStrength(signUpPassword.value);
+          }
+          if (signUpPasswordConfirm) {
+            signUpPasswordConfirm.value = 'SecurePass@2026';
+            evaluatePasswordMatch();
+          }
+          if (signUpTerms) signUpTerms.checked = true;
+
+          showToast('Auto-filled demo registration profile. Submitting...');
+          setTimeout(submitSignUp, 400);
+        });
+      }
+
+      // --- 8. SOCIAL LOGIN SHORTCUTS ---
       document.querySelectorAll('.social-login-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
-          if (emailInput) emailInput.value = 'federated.operator@gmiu.edu.in';
-          if (authPassword) authPassword.value = 'admin123';
-          showToast(`Connecting via ${btn.title || 'SSO'}...`);
-          setTimeout(() => submitAuthentication('admin123'), 500);
+          const provider = btn.title || 'SSO';
+          if (state.mode === 'signup') {
+            if (signUpFirstName) signUpFirstName.value = 'Operator';
+            if (signUpLastName) signUpLastName.value = 'User';
+            if (signUpEmail) signUpEmail.value = 'operator.sso@gmiu.edu.in';
+            if (signUpPassword) signUpPassword.value = 'admin123';
+            if (signUpPasswordConfirm) signUpPasswordConfirm.value = 'admin123';
+            showToast(`Connecting via ${provider}...`);
+            setTimeout(submitSignUp, 400);
+          } else {
+            if (loginEmail) loginEmail.value = 'operator.sso@gmiu.edu.in';
+            if (loginPassword) loginPassword.value = 'admin123';
+            showToast(`Connecting via ${provider}...`);
+            setTimeout(() => submitLogin('admin123'), 400);
+          }
         });
       });
 
@@ -1106,10 +1756,18 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         });
       }
 
-      // Initial theme setup (Default to Emerald Green '#10B981', Light Glass Mode, and Sign In Mode)
-      applyTheme('light');
-      applyCustomColorPalette('#10B981');
-      setAuthMode('signin');
+      // Ensure Left-Side Card Video Autoplays Smoothly
+      const showcaseVid = document.getElementById('showcaseVideo');
+      if (showcaseVid) {
+        showcaseVid.muted = true;
+        showcaseVid.play().catch(() => {
+          window.addEventListener('click', () => showcaseVid.play(), { once: true });
+        });
+      }
+
+      // Initial Theme setup with persistent storage
+      applyTheme(state.theme);
+      applyCustomColorPalette(state.primaryHex);
     })();
   </script>
 </body>
