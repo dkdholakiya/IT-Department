@@ -1,3 +1,7 @@
+# Sensitive credentials and local backups
+.pwd
+assets/video/original/
+
 # Temporary & Scratch files
 scratch/
 

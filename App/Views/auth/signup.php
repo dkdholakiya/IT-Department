@@ -98,7 +98,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
            ========================================================================= -->
       <section id="showcasePanel" class="auth-panel auth-panel-showcase rounded-none lg:rounded-[30px] p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden">
 
-        <!-- High-Definition Left-Side Card Video (assets/video/2.mp4) Full Width & Height - Zero Grey Filter -->
+        <!-- High-Definition Left-Side Card Video: HLS Chunked Streaming + Faststart Progressive MP4 Fallback -->
         <video
           id="showcaseVideo"
           autoplay
@@ -106,11 +106,18 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           muted
           playsinline
           preload="auto"
+          poster="<?php echo $baseUrl; ?>assets/video/posters/poster_signup.webp"
           class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none rounded-none lg:rounded-[30px]"
           style="object-position: 50% 67%;"
+          data-current-mode="signup"
+          data-hls-login="<?php echo $baseUrl; ?>assets/video/hls/login/index.m3u8"
+          data-hls-signup="<?php echo $baseUrl; ?>assets/video/hls/signup/index.m3u8"
+          data-mp4-login="<?php echo $baseUrl; ?>assets/video/1.mp4"
+          data-mp4-signup="<?php echo $baseUrl; ?>assets/video/2.mp4"
+          data-poster-login="<?php echo $baseUrl; ?>assets/video/posters/poster_login.webp"
+          data-poster-signup="<?php echo $baseUrl; ?>assets/video/posters/poster_signup.webp"
         >
           <source src="<?php echo $baseUrl; ?>assets/video/2.mp4" type="video/mp4">
-          <source src="<?php echo $baseUrl; ?>assets/video/1.mp4" type="video/mp4">
         </video>
 
         <!-- Subtle Top & Bottom Legibility Vignette — Center video remains 100% crisp & clear -->
@@ -643,6 +650,10 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
     <span id="toastMessage">Action completed</span>
   </div>
 
+  <!-- High-Performance Video Engine (HLS Chunks + Faststart Stream Manager) -->
+  <script src="<?php echo $baseUrl; ?>assets/js/hls.min.js"></script>
+  <script src="<?php echo $baseUrl; ?>assets/js/auth-video.js"></script>
+
   <!-- ================= JAVASCRIPT CONTROLLER ================= -->
   <script>
     (function () {
@@ -988,18 +999,14 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           }
         }
 
-        // 6. Update Showcase Video (1.mp4 for login, 2.mp4 for signup)
-        const showcaseVid = document.getElementById('showcaseVideo');
-        if (showcaseVid) {
-          const targetVideo = `${state.baseUrl}/assets/video/${newMode === 'signup' ? '2.mp4' : '1.mp4'}`;
-          const currentVideo = showcaseVid.currentSrc || showcaseVid.src || '';
-          if (!currentVideo.includes(newMode === 'signup' ? '2.mp4' : '1.mp4')) {
+        // 6. Update Showcase Video via HLS Stream Manager
+        if (typeof window.switchAuthVideo === 'function') {
+          window.switchAuthVideo(newMode);
+        } else {
+          const showcaseVid = document.getElementById('showcaseVideo');
+          if (showcaseVid) {
+            const targetVideo = `${state.baseUrl}/assets/video/${newMode === 'signup' ? '2.mp4' : '1.mp4'}`;
             showcaseVid.src = targetVideo;
-            const sources = showcaseVid.querySelectorAll('source');
-            if (sources.length > 0) {
-              sources[0].src = targetVideo;
-            }
-            showcaseVid.load();
             showcaseVid.play().catch(() => {});
           }
         }

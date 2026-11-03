@@ -1,0 +1,44 @@
+# ==============================================================================
+# Dedicated Uploads Directory Security Shield
+# Prevent any script execution, CGI execution, or file parsing in uploads/
+# ==============================================================================
+
+# Disable directory browsing and CGI execution
+Options -Indexes -ExecCGI
+
+# Remove script handlers
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .phar .inc .cgi .pl .py .sh
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .phar .inc .cgi .pl .py .sh
+
+# Deny access to any executable, script, or sensitive file
+<FilesMatch "\.(php|phtml|php[0-9]|phps|phar|inc|cgi|pl|py|sh|bash|exe|bat|cmd|dll|bin|env|sql|db)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Only allow safe media, spreadsheet, and document downloads
+<FilesMatch "\.(xlsx?|csv|pdf|png|jpe?g|webp|gif|txt|json)$">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Allow from all
+    </IfModule>
+</FilesMatch>
+

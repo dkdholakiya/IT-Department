@@ -98,7 +98,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
            ========================================================================= -->
       <section id="showcasePanel" class="auth-panel auth-panel-showcase rounded-none lg:rounded-[30px] p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden">
 
-        <!-- High-Definition Left-Side Card Video (Dedicated Cyber Security & Smart Lock Animation) -->
+        <!-- High-Definition Left-Side Card Video: HLS Chunked Streaming + Faststart Progressive MP4 Fallback -->
         <video
           id="showcaseVideo"
           autoplay
@@ -106,12 +106,15 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           muted
           playsinline
           preload="auto"
+          poster="<?php echo $baseUrl; ?>assets/video/posters/poster_otp.webp"
           class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none rounded-none lg:rounded-[30px]"
           style="object-position: 50% 50%;"
+          data-current-mode="otp"
+          data-hls-otp="<?php echo $baseUrl; ?>assets/video/hls/otp/index.m3u8"
+          data-mp4-otp="<?php echo $baseUrl; ?>assets/video/otp_security.mp4"
+          data-poster-otp="<?php echo $baseUrl; ?>assets/video/posters/poster_otp.webp"
         >
           <source src="<?php echo $baseUrl; ?>assets/video/otp_security.mp4" type="video/mp4">
-          <source src="<?php echo $baseUrl; ?>assets/video/otp_lock.mp4" type="video/mp4">
-          <source src="<?php echo $baseUrl; ?>assets/video/1.mp4" type="video/mp4">
         </video>
 
         <!-- Dynamic Laser Scanline Animation -->
@@ -434,6 +437,10 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
     <span class="w-2 h-2 rounded-full bg-[var(--color-primary-light)]"></span>
     <span id="toastMessage">Action completed</span>
   </div>
+
+  <!-- High-Performance Video Engine (HLS Chunks + Faststart Stream Manager) -->
+  <script src="<?php echo $baseUrl; ?>assets/js/hls.min.js"></script>
+  <script src="<?php echo $baseUrl; ?>assets/js/auth-video.js"></script>
 
   <!-- ================= JAVASCRIPT CONTROLLER ================= -->
   <script>
