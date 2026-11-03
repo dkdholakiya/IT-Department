@@ -1,0 +1,102 @@
+/**
+ * Global Font Configuration — PT Serif
+ * 
+ * Replaces old typography with Google Font: 'PT Serif'
+ * Applied across all views, controls, and modules in the project.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* ── PT Serif Utility Helper Classes ── */
+.pt-serif-regular {
+  font-family: "PT Serif", Georgia, serif !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+}
+
+.pt-serif-bold {
+  font-family: "PT Serif", Georgia, serif !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+}
+
+.pt-serif-regular-italic {
+  font-family: "PT Serif", Georgia, serif !important;
+  font-weight: 400 !important;
+  font-style: italic !important;
+}
+
+.pt-serif-bold-italic {
+  font-family: "PT Serif", Georgia, serif !important;
+  font-weight: 700 !important;
+  font-style: italic !important;
+}
+
+/* ── Global Font Variables ── */
+:root {
+  --font-primary: 'PT Serif', Georgia, serif;
+  --font-body: 'PT Serif', Georgia, serif;
+  --font-heading: 'PT Serif', Georgia, serif;
+  --font-brand: 'PT Serif', Georgia, serif;
+  --font-serif: 'PT Serif', Georgia, serif;
+  --font-editorial: 'PT Serif', Georgia, serif;
+  --font-family-base: 'PT Serif', Georgia, serif;
+  --font-sans: 'PT Serif', Georgia, serif;
+}
+
+/* ── Global Root & Body Overrides ── */
+html,
+body,
+body:not(.home-page),
+html[data-theme="light"] body,
+html[data-theme="dark"] body {
+  font-family: 'PT Serif', Georgia, 'Times New Roman', serif !important;
+}
+
+/* ── Apply PT Serif Across All Content & Structural Elements ── */
+h1, h2, h3, h4, h5, h6,
+p, a, label, li, dt, dd,
+input, button, select, textarea,
+table, th, td, blockquote, cite,
+div, section, article, header, footer, nav, aside,
+span:not([class*="bi-"]):not(.bi) {
+  font-family: 'PT Serif', Georgia, 'Times New Roman', serif !important;
+}
+
+/* Ensure placeholder texts inherit PT Serif */
+input::placeholder,
+textarea::placeholder {
+  font-family: 'PT Serif', Georgia, 'Times New Roman', serif !important;
+}
+
+/* Preserve bootstrap icons and svg symbols */
+[class^="bi-"], [class*=" bi-"],
+[class^="bi-"]::before, [class*=" bi-"]::before,
+.bi, .bi::before,
+[class^="icon-"], [class*=" icon-"],
+.fa, .fas, .far, .fab,
+[data-feather], svg, svg * {
+  font-family: bootstrap-icons, FontAwesome, inherit !important;
+}
+
+/* Preserve monospace for terminal and code blocks */
+code, kbd, pre, samp,
+.fira-code, .font-mono, .code-line, .terminal-body {
+  font-family: 'Fira Code', 'Courier New', Courier, monospace !important;
+}
+
+/* ── Dark Theme Font Contrast & Legibility Overrides ── */
+html[data-theme="dark"] body,
+html.dark body,
+body.theme-dark {
+  color: #F8FAFC !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+html[data-theme="dark"] h1, html[data-theme="dark"] h2, html[data-theme="dark"] h3, html[data-theme="dark"] h4,
+html.dark h1, html.dark h2, html.dark h3, html.dark h4,
+body.theme-dark h1, body.theme-dark h2, body.theme-dark h3, body.theme-dark h4 {
+  color: #FFFFFF;
+}

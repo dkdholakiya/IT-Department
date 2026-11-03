@@ -157,4 +157,19 @@ class AuthController extends Controller
             'initial_mode' => 'signup'
         ]);
     }
+
+    /**
+     * Render the unified AI Smart Management 6-digit OTP verification page
+     * Showcase on Left, 6-Digit OTP Form on Right
+     */
+    public function otp(): void
+    {
+        $email = $_GET['email'] ?? 'operator@gmiu.edu.in';
+        $page_label = $_GET['target'] ?? 'Smart Management Dashboard';
+        $this->view('auth.otp', [
+            'email'        => $email,
+            'page_label'   => $page_label,
+            'initial_mode' => 'otp'
+        ]);
+    }
 }

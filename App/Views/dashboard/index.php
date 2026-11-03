@@ -12,7 +12,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       /* Dynamic Theme Tokens (Updated live by the Color Chooser!) */
@@ -549,6 +549,8 @@
       animation: pulse-ring 2s infinite;
     }
   </style>
+  <!-- Global Typography (Playfair Display) -->
+  <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/font.css') : 'assets/css/font.css'; ?>">
 </head>
 <body class="antialiased selection:bg-[var(--color-primary)] selection:text-white lg:h-screen lg:w-screen lg:overflow-hidden">
 

@@ -61,6 +61,11 @@ $r->addRoute(['GET', 'POST'], '/signup.php', 'AuthController@signup');
 $r->addRoute(['GET', 'POST'], '/register', 'AuthController@signup');
 $r->addRoute(['GET', 'POST'], '/register.php', 'AuthController@signup');
 
+$r->addRoute(['GET', 'POST'], '/otp', 'AuthController@otp');
+$r->addRoute(['GET', 'POST'], '/otp.php', 'AuthController@otp');
+$r->addRoute(['GET', 'POST'], '/verify-otp', 'AuthController@otp');
+$r->addRoute(['GET', 'POST'], '/verify-otp.php', 'AuthController@otp');
+
 $r->addRoute(['GET', 'POST', 'OPTIONS'], '/verify-password', 'AuthController@verifyPassword');
 $r->addRoute(['GET', 'POST', 'OPTIONS'], '/verify-password.php', 'AuthController@verifyPassword');
 $r->addRoute(['POST', 'OPTIONS'], '/register-account', 'AuthController@registerAccount');

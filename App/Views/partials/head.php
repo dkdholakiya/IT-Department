@@ -43,7 +43,7 @@ if (!empty($page_css)) {
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Kameron:wght@400..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Kameron:wght@400..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Outfit:wght@300;400;500;600;700;800&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap" rel="stylesheet">
 
     <!-- Page-Specific Stylesheets -->
     <?php foreach ($cssList as $css): ?>
@@ -56,6 +56,8 @@ if (!empty($page_css)) {
 
     <!-- Light Theme Stylesheet (Global) -->
     <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme-light.css'); ?>">
+    <!-- Global Typography (Playfair Display) -->
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/font.css'); ?>">
 
     <!-- Extra Head Elements (e.g. CDNs, inline styles) -->
     <?php if (!empty($extra_head)): ?>

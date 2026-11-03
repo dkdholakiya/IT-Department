@@ -19,377 +19,84 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class'
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["'PT Serif'", "Georgia", "serif"],
+            serif: ["'PT Serif'", "Georgia", "serif"],
+            editorial: ["'PT Serif'", "Georgia", "serif"],
+            mono: ["'Share Tech'", "monospace"]
+          }
+        }
+      }
     };
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      /* Dynamic Theme Tokens */
-      --color-primary: #10B981;
-      --color-primary-dark: #059669;
-      --color-primary-light: #34D399;
-      --color-primary-rgb: 16, 185, 129;
-      --color-alert: #EB5011;
-
-      /* Ambient Mesh Backdrop */
-      --bg-mesh-1: #C7E0ED;
-      --bg-mesh-2: #D4E8C7;
-      --bg-mesh-3: #EDF6EE;
-      --bg-mesh-4: #C9E3B8;
-
-      /* Glassmorphic Surfaces */
-      --glass-surface: rgba(255, 255, 255, 0.72);
-      --glass-surface-strong: rgba(255, 255, 255, 0.92);
-      --glass-pill: rgba(255, 255, 255, 0.82);
-      --glass-border: rgba(255, 255, 255, 0.88);
-      --glass-shadow: 0 20px 48px -10px rgba(var(--color-primary-rgb), 0.20), 0 4px 16px -2px rgba(10, 9, 9, 0.06);
-
-      /* Left & Right Panel Backgrounds */
-      --left-panel-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.68) 0%, rgba(240, 253, 244, 0.50) 50%, rgba(255, 255, 255, 0.60) 100%);
-      --left-panel-border: rgba(255, 255, 255, 0.92);
-      --right-panel-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.84) 0%, rgba(255, 255, 255, 0.74) 100%);
-      --right-panel-border: rgba(255, 255, 255, 0.90);
-
-      /* Input Surface */
-      --input-bg: rgba(255, 255, 255, 0.85);
-      --input-border: rgba(10, 9, 9, 0.12);
-      --input-bg-focus: #FFFFFF;
-
-      /* Typography & Accents */
-      --text-primary: #0A0909;
-      --text-secondary: #2C3E28;
-      --text-muted: #5C6F58;
-      --text-accent: #059669;
-
-      /* Button Glows */
-      --ai-btn-grad: linear-gradient(180deg, #F2FFE6 0%, #34D399 48%, #10B981 100%);
-      --ai-btn-shadow: rgba(16, 185, 129, 0.35);
-      --ai-btn-text: #0A0909;
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: var(--text-primary);
-      background-color: var(--bg-mesh-3);
-      background-image:
-        radial-gradient(at 8% 8%, var(--bg-mesh-1) 0px, transparent 52%),
-        radial-gradient(at 92% 10%, var(--bg-mesh-1) 0px, transparent 48%),
-        radial-gradient(at 15% 85%, var(--bg-mesh-4) 0px, transparent 55%),
-        radial-gradient(at 65% 75%, var(--bg-mesh-2) 0px, transparent 55%),
-        radial-gradient(at 50% 50%, var(--bg-mesh-3) 0px, transparent 70%);
-      background-attachment: fixed;
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      transition: background 0.4s ease, color 0.3s ease;
-      position: relative;
-    }
-
-    /* Glass Cards */
-    .glass-card {
-      background: var(--glass-surface);
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: 1.5px solid var(--glass-border);
-      box-shadow: var(--glass-shadow);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.35s ease;
-    }
-
-    .glass-card-strong {
-      background: var(--glass-surface-strong);
-      backdrop-filter: blur(32px) saturate(185%);
-      -webkit-backdrop-filter: blur(32px) saturate(185%);
-      border: 1.5px solid var(--glass-border);
-      box-shadow: var(--glass-shadow);
-    }
-
-    .glass-pill {
-      background: var(--glass-pill);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1.5px solid var(--glass-border);
-      box-shadow: 0 4px 14px rgba(10, 9, 9, 0.05);
-      transition: all 0.22s ease;
-    }
-
-    /* Ultra-Translucent Frosted Glass for Video Showcase Overlay */
-    .video-glass-card {
-      background: rgba(255, 255, 255, 0.20) !important;
-      backdrop-filter: blur(16px) saturate(160%) !important;
-      -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.45) !important;
-      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.65) !important;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    .video-glass-card:hover {
-      background: rgba(255, 255, 255, 0.32) !important;
-      border-color: rgba(255, 255, 255, 0.75) !important;
-      box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.12), inset 0 1px 2px 0 rgba(255, 255, 255, 0.85) !important;
-      transform: translateY(-2px);
-    }
-    body.theme-dark .video-glass-card {
-      background: rgba(15, 23, 42, 0.35) !important;
-      backdrop-filter: blur(18px) saturate(180%) !important;
-      -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.22) !important;
-      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25) !important;
-    }
-    body.theme-dark .video-glass-card:hover {
-      background: rgba(15, 23, 42, 0.50) !important;
-      border-color: rgba(255, 255, 255, 0.38) !important;
-    }
-
-    /* Showcase Panel Crystal Glass Container */
-    .auth-panel-showcase {
-      background: transparent !important;
-      border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
-      box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
-    }
-    body.theme-dark .auth-panel-showcase {
-      border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
-      box-shadow: 0 24px 56px -8px rgba(0, 0, 0, 0.6), inset 0 1px 1.5px rgba(255, 255, 255, 0.18) !important;
-    }
-
-    /* Enhanced Headline Text Shadow for Over-Video Legibility */
-    .headline-glass-text {
-      text-shadow: 0 2px 14px rgba(255, 255, 255, 0.95), 0 1px 3px rgba(0, 0, 0, 0.25);
-    }
-    body.theme-dark .headline-glass-text {
-      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.95), 0 0 10px rgba(0, 0, 0, 0.8);
-    }
-
-    /* Left & Right Glass Panels with Dynamic Gradients */
-    .left-glass-panel {
-      background: var(--left-panel-bg);
-      backdrop-filter: blur(32px) saturate(185%);
-      -webkit-backdrop-filter: blur(32px) saturate(185%);
-      border: 1.5px solid var(--left-panel-border);
-      box-shadow: var(--glass-shadow);
-      transition: all 0.35s ease;
-    }
-
-    .right-glass-panel {
-      background: var(--right-panel-bg);
-      backdrop-filter: blur(32px) saturate(190%);
-      -webkit-backdrop-filter: blur(32px) saturate(190%);
-      border: 1.5px solid var(--right-panel-border);
-      box-shadow: var(--glass-shadow);
-      transition: all 0.35s ease;
-    }
-
-    /* Circular action arrow button */
-    .action-arrow-btn {
-      background: rgba(255, 255, 255, 0.16);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #FFFFFF;
-      transition: all 0.22s ease;
-    }
-    body.theme-light .action-arrow-btn {
-      background: rgba(10, 9, 9, 0.06);
-      border: 1px solid rgba(10, 9, 9, 0.12);
-      color: var(--text-primary);
-    }
-    .action-arrow-btn:hover {
-      transform: scale(1.1) translate(1px, -1px);
-      background: var(--color-primary);
-      color: #FFFFFF;
-      border-color: var(--color-primary);
-    }
-
-    /* Auth Inputs */
-    .auth-input {
-      background: var(--input-bg);
-      border: 1.5px solid var(--input-border);
-      color: var(--text-primary);
-      transition: all 0.2s ease;
-    }
-    .auth-input:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.22);
-      background: var(--input-bg-focus);
-    }
-
-    /* Shake animation on invalid attempt */
-    @keyframes shake-anim {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-6px); }
-      40%, 80% { transform: translateX(6px); }
-    }
-    .shake-error {
-      animation: shake-anim 0.4s ease-in-out;
-    }
-
-    /* Live status dot pulse */
-    @keyframes pulse-dot {
-      0% { transform: scale(1); opacity: 0.8; }
-      70%, 100% { transform: scale(2.2); opacity: 0; }
-    }
-    .live-dot {
-      position: relative !important;
-      display: inline-block !important;
-      width: 7px !important;
-      height: 7px !important;
-      border-radius: 9999px !important;
-      background-color: var(--color-primary) !important;
-      vertical-align: middle;
-      flex-shrink: 0;
-    }
-    .live-dot::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 9999px;
-      background-color: var(--color-primary);
-      opacity: 0.6;
-      animation: pulse-dot 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-      pointer-events: none;
-    }
-
-    /* Floating stat badges */
-    @keyframes float-subtle {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-    }
-    .animate-float {
-      animation: float-subtle 4s ease-in-out infinite;
-    }
-    .animate-float-delayed {
-      animation: float-subtle 4s ease-in-out 2s infinite;
-    }
-
-    /* Dual Slider Hardware-Accelerated Translations */
-    .auth-slider-container {
-      position: relative;
-      width: 100%;
-    }
-
-    @media (min-width: 1024px) {
-      .auth-slider-container {
-        display: flex;
-        flex-direction: row;
-        align-items: stretch;
-        gap: 1.5rem; /* 24px */
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap" rel="stylesheet">
+  <!-- Authentication Portal Stylesheet -->
+  <link rel="stylesheet" href="<?php echo v_asset('assets/css/auth.css'); ?>">
+  <!-- Global Typography (Playfair Display) -->
+  <link rel="stylesheet" href="<?php echo v_asset('assets/css/font.css'); ?>">
+  <!-- Default Page Theme Color: Royal Violet (R:124 G:58 B:237) -->
+  <style>:root { --color-primary: #7C3AED; --color-primary-rgb: 124, 58, 237; --color-primary-dark: #6D28D9; --color-primary-light: #A78BFA; }</style>
+  <!-- Immediate Dark/Light Theme Initialization to eliminate flash -->
+  <script>
+    (function() {
+      var savedTheme = localStorage.getItem('portal_auth_theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.setAttribute('data-theme', 'light');
       }
-
-      .auth-panel-showcase,
-      .auth-panel-form {
-        width: calc(50% - 0.75rem);
-        flex-shrink: 0;
-        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
-        will-change: transform;
-        z-index: 10;
-      }
-
-      #authCard.mode-login .auth-panel-showcase {
-        transform: translate3d(0, 0, 0);
-      }
-      #authCard.mode-login .auth-panel-form {
-        transform: translate3d(0, 0, 0);
-      }
-
-      #authCard.mode-signup .auth-panel-showcase {
-        transform: translate3d(calc(100% + 1.5rem), 0, 0);
-      }
-      #authCard.mode-signup .auth-panel-form {
-        transform: translate3d(calc(-100% - 1.5rem), 0, 0);
-      }
-    }
-
-    @media (max-width: 1023px) {
-      .auth-panel-showcase,
-      .auth-panel-form {
-        width: 100% !important;
-        transform: none !important;
-      }
-      #authCard.mode-login .auth-panel-showcase {
-        order: 1;
-      }
-      #authCard.mode-login .auth-panel-form {
-        order: 2;
-      }
-      #authCard.mode-signup .auth-panel-form {
-        order: 1;
-      }
-      #authCard.mode-signup .auth-panel-showcase {
-        order: 2;
-      }
-    }
-
-    .form-view {
-      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: opacity, transform;
-    }
-    .form-view-active {
-      opacity: 1;
-      transform: translateX(0);
-      pointer-events: auto;
-      position: relative;
-      display: block;
-    }
-    .form-view-hidden {
-      opacity: 0;
-      transform: translateX(20px);
-      pointer-events: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: none;
-    }
-
-    .showcase-content {
-      transition: opacity 0.35s ease, transform 0.35s ease;
-    }
-  </style>
+    })();
+  </script>
 </head>
-<body class="theme-light antialiased selection:bg-[var(--color-primary)] selection:text-white p-3 sm:p-5 lg:p-7">
+<body class="theme-light antialiased selection:bg-[var(--color-primary)] selection:text-white p-0 lg:p-7">
 
-  <!-- ================= AMBIENT FROSTED GLASS BACKGROUND ORBS ================= -->
+  <!-- ================= AMBIENT FROSTED GLASS BACKGROUND ORBS WITH FLUID ANIMATIONS ================= -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-    <div id="ambientOrb1" class="absolute -top-28 -left-28 w-[520px] h-[520px] rounded-full blur-[110px] opacity-75 transition-all duration-700"></div>
-    <div id="ambientOrb2" class="absolute -bottom-36 -right-36 w-[580px] h-[580px] rounded-full blur-[120px] opacity-65 transition-all duration-700"></div>
-    <div id="ambientOrb3" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[620px] rounded-full blur-[130px] opacity-45 transition-all duration-700"></div>
+    <div id="ambientOrb1" class="ambient-orb-1 absolute -top-28 -left-28 w-[540px] h-[540px] rounded-full blur-[110px] opacity-80 transition-colors duration-700"></div>
+    <div id="ambientOrb2" class="ambient-orb-2 absolute -bottom-36 -right-36 w-[600px] h-[600px] rounded-full blur-[120px] opacity-75 transition-colors duration-700"></div>
+    <div id="ambientOrb3" class="ambient-orb-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[640px] rounded-full blur-[130px] opacity-50 transition-colors duration-700"></div>
+    <div id="ambientOrb4" class="ambient-orb-4 absolute bottom-12 left-12 w-[420px] h-[420px] rounded-full blur-[100px] opacity-60 transition-colors duration-700"></div>
   </div>
+
+  <!-- High-Tech Animated Cyber Grid Backdrop -->
+  <div class="bg-cyber-grid"></div>
+  <div class="bg-mesh-particles"></div>
 
   <!-- ================= COLOR PICKER POPOVER ================= -->
   <div id="colorPickerPopover" class="hidden fixed w-64 glass-card p-3.5 z-50 shadow-2xl border border-white/60">
     <div class="flex items-center justify-between pb-2 mb-2 border-b border-black/10 dark:border-white/10">
       <span class="font-bold text-xs text-[var(--text-primary)]">Palette Studio</span>
-      <input id="customColorInput" type="color" value="#10B981" class="w-6 h-6 rounded-lg cursor-pointer border-0 bg-transparent p-0" title="Custom Color" />
+      <input id="customColorInput" type="color" value="#7C3AED" class="w-6 h-6 rounded-lg cursor-pointer border-0 bg-transparent p-0" title="Custom Color" />
     </div>
     <div class="grid grid-cols-6 gap-1.5">
-      <button type="button" data-theme-color="#10B981" class="color-preset-btn w-7 h-7 rounded-full bg-[#10B981] ring-2 ring-offset-1 ring-[#10B981]" title="Emerald Green (#10B981)"></button>
-      <button type="button" data-theme-color="#729C51" class="color-preset-btn w-7 h-7 rounded-full bg-[#729C51]" title="Leaf Green (#729C51)"></button>
+      <button type="button" data-theme-color="#7C3AED" class="color-preset-btn w-7 h-7 rounded-full bg-[#7C3AED] ring-2 ring-offset-1 ring-[#7C3AED]" title="Royal Violet (#7C3AED)"></button>
+      <button type="button" data-theme-color="#10B981" class="color-preset-btn w-7 h-7 rounded-full bg-[#10B981]" title="Emerald Green (#10B981)"></button>
       <button type="button" data-theme-color="#0284C7" class="color-preset-btn w-7 h-7 rounded-full bg-[#0284C7]" title="Ocean Blue (#0284C7)"></button>
-      <button type="button" data-theme-color="#7C3AED" class="color-preset-btn w-7 h-7 rounded-full bg-[#7C3AED]" title="Royal Violet (#7C3AED)"></button>
+      <button type="button" data-theme-color="#E58C7F" class="color-preset-btn w-7 h-7 rounded-full bg-[#E58C7F]" title="Warm Coral (#E58C7F)"></button>
       <button type="button" data-theme-color="#E11D48" class="color-preset-btn w-7 h-7 rounded-full bg-[#E11D48]" title="Crimson Rose (#E11D48)"></button>
       <button type="button" data-theme-color="#D97706" class="color-preset-btn w-7 h-7 rounded-full bg-[#D97706]" title="Amber Gold (#D97706)"></button>
     </div>
   </div>
 
   <!-- ================= MAIN WIDESCREEN CARD (LOGIN MODE) ================= -->
-  <main id="authCard" class="auth-card relative w-full max-w-[1240px] mx-auto rounded-[32px] sm:rounded-[38px] glass-card p-3 sm:p-5 lg:p-6 shadow-2xl border border-white/60 overflow-hidden my-auto mode-login">
+  <main id="authCard" class="auth-card relative w-full max-w-[1240px] mx-auto rounded-none lg:rounded-[38px] glass-card p-0 lg:p-6 shadow-2xl border-0 lg:border lg:border-white/60 overflow-hidden my-auto mode-login">
 
-    <div id="authSliderContainer" class="auth-slider-container w-full min-h-[580px] lg:min-h-[640px]">
+    <div id="authSliderContainer" class="auth-slider-container w-full min-h-0 lg:min-h-[640px]">
 
       <!-- =========================================================================
            SHOWCASE PANEL:
            - On Login: Left Side (Natural position)
            - On Sign Up: Right Side (Slid smoothly to right)
-           - Displays AI Hero Image, dynamic statistics, testimonials & theme controls
+           - Clear 100% Unobstructed 3D Video View (No overlap with phone/calendar/robot)
            ========================================================================= -->
-      <section id="showcasePanel" class="auth-panel auth-panel-showcase rounded-[26px] sm:rounded-[30px] p-5 sm:p-7 flex flex-col justify-between relative overflow-hidden">
+      <section id="showcasePanel" class="auth-panel auth-panel-showcase rounded-none lg:rounded-[30px] p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden">
 
         <!-- High-Definition Left-Side Card Video (assets/video/1.mp4) Full Width & Height - Zero Grey Filter -->
         <video
@@ -399,174 +106,163 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           muted
           playsinline
           preload="auto"
-          class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none rounded-[26px] sm:rounded-[30px]"
+          class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none rounded-none lg:rounded-[30px]"
+          style="object-position: 50% 67%;"
         >
           <source src="<?php echo $baseUrl; ?>assets/video/1.mp4" type="video/mp4">
           <source src="<?php echo $baseUrl; ?>assets/video/2.mp4" type="video/mp4">
         </video>
 
-        <!-- 1. Top Bar: Back to Dashboard & Theme Studio -->
-        <div class="relative z-10 flex items-center justify-between">
-          <a
-            href="<?php echo $baseUrl; ?>dashboard"
-            class="h-10 px-4 sm:px-5 rounded-full video-glass-card text-[var(--text-primary)] hover:text-[var(--color-primary)] active:scale-95 text-xs sm:text-[13px] font-bold flex items-center gap-2 shadow-sm transition"
-            title="Return to Smart Management Dashboard"
-          >
-            <svg class="w-4 h-4 text-[var(--color-primary)] shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            <span>Back to the dashboard</span>
-          </a>
+        <!-- Subtle Top & Bottom Legibility Vignette — Center video remains 100% crisp & clear -->
+        <div class="absolute inset-0 pointer-events-none z-[1] showcase-vignette"></div>
 
-          <!-- Controls: Palette Chooser + Dark/Light Mode -->
-          <div class="flex items-center gap-2.5">
-            <!-- Palette Chooser -->
-            <button id="colorPickerToggleBtn" type="button" class="w-10 h-10 rounded-full video-glass-card flex items-center justify-center hover:scale-105 active:scale-95 transition relative shadow-sm group" title="Choose Dynamic Theme Color" aria-label="Theme Color">
-              <!-- Perfect Artist Palette Icon -->
-              <svg class="w-5 h-5 text-[var(--text-primary)] transition-transform group-hover:rotate-12 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
-                <circle cx="13.5" cy="6.5" r=".75" fill="currentColor"></circle>
-                <circle cx="17.5" cy="10.5" r=".75" fill="currentColor"></circle>
-                <circle cx="8.5" cy="7.5" r=".75" fill="currentColor"></circle>
-                <circle cx="6.5" cy="12.5" r=".75" fill="currentColor"></circle>
+        <!-- 1. Top Section: Back Button + Theme Studio Controls -->
+        <div class="relative z-10 flex flex-col gap-2">
+          <!-- Top Nav Bar -->
+          <div class="flex items-center justify-between">
+            <a
+              href="<?php echo $baseUrl; ?>dashboard"
+              class="h-8 sm:h-9 px-2.5 sm:px-4 rounded-full video-glass-card text-[var(--text-primary)] hover:text-[var(--color-primary)] active:scale-95 text-[11px] sm:text-xs font-bold flex items-center gap-1.5 sm:gap-2 shadow-sm transition shrink-0"
+              title="Return to Smart Management Dashboard"
+            >
+              <svg class="w-3.5 h-3.5 text-[var(--color-primary)] shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              <!-- Live Theme Color Indicator Dot Badge -->
-              <span id="activeColorDot" class="w-3.5 h-3.5 rounded-full absolute -top-0.5 -right-0.5 border-2 border-white dark:border-slate-800 shadow-md transition-all group-hover:scale-110" style="background-color: var(--color-primary);"></span>
-            </button>
+              <span class="hidden min-[380px]:inline">Back to dashboard</span>
+              <span class="inline min-[380px]:hidden">Dashboard</span>
+            </a>
 
-            <!-- Dark / Light Theme Toggle -->
-            <div class="h-10 p-1 rounded-full video-glass-card flex items-center gap-1 shadow-sm">
-              <button id="themeDarkBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Dark Glass Mode" aria-label="Dark Mode">
-                <!-- Perfect Centered Lucide Moon Icon -->
-                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            <!-- Controls: Palette Chooser + Dark/Light Mode -->
+            <div class="flex items-center gap-2">
+              <!-- Palette Chooser -->
+              <button id="colorPickerToggleBtn" type="button" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full video-glass-card flex items-center justify-center hover:scale-105 active:scale-95 transition relative shadow-sm group" title="Choose Dynamic Theme Color" aria-label="Theme Color">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--text-primary)] transition-transform group-hover:rotate-12 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                  <circle cx="13.5" cy="6.5" r=".75" fill="currentColor"></circle>
+                  <circle cx="17.5" cy="10.5" r=".75" fill="currentColor"></circle>
+                  <circle cx="8.5" cy="7.5" r=".75" fill="currentColor"></circle>
+                  <circle cx="6.5" cy="12.5" r=".75" fill="currentColor"></circle>
                 </svg>
+                <span id="activeColorDot" class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full absolute -top-0.5 -right-0.5 border-2 border-white dark:border-slate-800 shadow-md transition-all group-hover:scale-110" style="background-color: var(--color-primary);"></span>
               </button>
-              <button id="themeLightBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-amber-500 bg-white shadow-md border border-black/5 transition" title="Light Glass Mode" aria-label="Light Mode">
-                <!-- Perfect Centered Lucide Sun Icon -->
-                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="4.5"></circle>
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
 
-        <!-- 2. Typographic Headline & Floating Glass Stat Chips -->
-        <div class="relative z-10 my-auto py-2 sm:py-3 flex flex-col items-center text-center">
-
-          <!-- Dynamic Headline with Enhanced Glass Legibility -->
-          <div id="showcaseHeadlineWrapper" class="showcase-content">
-            <h1 id="showcaseHeadline" class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[var(--text-primary)] leading-tight headline-glass-text">
-              <span id="headlinePrefix" class="opacity-80 font-normal block sm:inline">Your</span>
-              <span id="headlineAccent" class="bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-light)] to-[var(--color-primary-dark)] bg-clip-text text-transparent">AI</span>
-              <span id="headlineSuffix" class="font-extrabold">Assistant</span>
-            </h1>
-          </div>
-
-          <!-- Futuristic Centerpiece area with Transparent Glass Stat Chips over Video -->
-          <div class="relative mt-2 sm:mt-4 w-full max-w-[360px] sm:max-w-[440px] h-[260px] sm:h-[300px] lg:h-[340px] flex items-center justify-center">
-
-            <!-- Floating Translucent Glass Stat Chip 1 (Lower Left) -->
-            <div id="statChipLeft" class="absolute -left-2 sm:left-1 bottom-3 sm:bottom-6 z-20 px-3.5 py-2.5 rounded-2xl video-glass-card shadow-xl animate-float">
-              <div class="flex items-center gap-2">
-                <div class="w-6 h-6 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center shrink-0 border border-[var(--color-primary)]/30">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/>
-                    <circle cx="12" cy="12" r="9"/>
+              <!-- Dark / Light Theme Toggle -->
+              <div class="h-8 sm:h-9 p-0.5 rounded-full video-glass-card flex items-center gap-0.5 shadow-sm">
+                <button id="themeDarkBtn" type="button" class="w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Dark Glass Mode" aria-label="Dark Mode">
+                  <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                   </svg>
-                </div>
-                <div>
-                  <p id="statChipLeftTitle" class="text-xs sm:text-[13px] font-extrabold text-[#0F172A] dark:text-white leading-tight drop-shadow-sm">+15 Hours</p>
-                  <p id="statChipLeftDesc" class="text-[9.5px] text-[#334155] dark:text-slate-300 leading-none mt-0.5 font-bold">Continuous AI Control</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Floating Translucent Glass Stat Chip 2 (Upper Right) -->
-            <div id="statChipRight" class="absolute -right-2 sm:right-2 top-3 sm:top-6 z-20 px-3.5 py-2.5 rounded-2xl video-glass-card shadow-xl animate-float-delayed">
-              <div class="flex items-center gap-2">
-                <div class="w-6 h-6 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center shrink-0 border border-[var(--color-primary)]/30">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                </button>
+                <button id="themeLightBtn" type="button" class="w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-amber-500 bg-white shadow-md border border-black/5 transition" title="Light Glass Mode" aria-label="Light Mode">
+                  <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4.5"></circle>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
                   </svg>
-                </div>
-                <div>
-                  <p id="statChipRightTitle" class="text-xs sm:text-[13px] font-extrabold text-[#0F172A] dark:text-white leading-tight drop-shadow-sm">+ 2,400</p>
-                  <p id="statChipRightDesc" class="text-[9.5px] text-[#334155] dark:text-slate-300 leading-none mt-0.5 font-bold">Sensors & Telemetry</p>
-                </div>
+                </button>
               </div>
             </div>
           </div>
         </div>
+                <!-- 2. Pure Center Stage: 100% UNTOUCHED, CRYSTAL-CLEAR VIDEO VIEW (Zero Overlay Clutter) -->
+        <div class="relative z-10 flex-1 min-h-[30px] sm:min-h-[100px] lg:min-h-[200px] pointer-events-none flex items-center justify-center">
+          <!-- Perfectly Clear Viewing Window for 3D Video & Cyber HUD Animations -->
+        </div>
 
-        <!-- 3. Bottom Row: 3 Ultra-Translucent Glass Testimonial Cards (Video Fully Visible Behind) -->
-        <div id="showcaseBottomCards" class="relative z-10 pt-2 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left">
+<!-- 3. Bottom Dock: Stat Metrics + Sleek Testimonials (Visible on Desktop, Clean on Mobile) -->
+        <div class="hidden lg:flex relative z-10 pt-1.5 flex-col gap-2">
 
-          <!-- Card 1: David S. -->
-          <div class="p-2.5 rounded-2xl video-glass-card hover:scale-[1.02] transition group">
-            <div class="flex items-center justify-between gap-1.5">
-              <div class="flex items-center gap-2 min-w-0">
-                <div class="w-8 h-8 rounded-full bg-[var(--color-primary)]/30 ring-1 ring-white/50 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0 shadow-sm">
-                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="David S." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' fill=\'%2310B981\'><circle cx=\'16\' cy=\'16\' r=\'16\'/><text x=\'16\' y=\'20\' text-anchor=\'middle\' fill=\'white\' font-size=\'12\'>DS</text></svg>';" />
-                </div>
-                <div class="min-w-0">
-                  <p class="text-[11.5px] font-bold text-[#0F172A] dark:text-white truncate leading-tight">David S.</p>
-                  <p class="text-[9px] text-[#334155] dark:text-slate-300 truncate leading-none mt-0.5 font-semibold">CEO & Co-founder</p>
-                </div>
-              </div>
-              <button type="button" class="w-6 h-6 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View David S. Case">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
+          <!-- Stat Metrics Pill Row (Low-profile, non-intrusive) -->
+          <div class="flex items-center justify-between gap-2">
+            <div id="statChipLeft" class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl video-glass-card shadow-sm hover:scale-[1.02] transition">
+              <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center shrink-0 border border-[var(--color-primary)]/30">
+                <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/>
                 </svg>
-              </button>
+              </div>
+              <div class="leading-tight flex items-baseline gap-1">
+                <span id="statChipLeftTitle" class="text-[11px] sm:text-xs font-black text-[var(--text-primary)] drop-shadow-sm font-serif stat-chip-num">+15 Hours</span>
+                <span id="statChipLeftDesc" class="text-[9px] sm:text-[10px] text-[var(--text-muted)] font-bold hidden sm:inline font-sans stat-chip-desc">Continuous AI Control</span>
+              </div>
             </div>
-            <p class="text-[10px] text-[var(--color-primary)] font-bold mt-2 truncate drop-shadow-sm">"Best Ever. Autonomous yield +40%."</p>
+
+            <div id="statChipRight" class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl video-glass-card shadow-sm hover:scale-[1.02] transition">
+              <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center shrink-0 border border-[var(--color-primary)]/30">
+                <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <div class="leading-tight flex items-baseline gap-1">
+                <span id="statChipRightTitle" class="text-[11px] sm:text-xs font-black text-[var(--text-primary)] drop-shadow-sm font-serif stat-chip-num">+ 2,400</span>
+                <span id="statChipRightDesc" class="text-[9px] sm:text-[10px] text-[var(--text-muted)] font-bold hidden sm:inline font-sans stat-chip-desc">Sensors & Telemetry</span>
+              </div>
+            </div>
           </div>
 
-          <!-- Card 2: Mira K. -->
-          <div class="p-2.5 rounded-2xl video-glass-card hover:scale-[1.02] transition group">
-            <div class="flex items-center justify-between gap-1.5">
-              <div class="flex items-center gap-2 min-w-0">
-                <div class="w-8 h-8 rounded-full bg-[var(--color-primary-dark)]/40 ring-1 ring-white/50 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0 shadow-sm">
-                  <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=faces" alt="Mira K." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' fill=\'%23059669\'><circle cx=\'16\' cy=\'16\' r=\'16\'/><text x=\'16\' y=\'20\' text-anchor=\'middle\' fill=\'white\' font-size=\'12\'>MK</text></svg>';" />
-                </div>
-                <div class="min-w-0">
-                  <p class="text-[11.5px] font-bold text-[#0F172A] dark:text-white truncate leading-tight">Mira K.</p>
-                  <p class="text-[9px] text-[#334155] dark:text-slate-300 truncate leading-none mt-0.5 font-semibold">Marketing Manager</p>
-                </div>
-              </div>
-              <button type="button" class="w-6 h-6 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View Mira K. Case">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
-                </svg>
-              </button>
-            </div>
-            <p class="text-[10px] text-[var(--color-primary)] font-bold mt-2 truncate drop-shadow-sm">"Revolutionary. Zero manual errors."</p>
-          </div>
+          <!-- Bottom Testimonials: Ultra-Compact Low-Profile Micro-Cards -->
+          <div id="showcaseBottomCards" class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-left">
 
-          <!-- Card 3: Imran Jakir (Lead Operator) -->
-          <div class="p-2.5 rounded-2xl video-glass-card hover:scale-[1.02] transition group hidden sm:block">
-            <div class="flex items-center justify-between gap-1.5">
-              <div class="flex items-center gap-2 min-w-0">
-                <div class="w-8 h-8 rounded-full bg-[var(--color-primary)]/40 ring-1 ring-white/50 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0 shadow-sm">
-                  <img src="data:image/webp;base64,UklGRoADAABXRUJQVlA4IHQDAABQEwCdASpIAEgAPk0eikQioaEa28UAKATEsYBbQcmm2JIfYeZH4TL9JZ4SCKj80FL5PkxxSUoHsWj/akvbPVMgC2UCoSYtTnPzu6eNKwl6JJQVjfpfTiQb736NIgoPlkD7s4CKzca9Q8en5mOD9Mi3W9iHyIkhYapixdNXQE5VMncuCPFVGa/xGNb+A5v1JTIzpIM8RA1y6DpNPdhspwXL4GGAAP79elCCa5mpT5tfH+3pn5r9kKncStykW9LpNOVg3Z744eXfA79u1AR9E9L9b7Hu2+iK2nt7piU52Ol8VJUJSMtR+/74ZJ+BuQH0usp0gUAaabq21xYnMYEVB1C/WQVzhqfeKXWj+7K20eBSOqgeazhy7hJ4FqLkDMlosit692wRUqmiO/veeTwgvryJOCros8BjaHQMhAcsuAKvhNOwXnTCksVRPvWA1duJR2m/JuDYcPykBTdTAdpYgK8EI8aivUqra+7zwr0uiI/IeXDsi4B2xr0wMjQ2CkSni5TBwPs4jZ9MY0S4Yb2PuqFXAnIjA5z4rXNu16LUZAKzkiI1ZqUJPyb2w+Y1kWOUBrp/w2vJNVQLKHa4OXMbFKDSOkw/lWZPvIAJv84Lurm4uwuQ6SnsGWV6BzPNpLwsPRyfNAN7jB9q9ZVh1/XJGKEhPtXPg7JkbPCwVAM1mGZ2Zi3Srf6aryNWXuhKys4tPq6fKV9aGVoM/hhw0e+AhwdudgJMZce5EgZQ0M04iJtd30ez4j4f1iyepx+C39HRytHp1vyzTDqSagmY//TN/hqvefyz6tccSg1LHP1jbTYkJfuui9VZrby176zog/JP1V6Z/46FNBGx1bHqJheRESb1YUZp1pnUTOD5ek+kBZFqHZykmwVr/j7RpGG2YRi2GuJyXfnGDZ9WgDuUOeRBRuBoGVdl5wq0vK6nigwGCJGl2l69HGcEtxQMraHQ9Mjetnl75dNRbCeriN4Zvo7MLbeC6n7WJCze/v5Je8tYFXX16krLyk/YJc0W6xqiPk2aU6WjzY5u8ts5q6EgQInUaFMRDfEgdnWHvkAxc4ZVKrTbXROac2nmY2q5dx9P6UPUMIemzorSX4h8x6kIsbgSR62N793MdzUfKkyisCi78OmhpOmXMK4DFTHzvECGPSEwBubP8ZDtqW8//Me2mDvQ+NK8aQvAAA==" alt="Imran Jakir" class="w-full h-full object-cover" />
+            <!-- Card 1: David S. -->
+            <div class="p-2 rounded-xl video-glass-card hover:scale-[1.02] transition group">
+              <div class="flex items-center justify-between gap-1.5">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <div class="w-6 h-6 rounded-full bg-[var(--color-primary)]/30 ring-1 ring-white/50 flex items-center justify-center text-white text-[10px] font-bold overflow-hidden shrink-0 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="David S." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' fill=\'%2310B981\'><circle cx=\'16\' cy=\'16\' r=\'16\'/><text x=\'16\' y=\'20\' text-anchor=\'middle\' fill=\'white\' font-size=\'12\'>DS</text></svg>';" />
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-[11px] font-bold text-[#0F172A] dark:text-white truncate leading-tight font-serif testimonial-name">David S.</p>
+                    <p class="text-[9px] text-[#334155] dark:text-slate-300 truncate leading-none font-semibold font-mono testimonial-role">CEO & Co-founder</p>
+                  </div>
                 </div>
-                <div class="min-w-0">
-                  <p class="text-[11.5px] font-bold text-[#0F172A] dark:text-white truncate leading-tight">Imran Jakir</p>
-                  <p class="text-[9px] text-[#334155] dark:text-slate-300 truncate leading-none mt-0.5 font-semibold">Lead Agronomist</p>
-                </div>
+                <button type="button" class="w-5 h-5 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View David S. Case">
+                  <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
+                  </svg>
+                </button>
               </div>
-              <button type="button" class="w-6 h-6 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View Imran Jakir Case">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
-                </svg>
-              </button>
+              <p class="text-[9.5px] text-[var(--color-primary)] font-bold mt-1 truncate drop-shadow-sm font-editorial italic testimonial-quote">"Autonomous yield +40%."</p>
             </div>
-            <p class="text-[10px] text-[var(--color-primary)] font-bold mt-2 truncate drop-shadow-sm">"Optimal 80% Harvest yield."</p>
+
+            <!-- Card 2: Mira K. -->
+            <div class="p-2 rounded-xl video-glass-card hover:scale-[1.02] transition group">
+              <div class="flex items-center justify-between gap-1.5">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <div class="w-6 h-6 rounded-full bg-[var(--color-primary-dark)]/40 ring-1 ring-white/50 flex items-center justify-center text-white text-[10px] font-bold overflow-hidden shrink-0 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=faces" alt="Mira K." class="w-full h-full object-cover" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' fill=\'%23059669\'><circle cx=\'16\' cy=\'16\' r=\'16\'/><text x=\'16\' y=\'20\' text-anchor=\'middle\' fill=\'white\' font-size=\'12\'>MK</text></svg>';" />
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-[11px] font-bold text-[#0F172A] dark:text-white truncate leading-tight font-serif testimonial-name">Mira K.</p>
+                    <p class="text-[9px] text-[#334155] dark:text-slate-300 truncate leading-none font-semibold font-mono testimonial-role">Marketing Mgr</p>
+                  </div>
+                </div>
+                <button type="button" class="w-5 h-5 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View Mira K. Case">
+                  <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
+                  </svg>
+                </button>
+              </div>
+              <p class="text-[9.5px] text-[var(--color-primary)] font-bold mt-1 truncate drop-shadow-sm font-editorial italic testimonial-quote">"Zero manual errors."</p>
+            </div>
+
+            <!-- Card 3: Imran Jakir -->
+            <div class="p-2 rounded-xl video-glass-card hover:scale-[1.02] transition group hidden sm:block">
+              <div class="flex items-center justify-between gap-1.5">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <div class="w-6 h-6 rounded-full bg-[var(--color-primary)]/40 ring-1 ring-white/50 flex items-center justify-center text-white text-[10px] font-bold overflow-hidden shrink-0 shadow-sm">
+                    <img src="data:image/webp;base64,UklGRoADAABXRUJQVlA4IHQDAABQEwCdASpIAEgAPk0eikQioaEa28UAKATEsYBbQcmm2JIfYeZH4TL9JZ4SCKj80FL5PkxxSUoHsWj/akvbPVMgC2UCoSYtTnPzu6eNKwl6JJQVjfpfTiQb736NIgoPlkD7s4CKzca9Q8en5mOD9Mi3W9iHyIkhYapixdNXQE5VMncuCPFVGa/xGNb+A5v1JTIzpIM8RA1y6DpNPdhspwXL4GGAAP79elCCa5mpT5tfH+3pn5r9kKncStykW9LpNOVg3Z744eXfA79u1AR9E9L9b7Hu2+iK2nt7piU52Ol8VJUJSMtR+/74ZJ+BuQH0usp0gUAaabq21xYnMYEVB1C/WQVzhqfeKXWj+7K20eBSOqgeazhy7hJ4FqLkDMlosit692wRUqmiO/veeTwgvryJOCros8BjaHQMhAcsuAKvhNOwXnTCksVRPvWA1duJR2m/JuDYcPykBTdTAdpYgK8EI8aivUqra+7zwr0uiI/IeXDsi4B2xr0wMjQ2CkSni5TBwPs4jZ9MY0S4Yb2PuqFXAnIjA5z4rXNu16LUZAKzkiI1ZqUJPyb2w+Y1kWOUBrp/w2vJNVQLKHa4OXMbFKDSOkw/lWZPvIAJv84Lurm4uwuQ6SnsGWV6BzPNpLwsPRyfNAN7jB9q9ZVh1/XJGKEhPtXPg7JkbPCwVAM1mGZ2Zi3Srf6aryNWXuhKys4tPq6fKV9aGVoM/hhw0e+AhwdudgJMZce5EgZQ0M04iJtd30ez4j4f1iyepx+C39HRytHp1vyzTDqSagmY//TN/hqvefyz6tccSg1LHP1jbTYkJfuui9VZrby176zog/JP1V6Z/46FNBGx1bHqJheRESb1YUZp1pnUTOD5ek+kBZFqHZykmwVr/j7RpGG2YRi2GuJyXfnGDZ9WgDuUOeRBRuBoGVdl5wq0vK6nigwGCJGl2l69HGcEtxQMraHQ9Mjetnl75dNRbCeriN4Zvo7MLbeC6n7WJCze/v5Je8tYFXX16krLyk/YJc0W6xqiPk2aU6WjzY5u8ts5q6EgQInUaFMRDfEgdnWHvkAxc4ZVKrTbXROac2nmY2q5dx9P6UPUMIemzorSX4h8x6kIsbgSR62N793MdzUfKkyisCi78OmhpOmXMK4DFTHzvECGPSEwBubP8ZDtqW8//Me2mDvQ+NK8aQvAAA==" alt="Imran Jakir" class="w-full h-full object-cover" />
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-[11px] font-bold text-[#0F172A] dark:text-white truncate leading-tight font-serif testimonial-name">Imran Jakir</p>
+                    <p class="text-[9px] text-[#334155] dark:text-slate-300 truncate leading-none font-semibold font-mono testimonial-role">Agronomist</p>
+                  </div>
+                </div>
+                <button type="button" class="w-5 h-5 rounded-full action-arrow-btn flex items-center justify-center shrink-0" aria-label="View Imran Jakir Case">
+                  <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/>
+                  </svg>
+                </button>
+              </div>
+              <p class="text-[9.5px] text-[var(--color-primary)] font-bold mt-1 truncate drop-shadow-sm font-editorial italic testimonial-quote">"80% Harvest yield."</p>
+            </div>
           </div>
         </div>
       </section>
@@ -577,94 +273,110 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
            - On Sign Up: Left Side (Slid smoothly to left)
            - Seamlessly morphs between Login and Sign Up form views
            ========================================================================= -->
-      <section id="formPanel" class="auth-panel auth-panel-form rounded-[26px] sm:rounded-[30px] p-5 sm:p-6 lg:p-7 flex flex-col justify-between right-glass-panel relative overflow-hidden">
+      <section id="formPanel" class="auth-panel auth-panel-form rounded-t-[34px] lg:rounded-[30px] p-5 sm:p-6 lg:p-7 flex flex-col justify-between right-glass-panel relative overflow-hidden">
 
-        <div class="w-full">
+        <!-- Mobile Drag Handle (Native Bottom Sheet Look) -->
+        <div class="mobile-drag-handle"></div>
 
-          <!-- Top Status & Segmented Mode Switcher -->
-          <div class="flex items-center justify-between gap-2 mb-2">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10.5px] font-bold bg-[var(--color-primary)]/15 text-[var(--color-primary)] border border-[var(--color-primary)]/30">
-              <span class="live-dot"></span>
-              <span>CE & IT Secure Access</span>
-            </span>
+        <!-- Top Status & Segmented Mode Switcher (Pinned to Top) -->
+        <div class="flex items-center justify-between gap-1.5 sm:gap-2 pb-2.5 mb-2 sm:mb-3 border-b border-black/5 dark:border-white/5 w-full">
+          <span class="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-[10.5px] font-bold bg-[var(--color-primary)]/15 text-[var(--color-primary)] border border-[var(--color-primary)]/30 whitespace-nowrap shrink-0 live-badge font-mono">
+            <span class="live-dot"></span>
+            <span class="hidden min-[420px]:inline">CE & IT </span><span>Secure Access</span>
+          </span>
 
-            <!-- Mode Toggle Segmented Pill -->
-            <div class="p-0.5 rounded-full bg-black/10 dark:bg-white/10 flex items-center text-xs font-bold">
-              <a
-                id="tabLoginBtn"
-                href="<?php echo $baseUrl; ?>login"
-                class="px-3.5 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm"
-              >Log In</a>
-              <a
-                id="tabSignUpBtn"
-                href="<?php echo $baseUrl; ?>signup"
-                class="px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-              >Sign Up</a>
-            </div>
+          <!-- Mode Toggle Segmented Pill -->
+          <div class="p-0.5 rounded-full bg-black/10 dark:bg-white/10 flex items-center text-[11px] sm:text-xs font-bold shrink-0">
+            <a
+              id="tabLoginBtn"
+              href="<?php echo $baseUrl; ?>login"
+              class="px-2 sm:px-3 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm whitespace-nowrap leading-none"
+            >Log In</a>
+            <a href="<?php echo $baseUrl; ?>otp" class="px-2 sm:px-3 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none">OTP</a>
+            <a
+              id="tabSignUpBtn"
+              href="<?php echo $baseUrl; ?>signup"
+              class="px-2 sm:px-3 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none"
+            >Sign Up</a>
           </div>
+        </div>
 
-          <!-- Dynamic Form Container with 2 Views -->
-          <div class="relative w-full">
+        <!-- Dynamic Form Container with 2 Views (Stretches Full Height) -->
+        <div class="relative w-full flex-1 flex flex-col justify-between">
 
-            <!-- ================= VIEW 1: LOGIN ================= -->
-            <div id="loginFormView" class="form-view form-view-active">
-              <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1 text-[var(--text-primary)] leading-tight">Welcome Back.</h2>
-              <p class="text-xs text-[var(--text-muted)] mt-0.5">Sign in to access your portal & telemetry dashboard.</p>
+          <!-- ================= VIEW 1: LOGIN ================= -->
+          <div id="loginFormView" class="form-view form-view-active">
+            <!-- Top Content: Headline & Form Inputs (Mockup Design) -->
+            <div class="w-full">
+              <div class="text-center mb-3 sm:mb-4">
+                <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--text-primary)] leading-tight font-serif auth-heading">Login with email address</h2>
+                <p class="text-xs text-[var(--text-muted)] mt-1 font-editorial auth-subtitle">Sign in to access your portal & telemetry dashboard.</p>
+              </div>
 
-              <form id="loginForm" class="mt-3.5 space-y-2.5 sm:space-y-3" onsubmit="return false;">
-                <!-- Email / Operator ID -->
-                <div>
-                  <label for="loginEmail" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">E-mail / Operator ID</label>
-                  <div class="relative">
-                    <input
-                      id="loginEmail"
-                      type="text"
-                      placeholder="operator@gmiu.edu.in"
-                      required
-                      autocomplete="email"
-                      class="w-full h-10 sm:h-11 pl-3.5 pr-9 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
-                    />
-                    <svg class="w-4 h-4 text-[var(--text-muted)] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <form id="loginForm" class="mt-3 sm:mt-4 space-y-3 sm:space-y-3.5" onsubmit="return false;">
+                <!-- Email Address (Two-Tier Card Matching Mockup) -->
+                <div class="mobile-input-card">
+                  <div class="mobile-input-icon">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                       <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                     </svg>
                   </div>
+                  <div class="mobile-input-body">
+                    <label for="loginEmail" class="mobile-input-label">Email Address</label>
+                    <input
+                      id="loginEmail"
+                      type="email"
+                      placeholder="nazarisara@yahoo.com"
+                      required
+                      autocomplete="email"
+                      class="mobile-input-field"
+                    />
+                  </div>
+                  <button type="button" id="clearLoginEmailBtn" class="mobile-input-action" title="Clear input" onclick="const el=document.getElementById('loginEmail'); if(el){el.value=''; el.focus();}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/>
+                    </svg>
+                  </button>
                 </div>
 
-                <!-- Password -->
-                <div>
-                  <div class="flex items-center justify-between mb-1">
-                    <label for="loginPassword" class="block text-[11px] font-semibold text-[var(--text-secondary)]">Password</label>
-                    <button id="forgotPwdBtn" type="button" class="text-[11px] font-semibold text-[var(--color-primary)] hover:underline">Forgot password?</button>
+                <!-- Password (Two-Tier Card Matching Mockup) -->
+                <div class="mobile-input-card">
+                  <div class="mobile-input-icon">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                      <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
                   </div>
-                  <div class="relative">
+                  <div class="mobile-input-body">
+                    <label for="loginPassword" class="mobile-input-label">Password</label>
                     <input
                       id="loginPassword"
                       type="password"
                       placeholder="••••••••••••"
                       required
                       autocomplete="current-password"
-                      class="w-full h-10 sm:h-11 pl-3.5 pr-10 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                      class="mobile-input-field"
                     />
-                    <button id="toggleLoginPasswordBtn" type="button" class="w-8 h-8 rounded-lg absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Show/Hide Password">
-                      <svg id="eyeIconLogin" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>
-                    </button>
                   </div>
+                  <button id="toggleLoginPasswordBtn" type="button" class="mobile-input-action" title="Show/Hide Password">
+                    <svg id="eyeIconLogin" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
                 </div>
 
-                <!-- Remember Me Checkbox -->
-                <div class="pt-0.5 flex items-center justify-between">
-                  <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-[var(--text-secondary)]">
+                <!-- Remember Me & Forgot Password Row (Matching Mockup) -->
+                <div class="pt-0.5 pb-0.5 flex items-center justify-between text-xs px-1">
+                  <label class="flex items-center gap-2 cursor-pointer select-none font-medium text-[var(--text-secondary)]">
                     <input
                       id="rememberMeCheckbox"
                       type="checkbox"
                       checked
-                      class="w-4 h-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)] accent-[var(--color-primary)] cursor-pointer"
+                      class="w-4 h-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)] accent-[var(--color-primary)] cursor-pointer shrink-0"
                     />
-                    <span>Remember this device for 30 days</span>
+                    <span class="leading-normal">Remember me</span>
                   </label>
+                  <button id="forgotPwdBtn" type="button" class="text-xs font-bold text-[var(--color-primary)] hover:underline">Forgot password?</button>
                 </div>
 
                 <!-- Login Error & Success Banners -->
@@ -682,184 +394,174 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
                   <span id="loginSuccessText">Authentication verified! Redirecting to Dashboard...</span>
                 </div>
               </form>
-
-              <!-- Social Divider -->
-              <div class="relative my-3 sm:my-3.5 text-center">
-                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-black/10 dark:border-white/10"></div></div>
-                <span class="relative px-3 bg-[var(--glass-surface-strong)] text-[10px] uppercase font-bold tracking-wider text-[var(--text-muted)]">
-                  Or continue with
-                </span>
-              </div>
-
-              <!-- Social Buttons -->
-              <div class="flex items-center justify-center gap-2.5 sm:gap-3">
-                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Google SSO">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.41 7.34 24 12 24z"/>
-                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.92 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
-                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.59 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-                  </svg>
-                </button>
-                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Apple ID">
-                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.88c.63-.77 1.06-1.84.95-2.91-.91.04-2.02.61-2.67 1.37-.58.67-1.09 1.76-.95 2.81 1.02.08 2.04-.5 2.67-1.27z"/>
-                  </svg>
-                </button>
-                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="GitHub">
-                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                  </svg>
-                </button>
-              </div>
-
-              <!-- Bottom Action Row: Switch Prompt + Log In Pill Button -->
-              <div class="mt-4 pt-2.5 sm:mt-5 sm:pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between gap-3">
-                <div class="min-w-0">
-                  <p class="text-xs text-[var(--text-muted)] truncate">
-                    Don't have an account?
-                    <a href="<?php echo $baseUrl; ?>signup" id="linkToSignUp" class="font-bold text-[var(--text-primary)] hover:text-[var(--color-primary)] hover:underline transition cursor-pointer">Sign Up</a>
-                  </p>
-                </div>
-                <button
-                  id="loginSubmitBtn"
-                  type="button"
-                  class="h-10 sm:h-11 px-5 sm:px-6 rounded-full bg-white text-[#0A0909] font-extrabold text-xs tracking-tight flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition shrink-0 group border border-white"
-                >
-                  <span id="loginSubmitBtnText">Log In</span>
-                  <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
-                </button>
-              </div>
-
-              <!-- One-Click Demo Access -->
-              <div class="mt-2.5 sm:mt-3">
-                <button
-                  id="demoLoginBtn"
-                  type="button"
-                  class="w-full py-1.5 sm:py-2 px-3 rounded-2xl border border-dashed border-[var(--color-primary)]/50 hover:border-[var(--color-primary)] bg-[var(--color-primary)]/10 text-[var(--text-accent)] text-xs font-bold flex items-center justify-center gap-2 hover:bg-[var(--color-primary)]/20 transition"
-                  title="Fast Unlock with Default Demo Credentials"
-                >
-                  <svg class="w-3.5 h-3.5 text-[var(--color-primary)]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
-                  </svg>
-                  <span>One-Click Demo Access (Auto-fill & Unlock)</span>
-                </button>
-              </div>
             </div>
 
-            <!-- ================= VIEW 2: SIGN UP ================= -->
-            <div id="signUpFormView" class="form-view form-view-hidden">
-              <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1 text-[var(--text-primary)] leading-tight">Create Account.</h2>
-              <p class="text-xs text-[var(--text-muted)] mt-0.5">Register your operator profile for telemetry access.</p>
 
-              <form id="signUpForm" class="mt-3.5 space-y-2.5 sm:space-y-3" onsubmit="return false;">
-                <!-- First Name & Last Name (Grid 2 cols) -->
-                <div class="grid grid-cols-2 gap-2.5">
-                  <div>
-                    <label for="signUpFirstName" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">First Name</label>
-                    <input
-                      id="signUpFirstName"
-                      type="text"
-                      placeholder="Omar"
-                      required
-                      class="w-full h-10 sm:h-11 px-3.5 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
-                    />
+            <!-- Bottom Action Area (Docked at Bottom, Matching Mockup) -->
+            <div class="mt-4 sm:mt-auto pt-3 border-t border-black/10 dark:border-white/10 w-full shrink-0">
+              <button
+                id="loginSubmitBtn"
+                type="button"
+                class="mobile-continue-btn"
+              >
+                <span id="loginSubmitBtnText">Continue</span>
+                <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </button>
+
+              <div class="mt-2 text-center">
+                <a href="<?php echo $baseUrl; ?>otp" class="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--color-primary)] hover:underline">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/>
+                  </svg>
+                  <span>Verify with 6-Digit OTP</span>
+                </a>
+              </div>
+
+              <p class="text-xs text-[var(--text-muted)] text-center mt-2 font-medium">
+                Don't have an account?
+                <a href="<?php echo $baseUrl; ?>signup" id="linkToSignUp" class="font-bold text-[var(--color-primary)] hover:underline transition cursor-pointer">Sign up</a>
+              </p>
+            </div>
+          </div>
+
+          <!-- ================= VIEW 2: SIGN UP ================= -->
+          <div id="signUpFormView" class="form-view form-view-hidden">
+            <!-- Top Content: Headline & Form Inputs (Mockup Design) -->
+            <div class="w-full">
+              <div class="text-center mb-3 sm:mb-4">
+                <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--text-primary)] leading-tight font-serif auth-heading">Create operator account</h2>
+                <p class="text-xs text-[var(--text-muted)] mt-1 font-editorial auth-subtitle">Register your operator profile for telemetry access.</p>
+              </div>
+
+              <form id="signUpForm" class="mt-3 space-y-2.5 sm:space-y-3" onsubmit="return false;">
+                <!-- First Name & Last Name (Grid 2 cols with Two-Tier Cards) -->
+                <div class="grid grid-cols-2 gap-2 sm:gap-2.5">
+                  <div class="mobile-input-card">
+                    <div class="mobile-input-body">
+                      <label for="signUpFirstName" class="mobile-input-label">First Name</label>
+                      <input
+                        id="signUpFirstName"
+                        type="text"
+                        placeholder="Omar"
+                        required
+                        class="mobile-input-field"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label for="signUpLastName" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Last Name</label>
-                    <input
-                      id="signUpLastName"
-                      type="text"
-                      placeholder="Jakir"
-                      required
-                      class="w-full h-10 sm:h-11 px-3.5 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
-                    />
+                  <div class="mobile-input-card">
+                    <div class="mobile-input-body">
+                      <label for="signUpLastName" class="mobile-input-label">Last Name</label>
+                      <input
+                        id="signUpLastName"
+                        type="text"
+                        placeholder="Jakir"
+                        required
+                        class="mobile-input-field"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <!-- Email Address -->
-                <div>
-                  <label for="signUpEmail" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">E-mail Address</label>
-                  <div class="relative">
+                <!-- Email Address (Two-Tier Card) -->
+                <div class="mobile-input-card">
+                  <div class="mobile-input-icon">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                      <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                  </div>
+                  <div class="mobile-input-body">
+                    <label for="signUpEmail" class="mobile-input-label">Email Address</label>
                     <input
                       id="signUpEmail"
                       type="email"
                       placeholder="new.operator@gmiu.edu.in"
                       required
                       autocomplete="email"
-                      class="w-full h-10 sm:h-11 pl-3.5 pr-9 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                      class="mobile-input-field"
                     />
-                    <svg class="w-4 h-4 text-[var(--text-muted)] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-                    </svg>
                   </div>
+                  <button type="button" class="mobile-input-action" title="Clear input" onclick="const el=document.getElementById('signUpEmail'); if(el){el.value=''; el.focus();}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/>
+                    </svg>
+                  </button>
                 </div>
 
-                <!-- Password with Strength Meter -->
-                <div>
-                  <label for="signUpPassword" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Create Password</label>
-                  <div class="relative">
+                <!-- Password with Strength Meter (Two-Tier Card) -->
+                <div class="mobile-input-card">
+                  <div class="mobile-input-icon">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                      <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                  </div>
+                  <div class="mobile-input-body">
+                    <label for="signUpPassword" class="mobile-input-label">Create Password</label>
                     <input
                       id="signUpPassword"
                       type="password"
                       placeholder="Min 6 characters"
                       required
                       autocomplete="new-password"
-                      class="w-full h-10 sm:h-11 pl-3.5 pr-10 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                      class="mobile-input-field"
                     />
-                    <button id="toggleSignUpPasswordBtn" type="button" class="w-8 h-8 rounded-lg absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Show/Hide Password">
-                      <svg id="eyeIconSignUp" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>
-                    </button>
                   </div>
-                  <!-- Password Strength Bar -->
-                  <div class="mt-1.5">
-                    <div class="w-full bg-black/10 dark:bg-white/10 h-1.5 rounded-full overflow-hidden">
-                      <div id="passwordStrengthBar" class="h-full w-0 transition-all duration-300 rounded-full bg-red-500"></div>
-                    </div>
-                    <div class="flex justify-between items-center text-[10px] text-[var(--text-muted)] mt-1 font-semibold">
-                      <span>Security strength:</span>
-                      <span id="passwordStrengthText" class="font-bold text-[var(--text-muted)]">Too short</span>
-                    </div>
+                  <button id="toggleSignUpPasswordBtn" type="button" class="mobile-input-action" title="Show/Hide Password">
+                    <svg id="eyeIconSignUp" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                </div>
+                <!-- Password Strength Bar -->
+                <div class="px-1">
+                  <div class="w-full bg-black/10 dark:bg-white/10 h-1 rounded-full overflow-hidden">
+                    <div id="passwordStrengthBar" class="h-full w-0 transition-all duration-300 rounded-full bg-red-500"></div>
+                  </div>
+                  <div class="flex justify-between items-center text-[10px] text-[var(--text-muted)] mt-1 font-semibold">
+                    <span>Security strength:</span>
+                    <span id="passwordStrengthText" class="font-bold text-[var(--text-muted)]">Too short</span>
                   </div>
                 </div>
 
-                <!-- Confirm Password -->
-                <div>
-                  <label for="signUpPasswordConfirm" class="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Confirm Password</label>
-                  <div class="relative">
+                <!-- Confirm Password (Two-Tier Card) -->
+                <div class="mobile-input-card">
+                  <div class="mobile-input-icon">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                  </div>
+                  <div class="mobile-input-body">
+                    <label for="signUpPasswordConfirm" class="mobile-input-label">Confirm Password</label>
                     <input
                       id="signUpPasswordConfirm"
                       type="password"
                       placeholder="Re-enter password"
                       required
                       autocomplete="new-password"
-                      class="w-full h-10 sm:h-11 pl-3.5 pr-10 rounded-xl auth-input text-xs font-semibold placeholder:text-[var(--text-muted)]"
+                      class="mobile-input-field"
                     />
-                    <button id="toggleSignUpConfirmBtn" type="button" class="w-8 h-8 rounded-lg absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" title="Show/Hide Confirm Password">
-                      <svg id="eyeIconConfirm" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>
-                    </button>
                   </div>
-                  <div id="passwordMatchIndicator" class="hidden text-[10px] mt-1 font-semibold"></div>
+                  <button id="toggleSignUpConfirmBtn" type="button" class="mobile-input-action" title="Show/Hide Confirm Password">
+                    <svg id="eyeIconConfirm" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
                 </div>
+                <div id="passwordMatchIndicator" class="hidden text-[10px] mt-1 font-semibold px-1"></div>
 
                 <!-- Terms & Conditions Checkbox -->
-                <div class="pt-0.5 flex items-center justify-between">
+                <div class="pt-2 pb-2 flex items-center justify-between">
                   <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-[var(--text-secondary)]">
                     <input
                       id="signUpTerms"
                       type="checkbox"
                       checked
-                      class="w-4 h-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)] accent-[var(--color-primary)] cursor-pointer"
+                      class="w-4 h-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)] accent-[var(--color-primary)] cursor-pointer shrink-0"
                     />
-                    <span>Accept <a href="#" class="text-[var(--color-primary)] font-bold hover:underline">Terms of Service</a> & <a href="#" class="text-[var(--color-primary)] font-bold hover:underline">Privacy Policy</a></span>
+                    <span class="leading-normal">Accept <a href="#" class="text-[var(--color-primary)] font-bold hover:underline">Terms of Service</a> & <a href="#" class="text-[var(--color-primary)] font-bold hover:underline">Privacy Policy</a></span>
                   </label>
                 </div>
 
@@ -878,73 +580,27 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
                   <span id="signUpSuccessText">Operator registration complete! Entering Dashboard...</span>
                 </div>
               </form>
-
-              <!-- Social Divider -->
-              <div class="relative my-3 sm:my-3.5 text-center">
-                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-black/10 dark:border-white/10"></div></div>
-                <span class="relative px-3 bg-[var(--glass-surface-strong)] text-[10px] uppercase font-bold tracking-wider text-[var(--text-muted)]">
-                  Or register with
-                </span>
-              </div>
-
-              <!-- Social Buttons -->
-              <div class="flex items-center justify-center gap-2.5 sm:gap-3">
-                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Google SSO">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.41 7.34 24 12 24z"/>
-                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.92 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
-                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.59 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-                  </svg>
-                </button>
-                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="Apple ID">
-                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.88c.63-.77 1.06-1.84.95-2.91-.91.04-2.02.61-2.67 1.37-.58.67-1.09 1.76-.95 2.81 1.02.08 2.04-.5 2.67-1.27z"/>
-                  </svg>
-                </button>
-                <button type="button" class="social-login-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition shadow-sm" title="GitHub">
-                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                  </svg>
-                </button>
-              </div>
-
-              <!-- Bottom Action Row: Switch Prompt + Create Account Pill Button -->
-              <div class="mt-4 pt-2.5 sm:mt-5 sm:pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between gap-3">
-                <div class="min-w-0">
-                  <p class="text-xs text-[var(--text-muted)] truncate">
-                    Already have an account?
-                    <a href="<?php echo $baseUrl; ?>login" id="linkToLogin" class="font-bold text-[var(--text-primary)] hover:text-[var(--color-primary)] hover:underline transition cursor-pointer">Log In</a>
-                  </p>
-                </div>
-                <button
-                  id="signUpSubmitBtn"
-                  type="button"
-                  class="h-10 sm:h-11 px-5 sm:px-6 rounded-full bg-white text-[#0A0909] font-extrabold text-xs tracking-tight flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition shrink-0 group border border-white"
-                >
-                  <span id="signUpSubmitBtnText">Create Account</span>
-                  <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
-                </button>
-              </div>
-
-              <!-- One-Click Demo Registration Auto-fill -->
-              <div class="mt-2.5 sm:mt-3">
-                <button
-                  id="demoSignUpBtn"
-                  type="button"
-                  class="w-full py-1.5 sm:py-2 px-3 rounded-2xl border border-dashed border-[var(--color-primary)]/50 hover:border-[var(--color-primary)] bg-[var(--color-primary)]/10 text-[var(--text-accent)] text-xs font-bold flex items-center justify-center gap-2 hover:bg-[var(--color-primary)]/20 transition"
-                  title="Auto-fill Demo Registration Information"
-                >
-                  <svg class="w-3.5 h-3.5 text-[var(--color-primary)]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
-                  </svg>
-                  <span>One-Click Demo Registration (Auto-fill & Submit)</span>
-                </button>
-              </div>
             </div>
 
+
+            <!-- Bottom Action Area (Docked at the Bottom, Full Width) -->
+            <div class="mt-5 sm:mt-auto pt-3.5 sm:pt-4 border-t border-black/10 dark:border-white/10 w-full shrink-0">
+              <button
+                id="signUpSubmitBtn"
+                type="button"
+                class="mobile-continue-btn"
+              >
+                <span id="signUpSubmitBtnText">Create Account</span>
+                <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </button>
+
+              <p class="text-xs text-[var(--text-muted)] text-center mt-3 font-medium">
+                Already have an account?
+                <a href="<?php echo $baseUrl; ?>login" id="linkToLogin" class="font-bold text-[var(--color-primary)] hover:underline transition cursor-pointer">Log In</a>
+              </p>
+            </div>
           </div>
 
         </div>
@@ -1003,7 +659,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       const state = {
         mode: 'login', // 'login' | 'signup'
         theme: localStorage.getItem('portal_auth_theme') || 'light',
-        primaryHex: localStorage.getItem('portal_auth_color') || '#10B981',
+        primaryHex: localStorage.getItem('portal_auth_color_login') || '#7C3AED',
         loginPwdVisible: false,
         signUpPwdVisible: false,
         signUpConfirmVisible: false,
@@ -1077,7 +733,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
 
       function applyCustomColorPalette(hexColor) {
         state.primaryHex = hexColor.toUpperCase();
-        localStorage.setItem('portal_auth_color', state.primaryHex);
+        localStorage.setItem('portal_auth_color_login', state.primaryHex);
         const rgb = hexToRgb(hexColor);
         const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
         const root = document.documentElement;
@@ -1096,6 +752,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         const orb1 = document.getElementById('ambientOrb1');
         const orb2 = document.getElementById('ambientOrb2');
         const orb3 = document.getElementById('ambientOrb3');
+        const orb4 = document.getElementById('ambientOrb4');
 
         if (state.theme === 'dark') {
           // Dynamic Dark Mode Colors derived directly from the Color Picker
@@ -1109,7 +766,10 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           root.style.setProperty('--bg-mesh-3', mesh3);
           root.style.setProperty('--bg-mesh-4', mesh4);
 
-          // Glass Surfaces in Dark Mode
+          // Glass Surfaces & Card Tint in Dark Mode
+          root.style.setProperty('--auth-card-bg-dark', `linear-gradient(135deg, hsla(${hsl.h}, 45%, 11%, 0.88) 0%, hsla(${hsl.h}, 60%, 16%, 0.78) 35%, hsla(${hsl.h}, 40%, 9%, 0.86) 70%, hsla(${hsl.h}, 65%, 20%, 0.80) 100%)`);
+          root.style.setProperty('--auth-card-border-dark', `hsla(${hsl.h}, 65%, 65%, 0.28)`);
+
           root.style.setProperty('--glass-surface', `hsla(${hsl.h}, 45%, 10%, 0.82)`);
           root.style.setProperty('--glass-surface-strong', `hsla(${hsl.h}, 50%, 12%, 0.94)`);
           root.style.setProperty('--glass-pill', `hsla(${hsl.h}, 40%, 15%, 0.86)`);
@@ -1130,9 +790,10 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           root.style.setProperty('--text-muted', hslToHex(hsl.h, 20, 65));
           root.style.setProperty('--text-accent', lightShade);
 
-          if (orb1) orb1.style.background = `radial-gradient(circle, hsla(${hsl.h}, 85%, 35%, 0.5) 0%, transparent 70%)`;
-          if (orb2) orb2.style.background = `radial-gradient(circle, hsla(${(hsl.h + 30) % 360}, 80%, 30%, 0.45) 0%, transparent 70%)`;
-          if (orb3) orb3.style.background = `radial-gradient(circle, hsla(${(hsl.h - 30 + 360) % 360}, 75%, 25%, 0.35) 0%, transparent 70%)`;
+          if (orb1) orb1.style.background = `radial-gradient(circle, hsla(${hsl.h}, 85%, 35%, 0.55) 0%, transparent 70%)`;
+          if (orb2) orb2.style.background = `radial-gradient(circle, hsla(${(hsl.h + 30) % 360}, 80%, 30%, 0.50) 0%, transparent 70%)`;
+          if (orb3) orb3.style.background = `radial-gradient(circle, hsla(${(hsl.h - 30 + 360) % 360}, 75%, 25%, 0.40) 0%, transparent 70%)`;
+          if (orb4) orb4.style.background = `radial-gradient(circle, hsla(${(hsl.h + 60) % 360}, 85%, 28%, 0.45) 0%, transparent 70%)`;
         } else {
           // Dynamic Light Mode Colors with Rich Ambient Coloration
           const mesh1 = hslToHex((hsl.h + 35) % 360, 65, 86);
@@ -1145,7 +806,10 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           root.style.setProperty('--bg-mesh-3', mesh3);
           root.style.setProperty('--bg-mesh-4', mesh4);
 
-          // Glass Surfaces in Light Mode
+          // Glass Surfaces & Card Tint in Light Mode
+          root.style.setProperty('--auth-card-bg', `linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, hsla(${hsl.h}, 80%, 95%, 0.75) 35%, rgba(255, 255, 255, 0.85) 70%, hsla(${hsl.h}, 75%, 91%, 0.80) 100%)`);
+          root.style.setProperty('--auth-card-border', `rgba(255, 255, 255, 0.92)`);
+
           root.style.setProperty('--glass-surface', `rgba(255, 255, 255, 0.72)`);
           root.style.setProperty('--glass-surface-strong', `rgba(255, 255, 255, 0.92)`);
           root.style.setProperty('--glass-pill', `rgba(255, 255, 255, 0.84)`);
@@ -1166,9 +830,10 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           root.style.setProperty('--text-muted', hslToHex(hsl.h, 20, 45));
           root.style.setProperty('--text-accent', darkShade);
 
-          if (orb1) orb1.style.background = `radial-gradient(circle, hsla(${hsl.h}, 85%, 68%, 0.55) 0%, transparent 70%)`;
-          if (orb2) orb2.style.background = `radial-gradient(circle, hsla(${(hsl.h + 35) % 360}, 80%, 72%, 0.50) 0%, transparent 70%)`;
-          if (orb3) orb3.style.background = `radial-gradient(circle, hsla(${(hsl.h - 30 + 360) % 360}, 75%, 65%, 0.35) 0%, transparent 70%)`;
+          if (orb1) orb1.style.background = `radial-gradient(circle, hsla(${hsl.h}, 85%, 68%, 0.60) 0%, transparent 70%)`;
+          if (orb2) orb2.style.background = `radial-gradient(circle, hsla(${(hsl.h + 35) % 360}, 80%, 72%, 0.55) 0%, transparent 70%)`;
+          if (orb3) orb3.style.background = `radial-gradient(circle, hsla(${(hsl.h - 30 + 360) % 360}, 75%, 65%, 0.40) 0%, transparent 70%)`;
+          if (orb4) orb4.style.background = `radial-gradient(circle, hsla(${(hsl.h + 60) % 360}, 80%, 74%, 0.50) 0%, transparent 70%)`;
         }
 
         const activeDot = document.getElementById('activeColorDot');
@@ -1212,7 +877,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           e.stopPropagation();
           const rect = colorPickerToggleBtn.getBoundingClientRect();
           colorPickerPopover.style.top = (rect.bottom + 8) + 'px';
-          colorPickerPopover.style.left = Math.max(16, rect.right - 256) + 'px';
+          colorPickerPopover.style.left = Math.max(12, Math.min(window.innerWidth - 268, rect.right - 256)) + 'px';
           colorPickerPopover.classList.toggle('hidden');
         });
         document.addEventListener('click', (e) => {
@@ -1260,8 +925,8 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
 
           // 2. Segmented tab pills active state
           if (tabSignUpBtn && tabLoginBtn) {
-            tabSignUpBtn.className = 'px-3.5 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm';
-            tabLoginBtn.className = 'px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]';
+            tabSignUpBtn.className = 'px-2.5 sm:px-3.5 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm whitespace-nowrap leading-none';
+            tabLoginBtn.className = 'px-2.5 sm:px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none';
           }
 
           // 3. Smooth Form cross-fade
@@ -1275,6 +940,8 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           }
 
           // 4. Update Showcase text & badges
+          const headlineBadgeText = document.getElementById('headlineBadgeText');
+          if (headlineBadgeText) headlineBadgeText.textContent = 'Join Operator Network';
           if (headlinePrefix) headlinePrefix.textContent = 'Join';
           if (headlineAccent) headlineAccent.textContent = 'The Platform';
           if (headlineSuffix) headlineSuffix.textContent = 'Network';
@@ -1296,8 +963,8 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
 
           // 2. Segmented tab pills active state
           if (tabLoginBtn && tabSignUpBtn) {
-            tabLoginBtn.className = 'px-3.5 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm';
-            tabSignUpBtn.className = 'px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]';
+            tabLoginBtn.className = 'px-2.5 sm:px-3.5 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm whitespace-nowrap leading-none';
+            tabSignUpBtn.className = 'px-2.5 sm:px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none';
           }
 
           // 3. Smooth Form cross-fade
@@ -1311,6 +978,8 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           }
 
           // 4. Update Showcase text & badges
+          const headlineBadgeTextLogin = document.getElementById('headlineBadgeText');
+          if (headlineBadgeTextLogin) headlineBadgeTextLogin.textContent = 'Next-Gen Intelligent Core';
           if (headlinePrefix) headlinePrefix.textContent = 'Your';
           if (headlineAccent) headlineAccent.textContent = 'AI';
           if (headlineSuffix) headlineSuffix.textContent = 'Assistant';
@@ -1324,6 +993,22 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           if (updateHistory) {
             const loginUrl = state.baseUrl + '/login';
             window.history.pushState({ mode: 'login' }, '', loginUrl);
+          }
+        }
+
+        // 6. Update Showcase Video (1.mp4 for login, 2.mp4 for signup)
+        const showcaseVid = document.getElementById('showcaseVideo');
+        if (showcaseVid) {
+          const targetVideo = `${state.baseUrl}/assets/video/${newMode === 'signup' ? '2.mp4' : '1.mp4'}`;
+          const currentVideo = showcaseVid.currentSrc || showcaseVid.src || '';
+          if (!currentVideo.includes(newMode === 'signup' ? '2.mp4' : '1.mp4')) {
+            showcaseVid.src = targetVideo;
+            const sources = showcaseVid.querySelectorAll('source');
+            if (sources.length > 0) {
+              sources[0].src = targetVideo;
+            }
+            showcaseVid.load();
+            showcaseVid.play().catch(() => {});
           }
         }
       }
@@ -1704,26 +1389,6 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         });
       }
 
-      // --- 8. SOCIAL LOGIN SHORTCUTS ---
-      document.querySelectorAll('.social-login-btn').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const provider = btn.title || 'SSO';
-          if (state.mode === 'signup') {
-            if (signUpFirstName) signUpFirstName.value = 'Operator';
-            if (signUpLastName) signUpLastName.value = 'User';
-            if (signUpEmail) signUpEmail.value = 'operator.sso@gmiu.edu.in';
-            if (signUpPassword) signUpPassword.value = 'admin123';
-            if (signUpPasswordConfirm) signUpPasswordConfirm.value = 'admin123';
-            showToast(`Connecting via ${provider}...`);
-            setTimeout(submitSignUp, 400);
-          } else {
-            if (loginEmail) loginEmail.value = 'operator.sso@gmiu.edu.in';
-            if (loginPassword) loginPassword.value = 'admin123';
-            showToast(`Connecting via ${provider}...`);
-            setTimeout(() => submitLogin('admin123'), 400);
-          }
-        });
-      });
 
       // --- 9. FORGOT PASSWORD MODAL ---
       const forgotPwdBtn = document.getElementById('forgotPwdBtn');
