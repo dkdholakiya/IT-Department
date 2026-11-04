@@ -1,562 +1,235 @@
 <?php
 $page_title = 'Academic Calendar — CE & IT Department';
-$page_description = 'Department of CE & IT — Academic Calendar showing Public Holidays, Reserved Holidays, and Departmental Events.';
-$page_css = [
-    'assets/vendor/bootstrap/css/bootstrap.min.css',
-    'assets/css/portal.css',
-    'assets/css/faculty.css',
-    'assets/css/calendar.css',
-];
-include 'head.php';
+$page_css = ['assets/css/calendar.css'];
+include dirname(__DIR__) . '/partials/dashboard-head.php';
 ?>
 
-    <div class="fac-page">
+  <!-- MAIN WRAPPER: Matches Dashboard Layout Exactly (1600px Max-Width, 100vh on Desktop, Zero Edge Bleed) -->
+  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-16 sm:pt-20 lg:pt-3.5 pb-8 sm:pb-10 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col gap-3 lg:gap-3 overflow-x-hidden lg:overflow-hidden">
 
-        <!-- ░░ Particles (Matching Timetable & Faculty Page) ░░ -->
-        <div class="particles" aria-hidden="true">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-        </div>
-
-        <!-- Glowing Background Orbs -->
-        <div class="orb orb-1" aria-hidden="true"></div>
-        <div class="orb orb-2" aria-hidden="true"></div>
-        <div class="orb orb-3" aria-hidden="true"></div>
-
-        <!-- ── Page Header ── -->
-        <header class="rp-header">
-            <div class="rp-header-inner">
-                <a href="<?php echo base_url('/'); ?>" class="back-btn">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path d="M19 12H5M12 5l-7 7 7 7" />
-                    </svg>
-                    Back to Portal
-                </a>
-
-                <div class="rp-header-center">
-                    <div class="rp-dept-badge">
-                        <span class="rp-badge-dot"></span>
-                        <span id="rpDeptBadgeText">Department of Information Technology</span>
-                    </div>
-                    <h1 class="rp-title">Academic Calendar</h1>
-                </div>
-
-                <span class="portal-badge" id="portalBadge">IT Calendar</span>
-            </div>
-        </header>
-
-        <!-- Main Content Layout -->
-        <main class="container py-4">
-
-            <!-- Filters Dashboard Panel -->
-            <section class="filters-card">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-                    
-                    <!-- Filter Checkboxes -->
-                    <div class="filter-row">
-                        <span class="filter-title">Filters:</span>
-                        <div class="filter-checkboxes-group">
-                            <label class="filter-checkbox-label check-public">
-                                <input type="checkbox" id="filter-public" checked>
-                                <span class="filter-indicator-dot"></span>
-                                <span>Public Holidays</span>
-                            </label>
-
-                            <label class="filter-checkbox-label check-reserved">
-                                <input type="checkbox" id="filter-reserved" checked>
-                                <span class="filter-indicator-dot"></span>
-                                <span>Reserved Holidays</span>
-                            </label>
-
-                            <label class="filter-checkbox-label check-custom">
-                                <input type="checkbox" id="filter-custom" checked>
-                                <span class="filter-indicator-dot"></span>
-                                <span>Academic Events</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Department Selection Segment Controls -->
-                    <div class="zs-segment-control m-0">
-                        <button type="button" class="segment-btn active" id="dept-it-btn" data-dept="Information Technology">Information Technology</button>
-                        <button type="button" class="segment-btn" id="dept-ce-btn" data-dept="Computer Engineering">Computer Engineering</button>
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- Calendar Layout (Split view: Grid left, Sidebar right) -->
-            <section class="calendar-layout">
-                
-                <!-- Left: Calendar Matrix -->
-                <div class="calendar-card">
-                    
-                    <!-- Month/Year Toggle Row -->
-                    <div class="calendar-header-row">
-                        <button type="button" class="calendar-nav-btn" id="prev-month-btn" aria-label="Previous Month">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path d="M15 19l-7-7 7-7" />
-                            </svg>
-                        </button>
-                        
-                        <h2 class="month-year-title" id="monthYearDisplay">July 2026</h2>
-                        
-                        <button type="button" class="calendar-nav-btn" id="next-month-btn" aria-label="Next Month">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Days Header and Date Grid Wrapper -->
-                    <div class="calendar-scroll-wrapper">
-                        <div class="calendar-grid-min-width">
-                            <div class="calendar-grid">
-                                <div class="grid-day-header">Sun</div>
-                                <div class="grid-day-header">Mon</div>
-                                <div class="grid-day-header">Tue</div>
-                                <div class="grid-day-header">Wed</div>
-                                <div class="grid-day-header">Thu</div>
-                                <div class="grid-day-header">Fri</div>
-                                <div class="grid-day-header">Sat</div>
-                            </div>
-                            <div class="calendar-grid" id="calendarDaysGrid">
-                                <!-- Dynamic cells populated via JS -->
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Right: Detailed Info Sidebar -->
-                <div class="details-card">
-                    
-                    <!-- Selected Date Header -->
-                    <div class="details-header">
-                        <h3 class="details-date-title" id="selectedDateTitle">Select a Date</h3>
-                        <div class="details-subtitle" id="selectedDateSubtitle">Day Overview</div>
-                    </div>
-
-                    <!-- List of events on selected date -->
-                    <div class="event-details-list" id="selectedEventsList">
-                        <!-- Dynamic list populated via JS -->
-                    </div>
-
-                </div>
-
-            </section>
-
-        </main>
-
-        <!-- Footer -->
-        <?php 
-        $footer_class = 'rp-footer text-center';
-        include 'footer.php'; 
-        ?>
-
-    </div><!-- /fac-page -->
-
-    <!-- Navigation Menu (FAB Bottom Right) -->
-    <?php 
-    $active_page = 'calendar';
-    include 'fab-nav.php'; 
+    <!-- ================= TOP NAVIGATION BAR (SHARED PARTIAL) ================= -->
+    <?php
+    $nav_title = 'Academic Calendar';
+    $nav_subtitle = 'CE & IT Department • Academic Year 2026';
+    $nav_search_placeholder = 'Search holidays, events, schedules...';
+    include dirname(__DIR__) . '/partials/navbar.php';
     ?>
 
-    <!-- Bootstrap 5 CDN JS Bundle -->
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- ================= MAIN WORKSPACE (SAMSUNG SHORTCUT SIDEBAR + CALENDAR DOCK) ================= -->
+    <div class="flex-1 min-h-0 flex items-stretch gap-3.5 lg:gap-4 relative">
 
-    <!-- Load Shared Data -->
-    <script src="assets/js/calendarData.js"></script>
+      <!-- Shared Samsung Edge Shortcut Sidebar -->
+      <?php
+      $active_page = 'calendar';
+      $sidebar_mode = 'nav';
+      $sidebar_active_label = 'Academic Calendar';
+      include dirname(__DIR__) . '/partials/sidebar.php';
+      ?>
 
-    <!-- Calendar Rendering Logic -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // State variables
-            const today = new Date();
-            let currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate()).padStart(2, '0');
-            let selectedDateStr = `${today.getFullYear()}-${mm}-${dd}`;
-            let currentFilterPublic = true;
-            let currentFilterReserved = true;
-            let currentFilterCustom = true;
-            let currentDept = "Information Technology"; // Department state tracker
+      <!-- Main Responsive Grid: Calendar Matrix (Left 8 cols) & Event Inspector (Right 4 cols) -->
+      <main class="cal-main-grid flex-1 min-h-0 min-w-0 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-4 transition-all duration-300">
 
-            // DOM Elements
-            const calendarDaysGrid = document.getElementById("calendarDaysGrid");
-            const monthYearDisplay = document.getElementById("monthYearDisplay");
-            const prevMonthBtn = document.getElementById("prev-month-btn");
-            const nextMonthBtn = document.getElementById("next-month-btn");
-            const selectedDateTitle = document.getElementById("selectedDateTitle");
-            const selectedDateSubtitle = document.getElementById("selectedDateSubtitle");
-            const selectedEventsList = document.getElementById("selectedEventsList");
+        <!-- ================= 1. CALENDAR MATRIX CARD (8 Columns on Desktop) ================= -->
+        <section class="lg:col-span-8 glass-card p-3 sm:p-5 flex flex-col justify-between overflow-hidden relative">
 
-            // Filter Toggles
-            const filterPublicCheckbox = document.getElementById("filter-public");
-            const filterReservedCheckbox = document.getElementById("filter-reserved");
-            const filterCustomCheckbox = document.getElementById("filter-custom");
+          <!-- Top Header Row: Navigation Controls + Department Switcher & Filter Pills -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 pb-2.5 sm:pb-3 border-b border-black/5 dark:border-white/10 shrink-0">
+            <!-- Left: Month/Year Nav + Title + Today Button -->
+            <div class="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-2 sm:gap-3">
+              <div class="flex items-center gap-1.5 sm:gap-2">
+                <button type="button" class="cal-nav-btn" id="prev-month-btn" aria-label="Previous Month" title="Previous Month">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button type="button" class="cal-nav-btn" id="next-month-btn" aria-label="Next Month" title="Next Month">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+              <h2 class="text-lg sm:text-xl md:text-2xl font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none truncate" id="monthYearDisplay">
+                <?php echo date('F Y'); ?>
+              </h2>
+              <button
+                type="button"
+                id="todayJumpBtn"
+                class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-full glass-pill text-[11px] sm:text-xs font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1 shrink-0 ml-auto sm:ml-1"
+                title="Jump to current date"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>
+                Today
+              </button>
+            </div>
 
-            // Department Toggle Elements
-            const itBtn = document.getElementById("dept-it-btn");
-            const ceBtn = document.getElementById("dept-ce-btn");
-            const rpDeptBadgeText = document.getElementById("rpDeptBadgeText");
-            const portalBadge = document.getElementById("portalBadge");
+            <!-- Right: Department Toggle + Category Filter Pills -->
+            <div class="flex items-center flex-wrap gap-1.5 sm:gap-2 w-full sm:w-auto justify-start sm:justify-end">
+              <!-- Department Selector Segment -->
+              <div class="inline-flex items-center p-0.5 rounded-full glass-pill border border-white/80 dark:border-white/10 shrink-0">
+                <button
+                  type="button"
+                  id="dept-it-btn"
+                  data-dept="Information Technology"
+                  class="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-200 bg-[var(--color-primary)] text-white shadow-sm"
+                >
+                  IT
+                </button>
+                <button
+                  type="button"
+                  id="dept-ce-btn"
+                  data-dept="Computer Engineering"
+                  class="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-200 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                >
+                  CE
+                </button>
+              </div>
 
-            // Helper: Format Date to YYYY-MM-DD in local time
-            function formatDateStr(year, month, day) {
-                const mm = String(month + 1).padStart(2, '0');
-                const dd = String(day).padStart(2, '0');
-                return `${year}-${mm}-${dd}`;
-            }
+              <!-- Filter Toggles -->
+              <label class="cursor-pointer select-none inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full glass-pill text-[11px] sm:text-xs font-semibold text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition border border-white/70 shrink-0">
+                <input type="checkbox" id="filter-public" checked class="sr-only peer">
+                <span class="w-2 h-2 rounded-full bg-[#E11D48] transition-transform peer-checked:scale-125 peer-not-checked:opacity-30"></span>
+                <span class="peer-not-checked:line-through peer-not-checked:opacity-50">Public</span>
+              </label>
 
-            // Helper: Convert YYYY-MM-DD to human readable string (e.g. August 15, 2026)
-            function getHumanDate(dateString) {
-                const dateParts = dateString.split("-");
-                if (dateParts.length !== 3) return dateString;
-                const d = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-                return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            }
+              <label class="cursor-pointer select-none inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full glass-pill text-[11px] sm:text-xs font-semibold text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition border border-white/70 shrink-0">
+                <input type="checkbox" id="filter-reserved" checked class="sr-only peer">
+                <span class="w-2 h-2 rounded-full bg-[#F59E0B] transition-transform peer-checked:scale-125 peer-not-checked:opacity-30"></span>
+                <span class="peer-not-checked:line-through peer-not-checked:opacity-50">Reserved</span>
+              </label>
 
-            // Sync Department Theme (IT / CE)
-            function updateDepartmentTheme(isCe) {
-                currentDept = isCe ? "Computer Engineering" : "Information Technology";
-                if (isCe) {
-                    document.body.classList.add("ce-active");
-                    if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Computer Engineering";
-                    if (portalBadge) portalBadge.textContent = "CE Calendar";
-                    itBtn.classList.remove("active");
-                    ceBtn.classList.add("active");
-                    localStorage.setItem('portal_dept', 'CE');
-                    document.title = "Academic Calendar — CE Department";
-                } else {
-                    document.body.classList.remove("ce-active");
-                    if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Information Technology";
-                    if (portalBadge) portalBadge.textContent = "IT Calendar";
-                    ceBtn.classList.remove("active");
-                    itBtn.classList.add("active");
-                    localStorage.setItem('portal_dept', 'IT');
-                    document.title = "Academic Calendar — IT Department";
-                }
+              <label class="cursor-pointer select-none inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full glass-pill text-[11px] sm:text-xs font-semibold text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition border border-white/70 shrink-0">
+                <input type="checkbox" id="filter-custom" checked class="sr-only peer">
+                <span class="w-2 h-2 rounded-full bg-[var(--color-primary)] transition-transform peer-checked:scale-125 peer-not-checked:opacity-30"></span>
+                <span class="peer-not-checked:line-through peer-not-checked:opacity-50">Academic</span>
+              </label>
+            </div>
+          </div>
 
-                // Trigger re-render if elements are already loaded
-                if (calendarDaysGrid && calendarDaysGrid.children.length > 0) {
-                    renderCalendar();
-                    showEventDetails(selectedDateStr);
-                }
-            }
+          <!-- Calendar Matrix: Day Headers (Sun-Sat) & 7-Column Cell Grid -->
+          <div class="flex-1 min-h-0 flex flex-col justify-between py-1 sm:py-2 px-1.5 overflow-y-auto overflow-x-hidden">
+            <!-- 7-Day Header Row -->
+            <div class="cal-grid-header">
+              <div class="text-[#E11D48]">Sun</div>
+              <div>Mon</div>
+              <div>Tue</div>
+              <div>Wed</div>
+              <div>Thu</div>
+              <div>Fri</div>
+              <div class="text-[#E11D48]">Sat</div>
+            </div>
 
-            // Department Click Handlers
-            itBtn.addEventListener("click", () => updateDepartmentTheme(false));
-            ceBtn.addEventListener("click", () => updateDepartmentTheme(true));
+            <!-- Dynamic 7x5/6 Date Cells -->
+            <div class="cal-days-grid flex-1 items-stretch mb-2 sm:mb-2.5" id="calendarDaysGrid">
+              <!-- Dynamic day cells rendered via JavaScript -->
+            </div>
+          </div>
 
-            // Always default to Information Technology on initial page load
-            updateDepartmentTheme(false);
+          <!-- Bottom Legend Strip -->
+          <div class="pt-2 sm:pt-2.5 border-t border-black/5 dark:border-white/10 flex flex-wrap items-center justify-between gap-2 sm:gap-3 text-xs shrink-0">
+            <div class="flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-1 text-[10px] sm:text-[11px] text-[var(--text-muted)]">
+              <span class="inline-flex items-center gap-1.5 font-medium">
+                <span class="w-2 h-2 rounded-full bg-[#E11D48]"></span> Public Holiday
+              </span>
+              <span class="inline-flex items-center gap-1.5 font-medium">
+                <span class="w-2 h-2 rounded-full bg-[#F59E0B]"></span> Reserved Holiday
+              </span>
+              <span class="inline-flex items-center gap-1.5 font-medium">
+                <span class="w-2 h-2 rounded-full bg-[var(--color-primary)]"></span> Department Event
+              </span>
+            </div>
 
-            // Find events for a specific date
-            function getEventsForDate(dateStr) {
-                const matches = [];
-                
-                // Helper to check if event department matches currentDept
-                function matchesDept(dept) {
-                    if (!dept || dept === "all" || dept === "both") return true;
-                    if (Array.isArray(dept)) {
-                        return dept.includes(currentDept) || dept.includes("all") || dept.includes("both");
-                    }
-                    return dept === currentDept;
-                }
+            <span class="text-[10px] sm:text-[11px] text-[var(--text-muted)] font-medium hidden md:inline-block">
+              Click any date to inspect scheduled items
+            </span>
+          </div>
 
-                if (currentFilterPublic && calendarData.publicHolidays) {
-                    calendarData.publicHolidays.forEach(h => {
-                        if (h.date === dateStr) {
-                            if (matchesDept(h.department)) {
-                                matches.push({ ...h, type: 'public', badgeName: 'Public Holiday' });
-                            }
-                        }
-                    });
-                }
-                
-                if (currentFilterReserved && calendarData.reservedHolidays) {
-                    calendarData.reservedHolidays.forEach(h => {
-                        if (h.date === dateStr) {
-                            if (matchesDept(h.department)) {
-                                matches.push({ ...h, type: 'reserved', badgeName: 'Reserved Holiday' });
-                            }
-                        }
-                    });
-                }
-                
-                if (currentFilterCustom) {
-                    if (calendarData.customEvents) {
-                        calendarData.customEvents.forEach(e => {
-                            if (e.date === dateStr) {
-                                if (matchesDept(e.department)) {
-                                    matches.push({ ...e, type: 'custom', badgeName: e.category || 'Event' });
-                                }
-                            }
-                        });
-                    }
+        </section>
 
-                    if (calendarData.recurringEvents) {
-                        const parts = dateStr.split("-");
-                        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-                        const dayOfWeek = dateObj.getDay();
+        <!-- ================= 2. EVENT DETAILS INSPECTOR CARD (4 Columns on Desktop) ================= -->
+        <section id="dayOverviewSection" class="lg:col-span-4 glass-card p-3.5 sm:p-5 flex flex-col justify-between overflow-hidden relative min-h-[280px] sm:min-h-[320px] lg:min-h-0">
 
-                        calendarData.recurringEvents.forEach(r => {
-                            if (dayOfWeek === r.dayOfWeek && dateStr >= r.startDate) {
-                                if (matchesDept(r.department)) {
-                                    matches.push({
-                                        date: dateStr,
-                                        name: r.name,
-                                        type: 'custom',
-                                        badgeName: r.category || 'Event',
-                                        description: r.description,
-                                        time: r.time,
-                                        department: r.department
-                                    });
-                                }
-                            }
-                        });
-                    }
-                }
-                
-                return matches;
-            }
+          <!-- Selected Date Header -->
+          <div class="pb-2.5 sm:pb-3 border-b border-black/5 dark:border-white/10 shrink-0">
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <span class="text-[10px] font-extrabold uppercase tracking-widest text-[var(--color-primary)]">Day Overview</span>
+              <span id="selectedDateBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-[var(--text-muted)]">Selected</span>
+            </div>
+            <h3 class="text-base sm:text-lg lg:text-xl font-bold font-serif text-[var(--text-primary)] leading-tight truncate" id="selectedDateTitle">
+              Select a Date
+            </h3>
+            <p class="text-xs text-[var(--text-muted)] mt-0.5" id="selectedDateSubtitle">
+              0 Scheduled Items
+            </p>
+          </div>
 
-            // Render calendar grid and update sidebar displays
-            function renderCalendar() {
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth();
+          <!-- Scrollable Event Items List -->
+          <div class="flex-1 min-h-0 my-2 pt-2.5 sm:pt-3 pb-3 px-1.5 overflow-y-auto overflow-x-hidden space-y-2.5 sm:space-y-3 max-h-[300px] sm:max-h-[360px] lg:max-h-none" id="selectedEventsList">
+            <!-- Dynamic Event Cards rendered via JavaScript -->
+          </div>
 
-                // Clear previous grid elements
-                calendarDaysGrid.innerHTML = "";
+          <!-- Bottom Quick Actions inside Inspector -->
+          <div class="pt-3 border-t border-black/5 dark:border-white/10 flex items-center justify-between gap-2 shrink-0">
+            <button
+              type="button"
+              id="printCalendarBtn"
+              class="flex-1 py-2 px-3 rounded-xl glass-pill font-bold text-xs text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center justify-center gap-1.5 shadow-sm"
+              title="Print or save current month calendar"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 14h12v8H6z"/>
+              </svg>
+              Print Month
+            </button>
 
-                // Update Month/Year Header text
-                const monthNames = [
-                    "January", "February", "March", "April", "May", "June",
-                    "July", "August", "September", "October", "November", "December"
-                ];
-                monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
+            <button
+              type="button"
+              id="copyDateInfoBtn"
+              class="py-2 px-3 rounded-xl glass-pill font-bold text-xs text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center justify-center gap-1 shadow-sm"
+              title="Copy date information"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+              </svg>
+            </button>
+          </div>
 
-                // Calculate first day and count of days in month
-                const firstDayIndex = new Date(year, month, 1).getDay();
-                const totalDays = new Date(year, month + 1, 0).getDate();
+        </section>
 
-                // Render blank filler cells for start spacing
-                for (let i = 0; i < firstDayIndex; i++) {
-                    const emptyCell = document.createElement("div");
-                    emptyCell.className = "grid-cell empty-cell";
-                    calendarDaysGrid.appendChild(emptyCell);
-                }
+      </main>
 
-                // Render day cells
-                const today = new Date();
-                const todayFormatted = formatDateStr(today.getFullYear(), today.getMonth(), today.getDate());
+    </div><!-- /Workspace -->
 
-                for (let day = 1; day <= totalDays; day++) {
-                    const cellDateStr = formatDateStr(year, month, day);
-                    const cellEvents = getEventsForDate(cellDateStr);
+  </div><!-- /Main Wrapper -->
 
-                    const dayCell = document.createElement("div");
-                    dayCell.className = "grid-cell";
-                    dayCell.setAttribute("data-date", cellDateStr);
+  <!-- ================= POPUP MODAL OVERLAY (Settings / Profile / AI Assistant) ================= -->
+  <div id="modalOverlay" class="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-lg p-5 sm:p-6 rounded-3xl relative shadow-2xl border border-white/80">
+      <div class="flex items-center justify-between pb-3.5 border-b border-black/10">
+        <div>
+          <h3 id="modalTitle" class="text-base sm:text-lg font-bold text-[var(--text-primary)]">Settings</h3>
+          <p id="modalSubtitle" class="text-xs text-[var(--text-muted)]">Configure portal options</p>
+        </div>
+        <button id="closeModalBtn" type="button" class="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="modalBody" class="py-4 text-xs">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
 
-                    // Add dynamic class indicators
-                    if (cellDateStr === todayFormatted) {
-                        dayCell.classList.add("today-cell");
-                    }
-                    if (cellDateStr === selectedDateStr) {
-                        dayCell.classList.add("selected-cell");
-                    }
-
-                    // Date Label
-                    const dateLabel = document.createElement("span");
-                    dateLabel.className = "date-number";
-                    dateLabel.textContent = day;
-                    dayCell.appendChild(dateLabel);
-
-                    // Render event status dots inside cell
-                    if (cellEvents.length > 0) {
-                        const dotsContainer = document.createElement("div");
-                        dotsContainer.className = "indicator-dots";
-
-                        // Create deduped list of indicator dots
-                        const types = new Set(cellEvents.map(e => e.type));
-                        types.forEach(t => {
-                            const dot = document.createElement("span");
-                            dot.className = `dot dot-${t}`;
-                            dotsContainer.appendChild(dot);
-                        });
-
-                        dayCell.appendChild(dotsContainer);
-                    }
-
-                    // Click handler to select date
-                    dayCell.addEventListener("click", () => {
-                        // Remove previously selected highlights
-                        const activeSelected = calendarDaysGrid.querySelector(".selected-cell");
-                        if (activeSelected) {
-                            activeSelected.classList.remove("selected-cell");
-                        }
-
-                        // Add highlighting to current target
-                        dayCell.classList.add("selected-cell");
-                        selectedDateStr = cellDateStr;
-                        showEventDetails(cellDateStr);
-                    });
-
-                    calendarDaysGrid.appendChild(dayCell);
-                }
-            }
-
-            // Display list of events for the selected day in sidebar
-            function showEventDetails(dateStr) {
-                selectedDateTitle.textContent = getHumanDate(dateStr);
-                
-                const events = getEventsForDate(dateStr);
-                selectedEventsList.innerHTML = "";
-
-                if (events.length === 0) {
-                    selectedEventsList.innerHTML = `
-                        <div class="no-events-placeholder">
-                            <span class="placeholder-icon">🍵</span>
-                            <span>No holidays or events scheduled for this day.</span>
-                        </div>
-                    `;
-                    selectedDateSubtitle.textContent = "Day Overview";
-                    return;
-                }
-
-                // Subtitle count
-                selectedDateSubtitle.textContent = `${events.length} Scheduled Item(s)`;
-
-                // Loop and render details cards
-                events.forEach(e => {
-                    const node = document.createElement("div");
-                    node.className = `event-node type-${e.type}`;
-
-                    // Build meta elements html
-                    let metaHtml = '';
-                    if (e.time || e.department) {
-                        metaHtml += `<div class="event-node-meta">`;
-                        
-                        if (e.time) {
-                            metaHtml += `
-                                <div class="event-node-time">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <path d="M12 6v6h6"/>
-                                    </svg>
-                                    <span>${e.time}</span>
-                                </div>
-                            `;
-                        }
-
-                        if (e.department) {
-                            const isBoth = Array.isArray(e.department) ? e.department.length > 1 : (e.department === 'both' || e.department === 'all');
-                            if (isBoth) {
-                                metaHtml += `
-                                    <div class="event-node-dept dept-both">
-                                        <span>Common: CE & IT</span>
-                                    </div>
-                                `;
-                            } else {
-                                const deptName = Array.isArray(e.department) ? e.department[0] : e.department;
-                                const shortDeptName = deptName === 'Computer Engineering' ? 'CE' : (deptName === 'Information Technology' ? 'IT' : deptName);
-                                metaHtml += `
-                                    <div class="event-node-dept">
-                                        <span>Dept: ${shortDeptName}</span>
-                                    </div>
-                                `;
-                            }
-                        }
-
-                        metaHtml += `</div>`;
-                    }
-
-                    node.innerHTML = `
-                        <div class="event-node-header">
-                            <h4 class="event-node-title">${e.name}</h4>
-                            <span class="event-node-badge badge-${e.type}">${e.badgeName}</span>
-                        </div>
-                        ${metaHtml}
-                        <p class="event-node-desc">${e.description || 'No description provided.'}</p>
-                    `;
-                    selectedEventsList.appendChild(node);
-                });
-            }
-
-            // Month navigation events
-            prevMonthBtn.addEventListener("click", () => {
-                currentDate.setMonth(currentDate.getMonth() - 1);
-                renderCalendar();
-                // If the selected date is in the newly loaded month, view it, else update sidebar with instructions
-                const parts = selectedDateStr.split("-");
-                if (parseInt(parts[0]) === currentDate.getFullYear() && (parseInt(parts[1]) - 1) === currentDate.getMonth()) {
-                    showEventDetails(selectedDateStr);
-                } else {
-                    selectedDateTitle.textContent = "Select a Date";
-                    selectedDateSubtitle.textContent = "Day Overview";
-                    selectedEventsList.innerHTML = `
-                        <div class="no-events-placeholder">
-                            <span class="placeholder-icon">📅</span>
-                            <span>Click a cell on the calendar to view scheduled day events.</span>
-                        </div>
-                    `;
-                }
-            });
-
-            nextMonthBtn.addEventListener("click", () => {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                renderCalendar();
-                const parts = selectedDateStr.split("-");
-                if (parseInt(parts[0]) === currentDate.getFullYear() && (parseInt(parts[1]) - 1) === currentDate.getMonth()) {
-                    showEventDetails(selectedDateStr);
-                } else {
-                    selectedDateTitle.textContent = "Select a Date";
-                    selectedDateSubtitle.textContent = "Day Overview";
-                    selectedEventsList.innerHTML = `
-                        <div class="no-events-placeholder">
-                            <span class="placeholder-icon">📅</span>
-                            <span>Click a cell on the calendar to view scheduled day events.</span>
-                        </div>
-                    `;
-                }
-            });
-
-            // Filter Change Listeners
-            filterPublicCheckbox.addEventListener("change", (e) => {
-                currentFilterPublic = e.target.checked;
-                renderCalendar();
-                showEventDetails(selectedDateStr);
-            });
-
-            filterReservedCheckbox.addEventListener("change", (e) => {
-                currentFilterReserved = e.target.checked;
-                renderCalendar();
-                showEventDetails(selectedDateStr);
-            });
-
-            filterCustomCheckbox.addEventListener("change", (e) => {
-                currentFilterCustom = e.target.checked;
-                renderCalendar();
-                showEventDetails(selectedDateStr);
-            });
-
-            // Initial render call
-            renderCalendar();
-            showEventDetails(selectedDateStr);
-        });
-    </script>
-
+  <!-- ================= APPLICATION JAVASCRIPT: Modular Architecture ================= -->
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/navbar.js') : 'assets/js/navbar.js'; ?>"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/calendarData.js') : 'assets/js/calendarData.js'; ?>"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/calendar.js') : 'assets/js/calendar.js'; ?>"></script>
 </body>
-
 </html>

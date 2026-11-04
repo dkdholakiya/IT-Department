@@ -1,0 +1,172 @@
+/**
+ * GMIU Portal — Unified Theme & Ambient Backdrop Stylesheet
+ * Department of CE & IT — Smart Management Dashboard & Academic Portal
+ *
+ * Provides:
+ * - Dynamic Theme & Ambient Mesh Color Tokens (Light & Dark Glass)
+ * - Global Body Ambient Mesh Radial-Gradient Wallpaper
+ * - Glassmorphic Card & Surface Design System (.glass-card, .glass-pill)
+ * - Shiny AI Assistant Button (.ai-pill-btn)
+ * - Universal UI utilities & resets
+ */
+
+:root {
+  /* Dynamic Primary Color Tokens (Updated live by the Color Studio) */
+  --color-primary: #10B981;
+  --color-primary-dark: #059669;
+  --color-primary-light: #34D399;
+  --color-primary-rgb: 16, 185, 129;
+  --color-alert: #EB5011;
+
+  /* Dynamic Ambient Mesh Backdrop (Matching Dashboard Visual) */
+  --bg-mesh-1: #C7E0ED;
+  --bg-mesh-2: #D4E8C7;
+  --bg-mesh-3: #F2F7F0;
+  --bg-mesh-4: #C9E3B8;
+
+  /* Glassmorphic Surfaces */
+  --glass-surface: rgba(255, 255, 255, 0.74);
+  --glass-surface-strong: rgba(255, 255, 255, 0.94);
+  --glass-pill: rgba(255, 255, 255, 0.84);
+  --glass-border: rgba(255, 255, 255, 0.92);
+  --glass-shadow: 0 10px 28px -6px rgba(var(--color-primary-rgb), 0.14), 0 2px 8px -1px rgba(10, 9, 9, 0.04);
+  --drawer-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.44) 0%, rgba(255, 255, 255, 0.24) 55%, rgba(var(--color-primary-rgb), 0.16) 100%);
+  --drawer-item-bg: rgba(255, 255, 255, 0.48);
+  --side-menu-pill-glass: linear-gradient(145deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0.28) 58%, rgba(var(--color-primary-rgb), 0.15) 100%);
+  --side-menu-btn-glass: rgba(255, 255, 255, 0.45);
+  --side-menu-border: rgba(255, 255, 255, 0.78);
+  --side-menu-shadow: 0 12px 32px -4px rgba(var(--color-primary-rgb), 0.20), 0 4px 14px rgba(10, 9, 9, 0.06), inset 0 1px 1.5px rgba(255, 255, 255, 0.88);
+
+  /* Dynamic Font & Icon Colors */
+  --text-primary: #0A0909;
+  --text-secondary: #2C3E28;
+  --text-muted: #5C6F58;
+  --text-accent: #059669;
+  --text-role: #064E3B; /* High-contrast readable role in light mode (WCAG AAA 8.2:1) */
+
+  /* Chart & Sidebar Tokens */
+  --bar-inactive: rgba(var(--color-primary-rgb), 0.18);
+  --bar-mid: rgba(var(--color-primary-rgb), 0.46);
+  --bar-active: #10B981;
+  --bar-peak: #EB5011;
+  --sidebar-active-bg: #10B981;
+  --sidebar-active-text: #FFFFFF;
+  --icon-circle-bg: rgba(255, 255, 255, 0.94);
+
+  /* AI Assistant Button Pill */
+  --ai-btn-grad: linear-gradient(180deg, #F2FFE6 0%, #99FF55 48%, #6CE620 100%);
+  --ai-btn-shadow: rgba(108, 230, 32, 0.35);
+  --ai-btn-text: #0A0909;
+}
+
+/* ==========================================================================
+   DARK GLASS MODE
+   ========================================================================== */
+body.theme-dark,
+html.dark body {
+  --bg-mesh-1: #0D1F18;
+  --bg-mesh-2: #122616;
+  --bg-mesh-3: #090D0A;
+  --bg-mesh-4: #162E1B;
+  --glass-surface: rgba(16, 24, 18, 0.78);
+  --glass-surface-strong: rgba(20, 30, 23, 0.95);
+  --glass-pill: rgba(24, 36, 27, 0.88);
+  --glass-border: rgba(var(--color-primary-rgb), 0.32);
+  --glass-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.55);
+  --drawer-bg: linear-gradient(160deg, rgba(22, 34, 26, 0.62) 0%, rgba(14, 22, 17, 0.44) 60%, rgba(var(--color-primary-rgb), 0.18) 100%);
+  --drawer-item-bg: rgba(28, 42, 32, 0.54);
+  --side-menu-pill-glass: linear-gradient(145deg, rgba(24, 38, 28, 0.64) 0%, rgba(15, 25, 18, 0.46) 60%, rgba(var(--color-primary-rgb), 0.16) 100%);
+  --side-menu-btn-glass: rgba(255, 255, 255, 0.10);
+  --side-menu-border: rgba(var(--color-primary-rgb), 0.38);
+  --side-menu-shadow: 0 14px 34px -4px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.14);
+  --text-primary: #F4FBF2;
+  --text-secondary: #C8DEC4;
+  --text-muted: #8FA98B;
+  --text-accent: var(--color-primary-light);
+  --text-role: #6EE7B7; /* High-contrast crisp mint in dark mode (WCAG AAA 10:1) */
+  --bar-inactive: rgba(255, 255, 255, 0.13);
+  --bar-mid: rgba(var(--color-primary-rgb), 0.48);
+  --icon-circle-bg: rgba(28, 42, 31, 0.95);
+}
+
+/* Global Reset */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==========================================================================
+   GLOBAL BODY & AMBIENT MESH WALLPAPER
+   ========================================================================== */
+body {
+  font-family: 'Gilroy', 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--bg-mesh-3);
+  background-image:
+    radial-gradient(at 6% 6%, var(--bg-mesh-1) 0px, transparent 52%),
+    radial-gradient(at 94% 8%, var(--bg-mesh-1) 0px, transparent 48%),
+    radial-gradient(at 12% 88%, var(--bg-mesh-4) 0px, transparent 55%),
+    radial-gradient(at 62% 80%, var(--bg-mesh-2) 0px, transparent 55%),
+    radial-gradient(at 50% 42%, var(--bg-mesh-3) 0px, transparent 70%);
+  background-attachment: fixed;
+  margin: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.25s ease;
+}
+
+/* ==========================================================================
+   GLASSMORPHIC CARDS & PILLS DESIGN SYSTEM
+   ========================================================================== */
+.glass-card {
+  background: var(--glass-surface);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1.5px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 24px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.25s ease, background 0.3s ease;
+}
+
+.glass-card:hover {
+  box-shadow: 0 14px 32px -6px rgba(var(--color-primary-rgb), 0.18), 0 4px 12px -2px rgba(10, 9, 9, 0.05);
+}
+
+.glass-pill {
+  background: var(--glass-pill);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1.5px solid var(--glass-border);
+  box-shadow: 0 4px 14px rgba(10, 9, 9, 0.04);
+}
+
+body.theme-dark .glass-pill {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* Shiny AI Assistant Pill Button */
+.ai-pill-btn {
+  background: var(--ai-btn-grad);
+  box-shadow: 0 4px 16px var(--ai-btn-shadow);
+  color: var(--ai-btn-text);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.ai-pill-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+  filter: brightness(1.05);
+}
+
+.ai-pill-btn:active {
+  transform: translateY(0.5px) scale(0.98);
+}
+
+/* Dimmed state for cards during search/filter */
+.card-dimmed {
+  opacity: 0.22;
+  filter: grayscale(65%);
+  transform: scale(0.985);
+  pointer-events: none;
+}
+

@@ -396,3 +396,10 @@ const calendarData = {
         }
     ]
 };
+
+if (typeof window !== "undefined") {
+  window.calendarData = calendarData;
+}
+if (typeof global !== "undefined") {
+  global.calendarData = calendarData;
+}

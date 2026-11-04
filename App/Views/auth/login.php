@@ -417,15 +417,6 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
                 </svg>
               </button>
 
-              <div class="mt-2 text-center">
-                <a href="<?php echo $baseUrl; ?>otp" class="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--color-primary)] hover:underline">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/>
-                  </svg>
-                  <span>Verify with 6-Digit OTP</span>
-                </a>
-              </div>
-
               <p class="text-xs text-[var(--text-muted)] text-center mt-2 font-medium">
                 Don't have an account?
                 <a href="<?php echo $baseUrl; ?>signup" id="linkToSignUp" class="font-bold text-[var(--color-primary)] hover:underline transition cursor-pointer">Sign up</a>

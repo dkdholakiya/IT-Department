@@ -1,0 +1,362 @@
+/**
+ * Shared Samsung Edge Shortcut Sidebar Stylesheet
+ * Department of CE & IT — Smart Management Dashboard & Academic Portal
+ *
+ * Architecture:
+ * 1. Mobile / Tablet (< 1024px): Sleek Samsung Floating Edge Capsule
+ *    - Expand button (`>>`) toggles between Icon-Only Capsule (76px) and Full Drawer (284px)
+ *    - Horizontal scrollbar suppressed completely (eliminating any green line artifact)
+ * 2. Desktop (>= 1024px): 3-Mode Glassmorphic Floating Dock
+ *    - Mode 1: Compact Icon Dock (56px)
+ *    - Mode 2: Expanded Sidebar with Full Menu Names (260px)
+ *    - Mode 3: Fully Hidden Dock with Instant Restore Pill
+ */
+
+/* ==========================================================================
+   1. MOBILE & TABLET SHORTCUT CAPSULE (< 1024px)
+   ========================================================================== */
+@media (max-width: 1023px) {
+  #mainSidebar {
+    background: var(--drawer-bg);
+    backdrop-filter: blur(32px) saturate(195%);
+    -webkit-backdrop-filter: blur(32px) saturate(195%);
+    border: 1.5px solid var(--glass-border);
+    border-radius: 28px;
+    box-shadow:
+      0 26px 64px -8px rgba(10, 9, 9, 0.36),
+      0 0 0 1px rgba(255, 255, 255, 0.32) inset,
+      0 8px 26px rgba(var(--color-primary-rgb), 0.24);
+    transform-origin: left center;
+    transition:
+      transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+      width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+      padding 0.30s cubic-bezier(0.22, 1, 0.36, 1);
+    box-sizing: border-box;
+
+    /* Completely suppress horizontal scrollbar to remove green line artifact (Image 2) */
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE/Edge */
+  }
+
+  /* WebKit scrollbar suppression on the sidebar */
+  #mainSidebar::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  #mainSidebar.samsung-menu-closed {
+    transform: translate3d(-125%, 0, 0) scale(0.92);
+    opacity: 0;
+    filter: blur(8px);
+    pointer-events: none;
+  }
+
+  #mainSidebar.samsung-menu-open {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+    filter: blur(0px);
+    pointer-events: auto;
+  }
+
+  /* Staggered smooth entrance for shortcut items inside the Samsung capsule */
+  #mainSidebar .samsung-shortcut-item {
+    transition:
+      transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.32s ease,
+      background-color 0.22s ease,
+      box-shadow 0.22s ease;
+    transition-delay: calc(var(--stagger, 0) * 30ms);
+  }
+
+  #mainSidebar.samsung-menu-closed .samsung-shortcut-item {
+    transform: translateX(-16px) scale(0.9);
+    opacity: 0;
+  }
+
+  #mainSidebar.samsung-menu-open .samsung-shortcut-item {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+
+  /* DEFAULT MOBILE MODE: Clean Icon Capsule (76px wide, matching Image 1) */
+  #mainSidebar.samsung-icon-only {
+    width: 76px !important;
+    padding: 10px 8px !important;
+  }
+
+  #mainSidebar.samsung-icon-only #upperSideMenuHeader {
+    width: 56px !important;
+    height: auto !important;
+    padding: 6px !important;
+    border-radius: 9999px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: var(--side-menu-pill-glass) !important;
+    backdrop-filter: blur(26px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(190%) !important;
+    border: 1.5px solid var(--side-menu-border) !important;
+    box-shadow: var(--side-menu-shadow) !important;
+  }
+
+  #mainSidebar.samsung-icon-only #expandSidebarNamesBtn {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  #mainSidebar.samsung-icon-only .expanded-only {
+    display: none !important;
+  }
+
+  #mainSidebar.samsung-icon-only #sideMenuNavPill {
+    width: 56px !important;
+    padding: 6px !important;
+    border-radius: 9999px !important;
+    background: var(--side-menu-pill-glass) !important;
+    backdrop-filter: blur(26px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(190%) !important;
+    border: 1.5px solid var(--side-menu-border) !important;
+    box-shadow: var(--side-menu-shadow) !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  #mainSidebar.samsung-icon-only .sidebar-nav-btn {
+    justify-content: center !important;
+    padding: 0 !important;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 9999px !important;
+  }
+
+  #mainSidebar.samsung-icon-only #bottomCapsuleDock {
+    width: 56px !important;
+    flex-direction: column !important;
+    padding: 6px !important;
+    border-radius: 9999px !important;
+    align-items: center !important;
+    background: var(--side-menu-pill-glass) !important;
+    backdrop-filter: blur(26px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(190%) !important;
+    border: 1.5px solid var(--side-menu-border) !important;
+    box-shadow: var(--side-menu-shadow) !important;
+    gap: 8px !important;
+  }
+
+  #mainSidebar.samsung-icon-only .sidebar-bottom-btn {
+    justify-content: center !important;
+    padding: 0 !important;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 9999px !important;
+  }
+
+  /* EXPANDED MOBILE MODE: Full Frosted Glassmorphic Sidebar with Side Menu Names (284px wide) */
+  #mainSidebar.samsung-expanded-names {
+    width: 284px !important;
+    max-width: calc(100vw - 24px) !important;
+    padding: 12px 10px !important;
+  }
+
+  #mainSidebar.samsung-expanded-names #upperSideMenuHeader {
+    width: 100% !important;
+    height: auto !important;
+    padding: 8px 12px !important;
+    border-radius: 20px !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  #mainSidebar.samsung-expanded-names .expanded-only {
+    display: block !important;
+  }
+
+  #mainSidebar.samsung-expanded-names .expanded-flex {
+    display: flex !important;
+  }
+
+  #mainSidebar.samsung-expanded-names #sideMenuNavPill {
+    width: 100% !important;
+    padding: 8px !important;
+    border-radius: 24px !important;
+    background: var(--side-menu-pill-glass) !important;
+    backdrop-filter: blur(26px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(190%) !important;
+    border: 1.5px solid var(--side-menu-border) !important;
+    box-shadow: var(--side-menu-shadow) !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+  }
+
+  #mainSidebar.samsung-expanded-names .sidebar-nav-btn {
+    width: 100% !important;
+    height: 44px !important;
+    padding: 0 10px !important;
+    justify-content: flex-start !important;
+    border-radius: 14px !important;
+  }
+
+  #mainSidebar.samsung-expanded-names #bottomCapsuleDock {
+    width: 100% !important;
+    flex-direction: column !important;
+    padding: 8px !important;
+    border-radius: 24px !important;
+    background: var(--side-menu-pill-glass) !important;
+    backdrop-filter: blur(26px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(190%) !important;
+    border: 1.5px solid var(--side-menu-border) !important;
+    box-shadow: var(--side-menu-shadow) !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+  }
+
+  #mainSidebar.samsung-expanded-names .sidebar-bottom-btn {
+    width: 100% !important;
+    height: 44px !important;
+    padding: 0 10px !important;
+    justify-content: flex-start !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+}
+
+/* ==========================================================================
+   2. DESKTOP 3-STATE SIDEBAR DOCK (>= 1024px)
+   ========================================================================== */
+@media (min-width: 1024px) {
+  #mainSidebar {
+    width: 56px;
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), padding 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+    overflow-x: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  #mainSidebar::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  /* Desktop State 1: Compact Dock (< 256px) */
+  #mainSidebar:not(.desktop-expanded) #bottomCapsuleDock {
+    width: 50px !important;
+    flex-direction: column !important;
+    padding: 6px !important;
+    border-radius: 9999px !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  #mainSidebar:not(.desktop-expanded) .sidebar-bottom-btn {
+    width: 38px !important;
+    height: 38px !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    border-radius: 9999px !important;
+  }
+
+  /* Desktop State 2: Expanded with Menu Names */
+  #mainSidebar.desktop-expanded {
+    width: 256px !important;
+    align-items: stretch !important;
+  }
+
+  #mainSidebar.desktop-expanded #sideMenuNavPill {
+    border-radius: 26px !important;
+    padding: 8px !important;
+    width: 100% !important;
+    gap: 4px !important;
+  }
+
+  #mainSidebar.desktop-expanded .sidebar-nav-btn {
+    width: 100% !important;
+    height: 44px !important;
+    padding: 0 10px !important;
+    justify-content: flex-start !important;
+    border-radius: 14px !important;
+  }
+
+  #mainSidebar.desktop-expanded .sidebar-nav-label-wrap {
+    display: block !important;
+  }
+
+  #mainSidebar.desktop-expanded #upperDesktopMenuHeader {
+    display: flex !important;
+  }
+
+  #mainSidebar.desktop-expanded #bottomCapsuleDock {
+    border-radius: 26px !important;
+    padding: 8px !important;
+    width: 100% !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+  }
+
+  #mainSidebar.desktop-expanded .sidebar-bottom-btn {
+    width: 100% !important;
+    height: 44px !important;
+    padding: 0 10px !important;
+    justify-content: flex-start !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+}
+
+/* ==========================================================================
+   3. SHARED SIDEBAR GLASS ELEMENTS
+   ========================================================================== */
+.side-menu-glass {
+  background: var(--side-menu-pill-glass);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1.5px solid var(--side-menu-border);
+  box-shadow: var(--side-menu-shadow);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.side-menu-icon-glass {
+  background: var(--side-menu-btn-glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid var(--glass-border);
+  box-shadow: 0 2px 8px rgba(10, 9, 9, 0.05);
+}
+
+.samsung-squircle {
+  border-radius: 9999px;
+  transition: all 0.22s ease;
+}
+
+/* User Profile Role & Header Subtitles — Ultra Clear High-Contrast Legibility */
+.sidebar-user-role {
+  color: var(--text-role, #064E3B) !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.015em !important;
+  transition: color 0.22s ease;
+}
+
+body.theme-dark .sidebar-user-role {
+  color: var(--text-role, #6EE7B7) !important;
+}
+
+.sidebar-header-kicker {
+  color: var(--text-role, #064E3B) !important;
+  transition: color 0.22s ease;
+}
+
+body.theme-dark .sidebar-header-kicker {
+  color: var(--text-role, #6EE7B7) !important;
+}
+

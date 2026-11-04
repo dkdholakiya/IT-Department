@@ -1,0 +1,115 @@
+/**
+ * Shared Top Navigation Bar Stylesheet
+ * Department of CE & IT — Smart Management Dashboard & Academic Portal
+ *
+ * Architecture:
+ * - Fixed z-40 mobile & tablet header; relative flow on desktop
+ * - Glassmorphic pills, brand pill, search input, circular microphone button
+ * - Color Studio Popover & Notifications Popover
+ * - Mobile downside collapsible tray (#mobileSearchContainer)
+ */
+
+/* ==========================================================================
+   1. FIXED HEADER & GLASS PILLS
+   ========================================================================== */
+#topNavbar {
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-pill {
+  background: var(--glass-pill, rgba(255, 255, 255, 0.84));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1.5px solid var(--glass-border, rgba(255, 255, 255, 0.92));
+  box-shadow: 0 4px 14px rgba(10, 9, 9, 0.04);
+}
+
+body.theme-dark .glass-pill {
+  background: var(--glass-pill, rgba(24, 36, 27, 0.88));
+  border-color: var(--glass-border, rgba(var(--color-primary-rgb), 0.32));
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* Live Telemetry Pulse Dot */
+.live-dot {
+  box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.7);
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+}
+
+/* AI Assistant Header Button */
+.ai-assistant-btn {
+  background: var(--ai-btn-grad, linear-gradient(180deg, #F2FFE6 0%, #99FF55 48%, #6CE620 100%));
+  color: var(--ai-btn-text, #0A0909);
+  box-shadow: 0 6px 18px -2px var(--ai-btn-shadow, rgba(108, 230, 32, 0.35));
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ai-assistant-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+
+/* ==========================================================================
+   2. COLOR STUDIO POPOVER & NOTIFICATIONS POPOVER
+   ========================================================================== */
+#colorPickerPopover,
+#notificationsPopover {
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  animation: popoverFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.color-preset-btn {
+  transition: transform 0.18s ease, ring-width 0.18s ease, box-shadow 0.18s ease;
+}
+
+.color-preset-btn:hover {
+  transform: scale(1.12);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   3. MOBILE DOWNSIDE COLLAPSIBLE TRAY
+   ========================================================================== */
+#mobileSearchContainer {
+  animation: slideDownMobileTray 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideDownMobileTray {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
