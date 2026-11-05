@@ -3,7 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>CE & IT Department — Interactive 3D Portal | Made by DK Dholakiya</title>
+
+  <!-- High-Definition Dynamic Favicons (Crisp & Big in All Browser Tabs) -->
+  <link rel="icon" type="image/svg+xml" href="<?= base_url('assets/images/favicon.svg') ?>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('assets/images/favicon-32x32.png') ?>">
+  <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('assets/images/favicon-16x16.png') ?>">
+  <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('assets/images/apple-touch-icon.png') ?>">
+  <link rel="shortcut icon" href="<?= base_url('assets/images/favicon.ico') ?>" type="image/x-icon">
+
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -183,6 +194,129 @@
 
     body.light-mode #hex-vignette {
       opacity: 0;
+    }
+
+    /* ── High-Contrast Luminous Glassmorphic Pill (Matches Reference Image) ── */
+    .brand-glass-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(140, 90, 255, 0.08) 50%, rgba(44, 169, 255, 0.06) 100%);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      border-radius: 9999px;
+      padding: 6px 14px 6px 12px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.4),
+                  0 0 24px rgba(140, 80, 255, 0.22);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .brand-glass-pill:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(140, 90, 255, 0.12) 50%, rgba(44, 169, 255, 0.09) 100%);
+      border-color: rgba(255, 255, 255, 0.45);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.65),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.55),
+                  0 0 32px rgba(140, 80, 255, 0.35);
+      transform: translateY(-2px);
+    }
+    body.light-mode .brand-glass-pill {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1.5px solid rgba(210, 218, 240, 0.95);
+      box-shadow: 0 10px 30px rgba(120, 130, 160, 0.22),
+                  0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    body.light-mode .brand-glass-pill:hover {
+      background: rgba(255, 255, 255, 0.98);
+      border-color: rgba(140, 90, 255, 0.5);
+      box-shadow: 0 12px 34px rgba(120, 130, 160, 0.28);
+      transform: translateY(-2px);
+    }
+
+    /* Smooth Floating Up/Down Animation for Logo Icon */
+    @keyframes brandIconFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+    .brand-logo-floating {
+      animation: brandIconFloat 2.6s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Vertical Glass Divider */
+    .brand-divider {
+      width: 1px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.25);
+      flex-shrink: 0;
+      transition: background 0.3s ease;
+    }
+    body.light-mode .brand-divider {
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    /* Circular Pill Action Buttons (>> and x) */
+    .pill-action-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .pill-action-circle:hover {
+      transform: scale(1.1);
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+    body.light-mode .pill-action-circle {
+      background: rgba(244, 246, 252, 0.95);
+      border: 1px solid rgba(215, 222, 240, 0.9);
+    }
+    body.light-mode .pill-action-circle:hover {
+      background: #ffffff;
+      border-color: #a0a5b8;
+    }
+
+    /* Brand Logo Icon Styling for Dark & Light Themes */
+    .brand-logo-icon {
+      filter: drop-shadow(0 0 10px rgba(155, 61, 255, 0.55)) drop-shadow(0 0 16px rgba(44, 169, 255, 0.35));
+      transition: filter 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .brand-logo-icon:hover {
+      transform: scale(1.08);
+      filter: drop-shadow(0 0 14px rgba(155, 61, 255, 0.85)) drop-shadow(0 0 24px rgba(44, 169, 255, 0.6));
+    }
+    body.light-mode .brand-logo-icon {
+      filter: drop-shadow(0 2px 8px rgba(124, 61, 255, 0.30));
+    }
+    body.light-mode .brand-logo-icon:hover {
+      transform: scale(1.08);
+      filter: drop-shadow(0 4px 14px rgba(124, 61, 255, 0.5));
+    }
+
+    #logoOuterShell {
+      fill: #ffffff;
+      stroke: rgba(155, 61, 255, 0.45);
+      stroke-width: 1.2px;
+      transition: fill 0.3s ease, stroke 0.3s ease;
+    }
+    body.light-mode #logoOuterShell {
+      fill: #ffffff;
+      stroke: rgba(124, 61, 255, 0.32);
+      stroke-width: 1.2px;
     }
 
     /* Theme-Adaptive Brand Titles */
@@ -529,32 +663,62 @@
 
   <!-- Top Navigation Header (Fully Responsive on All Screen Sizes) -->
   <header class="relative z-20 w-full max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12 pt-4 sm:pt-6 md:pt-8 flex items-center justify-between">
-    <!-- Brand Logo -->
-    <button id="brand-logo" type="button" class="flex items-center gap-2 sm:gap-2.5 group focus:outline-none">
-      <div class="relative w-8 h-6 sm:w-10 sm:h-7 flex items-center justify-center shrink-0">
-        <svg viewBox="0 0 46 32" class="w-8 h-6 sm:w-10 sm:h-7 overflow-visible">
-          <defs>
-            <linearGradient id="logoRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop id="logoStop1" offset="0%" stop-color="#9b3dff" />
-              <stop id="logoStop2" offset="100%" stop-color="#2ca9ff" />
-            </linearGradient>
-          </defs>
-          <!-- Outer white shell -->
-          <rect x="1" y="1" width="44" height="30" rx="15" fill="#f3f3f7" stroke="#e2e2ea" stroke-width="1" />
-          <!-- Dynamic colored rim -->
-          <rect x="4" y="4" width="38" height="24" rx="12" fill="url(#logoRimGrad)" />
-          <!-- Black visor -->
-          <rect x="6.8" y="6.8" width="32.4" height="18.4" rx="9.2" fill="#0d0d12" />
-          <!-- Two white eyes -->
-          <rect id="logoEyeL" x="14.5" y="11" width="4.8" height="9.6" rx="2.4" fill="#ffffff" />
-          <rect id="logoEyeR" x="26.7" y="11" width="4.8" height="9.6" rx="2.4" fill="#ffffff" />
-        </svg>
+    <!-- Brand Glassmorphic Pill Capsule (Matching Reference Image to the pixel) -->
+    <div class="brand-glass-pill group" title="CE & IT Department Portal">
+      <!-- Left: Floating Robot Icon with Smooth Up/Down Movement -->
+      <button id="brand-logo" type="button" class="brand-logo-floating focus:outline-none" title="CE & IT Department">
+        <div class="relative w-8 h-6 sm:w-10 sm:h-7.5 flex items-center justify-center shrink-0">
+          <svg viewBox="0 0 46 32" class="w-8 h-6 sm:w-10 sm:h-7.5 overflow-visible brand-logo-icon">
+            <defs>
+              <linearGradient id="logoRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop id="logoStop1" offset="0%" stop-color="#9b3dff" />
+                <stop id="logoStop2" offset="100%" stop-color="#2ca9ff" />
+              </linearGradient>
+            </defs>
+            <!-- Outer white/pearl capsule shell -->
+            <rect id="logoOuterShell" x="1" y="1" width="44" height="30" rx="15" fill="#ffffff" stroke="rgba(155, 61, 255, 0.45)" stroke-width="1.2" />
+            <!-- Dynamic colored rim -->
+            <rect x="3.8" y="3.8" width="38.4" height="24.4" rx="12.2" fill="url(#logoRimGrad)" />
+            <!-- Deep black glossy visor -->
+            <rect x="6.6" y="6.6" width="32.8" height="18.8" rx="9.4" fill="#08080d" />
+            <!-- Two white capsule eyes -->
+            <rect id="logoEyeL" x="14.2" y="10.8" width="5.0" height="10.4" rx="2.5" fill="#ffffff" />
+            <rect id="logoEyeR" x="26.8" y="10.8" width="5.0" height="10.4" rx="2.5" fill="#ffffff" />
+          </svg>
+        </div>
+      </button>
+
+      <!-- Vertical Divider separating Logo from Text -->
+      <div class="brand-divider"></div>
+
+      <!-- Center: Department & Engineering Typography -->
+      <div class="flex flex-col text-left pr-1 sm:pr-2">
+        <span class="text-base sm:text-lg md:text-[1.35rem] font-bold tracking-tight leading-none pt-serif-bold brand-title">Engineering</span>
+        <div class="flex items-center gap-1.5 mt-0.5 sm:mt-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse inline-block shrink-0"></span>
+          <span class="text-[8.5px] sm:text-[9.5px] md:text-[10px] font-bold tracking-wider uppercase pt-serif-regular brand-subtitle">Department of IT & CE</span>
+        </div>
       </div>
-      <div class="flex flex-col text-left">
-        <span class="text-lg sm:text-xl md:text-[1.55rem] font-bold tracking-tight leading-none pt-serif-bold brand-title">Engineering</span>
-        <span class="text-[9px] sm:text-[10px] md:text-[11px] font-bold tracking-wider uppercase pt-serif-regular mt-0.5 brand-subtitle">Department of IT & CE</span>
+
+      <!-- Right Actions (Visible on sm+ screens, matching reference image >> and x) -->
+      <div class="hidden sm:flex items-center gap-1.5 pl-1">
+        <div class="brand-divider"></div>
+        <!-- >> Button (Go to Dashboard) -->
+        <a href="<?= base_url('dashboard') ?>" id="pill-dashboard-btn" class="pill-action-circle hover:border-emerald-500/50 text-emerald-400" title="Go to Dashboard">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="13 17 18 12 13 7"/>
+            <polyline points="6 17 11 12 6 7"/>
+          </svg>
+        </a>
+        <!-- x Button (Portal Details Modal) -->
+        <button id="pill-modal-btn" type="button" class="pill-action-circle hover:border-purple-400 text-gray-300 light:text-gray-600" title="Portal Information">
+          <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
-    </button>
+    </div>
 
     <!-- Top-Right Action Buttons: Theme Toggle & Desktop Action Buttons -->
     <div class="flex items-center gap-2 sm:gap-2.5">
@@ -599,8 +763,18 @@
   <!-- Interactive Adopt Modal / Notification Toast -->
   <div id="adopt-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/25 backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-7 shadow-2xl border border-gray-100 text-center relative">
-      <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-purple-600 to-sky-400 flex items-center justify-center text-white text-2xl shadow-md">
-        🤖
+      <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-purple-600 to-sky-400 flex items-center justify-center p-2.5 shadow-lg shadow-purple-500/25">
+        <svg viewBox="0 0 46 32" class="w-full h-full overflow-visible">
+          <!-- Outer white capsule shell -->
+          <rect x="1" y="1" width="44" height="30" rx="15" fill="#ffffff" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" />
+          <!-- Neon rim -->
+          <rect x="3.8" y="3.8" width="38.4" height="24.4" rx="12.2" fill="url(#logoRimGrad)" />
+          <!-- Deep black visor -->
+          <rect x="6.6" y="6.6" width="32.8" height="18.8" rx="9.4" fill="#08080d" />
+          <!-- Two white capsule eyes -->
+          <rect x="14.2" y="10.8" width="5.0" height="10.4" rx="2.5" fill="#ffffff" />
+          <rect x="26.8" y="10.8" width="5.0" height="10.4" rx="2.5" fill="#ffffff" />
+        </svg>
       </div>
       <h2 id="modal-title" class="text-2xl font-bold text-[#141418] pt-serif-bold">Department of IT & CE — Engineering Portal</h2>
       <p id="modal-desc" class="mt-2 text-sm text-[#60606c] leading-relaxed">
@@ -1479,6 +1653,16 @@
         }, { passive: true });
       }
 
+      // Connect Pill action buttons
+      const pillModalBtn = document.getElementById('pill-modal-btn');
+      const pillDashboardBtn = document.getElementById('pill-dashboard-btn');
+      if (pillModalBtn && adoptModal) {
+        pillModalBtn.addEventListener('click', () => {
+          adoptModal.classList.toggle('hidden');
+          adoptModal.classList.toggle('flex');
+        });
+      }
+
       // Bind all buttons & links (Header, Mobile Dock, Theme Switcher, Brand Logo, Modals)
       const allActionButtons = [
         topLoginBtn,
@@ -1488,6 +1672,8 @@
         themeToggleBtn,
         brandLogo,
         closeModalBtn,
+        pillModalBtn,
+        pillDashboardBtn,
         ...Array.from(document.querySelectorAll('header button, header a, .mobile-dock a, .mobile-dock button, #adopt-modal a, #adopt-modal button'))
       ];
 

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Vibrant Neon Rim Gradient -->
+    <linearGradient id="faviconRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9b3dff" />
+      <stop offset="48%" stop-color="#6e5cff" />
+      <stop offset="100%" stop-color="#2ca9ff" />
+    </linearGradient>
+    <!-- Soft Outer Shell Gradient for Dark & Light tabs -->
+    <linearGradient id="shellGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e9eaf2" />
+    </linearGradient>
+    <!-- Visor Gloss Reflection -->
+    <linearGradient id="visorGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#14141e" />
+      <stop offset="100%" stop-color="#07070b" />
+    </linearGradient>
+    <!-- Subtle Glow Filter for modern browsers -->
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#9b3dff" flood-opacity="0.45" />
+    </filter>
+  </defs>
+
+  <g filter="url(#neonGlow)">
+    <!-- Layer 1: Outer Shell (Crisp white/silver capsule, stands out boldly on dark & light tabs) -->
+    <rect x="14" y="76" width="484" height="360" rx="180" fill="url(#shellGrad)" stroke="#d2d5e5" stroke-width="3" />
+    
+    <!-- Layer 2: Glowing Neon Rim (Purple to Cyan Gradient) -->
+    <rect x="42" y="104" width="428" height="304" rx="152" fill="url(#faviconRimGrad)" />
+    
+    <!-- Layer 3: Jet Black Visor -->
+    <rect x="74" y="136" width="364" height="240" rx="120" fill="url(#visorGloss)" />
+    
+    <!-- Layer 4: Soft Inner Visor Reflection Arc -->
+    <path d="M 120 162 Q 256 182 392 162 Q 256 166 120 162 Z" fill="#ffffff" opacity="0.14" />
+    
+    <!-- Layer 5: Two Iconic Bright White Pill Eyes -->
+    <rect x="184" y="194" width="46" height="124" rx="23" fill="#ffffff" />
+    <rect x="282" y="194" width="46" height="124" rx="23" fill="#ffffff" />
+  </g>
+</svg>

@@ -28,7 +28,9 @@ if (!empty($page_css)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <title><?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?></title>
 
-  <!-- Favicons -->
+  <!-- High-Definition Dynamic Favicons -->
+  <link rel="icon" type="image/svg+xml" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.svg') : 'assets/images/favicon.svg'; ?>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-32x32.png') : 'assets/images/favicon-32x32.png'; ?>">
   <link rel="shortcut icon" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.ico') : 'assets/images/favicon.ico'; ?>" type="image/x-icon">
   <link rel="icon" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.ico') : 'assets/images/favicon.ico'; ?>" type="image/x-icon">
 

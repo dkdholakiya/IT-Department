@@ -33,7 +33,9 @@ if (!empty($page_css)) {
     <meta name="description" content="<?php echo htmlspecialchars($description); ?>">
     <title><?php echo htmlspecialchars($title); ?></title>
 
-    <!-- Favicons -->
+    <!-- High-Definition Dynamic Favicons -->
+    <link rel="icon" type="image/svg+xml" href="<?php echo v_asset('assets/images/favicon.svg'); ?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo v_asset('assets/images/favicon-32x32.png'); ?>">
     <link rel="shortcut icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
     <link rel="icon" href="<?php echo v_asset('assets/images/favicon.ico'); ?>" type="image/x-icon">
     <link rel="apple-touch-icon" href="<?php echo v_asset('assets/images/apple-touch-icon.png'); ?>">
