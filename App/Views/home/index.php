@@ -53,6 +53,17 @@
       background: #09090f;
       color: #e8e8f4;
       transition: background-color 0.4s ease, color 0.4s ease;
+      touch-action: none;
+      -webkit-touch-callout: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    #canvas-container, #hex-canvas {
+      touch-action: none;
+      -webkit-touch-callout: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     body.light-mode {
@@ -514,7 +525,7 @@
   </div>
 
   <!-- 3D Three.js Scene Container (3D Orbii Robot) -->
-  <div id="canvas-container" class="fixed inset-0 w-full h-full z-[5]"></div>
+  <div id="canvas-container" class="fixed inset-0 w-full h-full z-[5] touch-none"></div>
 
   <!-- Top Navigation Header (Fully Responsive on All Screen Sizes) -->
   <header class="relative z-20 w-full max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12 pt-4 sm:pt-6 md:pt-8 flex items-center justify-between">
@@ -669,8 +680,12 @@
       // ==========================================
       const customCursor = document.getElementById('custom-cursor');
       const topAdoptBtn = document.getElementById('top-adopt-btn');
+      const topLoginBtn = document.getElementById('top-login-btn');
       const mobileAdoptBtn = document.getElementById('mobile-adopt-btn');
       const mobileLoginBtn = document.getElementById('mobile-login-btn');
+      const themeToggleBtn = document.getElementById('theme-toggle-btn');
+      const sunIcon = document.getElementById('theme-sun-icon');
+      const moonIcon = document.getElementById('theme-moon-icon');
       const heroAdoptBtn = document.getElementById('hero-adopt-btn');
       const navTricksBtn = document.getElementById('nav-tricks');
       const navPills = document.querySelectorAll('.nav-pill');
@@ -1348,64 +1363,135 @@
 
 
 
-      // Real-time PC mouse cursor tracking: moving your PC mouse immediately drives the cursor and 3D AI model!
-      window.addEventListener('pointermove', (e) => {
-        const nx = e.clientX / window.innerWidth;
-        const ny = e.clientY / window.innerHeight;
+      // ==========================================
+      // HUMAN-LIKE AFFIRMATIVE "YES" HEAD NOD GESTURE
+      // ==========================================
+      let nodStartTime = -999;
+      let isNodding = false;
+      let lastNodTrigger = 0;
 
-        // If Auto Demo was running and the user moves their PC mouse, switch to live PC cursor control automatically
-        if (isAiDemoMode && (Math.abs(e.movementX) > 2 || Math.abs(e.movementY) > 2)) {
+      function triggerNodYes() {
+        const now = performance.now();
+        // Prevent abrupt restarts if user twitches over button within 320ms
+        if (now - lastNodTrigger < 320) return;
+        lastNodTrigger = now;
+        nodStartTime = now;
+        isNodding = true;
+      }
+
+      // ==========================================
+      // UNIFIED REAL-TIME DESKTOP MOUSE & MOBILE TOUCH TRACKING
+      // ==========================================
+      function updateTrackingPosition(clientX, clientY) {
+        if (typeof clientX !== 'number' || typeof clientY !== 'number') return;
+        const nx = Math.max(0, Math.min(1, clientX / window.innerWidth));
+        const ny = Math.max(0, Math.min(1, clientY / window.innerHeight));
+
+        // Disable auto-demo if running
+        if (isAiDemoMode) {
           setAiDemoMode(false);
         }
 
         cursorState.targetX = nx;
         cursorState.targetY = ny;
-        // Snap custom cursor ring directly to PC mouse position with zero lag
         cursorState.x = nx;
         cursorState.y = ny;
 
         if (!isAiDemoMode) {
-          
-
-          // Check if PC cursor is right between Orbii's eyes (center forehead zone)
+          // Check if cursor/finger is right between Orbii's eyes (center forehead zone)
           const distToForehead = Math.hypot(nx - 0.5, ny - 0.49);
           if (!isHoveringCta && !isAngryLocked) {
-            if (distToForehead < 0.055) {
+            if (distToForehead < 0.070) {
               applyTheme('angry', 'angry-visor');
             } else if (cursorState.theme === 'angry') {
               applyTheme('default', null);
             }
           }
         }
-      });
-
-      // Hover listeners for Action buttons (Login & Dashboard on desktop & mobile)
-      const topLoginBtn = document.getElementById('top-login-btn');
-      [topAdoptBtn, topLoginBtn, heroAdoptBtn, mobileAdoptBtn, mobileLoginBtn].forEach((btn) => {
-        if (!btn) return;
-        btn.addEventListener('pointerenter', () => {
-          isHoveringCta = true;
-          isAngryLocked = false;
-          if (!isAiDemoMode) applyTheme('green', 'top-cta');
-        });
-        btn.addEventListener('pointerleave', () => {
-          isHoveringCta = false;
-          if (!isAiDemoMode) applyTheme('default', null);
-        });
-      });
-
-      const heroLoginBtn = document.getElementById('hero-login-btn');
-      if (heroLoginBtn) {
-        heroLoginBtn.addEventListener('pointerenter', () => {
-          isHoveringCta = true;
-          isAngryLocked = false;
-          if (!isAiDemoMode) applyTheme('green', 'hero-cta');
-        });
-        heroLoginBtn.addEventListener('pointerleave', () => {
-          isHoveringCta = false;
-          if (!isAiDemoMode) applyTheme('default', null);
-        });
       }
+
+      // Desktop PC mouse tracking
+      window.addEventListener('pointermove', (e) => {
+        updateTrackingPosition(e.clientX, e.clientY);
+      });
+      window.addEventListener('pointerdown', (e) => {
+        updateTrackingPosition(e.clientX, e.clientY);
+      });
+
+      // Mobile Touch Tracking: 100% reliable continuous finger tracking
+      window.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          const t = e.touches[0];
+          updateTrackingPosition(t.clientX, t.clientY);
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          const t = e.touches[0];
+          updateTrackingPosition(t.clientX, t.clientY);
+        }
+      }, { passive: true });
+
+      // After user lifts finger on mobile, gently ease gaze to center after an idle delay
+      let touchIdleTimer = null;
+      window.addEventListener('touchend', () => {
+        clearTimeout(touchIdleTimer);
+        touchIdleTimer = setTimeout(() => {
+          cursorState.targetX = 0.5;
+          cursorState.targetY = 0.5;
+        }, 1800);
+      }, { passive: true });
+
+      // ==========================================
+      // ATTACH "YES" NOD TO ANY BUTTON ON THE PAGE
+      // ==========================================
+      function registerButtonNod(el) {
+        if (!el) return;
+        // Desktop mouse hover
+        el.addEventListener('pointerenter', () => {
+          triggerNodYes();
+          isHoveringCta = true;
+          isAngryLocked = false;
+          if (!isAiDemoMode && cursorState.theme !== 'angry') {
+            applyTheme('green', 'top-cta');
+          }
+        });
+        el.addEventListener('pointerleave', () => {
+          isHoveringCta = false;
+          if (!isAiDemoMode && cursorState.theme !== 'angry') {
+            applyTheme('default', null);
+          }
+        });
+        // Mobile touch tap / hold
+        el.addEventListener('touchstart', () => {
+          triggerNodYes();
+          isHoveringCta = true;
+          if (!isAiDemoMode && cursorState.theme !== 'angry') {
+            applyTheme('green', 'top-cta');
+          }
+        }, { passive: true });
+        el.addEventListener('touchend', () => {
+          isHoveringCta = false;
+          if (!isAiDemoMode && cursorState.theme !== 'angry') {
+            applyTheme('default', null);
+          }
+        }, { passive: true });
+      }
+
+      // Bind all buttons & links (Header, Mobile Dock, Theme Switcher, Brand Logo, Modals)
+      const allActionButtons = [
+        topLoginBtn,
+        topAdoptBtn,
+        mobileLoginBtn,
+        mobileAdoptBtn,
+        themeToggleBtn,
+        brandLogo,
+        closeModalBtn,
+        ...Array.from(document.querySelectorAll('header button, header a, .mobile-dock a, .mobile-dock button, #adopt-modal a, #adopt-modal button'))
+      ];
+
+      new Set(allActionButtons.filter(Boolean)).forEach(registerButtonNod);
 
       if (closeModalBtn && adoptModal) {
         closeModalBtn.addEventListener('click', () => {
@@ -1627,10 +1713,6 @@
       }
 
       // Theme Switcher Event Listener
-      const themeToggleBtn = document.getElementById('theme-toggle-btn');
-      const sunIcon = document.getElementById('theme-sun-icon');
-      const moonIcon = document.getElementById('theme-moon-icon');
-
       function updateThemeIcons(light) {
         if (!sunIcon || !moonIcon) return;
         if (light) {
@@ -1710,14 +1792,50 @@
         animState.headRotX += (targetRotX - animState.headRotX) * 0.14;
         animState.headRotZ += (targetRotZ - animState.headRotZ) * 0.14;
 
+        // Calculate Human-like "Yes" Neck & Head Nod Motion
+        let nodRotX = 0;
+        let nodPosY = 0;
+        let nodBlink = 0;
+
+        if (isNodding) {
+          const nodElapsed = (now - nodStartTime) / 1000; // in seconds
+          const nodDuration = 0.88; // ~0.88s for natural double-nod
+          if (nodElapsed < nodDuration) {
+            const p = nodElapsed / nodDuration; // 0..1
+            // Smooth bell envelope for the gesture
+            const env = Math.sin(p * Math.PI) * Math.pow(1 - p, 0.35);
+            // 2 full nod cycles at ~2.3 Hz
+            const wave = Math.sin(nodElapsed * Math.PI * 4.6);
+            // Downward pitch bias (nod starts by dipping down affirmatively)
+            const downwardBias = Math.sin(p * Math.PI) * 0.22;
+            nodRotX = (wave * 0.22 + downwardBias) * env * 1.6;
+            // Vertical neck translation (neck compresses slightly on downward nod)
+            nodPosY = -Math.max(0, nodRotX) * 0.18;
+            // Affirmative happy eyelid dip during peak of first nod
+            if (p > 0.12 && p < 0.45) {
+              nodBlink = Math.sin((p - 0.12) / 0.33 * Math.PI) * 0.38;
+            }
+          } else {
+            isNodding = false;
+            nodRotX = 0;
+            nodPosY = 0;
+          }
+        }
+
+        // Apply Head Rotation (with affirmative "Yes" neck pitch)
         robotHeadGroup.rotation.y = animState.headRotY;
-        robotHeadGroup.rotation.x = animState.headRotX;
+        robotHeadGroup.rotation.x = animState.headRotX + nodRotX;
         robotHeadGroup.rotation.z = animState.headRotZ;
 
-        // Subtle 3D head translation toward the PC cursor for lifelike depth
+        // Responsive Mobile Sizing: make model more little/compact on mobile screens (< 768px)
+        const isMobileScreen = window.innerWidth < 768;
+        const targetScale = isMobileScreen ? Math.max(0.64, Math.min(0.76, window.innerWidth / 520)) : 1.0;
+        robotRoot.scale.set(targetScale, targetScale, targetScale);
+
+        // Subtle 3D head translation toward the cursor/finger for lifelike depth
         robotRoot.position.x += ((lookCenter ? 0 : dx * 0.38) - robotRoot.position.x) * 0.12;
 
-        // Secondary eye shift inside visor following the PC cursor
+        // Secondary eye shift inside visor following the cursor/finger
         const targetEyeX = lookCenter ? 0 : THREE.MathUtils.clamp(dx * 1.55, -0.72, 0.72);
         const targetEyeY = lookCenter ? 0 : THREE.MathUtils.clamp(-dy * 1.45, -0.65, 0.65);
         animState.eyeShiftX += (targetEyeX - animState.eyeShiftX) * 0.2;
@@ -1727,13 +1845,17 @@
         const targetEntranceY = (isAiDemoMode && currentVideoSec >= 26.8 && currentVideoSec < 27.85) ? -3.35 : 0;
         animState.entranceOffsetY += (targetEntranceY - animState.entranceOffsetY) * 0.11;
 
-        // Gentle floating idle bobbing
+        // Gentle floating idle bobbing + base vertical offset for mobile framing + neck nod bobbing
         const floatY = Math.sin(elapsedSec * 2.1) * 0.09;
-        robotRoot.position.y = floatY + animState.entranceOffsetY;
+        const baseOffsetY = isMobileScreen ? 0.08 : 0;
+        robotRoot.position.y = baseOffsetY + floatY + animState.entranceOffsetY + nodPosY;
 
-        // Scale floor shadow with height
+        // Scale floor shadow proportionally with robot size & height
+        const currentScale = robotRoot.scale.x;
         const shadowScale = THREE.MathUtils.clamp(1.0 - (floatY + animState.entranceOffsetY) * 0.15, 0.5, 1.3);
-        shadowPlane.scale.set(shadowScale, shadowScale, 1);
+        const shadowBaseY = -2.35 * currentScale + baseOffsetY;
+        shadowPlane.position.y = shadowBaseY;
+        shadowPlane.scale.set(shadowScale * currentScale, shadowScale * currentScale, 1);
 
         // Animate background hex tiles & floating spheres subtly
         hexTiles.forEach((tile) => {
@@ -1764,6 +1886,11 @@
         animState.angryAmount += (targetAngry - animState.angryAmount) * 0.18;
         animState.targetReticle += (targetReticle - animState.targetReticle) * 0.2;
 
+        // Blend nod affirmative blink
+        if (nodBlink > 0) {
+          animState.blinkAmount = Math.max(animState.blinkAmount, nodBlink);
+        }
+
         // Natural occasional eye blink (when not angry)
         if (elapsedSec > nextBlinkTime && animState.angryAmount < 0.1) {
           const blinkPhase = (elapsedSec - nextBlinkTime) / 0.18;
@@ -1789,10 +1916,12 @@
       function onWindowResize() {
         const aspect = window.innerWidth / window.innerHeight;
         camera.aspect = aspect;
-        if (aspect < 0.85) {
-          // Mobile portrait mode: pull camera back so Orbii robot & shadow stay beautifully framed
-          camera.position.z = 13.5 + (0.85 - aspect) * 6.5;
+        const isMobileScreen = window.innerWidth < 768;
+        if (isMobileScreen) {
+          // Mobile portrait mode: pull camera back slightly to frame compact robot comfortably
+          camera.position.z = 14.2 + Math.max(0, (0.85 - aspect) * 4.5);
         } else {
+          // Desktop: exact original distance
           camera.position.z = 13.5;
         }
         camera.updateProjectionMatrix();
