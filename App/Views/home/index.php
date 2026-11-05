@@ -206,7 +206,7 @@
       -webkit-backdrop-filter: blur(24px) saturate(190%);
       border: 1.5px solid rgba(255, 255, 255, 0.25);
       border-radius: 9999px;
-      padding: 6px 14px 6px 12px;
+      padding: 6px 20px 6px 12px;
       box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55),
                   inset 0 1px 1px rgba(255, 255, 255, 0.4),
                   0 0 24px rgba(140, 80, 255, 0.22);
@@ -263,32 +263,7 @@
       background: rgba(0, 0, 0, 0.12);
     }
 
-    /* Circular Pill Action Buttons (>> and x) */
-    .pill-action-circle {
-      width: 30px;
-      height: 30px;
-      border-radius: 9999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      transition: all 0.25s ease;
-      cursor: pointer;
-    }
-    .pill-action-circle:hover {
-      transform: scale(1.1);
-      background: rgba(255, 255, 255, 0.18);
-      border-color: rgba(255, 255, 255, 0.35);
-    }
-    body.light-mode .pill-action-circle {
-      background: rgba(244, 246, 252, 0.95);
-      border: 1px solid rgba(215, 222, 240, 0.9);
-    }
-    body.light-mode .pill-action-circle:hover {
-      background: #ffffff;
-      border-color: #a0a5b8;
-    }
+
 
     /* Brand Logo Icon Styling for Dark & Light Themes */
     .brand-logo-icon {
@@ -700,24 +675,7 @@
         </div>
       </div>
 
-      <!-- Right Actions (Visible on sm+ screens, matching reference image >> and x) -->
-      <div class="hidden sm:flex items-center gap-1.5 pl-1">
-        <div class="brand-divider"></div>
-        <!-- >> Button (Go to Dashboard) -->
-        <a href="<?= base_url('dashboard') ?>" id="pill-dashboard-btn" class="pill-action-circle hover:border-emerald-500/50 text-emerald-400" title="Go to Dashboard">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="13 17 18 12 13 7"/>
-            <polyline points="6 17 11 12 6 7"/>
-          </svg>
-        </a>
-        <!-- x Button (Portal Details Modal) -->
-        <button id="pill-modal-btn" type="button" class="pill-action-circle hover:border-purple-400 text-gray-300 light:text-gray-600" title="Portal Information">
-          <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
+
     </div>
 
     <!-- Top-Right Action Buttons: Theme Toggle & Desktop Action Buttons -->
@@ -1653,16 +1611,6 @@
         }, { passive: true });
       }
 
-      // Connect Pill action buttons
-      const pillModalBtn = document.getElementById('pill-modal-btn');
-      const pillDashboardBtn = document.getElementById('pill-dashboard-btn');
-      if (pillModalBtn && adoptModal) {
-        pillModalBtn.addEventListener('click', () => {
-          adoptModal.classList.toggle('hidden');
-          adoptModal.classList.toggle('flex');
-        });
-      }
-
       // Bind all buttons & links (Header, Mobile Dock, Theme Switcher, Brand Logo, Modals)
       const allActionButtons = [
         topLoginBtn,
@@ -1672,8 +1620,6 @@
         themeToggleBtn,
         brandLogo,
         closeModalBtn,
-        pillModalBtn,
-        pillDashboardBtn,
         ...Array.from(document.querySelectorAll('header button, header a, .mobile-dock a, .mobile-dock button, #adopt-modal a, #adopt-modal button'))
       ];
 
