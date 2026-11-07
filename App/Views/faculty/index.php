@@ -1,463 +1,454 @@
 <?php
-$page_title = 'Faculty Directory — CE & IT Department';
-$page_description = 'Faculty Directory — Meet our academic mentors, researchers, and creators shaping the future of IT.';
-$page_css = [
-    'assets/vendor/bootstrap/css/bootstrap.min.css',
-    'assets/css/portal.css',
-    'assets/css/faculty.css',
-];
-include 'head.php';
+$page_title = 'Faculty List — CE & IT Department';
+$page_css = ['assets/css/faculty.css'];
+include dirname(__DIR__) . '/partials/dashboard-head.php';
 ?>
 
-    <div class="fac-page">
+  <!-- MAIN WRAPPER: Balanced Responsive Top Spacing (Snug 6-8px Gap below Mobile Fixed Navbar, 100vh on Desktop) -->
+  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-[72px] sm:pt-[76px] lg:pt-3.5 pb-6 sm:pb-8 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row gap-2.5 sm:gap-3 lg:gap-4 overflow-x-hidden lg:overflow-hidden">
 
-        <!-- ░░ Particles ░░ -->
-        <div class="particles" aria-hidden="true">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-        </div>
-
-        <!-- Glowing Orbs -->
-        <div class="orb orb-1" aria-hidden="true"></div>
-        <div class="orb orb-2" aria-hidden="true"></div>
-        <div class="orb orb-3" aria-hidden="true"></div>
-
-        <!-- ── Page Header (matches report.php structure) ── -->
-        <header class="rp-header">
-            <div class="rp-header-inner">
-                <a href="<?php echo base_url('/'); ?>" class="back-btn">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path d="M19 12H5M12 5l-7 7 7 7" />
-                    </svg>
-                    Back to Portal
-                </a>
-
-                <div class="rp-header-center">
-                    <div class="rp-dept-badge">
-                        <span class="rp-badge-dot"></span>
-                        <span id="rpDeptBadgeText">Department of Information Technology</span>
-                    </div>
-                    <h1 class="rp-title">Faculty Directory</h1>
-                </div>
-
-                <div class="d-flex align-items-center gap-2">
-                    <button type="button" class="export-excel-btn" id="exportExcelBtn" onclick="exportFacultyExcel()" title="Export Faculty Directory to Excel">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg>
-                        <span>Export Excel</span>
-                    </button>
-                    <span class="portal-badge" id="portalBadge">IT Faculty</span>
-                </div>
-            </div>
-        </header>
-
-        <!-- ── Faculty Filter ── -->
-        <div class="fac-filter-container">
-            <div class="zs-segment-control">
-                <button type="button" class="segment-btn active" id="filter-all-btn" data-dept="all">All Departments</button>
-                <button type="button" class="segment-btn" id="filter-it-btn" data-dept="Information Technology">Information Technology</button>
-                <button type="button" class="segment-btn" id="filter-ce-btn" data-dept="Computer Engineering">Computer Engineering</button>
-            </div>
-        </div>
-
-        <!-- ── Faculty Search ── -->
-        <div class="fac-search-container">
-            <div class="search-input-wrap" id="searchWrapper">
-                <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" id="faculty-search-input" placeholder="Search by name or initials" autocomplete="off">
-            </div>
-        </div>
-
-        <!-- ── Faculty Grid Container ── -->
-        <main class="faculty-grid" id="facultyGrid">
-            <!-- Dynamic cards rendered by JS -->
-        </main>
-
-        <!-- Footer -->
-        <?php 
-        $footer_class = 'rp-footer text-center';
-        include 'footer.php'; 
-        ?>
-
-    </div><!-- /fac-page -->
-
-    <!-- ░░ MODAL POPUPS CONTAINER (Bootstrap 5) ░░ -->
-    <div id="modalContainer">
-        <!-- Dynamic modals rendered by JS -->
-    </div>
-
-    <?php 
+    <!-- Shared Samsung Edge Shortcut Sidebar -->
+    <?php
     $active_page = 'faculty';
-    include 'fab-nav.php'; 
+    $sidebar_mode = 'nav';
+    $sidebar_active_label = 'Faculty List';
+    include dirname(__DIR__) . '/partials/sidebar.php';
     ?>
 
-    <!-- Bootstrap 5 CDN JS Bundle -->
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+    <!-- ================= RIGHT COLUMN: TOP NAVBAR + FACULTY WORKSPACE ================= -->
+    <div class="flex-1 min-h-0 min-w-0 flex flex-col gap-2.5 sm:gap-3 lg:gap-3">
 
-    <!-- Load Shared Faculty Data -->
-    <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>"></script>
+      <!-- ================= TOP NAVIGATION BAR (SHARED PARTIAL) ================= -->
+      <?php
+      $nav_title = 'Faculty List';
+      $nav_subtitle = 'CE & IT Department • Directory & Management';
+      $nav_search_placeholder = 'Search faculty by name, initials, ID, room...';
+      include dirname(__DIR__) . '/partials/navbar.php';
+      ?>
 
-    <!-- Rendering & Export Logic Script -->
-    <script>
-        let exportFacultyExcel = null;
+      <!-- ================= MAIN WORKSPACE: GLASS FACULTY DIRECTORY & TABLE ================= -->
+      <main class="fac-main-workspace flex-1 min-h-0 min-w-0 glass-card p-3 sm:p-5 flex flex-col justify-between overflow-hidden relative transition-all duration-300">
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const grid = document.getElementById("facultyGrid");
-            const modalContainer = document.getElementById("modalContainer");
+        <!-- 1. TOP HEADER & CONTROLS TOOLBAR -->
+        <div class="flex flex-col gap-3 pb-3 border-b border-black/5 dark:border-white/10 shrink-0">
+          
+          <!-- Top Row: Title + Live Badge & Action Buttons -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="text-base sm:text-xl md:text-2xl font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none">
+                  Faculty Directory & Records
+                </h2>
+                <span id="totalFacultyBadge" class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10 shadow-sm shrink-0">
+                  Loading...
+                </span>
+              </div>
+              <p class="text-[11.5px] sm:text-xs text-[var(--text-muted)] mt-1 hidden sm:block">
+                Academic staff list with designations, cabins, contact details, and single-click administrative actions.
+              </p>
+            </div>
 
-            let currentFilterDept = "all";
-            let currentSearchQuery = "";
+            <!-- Action Buttons: + Add Faculty, Export Excel, Reset Defaults -->
+            <div class="flex items-center gap-1.5 sm:gap-2 self-start sm:self-auto flex-wrap">
+              <!-- Reset Button -->
+              <button
+                type="button"
+                id="resetFacultyDefaultsBtn"
+                class="h-7 sm:h-8 px-2 sm:px-2.5 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 shrink-0 cursor-pointer"
+                title="Reset back to default faculty list"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                </svg>
+                <span class="hidden md:inline">Reset Defaults</span>
+              </button>
 
-            // Helper to check if a faculty member's department matches the filter (supports Both, IT & CE, etc.)
-            const isDeptMatch = (memberDept, filterDept) => {
-                if (filterDept === "all") return true;
-                if (!memberDept) return true;
-                const d = memberDept.toLowerCase().trim();
-                if (d === "both" || d.includes("both") || d.includes("it & ce") || d.includes("ce & it") || d.includes("it/ce") || d.includes("ce/it")) {
-                    return true;
-                }
-                if (filterDept === "Information Technology") {
-                    return d === "information technology" || d.includes("information technology") || d === "it";
-                }
-                if (filterDept === "Computer Engineering") {
-                    return d === "computer engineering" || d.includes("computer engineering") || d === "ce";
-                }
-                return d === filterDept.toLowerCase();
-            };
+              <!-- Export Excel Button -->
+              <button
+                type="button"
+                id="exportExcelBtn"
+                class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+                title="Export filtered faculty list to Excel"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span class="hidden xs:inline">Export</span><span class="hidden md:inline">&nbsp;Excel</span>
+              </button>
 
-            // Calculate faculty counts dynamically
-            const allCount = facultyData.length;
-            const itCount = facultyData.filter(m => isDeptMatch(m.department, "Information Technology")).length;
-            const ceCount = facultyData.filter(m => isDeptMatch(m.department, "Computer Engineering")).length;
+              <!-- + Add Faculty Button -->
+              <button
+                type="button"
+                id="addFacultyBtn"
+                class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl bg-[var(--color-primary)] text-white text-[10.5px] sm:text-[11px] font-bold hover:brightness-105 active:scale-95 transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+                title="Add a new faculty member"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+                <span>Add Faculty</span>
+              </button>
+            </div>
+          </div>
 
-            // Update button texts to show counts with styled badge
-            const allBtn = document.getElementById("filter-all-btn");
-            const itBtn = document.getElementById("filter-it-btn");
-            const ceBtn = document.getElementById("filter-ce-btn");
+          <!-- Bottom Row: Filter Tabs & Search Bar -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 sm:gap-2.5">
+            
+            <!-- Left: Department Segment & Status Filter Segment (horizontally scrollable without ugly scrollbar) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 w-full md:w-auto shrink-0">
+              <!-- Department Pills -->
+              <div class="inline-flex items-center p-0.5 rounded-full glass-pill border border-white/80 dark:border-white/10 shrink-0">
+                <button
+                  type="button"
+                  id="deptFilterAll"
+                  class="fac-seg-btn active"
+                >
+                  <span class="hidden md:inline">All Departments</span>
+                  <span class="md:hidden">All</span>
+                </button>
+                <button
+                  type="button"
+                  id="deptFilterIt"
+                  class="fac-seg-btn"
+                >
+                  <span class="hidden md:inline">Information Technology</span>
+                  <span class="md:hidden">IT</span>
+                </button>
+                <button
+                  type="button"
+                  id="deptFilterCe"
+                  class="fac-seg-btn"
+                >
+                  <span class="hidden md:inline">Computer Engineering</span>
+                  <span class="md:hidden">CE</span>
+                </button>
+              </div>
 
-            if (allBtn) allBtn.innerHTML = `All Departments <span class="dept-count">${allCount}</span>`;
-            if (itBtn) itBtn.innerHTML = `Information Technology <span class="dept-count">${itCount}</span>`;
-            if (ceBtn) ceBtn.innerHTML = `Computer Engineering <span class="dept-count">${ceCount}</span>`;
+              <!-- Status Filter Pills -->
+              <div class="inline-flex items-center p-0.5 rounded-full glass-pill border border-white/80 dark:border-white/10 shrink-0">
+                <button
+                  type="button"
+                  id="statusFilterAll"
+                  class="fac-seg-btn active"
+                  title="Show all records"
+                >
+                  All
+                </button>
+                <button
+                  type="button"
+                  id="statusFilterActive"
+                  class="fac-seg-btn"
+                  title="Filter active faculty only"
+                >
+                  Active
+                </button>
+                <button
+                  type="button"
+                  id="statusFilterInactive"
+                  class="fac-seg-btn"
+                  title="Filter inactive faculty only"
+                >
+                  Inactive
+                </button>
+              </div>
+            </div>
 
-            // Render function with optional department and search filtering
-            function renderFaculty(filterDept = "all", searchQuery = "") {
-                let cardsHtml = "";
-                let modalsHtml = "";
-                const query = searchQuery.toLowerCase().trim();
+            <!-- Right: Search Input -->
+            <div class="w-full md:w-64 lg:w-72 shrink-0">
+              <div class="h-8 sm:h-9 px-3 rounded-full glass-pill flex items-center gap-2 border border-white/80 dark:border-white/10 shadow-sm w-full">
+                <svg class="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input
+                  type="text"
+                  id="facultySearchInput"
+                  class="fac-search-input"
+                  placeholder="Search name, ID, room..."
+                  autocomplete="off"
+                />
+              </div>
+            </div>
 
-                const getAvatarClass = (member) => {
-                    const legacyClasses = ["av-dc", "av-sw", "av-eu", "av-tv"];
-                    if (member.avatarClass && legacyClasses.includes(member.avatarClass)) {
-                        return member.avatarClass;
-                    }
-                    const colors = [
-                        'av-theme-red', 'av-theme-blue', 'av-theme-purple', 
-                        'av-theme-teal', 'av-theme-green', 'av-theme-orange', 
-                        'av-theme-indigo', 'av-theme-cyan', 'av-theme-pink'
-                    ];
-                    let hash = 0;
-                    const name = member.name || "";
-                    for (let i = 0; i < name.length; i++) {
-                        hash = name.charCodeAt(i) + ((hash << 5) - hash);
-                    }
-                    const index = Math.abs(hash) % colors.length;
-                    return colors[index];
-                };
+          </div>
 
-                const generateCardHtml = (member, avatarClass) => {
-                    return `
-                    <div class="faculty-card">
-                        <div class="avatar-wrapper">
-                            <div class="avatar-glow"></div>
-                            <div class="avatar-image-placeholder ${avatarClass}">${member.initials}</div>
-                        </div>
-                        <h3 class="faculty-name">${member.name}</h3>
-                        <div class="faculty-desg">${member.designation}</div>
-                        <div class="faculty-dept">${member.department || "Information Technology"}</div>
-                        <p class="faculty-focus">Employee ID: ${member.empId}${member.setting ? ` | Setting: ${member.setting}` : ''}<br>Contact: ${member.email}</p>
-                        <button type="button" class="details-btn" data-bs-toggle="modal" data-bs-target="#modal-${member.id}">
-                            <span>View More Details</span>
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-                    </div>`;
-                };
+        </div>
 
-                const generateModalHtml = (member, avatarClass) => {
-                    const phoneDigits = (member.phone || '').replace(/\s+/g, '');
-                    return `
-                    <div class="modal fade gmiu-modal" id="modal-${member.id}" tabindex="-1" aria-labelledby="modal-${member.id}-label" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modal-${member.id}-label">Faculty Profile Details</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body text-center">
-                                    <div class="modal-avatar-wrapper mx-auto mb-3">
-                                        <div class="modal-avatar-gradient ${avatarClass}">${member.initials}</div>
-                                    </div>
-                                    <h4 class="modal-fac-name">${member.name}</h4>
-                                    <p class="modal-fac-desg">${member.designation}</p>
-                                    <p class="modal-fac-dept">${member.department || "Information Technology"}</p>
-                                    
-                                    <div class="modal-fac-cabin mb-3 d-flex justify-content-center align-items-center gap-3 flex-wrap">
-                                        <span>🆔 Employee ID: ${member.empId}</span>
-                                        ${member.setting ? `<span>📍 Setting: <strong>${member.setting}</strong></span>` : ''}
-                                    </div>
-                                    
-                                    <div class="modal-fac-contact d-flex flex-column gap-2">
-                                        <a href="mailto:${member.email}" class="modal-contact-link" title="Click to email">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                                <polyline points="22,6 12,13 2,6"/>
-                                            </svg>
-                                            ${member.email}
-                                        </a>
-                                        <a href="tel:${phoneDigits}" class="modal-contact-link" title="Click to call">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                                            </svg>
-                                            +91 ${member.phone}
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="modal-footer justify-content-center">
-                                    <button type="button" class="modal-action-close" data-bs-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-                };
+        <!-- 2. MAIN SCROLLABLE TABLE AREA -->
+        <div class="fac-table-card flex-1 min-h-0 my-2">
+          <div class="fac-table-wrapper rounded-2xl border border-black/5 dark:border-white/10">
+            <table class="fac-table">
+              <thead>
+                <tr>
+                  <th class="w-10 sm:w-12 text-center hidden sm:table-cell">#</th>
+                  <th>Faculty Member</th>
+                  <th>Department</th>
+                  <th class="hidden md:table-cell">Designation</th>
+                  <th class="hidden lg:table-cell">Employee ID</th>
+                  <th class="hidden sm:table-cell">Contact Details</th>
+                  <th>Status</th>
+                  <th class="action-col-header text-right pr-3 sm:pr-4">Action</th>
+                </tr>
+              </thead>
+              <tbody id="facultyTableBody">
+                <!-- Dynamically rendered via assets/js/faculty.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-                // Fixed Top HOD IDs in exact order: [1st: Dhaval Chandarana (HOD), 2nd: Shwetaba Chauhan, 3rd: Ekta Unagar]
-                const fixedHodIds = ["dc", "sw", "eu"];
+        <!-- 3. BOTTOM PAGINATION & METRICS FOOTER -->
+        <div class="pt-2.5 sm:pt-3 border-t border-black/5 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 shrink-0">
+          <!-- Summary Text & Page Size Selector -->
+          <div class="flex items-center gap-3 text-xs text-[var(--text-muted)]">
+            <span id="tableInfoText" class="font-semibold select-none">
+              Loading faculty members...
+            </span>
 
-                // 1. Separate fixed top HOD members that match active filter
-                let topHodMembers = [];
-                fixedHodIds.forEach(id => {
-                    const member = facultyData.find(m => m.id === id);
-                    if (member) {
-                        const deptMatch = isDeptMatch(member.department, filterDept);
-                        let searchMatch = true;
-                        if (query !== "") {
-                            const nameMatches = (member.name || "").toLowerCase().includes(query);
-                            const initialsMatches = (member.initials || "").toLowerCase().includes(query);
-                            const settingMatches = (member.setting || "").toLowerCase().includes(query);
-                            searchMatch = nameMatches || initialsMatches || settingMatches;
-                        }
-                        if (deptMatch && searchMatch) {
-                            topHodMembers.push(member);
-                        }
-                    }
-                });
+            <div class="hidden sm:flex items-center gap-1.5 pl-3 border-l border-black/10 dark:border-white/10">
+              <label for="pageSizeSelect" class="font-medium text-[11px] select-none">Rows per page:</label>
+              <select
+                id="pageSizeSelect"
+                class="px-2 py-0.5 rounded-lg glass-pill font-bold text-xs text-[var(--text-primary)] border border-white/80 dark:border-white/10 focus:outline-none cursor-pointer"
+              >
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="50">50</option>
+                <option value="all">All</option>
+              </select>
+            </div>
+          </div>
 
-                // 2. Filter remaining faculty members (excluding fixed HODs)
-                let remainingMembers = facultyData.filter(member => {
-                    if (fixedHodIds.includes(member.id)) return false;
+          <!-- Page Navigation Buttons -->
+          <div id="paginationControls" class="flex items-center gap-1 shrink-0">
+            <!-- Dynamically rendered via assets/js/faculty.js -->
+          </div>
+        </div>
 
-                    if (!isDeptMatch(member.department, filterDept)) {
-                        return false;
-                    }
-                    if (query !== "") {
-                        const nameMatches = (member.name || "").toLowerCase().includes(query);
-                        const initialsMatches = (member.initials || "").toLowerCase().includes(query);
-                        const settingMatches = (member.setting || "").toLowerCase().includes(query);
-                        if (!nameMatches && !initialsMatches && !settingMatches) {
-                            return false;
-                        }
-                    }
-                    return true;
-                });
+      </main>
 
-                // 3. Shuffle remaining members using Fisher-Yates algorithm
-                for (let i = remainingMembers.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [remainingMembers[i], remainingMembers[j]] = [remainingMembers[j], remainingMembers[i]];
-                }
+    </div><!-- /Workspace -->
 
-                // 4. Render HTML: Top HOD Row (Row 1: 3 cards) + Shuffled Grid (Row 2+: 4 cards per row)
-                if (topHodMembers.length > 0) {
-                    let topRowCardsHtml = "";
-                    topHodMembers.forEach(member => {
-                        const avatarClass = getAvatarClass(member);
-                        topRowCardsHtml += generateCardHtml(member, avatarClass);
-                        modalsHtml += generateModalHtml(member, avatarClass);
-                    });
-                    cardsHtml += `<div class="hod-top-row hod-cols-${topHodMembers.length}">${topRowCardsHtml}</div>`;
-                }
+  </div><!-- /Main Wrapper -->
 
-                remainingMembers.forEach(member => {
-                    const avatarClass = getAvatarClass(member);
-                    cardsHtml += generateCardHtml(member, avatarClass);
-                    modalsHtml += generateModalHtml(member, avatarClass);
-                });
 
-                grid.innerHTML = cardsHtml || `<div class="col-12 text-center text-muted py-5" style="grid-column: 1 / -1; font-size: 15px; font-family: 'Share Tech', monospace; color: var(--text-dim) !important;">No faculty members found in this department.</div>`;
-                modalContainer.innerHTML = modalsHtml;
-            }
+  <!-- ================= POPUP MODALS CONTAINER ================= -->
 
-            // Filter button event listeners
-            const filterBtns = document.querySelectorAll(".fac-filter-container .segment-btn");
-            const rpDeptBadgeText = document.getElementById("rpDeptBadgeText");
-            const portalBadge = document.getElementById("portalBadge");
+  <!-- 1. VIEW FACULTY DETAILS MODAL -->
+  <div id="viewFacultyModal" class="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-md p-5 sm:p-6 rounded-3xl relative shadow-2xl border border-white/80">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-black/10 dark:border-white/10">
+        <div>
+          <h3 class="text-base font-bold text-[var(--text-primary)]">Faculty Profile Details</h3>
+          <p class="text-xs text-[var(--text-muted)]">Full mentor credentials & contact record</p>
+        </div>
+        <button type="button" class="close-modal-trigger w-8 h-8 rounded-full glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)]" aria-label="Close">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
-            filterBtns.forEach(btn => {
-                btn.addEventListener("click", function() {
-                    filterBtns.forEach(b => b.classList.remove("active"));
-                    this.classList.add("active");
-                    currentFilterDept = this.getAttribute("data-dept");
-                    
-                    // Toggle theme class and update header texts dynamically
-                    if (currentFilterDept === "Computer Engineering") {
-                        document.body.classList.add("ce-active");
-                        document.body.classList.remove("common-active");
-                        if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Computer Engineering";
-                        if (portalBadge) portalBadge.textContent = "CE Faculty";
-                        localStorage.setItem('portal_dept', 'CE');
-                        document.title = "Faculty Directory — CE Department";
-                    } else if (currentFilterDept === "Information Technology") {
-                        document.body.classList.remove("ce-active");
-                        document.body.classList.remove("common-active");
-                        if (rpDeptBadgeText) rpDeptBadgeText.textContent = "Department of Information Technology";
-                        if (portalBadge) portalBadge.textContent = "IT Faculty";
-                        localStorage.setItem('portal_dept', 'IT');
-                        document.title = "Faculty Directory — IT Department";
-                    } else {
-                        // "all"
-                        document.body.classList.remove("ce-active");
-                        document.body.classList.add("common-active");
-                        if (rpDeptBadgeText) rpDeptBadgeText.textContent = "IT & CE Departments";
-                        if (portalBadge) portalBadge.textContent = "All Faculty";
-                        // Note: Don't overwrite local storage for 'all' tab click to preserve base page default
-                        document.title = "Faculty Directory — CE & IT Department";
-                    }
-                    
-                    renderFaculty(currentFilterDept, currentSearchQuery);
-                });
-            });
+      <div id="viewModalBody">
+        <!-- Injected dynamically -->
+      </div>
 
-            // Search input keyup/input event listener
-            const searchInput = document.getElementById("faculty-search-input");
-            const searchWrapper = document.getElementById("searchWrapper");
-            if (searchInput) {
-                searchInput.addEventListener("input", function() {
-                    currentSearchQuery = this.value;
-                    renderFaculty(currentFilterDept, currentSearchQuery);
-                });
+      <div class="pt-3 border-t border-black/5 dark:border-white/10 flex justify-end">
+        <button type="button" class="close-modal-trigger px-4 py-2 rounded-xl glass-pill font-bold text-xs text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition">
+          Close Profile
+        </button>
+      </div>
+    </div>
+  </div>
 
-                searchInput.addEventListener("focus", () => {
-                    if (searchWrapper) searchWrapper.classList.add("focused");
-                });
 
-                searchInput.addEventListener("blur", () => {
-                    if (searchWrapper) searchWrapper.classList.remove("focused");
-                });
-            }
+  <!-- 2. ADD / EDIT FACULTY FORM MODAL -->
+  <div id="facultyFormModal" class="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-lg p-5 sm:p-6 rounded-3xl relative shadow-2xl border border-white/80 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-black/10 dark:border-white/10">
+        <div>
+          <h3 id="formModalTitle" class="text-base font-bold text-[var(--text-primary)]">Add New Faculty</h3>
+          <p class="text-xs text-[var(--text-muted)]">Configure department role & mentor parameters</p>
+        </div>
+        <button type="button" class="close-modal-trigger w-8 h-8 rounded-full glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)]" aria-label="Close">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
-            // Export Filtered Faculty Data to Excel (Lazy-loads SheetJS library for super fast initial page load)
-            exportFacultyExcel = function() {
-                const runExport = () => {
-                    const query = currentSearchQuery.toLowerCase().trim();
-                    const listToExport = facultyData.filter(member => {
-                        if (!isDeptMatch(member.department, currentFilterDept)) {
-                            return false;
-                        }
-                        if (query !== "") {
-                            const nameMatches = (member.name || "").toLowerCase().includes(query);
-                            const initialsMatches = (member.initials || "").toLowerCase().includes(query);
-                            const settingMatches = (member.setting || "").toLowerCase().includes(query);
-                            if (!nameMatches && !initialsMatches && !settingMatches) return false;
-                        }
-                        return true;
-                    });
+      <form id="facultyForm" class="space-y-3.5 text-xs">
+        <!-- Full Name -->
+        <div>
+          <label for="inputName" class="block font-bold text-[var(--text-primary)] mb-1">Full Name <span class="text-red-500">*</span></label>
+          <input
+            type="text"
+            id="inputName"
+            required
+            class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium"
+            placeholder="e.g. Prof. Dhaval Chandarana"
+          />
+        </div>
 
-                    if (!listToExport || listToExport.length === 0) {
-                        alert("No faculty records found for the current selection.");
-                        return;
-                    }
+        <!-- Row: Initials & Employee ID -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+          <div>
+            <label for="inputInitials" class="block font-bold text-[var(--text-primary)] mb-1">Initials / Short Code</label>
+            <input
+              type="text"
+              id="inputInitials"
+              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono uppercase"
+              placeholder="e.g. DRC"
+            />
+          </div>
+          <div>
+            <label for="inputEmpId" class="block font-bold text-[var(--text-primary)] mb-1">Employee ID</label>
+            <input
+              type="text"
+              id="inputEmpId"
+              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono"
+              placeholder="e.g. #5036"
+            />
+          </div>
+        </div>
 
-                    // Format row data for Excel export
-                    const excelRows = listToExport.map((member, index) => ({
-                        "Sr. No.": index + 1,
-                        "Faculty Name": member.name || "",
-                        "Designation": member.designation || "",
-                        "Department": member.department || "Information Technology",
-                        "Employee ID": member.empId ? member.empId.replace('#', '') : "",
-                        "Email Address": member.email || "",
-                        "Mobile Number": member.phone ? `+91 ${member.phone}` : "",
-                        "Setting": member.setting || ""
-                    }));
+        <!-- Row: Designation & Department -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+          <div>
+            <label for="inputDesignation" class="block font-bold text-[var(--text-primary)] mb-1">Designation / Role</label>
+            <input
+              type="text"
+              id="inputDesignation"
+              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium"
+              placeholder="e.g. Assistant Professor"
+            />
+          </div>
+          <div>
+            <label for="inputDepartment" class="block font-bold text-[var(--text-primary)] mb-1">Department</label>
+            <select
+              id="inputDepartment"
+              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-semibold cursor-pointer"
+            >
+              <option value="Information Technology">Information Technology</option>
+              <option value="Computer Engineering">Computer Engineering</option>
+              <option value=" IT & CE ">IT & CE (Both)</option>
+            </select>
+          </div>
+        </div>
 
-                    // Build worksheet and set column widths
-                    const worksheet = XLSX.utils.json_to_sheet(excelRows);
-                    worksheet['!cols'] = [
-                        { wch: 8 },   // Sr. No.
-                        { wch: 28 },  // Faculty Name
-                        { wch: 24 },  // Designation
-                        { wch: 26 },  // Department
-                        { wch: 14 },  // Employee ID
-                        { wch: 32 },  // Email Address
-                        { wch: 18 },  // Mobile Number
-                        { wch: 12 }   // Setting
-                    ];
+        <!-- Row: Cabin Room & Status -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+          <div>
+            <label for="inputSetting" class="block font-bold text-[var(--text-primary)] mb-1">Cabin / Setting Room</label>
+            <input
+              type="text"
+              id="inputSetting"
+              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium"
+              placeholder="e.g. FF-38"
+            />
+          </div>
+          <div>
+            <label for="inputStatus" class="block font-bold text-[var(--text-primary)] mb-1">Status</label>
+            <select
+              id="inputStatus"
+              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-semibold cursor-pointer"
+            >
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
 
-                    // Build workbook
-                    const workbook = XLSX.utils.book_new();
-                    let sheetLabel = "All Faculty";
-                    if (currentFilterDept === "Information Technology") sheetLabel = "IT Faculty";
-                    if (currentFilterDept === "Computer Engineering") sheetLabel = "CE Faculty";
+        <!-- Row: Email & Phone -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+          <div>
+            <label for="inputEmail" class="block font-bold text-[var(--text-primary)] mb-1">Email Address</label>
+            <input
+              type="email"
+              id="inputEmail"
+              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+              placeholder="e.g. mentor@gmiu.edu.in"
+            />
+          </div>
+          <div>
+            <label for="inputPhone" class="block font-bold text-[var(--text-primary)] mb-1">Mobile Number</label>
+            <input
+              type="text"
+              id="inputPhone"
+              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono"
+              placeholder="e.g. 98765 43210"
+            />
+          </div>
+        </div>
 
-                    XLSX.utils.book_append_sheet(workbook, worksheet, sheetLabel);
+        <!-- Form Actions -->
+        <div class="pt-3 border-t border-black/5 dark:border-white/10 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            class="close-modal-trigger px-4 py-2.5 rounded-xl glass-pill font-bold text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="px-5 py-2.5 rounded-xl bg-[var(--color-primary)] text-white font-bold text-xs shadow-md hover:brightness-105 active:scale-95 transition"
+          >
+            Save Faculty Member
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-                    // Generate filename
-                    const dateStr = new Date().toISOString().split('T')[0];
-                    const fileName = `Faculty_Directory_${sheetLabel.replace(/\s+/g, '_')}_${dateStr}.xlsx`;
 
-                    // Export file
-                    XLSX.writeFile(workbook, fileName);
-                };
+  <!-- 3. DELETE CONFIRMATION MODAL -->
+  <div id="deleteConfirmModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-sm p-5 sm:p-6 rounded-3xl relative shadow-2xl border border-white/80 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-red-500/15 text-red-500 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+        </svg>
+      </div>
 
-                if (typeof XLSX === "undefined") {
-                    const script = document.createElement("script");
-                    script.src = "assets/vendor/xlsx/xlsx.full.min.js";
-                    script.onload = runExport;
-                    document.body.appendChild(script);
-                } else {
-                    runExport();
-                }
-            };
+      <h3 class="text-base font-bold text-[var(--text-primary)]">Delete Faculty Member</h3>
+      <p class="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">
+        Are you sure you want to remove <strong id="deleteFacultyName" class="text-[var(--text-primary)]">this member</strong> from the active faculty records?
+      </p>
 
-            // Default to all departments on initial page load
-            if (allBtn) {
-                allBtn.click();
-            } else {
-                renderFaculty("all", "");
-            }
+      <div class="mt-5 flex items-center justify-center gap-2 text-xs font-bold">
+        <button
+          type="button"
+          class="close-modal-trigger flex-1 py-2.5 rounded-xl glass-pill text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          id="confirmDeleteBtn"
+          class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-md active:scale-95 transition"
+        >
+          Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
 
-            // Redundant FAB toggle logic removed
-        });
-    </script>
+
+  <!-- 4. UNIVERSAL TOAST NOTIFICATION -->
+  <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 px-4 py-3 rounded-2xl bg-[#0A0909] text-white text-xs font-semibold shadow-2xl border border-white/15 transition-all">
+    <span id="toastDot" class="w-2 h-2 rounded-full bg-[var(--color-primary-light)]"></span>
+    <span id="toastMessage">Action completed</span>
+  </div>
+
+
+  <!-- ================= APPLICATION JAVASCRIPT ================= -->
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/navbar.js') : 'assets/js/navbar.js'; ?>"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/facultyData.js') : 'assets/js/facultyData.js'; ?>"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/faculty.js') : 'assets/js/faculty.js'; ?>"></script>
 </body>
-
 </html>

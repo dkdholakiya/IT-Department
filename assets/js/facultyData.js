@@ -851,4 +851,11 @@ const facultyData = [
     }
 ];
 
+if (typeof window !== 'undefined') {
+    window.facultyData = facultyData;
+}
+if (typeof global !== 'undefined') {
+    global.facultyData = facultyData;
+}
+
 
