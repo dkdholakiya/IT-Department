@@ -224,6 +224,16 @@
     const backdrop = document.getElementById('sidebarBackdrop');
     const handle = document.getElementById('samsungEdgeHandle');
 
+    document.body.classList.add('mobile-sidebar-active');
+
+    // Close any open popovers or trays in navbar
+    const mobileSearchContainer = document.getElementById('mobileSearchContainer');
+    if (mobileSearchContainer) mobileSearchContainer.classList.add('hidden');
+    const mobileUserMenuChevron = document.getElementById('mobileUserMenuChevron');
+    if (mobileUserMenuChevron) mobileUserMenuChevron.classList.remove('rotate-180');
+    document.getElementById('colorPickerPopover')?.classList.add('hidden');
+    document.getElementById('notificationsPopover')?.classList.add('hidden');
+
     if (sidebar) {
       sidebar.classList.remove('samsung-menu-closed');
       sidebar.classList.add('samsung-menu-open');
@@ -394,6 +404,13 @@
         if (sidebar && sidebar.classList.contains('samsung-menu-open')) {
           closeMobileSidebar();
         }
+      }
+    });
+
+    // Close mobile sidebar if screen is resized to desktop viewport
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024 && document.body.classList.contains('mobile-sidebar-active')) {
+        closeMobileSidebar();
       }
     });
 

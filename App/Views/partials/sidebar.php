@@ -33,8 +33,8 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
   <span class="w-0.5 h-8 rounded-full bg-white/90"></span>
 </button>
 
-<!-- MOBILE / TABLET SIDEBAR BACKDROP OVERLAY (Covers page when Sidebar is open!) -->
-<div id="sidebarBackdrop" class="fixed inset-0 bg-black/40 backdrop-blur-[5px] z-40 hidden lg:hidden transition-opacity duration-300 opacity-0 cursor-pointer" aria-hidden="true"></div>
+<!-- MOBILE / TABLET SIDEBAR BACKDROP OVERLAY (Covers entire screen behind Sidebar when open!) -->
+<div id="sidebarBackdrop" class="fixed inset-0 bg-black/45 backdrop-blur-md z-40 hidden lg:hidden transition-opacity duration-300 opacity-0 cursor-pointer" aria-hidden="true"></div>
 
 <!-- =========================================================================
      LEFT SIDE MENU: FLOATING SAMSUNG EDGE SHORTCUT CAPSULE (<1024px) & DESKTOP DOCK
@@ -44,8 +44,19 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
 <aside
   id="mainSidebar"
   aria-label="Side Menu"
-  class="samsung-menu-closed samsung-icon-only fixed lg:static inset-y-0 my-auto h-fit max-h-[calc(100dvh-20px)] lg:max-h-none lg:h-full left-[10px] z-50 w-[76px] lg:w-[56px] p-2.5 lg:py-2 lg:px-0 flex flex-col justify-between items-center gap-2.5 lg:gap-3 shrink-0 overflow-y-auto overflow-x-hidden select-none"
+  class="samsung-menu-closed samsung-icon-only fixed lg:static inset-y-0 my-auto lg:my-0 h-fit max-h-[calc(100dvh-20px)] lg:max-h-none lg:h-full left-[10px] z-50 w-[76px] lg:w-[56px] p-2.5 lg:py-0 lg:px-0 flex flex-col justify-between items-center gap-2.5 lg:gap-3 shrink-0 overflow-y-auto overflow-x-hidden select-none"
 >
+  <!-- 0. TOP HOME ICON CAPSULE (Desktop & Mobile Brand Home Button) -->
+  <div id="sidebarHomeCapsule" class="samsung-shortcut-item glass-pill rounded-full w-12 h-12 flex items-center justify-center shrink-0" style="--stagger: 0;">
+    <a href="<?php echo htmlspecialchars($baseUrl); ?>dashboard" id="brandHomeBtn" class="w-full h-full rounded-full flex items-center justify-center text-[var(--color-primary)] hover:scale-110 group transition shrink-0" title="Return to Main Dashboard">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--color-primary)] group-hover:bg-[var(--color-primary)]/10 transition shrink-0">
+        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+    </a>
+  </div>
   <!-- 1. UPPER CONTROL HEADER PILL (Mobile Header: Brand Icon, Menu Title & Sleek Expand Button) -->
   <div id="upperSideMenuHeader" class="samsung-shortcut-item side-menu-glass flex lg:hidden items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-full w-full" style="--stagger: 0;">
     <!-- Left Brand & Active Menu Title (Visible when Expanded with Side Menu Names) -->
@@ -149,18 +160,6 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
         </span>
         <span class="sidebar-nav-label-wrap expanded-only lg:hidden min-w-0 flex-1 pr-2">
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">CTL Drive</span>
-        </span>
-      </a>
-
-      <!-- Nav 6: Main Portal Home -->
-      <a href="<?php echo htmlspecialchars($baseUrl); ?>" style="--stagger: 6;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10" title="Department Portal Home">
-        <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center text-current shrink-0">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
-          </svg>
-        </span>
-        <span class="sidebar-nav-label-wrap expanded-only lg:hidden min-w-0 flex-1 pr-2">
-          <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Portal Home</span>
         </span>
       </a>
 

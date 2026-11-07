@@ -16,6 +16,10 @@
    1. MOBILE & TABLET SHORTCUT CAPSULE (< 1024px)
    ========================================================================== */
 @media (max-width: 1023px) {
+  #sidebarBackdrop {
+    z-index: 40 !important;
+  }
+
   #mainSidebar {
     background: var(--drawer-bg);
     backdrop-filter: blur(32px) saturate(195%);

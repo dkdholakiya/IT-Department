@@ -113,3 +113,28 @@ body.theme-dark .glass-pill {
   }
 }
 
+/* ==========================================================================
+   4. RESPONSIVE SIDEBAR BLUR (Mobile & Tablet < 1024px)
+   When the mobile sidebar drawer opens, topNavbar stays behind the backdrop (z-30)
+   and blurs/dims so only the floating shortcut sidebar is prominent in front.
+   ========================================================================== */
+@media (max-width: 1023px) {
+  #topNavbar {
+    z-index: 30;
+    transition: filter 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                background-color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+  }
+
+  body.mobile-sidebar-active #topNavbar {
+    filter: blur(10px);
+    -webkit-filter: blur(10px);
+    opacity: 0.3;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+

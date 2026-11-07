@@ -5,25 +5,25 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
 ?>
 
   <!-- MAIN WRAPPER: Matches Dashboard Layout Exactly (1600px Max-Width, 100vh on Desktop, Zero Edge Bleed) -->
-  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-16 sm:pt-20 lg:pt-3.5 pb-8 sm:pb-10 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col gap-3 lg:gap-3 overflow-x-hidden lg:overflow-hidden">
+  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-16 sm:pt-20 lg:pt-3.5 pb-8 sm:pb-10 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row gap-3.5 lg:gap-4 overflow-x-hidden lg:overflow-hidden">
 
-    <!-- ================= TOP NAVIGATION BAR (SHARED PARTIAL) ================= -->
+    <!-- Shared Samsung Edge Shortcut Sidebar -->
     <?php
-    $nav_title = 'Academic Calendar';
-    $nav_subtitle = 'CE & IT Department • Academic Year 2026';
-    $nav_search_placeholder = 'Search holidays, events, schedules...';
-    include dirname(__DIR__) . '/partials/navbar.php';
+    $active_page = 'calendar';
+    $sidebar_mode = 'nav';
+    $sidebar_active_label = 'Academic Calendar';
+    include dirname(__DIR__) . '/partials/sidebar.php';
     ?>
 
-    <!-- ================= MAIN WORKSPACE (SAMSUNG SHORTCUT SIDEBAR + CALENDAR DOCK) ================= -->
-    <div class="flex-1 min-h-0 flex items-stretch gap-3.5 lg:gap-4 relative">
+    <!-- ================= RIGHT COLUMN: TOP NAVBAR + CALENDAR WORKSPACE ================= -->
+    <div class="flex-1 min-h-0 min-w-0 flex flex-col gap-3 lg:gap-3">
 
-      <!-- Shared Samsung Edge Shortcut Sidebar -->
+      <!-- ================= TOP NAVIGATION BAR (SHARED PARTIAL) ================= -->
       <?php
-      $active_page = 'calendar';
-      $sidebar_mode = 'nav';
-      $sidebar_active_label = 'Academic Calendar';
-      include dirname(__DIR__) . '/partials/sidebar.php';
+      $nav_title = 'Academic Calendar';
+      $nav_subtitle = 'CE & IT Department • Academic Year 2026';
+      $nav_search_placeholder = 'Search holidays, events, schedules...';
+      include dirname(__DIR__) . '/partials/navbar.php';
       ?>
 
       <!-- Main Responsive Grid: Calendar Matrix (Left 8 cols) & Event Inspector (Right 4 cols) -->

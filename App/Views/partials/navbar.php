@@ -17,8 +17,8 @@ $navBackUrl = $nav_back_url ?? $baseUrl;
 $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modules...';
 ?>
 
-<!-- ================= FIXED TOP NAVIGATION BAR (Pinned at z-40 on Mobile; Relative in Flow on Desktop) ================= -->
-<header id="topNavbar" class="fixed lg:relative top-0 left-0 right-0 z-40 px-3 sm:px-5 lg:px-0 py-2.5 lg:py-0 bg-[var(--bg-mesh-3)]/85 lg:bg-transparent backdrop-blur-xl lg:backdrop-blur-none border-b border-white/50 lg:border-none shrink-0">
+<!-- ================= FIXED TOP NAVIGATION BAR (Pinned at z-30 on Mobile; Relative in Flow on Desktop) ================= -->
+<header id="topNavbar" class="fixed lg:relative top-0 left-0 right-0 z-30 lg:z-auto px-3 sm:px-5 lg:px-0 py-2.5 lg:py-0 bg-[var(--bg-mesh-3)]/85 lg:bg-transparent backdrop-blur-xl lg:backdrop-blur-none border-b border-white/50 lg:border-none shrink-0">
   <div class="max-w-[1600px] mx-auto flex items-center justify-between gap-2 sm:gap-3 w-full relative">
 
     <!-- Left: Hamburger Menu (Mobile/Tablet) + Brand Logo + Desktop Sidebar Toggle Button -->
@@ -32,25 +32,16 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
         </svg>
       </button>
 
-      <!-- Brand Logo & Navigation Capsule (Unified Glass Pill, Normal Home Icon, 100% Fluid Responsive) -->
-      <div class="glass-pill rounded-full px-2.5 sm:px-3.5 py-1.5 sm:py-2 flex items-center gap-2 sm:gap-3 min-w-0 shrink-0">
-        <!-- Brand Link: Normal Home Icon + Title & Subtitle -->
-        <a href="<?php echo htmlspecialchars($baseUrl); ?>dashboard" id="brandHomeBtn" class="flex items-center gap-2 sm:gap-2.5 group text-left focus:outline-none min-w-0" title="Return to Main Dashboard">
-          <!-- Normal Home Icon (Prismatic Theme Color, No White Background Disc) -->
-          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[var(--color-primary)] group-hover:scale-110 group-hover:bg-[var(--color-primary)]/10 transition shrink-0">
-            <svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              <polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/>
-            </svg>
-          </div>
-          <div class="min-w-0 max-w-[125px] xs:max-w-[170px] sm:max-w-none">
-            <span class="text-[13.5px] sm:text-[15.5px] lg:text-[17px] font-bold tracking-tight text-[var(--text-primary)] block leading-tight truncate"><?php echo htmlspecialchars($navTitle); ?></span>
-            <span class="text-[9.5px] sm:text-[10.5px] font-medium text-[var(--text-muted)] flex items-center gap-1.5 truncate">
-              <span class="relative inline-flex w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] live-dot shrink-0"></span>
-              <span id="activeZoneHeaderLabel" class="truncate"><?php echo htmlspecialchars($navSubtitle); ?></span>
-            </span>
-          </div>
-        </a>
+      <!-- Navigation Title Capsule (Title & Subtitle + Desktop Sidebar Toggle Controls) -->
+      <div class="glass-pill rounded-full h-12 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
+        <!-- Title & Subtitle -->
+        <div class="min-w-0 max-w-[125px] xs:max-w-[170px] sm:max-w-none text-left">
+          <span class="text-[13.5px] sm:text-[15.5px] lg:text-[17px] font-bold tracking-tight text-[var(--text-primary)] block leading-tight truncate"><?php echo htmlspecialchars($navTitle); ?></span>
+          <span class="text-[9.5px] sm:text-[10.5px] font-medium text-[var(--text-muted)] flex items-center gap-1.5 truncate">
+            <span class="relative inline-flex w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] live-dot shrink-0"></span>
+            <span id="activeZoneHeaderLabel" class="truncate"><?php echo htmlspecialchars($navSubtitle); ?></span>
+          </span>
+        </div>
 
         <!-- Desktop Two-Icon Sidebar Control Group -->
         <div id="desktopSidebarControlGroup" class="hidden lg:flex items-center gap-1 pl-2 sm:pl-2.5 border-l border-black/10 dark:border-white/15 shrink-0">

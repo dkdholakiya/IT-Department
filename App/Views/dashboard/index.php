@@ -5,33 +5,33 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
 ?>
 
   <!-- MAIN WRAPPER: Fixed 100vh x 100vw on Desktop, Smooth Scroll with Fixed Top Navbar on Mobile -->
-  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-16 sm:pt-20 lg:pt-3.5 pb-5 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col gap-3 lg:gap-3 overflow-x-hidden lg:overflow-hidden">
+  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-16 sm:pt-20 lg:pt-3.5 pb-5 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row gap-3.5 lg:gap-4 overflow-x-hidden lg:overflow-hidden">
 
-  <?php
-  $nav_title = 'AI Greenhouse';
-  $nav_subtitle = 'Zone A • Hydroponic Bay';
-  $nav_search_placeholder = 'Search greenhouse metrics...';
-  include dirname(__DIR__) . '/partials/navbar.php';
-  ?>
+    <?php
+    $active_page = 'dashboard';
+    $sidebar_mode = 'filter';
+    $sidebar_active_label = 'Dashboard Overview';
+    include dirname(__DIR__) . '/partials/sidebar.php';
+    ?>
 
-    <!-- Active Filter Banner -->
-    <div id="activeFilterBanner" class="hidden items-center justify-between px-4 py-1.5 rounded-2xl glass-pill text-xs font-medium shrink-0">
-      <div class="flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-[var(--color-primary)]"></span>
-        <span id="activeFilterText">Showing all greenhouse telemetry modules</span>
-      </div>
-      <button id="resetFilterBtn" type="button" class="font-bold text-[var(--color-primary)] hover:underline">Show All Widgets</button>
-    </div>
-
-    <!-- ================= MAIN WORKSPACE (SAMSUNG SHORTCUT SIDEBAR + 100vh BENTO GRID) ================= -->
-    <div class="flex-1 min-h-0 flex items-stretch gap-3.5 lg:gap-4 relative">
+    <!-- ================= RIGHT COLUMN: TOP NAVBAR + BENTO GRID WORKSPACE ================= -->
+    <div class="flex-1 min-h-0 min-w-0 flex flex-col gap-3 lg:gap-3">
 
       <?php
-      $active_page = 'dashboard';
-      $sidebar_mode = 'filter';
-      $sidebar_active_label = 'Dashboard Overview';
-      include dirname(__DIR__) . '/partials/sidebar.php';
+      $nav_title = 'AI Greenhouse';
+      $nav_subtitle = 'Zone A • Hydroponic Bay';
+      $nav_search_placeholder = 'Search greenhouse metrics...';
+      include dirname(__DIR__) . '/partials/navbar.php';
       ?>
+
+      <!-- Active Filter Banner -->
+      <div id="activeFilterBanner" class="hidden items-center justify-between px-4 py-1.5 rounded-2xl glass-pill text-xs font-medium shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[var(--color-primary)]"></span>
+          <span id="activeFilterText">Showing all greenhouse telemetry modules</span>
+        </div>
+        <button id="resetFilterBtn" type="button" class="font-bold text-[var(--color-primary)] hover:underline">Show All Widgets</button>
+      </div>
 
       <!-- ================= BENTO GRID DASHBOARD (Fits 100% inside 100vh on Desktop!) ================= -->
       <main id="bentoGrid" class="flex-1 min-h-0 min-w-0 grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[1.32fr_1fr] gap-3.5 lg:gap-3.5 transition-all duration-300">
