@@ -12,12 +12,13 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
 $activePage = $active_page ?? 'dashboard';
 
 $pageLabels = [
-  'dashboard' => 'Smart Dashboard',
-  'calendar'  => 'Academic Calendar',
-  'timetable' => 'Timetable Schedules',
-  'report'    => 'Workload Reports',
-  'ctldrive'  => 'CTL Activity Drive',
-  'faculty'   => 'Faculty List',
+  'dashboard'   => 'Smart Dashboard',
+  'calendar'    => 'Academic Calendar',
+  'timetable'   => 'Timetable Schedules',
+  'report'      => 'Workload Reports',
+  'ctlactivity' => 'CTL Activity Dashboard',
+  'ctldrive'    => 'CTL Activity Drive',
+  'faculty'     => 'Faculty List',
 ];
 $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Navigation');
 ?>
@@ -151,8 +152,24 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
         </span>
       </a>
 
-      <!-- Nav 5: CTL Activity Drive -->
-      <a href="<?php echo htmlspecialchars($baseUrl); ?>ctldrive" style="--stagger: 5;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'ctldrive') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="CTL Activity Drive">
+      <!-- Nav 5: CTL Activity Dashboard -->
+      <a href="<?php echo htmlspecialchars($baseUrl); ?>ctlactivity" style="--stagger: 5;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'ctlactivity') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="CTL Activity Dashboard">
+        <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'ctlactivity') ? 'text-white' : 'text-current'; ?> shrink-0">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="9" y1="3" x2="9" y2="21"/>
+            <line x1="15" y1="3" x2="15" y2="21"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="3" y1="15" x2="21" y2="15"/>
+          </svg>
+        </span>
+        <span class="sidebar-nav-label-wrap expanded-only lg:hidden min-w-0 flex-1 pr-2">
+          <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">CTL Activity</span>
+        </span>
+      </a>
+
+      <!-- Nav 6: CTL Activity Drive -->
+      <a href="<?php echo htmlspecialchars($baseUrl); ?>ctldrive" style="--stagger: 6;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'ctldrive') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="CTL Activity Drive">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'ctldrive') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"/>
@@ -163,8 +180,8 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
         </span>
       </a>
 
-      <!-- Nav 6: Faculty List -->
-      <a href="<?php echo htmlspecialchars($baseUrl); ?>faculty" style="--stagger: 6;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'faculty') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Faculty List">
+      <!-- Nav 7: Faculty List -->
+      <a href="<?php echo htmlspecialchars($baseUrl); ?>faculty" style="--stagger: 7;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'faculty') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Faculty List">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'faculty') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/>
