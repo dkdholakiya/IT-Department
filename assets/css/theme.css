@@ -28,7 +28,9 @@
   --glass-surface: rgba(255, 255, 255, 0.74);
   --glass-surface-strong: rgba(255, 255, 255, 0.94);
   --glass-pill: rgba(255, 255, 255, 0.84);
-  --glass-border: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(var(--color-primary-rgb), 0.28);
+  --glass-border-light: rgba(var(--color-primary-rgb), 0.16);
+  --glass-border-strong: rgba(var(--color-primary-rgb), 0.45);
   --glass-shadow: 0 10px 28px -6px rgba(var(--color-primary-rgb), 0.14), 0 2px 8px -1px rgba(10, 9, 9, 0.04);
   --drawer-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.44) 0%, rgba(255, 255, 255, 0.24) 55%, rgba(var(--color-primary-rgb), 0.16) 100%);
   --drawer-item-bg: rgba(255, 255, 255, 0.48);
@@ -71,7 +73,9 @@ html.dark body {
   --glass-surface: rgba(16, 24, 18, 0.78);
   --glass-surface-strong: rgba(20, 30, 23, 0.95);
   --glass-pill: rgba(24, 36, 27, 0.88);
-  --glass-border: rgba(var(--color-primary-rgb), 0.32);
+  --glass-border: rgba(var(--color-primary-rgb), 0.38);
+  --glass-border-light: rgba(var(--color-primary-rgb), 0.22);
+  --glass-border-strong: rgba(var(--color-primary-rgb), 0.55);
   --glass-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.55);
   --drawer-bg: linear-gradient(160deg, rgba(22, 34, 26, 0.62) 0%, rgba(14, 22, 17, 0.44) 60%, rgba(var(--color-primary-rgb), 0.18) 100%);
   --drawer-item-bg: rgba(28, 42, 32, 0.54);

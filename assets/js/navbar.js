@@ -115,6 +115,20 @@
     root.style.setProperty('--sidebar-active-bg', hex);
     root.style.setProperty('--bar-active', hex);
 
+    // Dynamic High-Definition Glass Borders & Card/Button Outlines
+    const isDark = navbarState.theme === 'dark';
+    const borderAlpha = isDark ? 0.44 : 0.36;
+    const borderStrongAlpha = isDark ? 0.65 : 0.52;
+    const borderLightAlpha = isDark ? 0.25 : 0.18;
+    root.style.setProperty('--glass-border', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${borderAlpha})`);
+    root.style.setProperty('--glass-border-strong', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${borderStrongAlpha})`);
+    root.style.setProperty('--glass-border-light', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${borderLightAlpha})`);
+    root.style.setProperty('--card-outline-color', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${borderAlpha})`);
+    root.style.setProperty('--btn-outline-color', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${borderStrongAlpha})`);
+    root.style.setProperty('--glass-shadow', isDark 
+      ? `0 14px 34px -4px rgba(0, 0, 0, 0.60), 0 0 0 1px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.28)` 
+      : `0 10px 28px -6px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.16), 0 2px 8px -1px rgba(10, 9, 9, 0.04)`);
+
     // Dynamic Ambient Mesh Wallpaper Colors
     const isDefaultGreen = hex.toUpperCase() === '#10B981';
     if (navbarState.theme === 'dark') {
@@ -152,6 +166,9 @@
 
     const customPicker = document.getElementById('desktopCustomColorInput');
     if (customPicker) customPicker.value = hex;
+
+    const mobileCustomPicker = document.getElementById('mobileCustomColorInput');
+    if (mobileCustomPicker) mobileCustomPicker.value = hex;
 
     // Highlight active preset ring
     document.querySelectorAll('.color-preset-btn').forEach(btn => {
@@ -248,6 +265,13 @@
 
     if (customColorInput) {
       customColorInput.addEventListener('input', (e) => {
+        applyCustomColorPalette(e.target.value);
+      });
+    }
+
+    const mobileCustomColorInput = document.getElementById('mobileCustomColorInput');
+    if (mobileCustomColorInput) {
+      mobileCustomColorInput.addEventListener('input', (e) => {
         applyCustomColorPalette(e.target.value);
       });
     }
