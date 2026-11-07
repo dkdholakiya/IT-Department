@@ -1,97 +1,171 @@
 <?php
-$page_title = 'Report System — CE & IT Department';
-$page_description = 'Departmental Report Management System for academic events, Expert talks, and achievement documentation.';
+$page_title = 'Report Management System — CE & IT Department';
 $page_css = [
     'assets/vendor/bootstrap/css/bootstrap.min.css',
     'assets/vendor/bootstrap-icons/bootstrap-icons.min.css',
-    'assets/css/style.css',
+    'assets/css/report.css',
 ];
-$extra_head = '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>';
-include 'head.php';
+$extra_head = '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>' .
+              '<script src="' . (function_exists('v_asset') ? v_asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') : 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js') . '"></script>';
+
+$active_step = isset($_GET['step']) ? (int)$_GET['step'] : 1;
+if ($active_step < 1 || $active_step > 4) $active_step = 1;
+
+include dirname(__DIR__) . '/partials/dashboard-head.php';
 ?>
 
-    <!-- Background particles -->
-    <div class="rp-particles" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-    </div>
+  <!-- MAIN WRAPPER: Matches Dashboard, Faculty, Timetable, CTL Activity & Drive Scanner (1600px Max-Width, 100vh on Desktop, Zero Edge Bleed) -->
+  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-[72px] sm:pt-[76px] lg:pt-3.5 pb-6 sm:pb-8 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row gap-2.5 sm:gap-3 lg:gap-4 overflow-x-hidden lg:overflow-hidden">
 
-    <!-- Glow orbs -->
-    <div class="rp-orb rp-orb-1" aria-hidden="true"></div>
-    <div class="rp-orb rp-orb-2" aria-hidden="true"></div>
+    <!-- Shared Samsung Edge Shortcut Sidebar -->
+    <?php
+    $active_page = 'report';
+    $sidebar_mode = 'nav';
+    $sidebar_active_label = 'Workload Reports';
+    include dirname(__DIR__) . '/partials/sidebar.php';
+    ?>
 
-    <div class="rp-page">
+    <!-- ================= RIGHT COLUMN: TOP NAVBAR + REPORT WORKSPACE ================= -->
+    <div class="flex-1 min-h-0 min-w-0 flex flex-col gap-2.5 sm:gap-3 lg:gap-3">
 
-        <!-- ── Page Header ── -->
-        <header class="rp-header container">
-            <div class="rp-header-inner">
-                <a href="<?php echo base_url('/'); ?>" class="back-btn">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path d="M19 12H5M12 5l-7 7 7 7" />
-                    </svg>
-                    Back to Portal
-                </a>
+      <!-- ================= TOP NAVIGATION BAR (SHARED PARTIAL) ================= -->
+      <?php
+      $nav_title = 'Report Management System';
+      $nav_subtitle = 'CE & IT Department • Academic Events, Talks & Documentation';
+      $nav_search_placeholder = 'Search report fields, faculty, activities...';
+      $nav_back_url = function_exists('base_url') ? base_url('/dashboard') : './dashboard';
+      include dirname(__DIR__) . '/partials/navbar.php';
+      ?>
 
-                <div class="rp-header-center">
-                    <div class="rp-dept-badge">
-                        <span class="rp-badge-dot"></span>
-                        Department of CE & IT
-                    </div>
-                    <h1 class="rp-title">Report Management System</h1>
-                </div>
+      <!-- ================= MAIN WORKSPACE: GLASS REPORT DASHBOARD ================= -->
+      <main class="rp-main-workspace flex-1 min-h-0 min-w-0 glass-card p-3 sm:p-5 flex flex-col justify-between overflow-hidden relative transition-all duration-300">
 
-                <span class="portal-badge">Report System</span>
+        <!-- Scrollable Interior Workspace -->
+        <div id="mainReportContent" class="flex-1 min-h-0 min-w-0 flex flex-col gap-3.5 overflow-y-auto rp-custom-scroll pr-1 sm:pr-2">
+
+          <!-- 1. TOP HEADER & QUICK ACTIONS TOOLBAR -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/5 dark:border-white/10 shrink-0">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="text-base sm:text-xl md:text-2xl font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none">
+                  Departmental Report Management
+                </h2>
+                <span class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10 shadow-sm shrink-0">
+                  4-Step Workflow
+                </span>
+                <span id="draftStatusBadge" class="hidden px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] sm:text-[11px] font-bold border border-emerald-500/20 shrink-0">
+                  Draft Saved
+                </span>
+              </div>
+              <p class="text-[11.5px] sm:text-xs text-[var(--text-muted)] mt-1 hidden sm:block">
+                Academic events, expert talks, industrial visits, and achievement documentation with real-time email dispatch & official PDF archive.
+              </p>
             </div>
-        </header>
 
-        <!-- Stepper Component -->
-        <div class="container stepper-wrapper">
-            <div class="stepper">
-                <div class="stepper-progress-bar" id="stepperProgressBar"></div>
-                <div class="step-node active" data-step="1" onclick="jumpToSection(1)">
-                    <div class="step-circle">1</div>
-                    <div class="step-title">Requested By</div>
-                </div>
-                <div class="step-node disabled-step" data-step="2" onclick="jumpToSection(2)">
-                    <div class="step-circle">2</div>
-                    <div class="step-title">Basic Info</div>
-                </div>
-                <div class="step-node disabled-step" data-step="3" onclick="jumpToSection(3)">
-                    <div class="step-circle">3</div>
-                    <div class="step-title">Specific Info</div>
-                </div>
-                <div class="step-node disabled-step" data-step="4" onclick="jumpToSection(4)">
-                    <div class="step-circle">4</div>
-                    <div class="step-title">Submit Report</div>
-                </div>
+            <!-- Quick Action Toolbar Buttons -->
+            <div class="flex items-center gap-2 self-end sm:self-auto flex-wrap">
+              <button type="button" onclick="saveDraft()" class="h-8 sm:h-9 px-3 sm:px-4 rounded-full glass-pill text-xs font-bold text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 cursor-pointer shadow-sm" title="Save draft to local storage">
+                <i class="bi bi-save2 text-[var(--color-primary)]"></i>
+                <span>Save Draft</span>
+              </button>
+              <button type="button" onclick="openPreviewModal()" class="h-8 sm:h-9 px-3 sm:px-4 rounded-full glass-pill text-xs font-bold text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 cursor-pointer shadow-sm" title="Preview compiled report">
+                <i class="bi bi-eye"></i>
+                <span class="hidden xs:inline">Preview</span>
+              </button>
+              <button type="button" onclick="triggerPrint()" class="h-8 sm:h-9 px-3 sm:px-4 rounded-full glass-pill text-xs font-bold text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 cursor-pointer shadow-sm" title="Print / PDF Export">
+                <i class="bi bi-printer"></i>
+                <span class="hidden xs:inline">Print / PDF</span>
+              </button>
+              <button type="button" onclick="resetReportForm()" class="h-8 sm:h-9 px-3 sm:px-4 rounded-full glass-pill text-xs font-bold text-red-500 hover:bg-red-500/10 transition flex items-center gap-1.5 cursor-pointer shadow-sm" title="Reset all fields">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                <span class="hidden sm:inline">Reset</span>
+              </button>
             </div>
-        </div>
+          </div>
 
-        <!-- Breadcrumb Navigation -->
-        <div class="container mb-4">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-transparent p-0 m-0 rp-breadcrumb-list">
-                    <li class="breadcrumb-item"><a href="./" class="text-decoration-none text-muted">Home</a>
-                    </li>
-                </ol>
-            </nav>
-        </div>
+          <!-- 2. MODERN BENTO GLASS WORKFLOW STEPPER -->
+          <div class="stepper-wrapper shrink-0">
+            <!-- Hidden backward-compatible progress bar element so existing JS never throws null error -->
+            <div id="stepperProgressBar" class="hidden" style="width: 0%;"></div>
 
-        <!-- ── Main Form Accordion Card ── -->
-        <main class="rp-main container">
-            <form id="reportForm" novalidate>
-                <div class="accordion report-accordion" id="reportAccordion">
+            <div class="bento-stepper grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5">
+
+              <!-- Step 1: Faculty Profile (Requested By) -->
+              <div class="step-node <?php echo $active_step === 1 ? 'active' : ($active_step > 1 ? 'completed' : 'disabled-step'); ?>" data-step="1" onclick="jumpToSection(1)" role="button" tabindex="0" title="Step 1: Faculty Profile">
+                <div class="step-circle">
+                  <span class="step-number <?php echo $active_step > 1 ? 'hidden' : ''; ?>">1</span>
+                  <i class="bi bi-check-lg step-check <?php echo $active_step > 1 ? '' : 'hidden'; ?>"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-meta">
+                    <span class="step-tag">Step 01</span>
+                    <span class="step-status-pill"></span>
+                  </div>
+                  <div class="step-title">Requested By</div>
+                </div>
+              </div>
+
+              <!-- Step 2: Basic Information -->
+              <div class="step-node <?php echo $active_step === 2 ? 'active' : ($active_step > 2 ? 'completed' : ($active_step > 1 ? '' : 'disabled-step')); ?>" data-step="2" onclick="jumpToSection(2)" role="button" tabindex="0" title="Step 2: Basic Report Information">
+                <div class="step-circle">
+                  <span class="step-number <?php echo $active_step > 2 ? 'hidden' : ''; ?>">2</span>
+                  <i class="bi bi-check-lg step-check <?php echo $active_step > 2 ? '' : 'hidden'; ?>"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-meta">
+                    <span class="step-tag">Step 02</span>
+                    <span class="step-status-pill"></span>
+                  </div>
+                  <div class="step-title">Basic Info</div>
+                </div>
+              </div>
+
+              <!-- Step 3: Specific Information -->
+              <div class="step-node <?php echo $active_step === 3 ? 'active' : ($active_step > 3 ? 'completed' : ($active_step > 2 ? '' : 'disabled-step')); ?>" data-step="3" onclick="jumpToSection(3)" role="button" tabindex="0" title="Step 3: Dynamic Activity Specific Details">
+                <div class="step-circle">
+                  <span class="step-number <?php echo $active_step > 3 ? 'hidden' : ''; ?>">3</span>
+                  <i class="bi bi-check-lg step-check <?php echo $active_step > 3 ? '' : 'hidden'; ?>"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-meta">
+                    <span class="step-tag">Step 03</span>
+                    <span class="step-status-pill"></span>
+                  </div>
+                  <div class="step-title">Specific Info</div>
+                </div>
+              </div>
+
+              <!-- Step 4: Submit Report -->
+              <div class="step-node <?php echo $active_step === 4 ? 'active' : ($active_step > 3 ? '' : 'disabled-step'); ?>" data-step="4" onclick="jumpToSection(4)" role="button" tabindex="0" title="Step 4: Email Review & Submission">
+                <div class="step-circle">
+                  <span class="step-number">4</span>
+                  <i class="bi bi-check-lg step-check hidden"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-meta">
+                    <span class="step-tag">Step 04</span>
+                    <span class="step-status-pill"></span>
+                  </div>
+                  <div class="step-title">Submit Report</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 3. MAIN FORM WITH ACCORDION SECTIONS -->
+          <form id="reportForm" novalidate class="flex flex-col gap-3">
+            <div class="accordion report-accordion" id="reportAccordion">
 
                     <!-- Section 1: Faculty Profile (Requested By) -->
                     <div class="accordion-item" id="secItemOne">
                         <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <button class="accordion-button <?php echo $active_step === 1 ? '' : 'collapsed'; ?>" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="<?php echo $active_step === 1 ? 'true' : 'false'; ?>" aria-controls="collapseOne">
                                 <i class="bi bi-person-fill-gear me-2"></i> Section 1: Faculty Profile (Requested By)
                             </button>
                         </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        <div id="collapseOne" class="accordion-collapse collapse <?php echo $active_step === 1 ? 'show' : ''; ?>" aria-labelledby="headingOne"
                             data-bs-parent="#reportAccordion">
                             <div class="accordion-body">
                                 <div class="row g-3">
@@ -155,14 +229,14 @@ include 'head.php';
                     </div>
 
                     <!-- Section 2: Basic Report Information -->
-                    <div class="accordion-item d-none" id="secItemTwo">
+                    <div class="accordion-item <?php echo $active_step >= 2 ? '' : 'd-none'; ?>" id="secItemTwo">
                         <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <button class="accordion-button <?php echo $active_step === 2 ? '' : 'collapsed'; ?>" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo" aria-expanded="<?php echo $active_step === 2 ? 'true' : 'false'; ?>" aria-controls="collapseTwo">
                                 <i class="bi bi-file-earmark-text-fill me-2"></i> Section 2: Basic Report Information
                             </button>
                         </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                        <div id="collapseTwo" class="accordion-collapse collapse <?php echo $active_step === 2 ? 'show' : ''; ?>" aria-labelledby="headingTwo"
                             data-bs-parent="#reportAccordion">
                             <div class="accordion-body">
                                 <div class="row g-3">
@@ -253,55 +327,55 @@ include 'head.php';
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="Diploma" id="progDiploma">
-                                                <label class="form-check-label text-light"
+                                                <label class="form-check-label"
                                                     for="progDiploma">Diploma</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="Diploma Premium" id="progDiplomaPremium">
-                                                <label class="form-check-label text-light"
+                                                <label class="form-check-label"
                                                     for="progDiplomaPremium">Diploma Premium</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="Diploma PLM" id="progDiplomaPLM">
-                                                <label class="form-check-label text-light"
+                                                <label class="form-check-label"
                                                     for="progDiplomaPLM">Diploma PLM</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="B.Tech" id="progBTech">
-                                                <label class="form-check-label text-light"
+                                                <label class="form-check-label"
                                                     for="progBTech">B.Tech</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="B.Tech Premium" id="progBTechPremium">
-                                                <label class="form-check-label text-light"
+                                                <label class="form-check-label"
                                                     for="progBTechPremium">B.Tech Premium</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="B.Tech PLM" id="progBTechPLM">
-                                                <label class="form-check-label text-light"
+                                                <label class="form-check-label"
                                                     for="progBTechPLM">B.Tech PLM</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="M.Tech" id="progMTech">
-                                                <label class="form-check-label text-light"
+                                                <label class="form-check-label"
                                                     for="progMTech">M.Tech</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="M.Tech Premium" id="progMTechPremium">
-                                                <label class="form-check-label text-light"
+                                                <label class="form-check-label"
                                                     for="progMTechPremium">M.Tech Premium</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input prog-checkbox" type="checkbox"
                                                     value="DLM" id="progDLM">
-                                                <label class="form-check-label text-light"
+                                                <label class="form-check-label"
                                                     for="progDLM">DLM</label>
                                             </div>
                                         </div>
@@ -313,35 +387,35 @@ include 'head.php';
                                         <div class="d-flex flex-wrap gap-3 mt-2" id="semCheckboxGroup">
                                             <div class="form-check">
                                                 <input class="form-check-input sem-checkbox" type="checkbox" value="1" id="sem1">
-                                                <label class="form-check-label text-light" for="sem1">Sem 1</label>
+                                                <label class="form-check-label" for="sem1">Sem 1</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input sem-checkbox" type="checkbox" value="2" id="sem2">
-                                                <label class="form-check-label text-light" for="sem2">Sem 2</label>
+                                                <label class="form-check-label" for="sem2">Sem 2</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input sem-checkbox" type="checkbox" value="3" id="sem3">
-                                                <label class="form-check-label text-light" for="sem3">Sem 3</label>
+                                                <label class="form-check-label" for="sem3">Sem 3</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input sem-checkbox" type="checkbox" value="4" id="sem4">
-                                                <label class="form-check-label text-light" for="sem4">Sem 4</label>
+                                                <label class="form-check-label" for="sem4">Sem 4</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input sem-checkbox" type="checkbox" value="5" id="sem5">
-                                                <label class="form-check-label text-light" for="sem5">Sem 5</label>
+                                                <label class="form-check-label" for="sem5">Sem 5</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input sem-checkbox" type="checkbox" value="6" id="sem6">
-                                                <label class="form-check-label text-light" for="sem6">Sem 6</label>
+                                                <label class="form-check-label" for="sem6">Sem 6</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input sem-checkbox" type="checkbox" value="7" id="sem7">
-                                                <label class="form-check-label text-light" for="sem7">Sem 7</label>
+                                                <label class="form-check-label" for="sem7">Sem 7</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input sem-checkbox" type="checkbox" value="8" id="sem8">
-                                                <label class="form-check-label text-light" for="sem8">Sem 8</label>
+                                                <label class="form-check-label" for="sem8">Sem 8</label>
                                             </div>
                                         </div>
                                         <div class="text-danger d-none rp-error-text" id="semError">Select at least one semester.</div>
@@ -376,29 +450,29 @@ include 'head.php';
                                         <input type="text" class="form-control" id="studentCoordinator" placeholder="Enter student coordinator name...">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label text-light">Report is published on Website? <span class="text-danger">*</span></label>
+                                        <label class="form-label">Report is published on Website? <span class="text-danger">*</span></label>
                                         <div class="d-flex gap-3 mt-2">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="publishWebsite" id="publishYes" value="Yes" required>
-                                                <label class="form-check-label text-light" for="publishYes">Yes</label>
+                                                <label class="form-check-label" for="publishYes">Yes</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="publishWebsite" id="publishNo" value="No" required>
-                                                <label class="form-check-label text-light" for="publishNo">No</label>
+                                                <label class="form-check-label" for="publishNo">No</label>
                                             </div>
                                         </div>
                                         <div class="invalid-feedback text-danger">Please choose an option.</div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label text-light">Press Note Required? <span class="text-danger">*</span></label>
+                                        <label class="form-label">Press Note Required? <span class="text-danger">*</span></label>
                                         <div class="d-flex gap-3 mt-2">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="pressNote" id="pressYes" value="Yes" required>
-                                                <label class="form-check-label text-light" for="pressYes">Yes</label>
+                                                <label class="form-check-label" for="pressYes">Yes</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="pressNote" id="pressNo" value="No" checked required>
-                                                <label class="form-check-label text-light" for="pressNo">No</label>
+                                                <label class="form-check-label" for="pressNo">No</label>
                                             </div>
                                         </div>
                                         <div class="invalid-feedback text-danger">Please choose an option.</div>
@@ -427,19 +501,19 @@ include 'head.php';
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="form-label text-light">Photo Submission Method <span class="text-danger">*</span></label>
+                                        <label class="form-label">Photo Submission Method <span class="text-danger">*</span></label>
                                         <div class="d-flex flex-wrap gap-3 mt-1 mb-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="photoMethod" id="photoMethodDrive" value="drive" checked required>
-                                                <label class="form-check-label text-light" for="photoMethodDrive">Google Drive Link</label>
+                                                <label class="form-check-label" for="photoMethodDrive">Google Drive Link</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="photoMethod" id="photoMethodZip" value="zip" required>
-                                                <label class="form-check-label text-light" for="photoMethodZip">Upload ZIP File (Max 5 MB)</label>
+                                                <label class="form-check-label" for="photoMethodZip">Upload ZIP File (Max 5 MB)</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="photoMethod" id="photoMethodEmail" value="email" required>
-                                                <label class="form-check-label text-light" for="photoMethodEmail">ZIP > 5 MB (Attach via Email Reply)</label>
+                                                <label class="form-check-label" for="photoMethodEmail">ZIP > 5 MB (Attach via Email Reply)</label>
                                             </div>
                                         </div>
                                     </div>
@@ -461,7 +535,7 @@ include 'head.php';
                                     <div class="col-md-12 d-none" id="emailReplyNoticeWrap">
                                         <div class="form-check p-3 rounded" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3);">
                                             <input class="form-check-input ms-0 me-2" type="checkbox" id="largeZipCheckbox">
-                                            <label class="form-check-label text-light fw-bold ms-1" for="largeZipCheckbox">
+                                            <label class="form-check-label fw-bold ms-1" for="largeZipCheckbox">
                                                 My ZIP file is larger than 5 MB. I will submit the report first and attach the ZIP file in the email reply I receive. <span class="text-danger">*</span>
                                             </label>
                                             <div class="invalid-feedback text-danger mt-1">Please check this box to confirm you will send the ZIP file via email reply.</div>
@@ -481,15 +555,15 @@ include 'head.php';
                     </div>
 
                     <!-- Section 3: Dynamic Report-Specific Information -->
-                    <div class="accordion-item d-none" id="secItemThree">
+                    <div class="accordion-item <?php echo $active_step >= 3 ? '' : 'd-none'; ?>" id="secItemThree">
                         <h2 class="accordion-header" id="headingThree">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <button class="accordion-button <?php echo $active_step === 3 ? '' : 'collapsed'; ?>" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseThree" aria-expanded="<?php echo $active_step === 3 ? 'true' : 'false'; ?>" aria-controls="collapseThree">
                                 <i class="bi bi-grid-3x3-gap-fill me-2"></i> Section 3: Dynamic Report-Specific
                                 Information
                             </button>
                         </h2>
-                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                        <div id="collapseThree" class="accordion-collapse collapse <?php echo $active_step === 3 ? 'show' : ''; ?>" aria-labelledby="headingThree"
                             data-bs-parent="#reportAccordion">
                             <div class="accordion-body">
                                 <div id="dynamicPlaceholder" class="text-center py-4 text-muted rp-dynamic-placeholder">
@@ -500,15 +574,15 @@ include 'head.php';
                                 <div class="dynamic-report-section d-none" id="sec-training_placement">
                                     <div class="row g-3">
                                         <div class="col-md-12">
-                                            <label class="form-label text-light">Placement Activity Type <span class="text-danger">*</span></label>
+                                            <label class="form-label">Placement Activity Type <span class="text-danger">*</span></label>
                                             <div class="d-flex gap-3 mt-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input dynamic-field" type="radio" name="placementActType" id="typeRLM" value="RLM" onchange="togglePlacementActType()">
-                                                    <label class="form-check-label text-light" for="typeRLM">RLM</label>
+                                                    <label class="form-check-label" for="typeRLM">RLM</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input dynamic-field" type="radio" name="placementActType" id="typePLM" value="PLM" onchange="togglePlacementActType()">
-                                                    <label class="form-check-label text-light" for="typePLM">PLM</label>
+                                                    <label class="form-check-label" for="typePLM">PLM</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -871,14 +945,14 @@ include 'head.php';
                     </div>
 
                     <!-- Section 4: Email Notification -->
-                    <div class="accordion-item d-none" id="secItemFive">
+                    <div class="accordion-item <?php echo $active_step >= 4 ? '' : 'd-none'; ?>" id="secItemFive">
                         <h2 class="accordion-header" id="headingFive">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            <button class="accordion-button <?php echo $active_step === 4 ? '' : 'collapsed'; ?>" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFive" aria-expanded="<?php echo $active_step === 4 ? 'true' : 'false'; ?>" aria-controls="collapseFive">
                                 <i class="bi bi-envelope-at-fill me-2"></i> Section 4: Email Notification
                             </button>
                         </h2>
-                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                        <div id="collapseFive" class="accordion-collapse collapse <?php echo $active_step === 4 ? 'show' : ''; ?>" aria-labelledby="headingFive"
                             data-bs-parent="#reportAccordion">
                             <div class="accordion-body">
                                 <div class="row g-4">
@@ -927,7 +1001,7 @@ include 'head.php';
                                                     <label class="form-check-label text-warning fw-bold" for="enableDeadline" style="cursor: pointer; font-size: 15px; text-shadow: 0 0 10px rgba(245, 158, 11, 0.2);">
                                                         Set Submission Deadline <span class="text-danger">*</span>
                                                     </label>
-                                                    <span class="text-light small ms-1">(Specify a target deadline for report review)</span>
+                                                    <span class="text-[var(--text-muted)] small ms-1">(Specify a target deadline for report review)</span>
                                                     <span id="deadlineDisplay" class="badge bg-danger ms-2 d-none" style="font-size: 13px; font-weight: 700;"></span>
                                                 </div>
                                                 <div class="text-danger d-none small mt-1 fw-bold" id="deadlineFormError">Submission deadline is required to submit the report.</div>
@@ -992,15 +1066,12 @@ include 'head.php';
 
                 </div><!-- /Accordion -->
             </form>
+
+          </div><!-- /#mainReportContent -->
         </main>
 
-        <!-- Footer -->
-        <?php 
-        $footer_class = 'rp-footer text-center container';
-        include 'footer.php'; 
-        ?>
-
-    </div><!-- /rp-page -->
+      </div><!-- /right column -->
+    </div><!-- /main wrapper -->
 
     <!-- Preview Modal -->
     <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
@@ -1031,14 +1102,14 @@ include 'head.php';
                 <div class="modal-body py-4">
                     <div id="emailSendingUI" class="text-center">
                         <div class="spinner-border text-danger mb-3 spinner-lg" role="status"></div>
-                        <h5 class="text-light rp-serif-heading">Sending Email Notification...</h5>
+                        <h5 class="text-[var(--text-primary)] rp-serif-heading">Sending Email Notification...</h5>
                         <p class="text-muted small">Transmitting report parameters via department mail hub</p>
                     </div>
                     <div id="emailSuccessUI" class="success-checkmark-modal d-none">
                         <div class="icon-circle">
                             <i class="bi bi-check-lg"></i>
                         </div>
-                        <h5 class="text-light rp-serif-heading">Email Sent Successfully!</h5>
+                        <h5 class="text-[var(--text-primary)] rp-serif-heading">Email Sent Successfully!</h5>
                         <p class="text-muted small mb-3">The report details were dispatched to the recipient mailbox.
                         </p>
                         <button type="button" class="btn btn-outline-danger btn-sm"
@@ -1065,7 +1136,7 @@ include 'head.php';
                     </p>
                 </div>
                 <div class="modal-footer border-0 justify-content-center gap-2 pt-2">
-                    <button type="button" class="btn btn-outline-secondary px-3 rounded-pill text-light" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-secondary px-3 rounded-pill " data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn zip-modal-btn px-4 rounded-pill" data-bs-dismiss="modal" onclick="switchToEmailReplyMethod()">Switch to Email Reply Method</button>
                 </div>
             </div>
@@ -1078,10 +1149,11 @@ include 'head.php';
         <span id="toastMessage">Draft successfully saved.</span>
     </div>
 
-    <?php 
-    $active_page = 'report';
-    include 'fab-nav.php'; 
-    ?>
+    <!-- Universal Modern Dashboard Toast Notification -->
+    <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-[#0A0909] text-white text-xs font-semibold shadow-2xl border border-white/15 transition-all">
+      <span id="toastDot" class="w-2 h-2 rounded-full bg-[var(--color-primary-light)]"></span>
+      <span id="portalToastMsg">Action completed</span>
+    </div>
 
     <!-- ── Print Report Preview Area (Targeted by CSS @media print) ── -->
     <div id="printReportArea">
@@ -1210,12 +1282,16 @@ include 'head.php';
     <!-- Bootstrap JS Bundle -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Shared Layout Scripts (Samsung Edge Sidebar & Top Navbar) -->
+    <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>
+    <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/navbar.js') : 'assets/js/navbar.js'; ?>"></script>
+
     <!-- Shared Faculty Database -->
     <!-- Google Sheets configuration loaded securely from backend proxy -->
-    <script src="<?php echo v_asset('assets/js/facultyData.js'); ?>" defer></script>
+    <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/facultyData.js') : 'assets/js/facultyData.js'; ?>"></script>
 
     <!-- 6-Digit Email OTP Verification Component -->
-    <script src="<?php echo v_asset('assets/js/otp-verify.js'); ?>"></script>
+    <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/otp-verify.js') : 'assets/js/otp-verify.js'; ?>"></script>
 
     <!-- Department Report System logic -->
     <script>
@@ -1267,6 +1343,17 @@ include 'head.php';
 
             // Initialize searchable autocomplete drop downs
             initAutocompleteSearch("facultySearch", "facultyId", "facultyDropdownList", fillFacultyDetails);
+
+            // Synchronize active step from server route query (e.g. ?step=2)
+            const initialStep = <?php echo (int)$active_step; ?>;
+            if (initialStep > 1) {
+                for (let s = 1; s <= initialStep; s++) {
+                    unlockSection(s);
+                    if (s < initialStep) updateStepState(s, true);
+                }
+                setActiveStepNode(initialStep);
+            }
+
             // Populate CC emails multi-select dropdown
             populateCcEmails();
 
@@ -2241,7 +2328,7 @@ include 'head.php';
             countBadge.innerText = `${words} / 30 words`;
 
             if (words >= 30) {
-                countBadge.className = "badge bg-success text-light border border-success";
+                countBadge.className = "badge bg-success text-white border border-success";
                 el.classList.remove("is-invalid");
                 if (feedback) feedback.innerText = "Brief Objective is required.";
             } else {
@@ -2339,26 +2426,40 @@ include 'head.php';
             const stepNodes = document.querySelectorAll(".step-node");
             stepNodes.forEach(node => {
                 const nStep = parseInt(node.getAttribute("data-step"));
+                const num = node.querySelector(".step-number");
+                const check = node.querySelector(".step-check");
                 if (nStep === stepNum) {
                     node.classList.add("active");
+                    node.classList.remove("completed");
+                    if (num) num.classList.remove("hidden");
+                    if (check) check.classList.add("hidden");
                 } else {
                     node.classList.remove("active");
                 }
             });
 
-            // Update progress bar
+            // Update progress bar if element present
             const progressBar = document.getElementById("stepperProgressBar");
-            const percentage = ((stepNum - 1) / (stepNodes.length - 1)) * 100;
-            progressBar.style.width = `calc(${percentage}% - ${(percentage / 100) * 90}px)`;
+            if (progressBar && stepNodes.length > 1) {
+                const percentage = ((stepNum - 1) / (stepNodes.length - 1)) * 100;
+                progressBar.style.width = `${percentage}%`;
+            }
         }
 
         function updateStepState(stepNum, isCompleted) {
             const stepNode = document.querySelector(`.step-node[data-step="${stepNum}"]`);
             if (stepNode) {
+                const num = stepNode.querySelector(".step-number");
+                const check = stepNode.querySelector(".step-check");
                 if (isCompleted) {
                     stepNode.classList.add("completed");
+                    stepNode.classList.remove("active");
+                    if (num) num.classList.add("hidden");
+                    if (check) check.classList.remove("hidden");
                 } else {
                     stepNode.classList.remove("completed");
+                    if (num) num.classList.remove("hidden");
+                    if (check) check.classList.add("hidden");
                 }
             }
         }
@@ -4013,16 +4114,33 @@ Department of CE & IT`;
             clone.style.fontFamily = "'Lora', Georgia, serif";
 
             // Enforce explicit font styling on clone elements matching print view
-            const printHeaders = clone.querySelectorAll(".print-title, .print-section-title, #printDeptHeader");
+            const printHeaders = clone.querySelectorAll(".print-title, #printDeptHeader");
             printHeaders.forEach(h => {
                 h.style.fontFamily = "'Playfair Display', Georgia, serif";
             });
 
-            // Ensure table styles in clone fit 100% within the 718px width
-            const tables = clone.querySelectorAll("table");
+            const sectionTitles = clone.querySelectorAll(".print-section-title");
+            sectionTitles.forEach(st => {
+                st.style.backgroundColor = "#f1f5f9";
+                st.style.border = "1px solid #cbd5e1";
+                st.style.borderLeft = "4.5px solid #0f172a";
+                st.style.padding = "6px 12px";
+                st.style.fontSize = "11pt";
+                st.style.fontWeight = "700";
+                st.style.textTransform = "uppercase";
+                st.style.letterSpacing = "0.5px";
+                st.style.color = "#0f172a";
+                st.style.margin = "16px 0 8px 0";
+                st.style.fontFamily = "'Playfair Display', Georgia, serif";
+            });
+
+            // Ensure table styles in clone fit 100% within the 718px width with crisp professional borders
+            const tables = clone.querySelectorAll("table, .print-meta-table");
             tables.forEach(t => {
                 t.style.width = "100%";
-                t.style.margin = "0 0 15px 0";
+                t.style.borderCollapse = "collapse";
+                t.style.border = "1.5px solid #334155";
+                t.style.margin = "0 0 14px 0";
                 t.style.boxSizing = "border-box";
                 t.style.tableLayout = "fixed";
                 t.style.wordBreak = "break-word";
@@ -4036,7 +4154,24 @@ Department of CE & IT`;
                 c.style.overflowWrap = "break-word";
                 c.style.whiteSpace = "normal";
                 c.style.boxSizing = "border-box";
+                c.style.border = "1px solid #94a3b8";
+                c.style.padding = "7px 10px";
+                c.style.fontSize = "10pt";
                 c.style.fontFamily = "'Lora', Georgia, serif";
+            });
+
+            const thCells = clone.querySelectorAll("th");
+            thCells.forEach(th => {
+                th.style.backgroundColor = "#f1f5f9";
+                th.style.fontWeight = "700";
+                th.style.color = "#0f172a";
+                th.style.width = "25%";
+            });
+
+            const tdCells = clone.querySelectorAll("td");
+            tdCells.forEach(td => {
+                td.style.backgroundColor = "#ffffff";
+                td.style.color = "#0f172a";
             });
 
             // Force Section 3 (Activity-Specific Details) to start cleanly at the top of Page 2
@@ -4456,6 +4591,10 @@ Department of CE & IT`;
             const stepNodes = document.querySelectorAll(".step-node");
             stepNodes.forEach((node, index) => {
                 node.classList.remove("completed");
+                const num = node.querySelector(".step-number");
+                const check = node.querySelector(".step-check");
+                if (num) num.classList.remove("hidden");
+                if (check) check.classList.add("hidden");
                 if (index === 0) {
                     node.classList.add("active");
                     node.classList.remove("disabled-step");
@@ -4784,7 +4923,7 @@ Department of CE & IT`;
 
                 <!-- Modal Footer Actions -->
                 <div class="clock-modal-footer">
-                    <button type="button" class="btn btn-outline-secondary btn-sm px-4 rounded-pill text-light border-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm px-4 rounded-pill border-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-danger btn-sm px-4 rounded-pill shadow-sm" onclick="confirmClockSelection()">Set Time <i class="bi bi-check2 ms-1"></i></button>
                 </div>
             </div>
@@ -5101,7 +5240,7 @@ Department of CE & IT`;
 
                 <!-- Footer Actions -->
                 <div class="date-modal-footer">
-                    <button type="button" class="btn btn-outline-secondary btn-sm px-4 rounded-pill text-light border-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm px-4 rounded-pill border-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-danger btn-sm px-4 rounded-pill shadow-sm" onclick="confirmDateSelection()">Set Date <i class="bi bi-check2 ms-1"></i></button>
                 </div>
             </div>
@@ -5307,9 +5446,6 @@ Department of CE & IT`;
             }
         }
     </script>
-</body>
-
-</html>
 </body>
 
 </html>

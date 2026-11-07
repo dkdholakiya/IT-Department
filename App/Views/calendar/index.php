@@ -5,7 +5,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
 ?>
 
   <!-- MAIN WRAPPER: Matches Dashboard Layout Exactly (1600px Max-Width, 100vh on Desktop, Zero Edge Bleed) -->
-  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-16 sm:pt-20 lg:pt-3.5 pb-8 sm:pb-10 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row gap-3.5 lg:gap-4 overflow-x-hidden lg:overflow-hidden">
+  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-[72px] sm:pt-[76px] lg:pt-3.5 pb-8 sm:pb-10 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row gap-3.5 lg:gap-4 overflow-x-hidden lg:overflow-hidden">
 
     <!-- Shared Samsung Edge Shortcut Sidebar -->
     <?php

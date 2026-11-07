@@ -5,7 +5,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
 ?>
 
   <!-- MAIN WRAPPER: Fixed 100vh x 100vw on Desktop, Smooth Scroll with Fixed Top Navbar on Mobile -->
-  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-16 sm:pt-20 lg:pt-3.5 pb-5 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row gap-3.5 lg:gap-4 overflow-x-hidden lg:overflow-hidden">
+  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-[72px] sm:pt-[76px] lg:pt-3.5 pb-5 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row gap-3.5 lg:gap-4 overflow-x-hidden lg:overflow-hidden">
 
     <?php
     $active_page = 'dashboard';
