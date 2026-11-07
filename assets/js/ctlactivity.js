@@ -1307,6 +1307,13 @@
     if (submissionFilter) submissionFilter.addEventListener('change', filterData);
     if (searchInput) searchInput.addEventListener('input', filterData);
 
+    // Synchronized Top Navbar Search Listener
+    window.addEventListener('portal:search', (e) => {
+      const q = e.detail?.query || '';
+      if (searchInput) searchInput.value = q;
+      filterData();
+    });
+
     if (resetFiltersBtn) {
       resetFiltersBtn.addEventListener('click', () => {
         if (statusFilter) statusFilter.value = '';

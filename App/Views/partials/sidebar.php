@@ -17,7 +17,7 @@ $pageLabels = [
   'timetable'   => 'Timetable Schedules',
   'report'      => 'Workload Reports',
   'ctlactivity' => 'CTL Activity Dashboard',
-  'ctldrive'    => 'CTL Activity Drive',
+  'ctldrive'    => 'Drive Folder Scanner',
   'faculty'     => 'Faculty List',
 ];
 $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Navigation');
@@ -168,15 +168,15 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
         </span>
       </a>
 
-      <!-- Nav 6: CTL Activity Drive -->
-      <a href="<?php echo htmlspecialchars($baseUrl); ?>ctldrive" style="--stagger: 6;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'ctldrive') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="CTL Activity Drive">
+      <!-- Nav 6: Drive Folder Scanner -->
+      <a href="<?php echo htmlspecialchars($baseUrl); ?>ctldrive" style="--stagger: 6;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'ctldrive') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Drive Folder Scanner">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'ctldrive') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"/>
           </svg>
         </span>
         <span class="sidebar-nav-label-wrap expanded-only lg:hidden min-w-0 flex-1 pr-2">
-          <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">CTL Drive</span>
+          <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Drive Scanner</span>
         </span>
       </a>
 

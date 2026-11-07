@@ -1023,6 +1023,14 @@
       });
     }
 
+    // 3b. Synchronized Top Navbar Search Listener
+    window.addEventListener('portal:search', (e) => {
+      searchQuery = e.detail?.query || '';
+      if (searchInp) searchInp.value = searchQuery;
+      currentPage = 1;
+      renderTable();
+    });
+
     // 4. Page Size Selector
     const pageSizeSelect = document.getElementById('pageSizeSelect');
     if (pageSizeSelect) {
