@@ -106,91 +106,84 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
           </div>
 
         <?php else: ?>
-          <!-- 1. TOP HEADER ROW & DEPARTMENT SWITCHER TOOLBAR -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-black/5 dark:border-white/10 shrink-0">
-            <div>
-              <div class="flex items-center gap-2 flex-wrap">
-                <h2 class="text-base sm:text-xl font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none" id="pageTitleMain">
-                  Faculty Timetable Viewer
-                </h2>
-                <span class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10 shadow-sm shrink-0" id="portalBadge">
-                  IT Timetable
-                </span>
-              </div>
-              <p class="text-[11px] sm:text-xs text-[var(--text-muted)] mt-1 hidden sm:block" id="rpDeptBadgeText">
-                Department of Information Technology
-              </p>
-            </div>
+          <!-- 1. UNIFIED TOP HEADER TOOLBAR: FULLY RESPONSIVE (1 ROW ON DESKTOP, FLUID ON MOBILE/TABLET) -->
+          <div class="tt-header-toolbar flex flex-col md:flex-row md:flex-wrap xl:flex-nowrap items-stretch md:items-center justify-between gap-2 sm:gap-2.5 pb-2.5 border-b border-black/5 dark:border-white/10 shrink-0" id="facultyInfoCard">
+            
+            <!-- Hidden DOM anchors for seamless JavaScript compatibility -->
+            <span id="pageTitleMain" class="hidden" aria-hidden="true">Faculty Timetable Viewer</span>
+            <span id="portalBadge" class="hidden" aria-hidden="true">IT Timetable</span>
+            <span id="rpDeptBadgeText" class="hidden" aria-hidden="true">Department of Information Technology</span>
+            <span id="facName" class="hidden" aria-hidden="true"></span>
+            <span id="facAvatar" class="hidden" aria-hidden="true"></span>
+            <span id="facDesignation" class="hidden" aria-hidden="true"></span>
 
-            <!-- Controls Right: Department Pill & Live Sync Button -->
-            <div class="flex items-center flex-wrap gap-1.5 sm:gap-2 shrink-0">
-              <!-- Segment control for Departments -->
-              <div class="zs-segment-control">
-                <button type="button" class="segment-btn active" id="dept-it-btn" data-dept="Information Technology">Information Technology</button>
-                <button type="button" class="segment-btn" id="dept-ce-btn" data-dept="Computer Engineering">Computer Engineering</button>
-              </div>
-
-              <!-- Workload Summary Button -->
-              <a href="<?php echo function_exists('base_url') ? base_url('workload-summary') : './workload-summary'; ?>" class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-full glass-pill text-[11px] sm:text-xs font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 workload-summary-seg-btn" style="text-decoration:none;">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10M12 20V4M6 20v-6" />
-                </svg>
-                <span>Workload Summary</span>
-              </a>
-
-              <!-- Sync Live Sheet Button -->
-              <button type="button" onclick="quickSyncSheet(event, 'faculty')" class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-full glass-pill text-[11px] sm:text-xs font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer" title="Download latest Google Sheet file, remove old file, and refresh">
-                <svg class="w-3.5 h-3.5 quick-sync-icon" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                <span class="quick-sync-text">Sync Live Sheet</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- 2. UNIFIED FACULTY SELECTOR & PROFILE ROW (COMBINED SINGLE COMPACT ROW) -->
-          <div class="faculty-bar-card shrink-0" id="facultyInfoCard">
-            <!-- Left: Faculty Selector Dropdown -->
-            <div class="faculty-bar-selector">
-              <span class="selector-label">Select Faculty:</span>
-              <div class="custom-select-wrapper">
-                <div class="custom-select-trigger" id="selectTrigger">
-                  <span id="selectedFacultyText">Select a member...</span>
-                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" class="shrink-0">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-                <div class="custom-select-options" id="selectOptions">
-                  <div class="select-search-box">
-                    <input type="text" class="select-search-input" id="selectSearchInput" placeholder="Search by name or initials..." autocomplete="off">
+            <!-- Left Group: Faculty Selector + Profile Badges -->
+            <div class="faculty-bar-left-group flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap min-w-0">
+              
+              <!-- Faculty Selector Dropdown -->
+              <div class="faculty-bar-selector flex-1 sm:flex-none">
+                <span class="selector-label">Select Faculty:</span>
+                <div class="custom-select-wrapper">
+                  <div class="custom-select-trigger" id="selectTrigger">
+                    <span id="selectedFacultyText">Select a member...</span>
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" class="shrink-0">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
                   </div>
-                  <div id="optionsListContainer">
-                    <!-- Populated via Javascript -->
+                  <div class="custom-select-options" id="selectOptions">
+                    <div class="select-search-box">
+                      <input type="text" class="select-search-input" id="selectSearchInput" placeholder="Search by name or initials..." autocomplete="off">
+                    </div>
+                    <div id="optionsListContainer">
+                      <!-- Populated via Javascript -->
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Subtle Vertical Divider -->
-            <div class="faculty-bar-divider"></div>
-
-            <!-- Right: Active Faculty Info & Alteration Button -->
-            <div class="faculty-bar-profile">
-              <div class="faculty-bar-profile-left">
-                <div class="faculty-avatar" id="facAvatar">SBC</div>
-                <div class="faculty-meta-left">
-                  <h2 class="faculty-name-title" id="facName">Prof. Shwetaba B. Chauhan</h2>
-                  <span class="faculty-designation-badge" id="facDesignation"></span>
-                </div>
-              </div>
-              <div class="faculty-bar-profile-right">
+              <!-- Faculty Profile Capsule Chips (Department, Semester & Alteration) -->
+              <div class="faculty-profile-strip flex items-center gap-1.5 sm:gap-2 shrink-0 flex-wrap">
                 <span class="faculty-dept-badge" id="facDeptBadge">
-                  <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]"></span>
-                  Department of Information Technology
+                  <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] shrink-0"></span>
+                  Department of IT & CE
                 </span>
                 <div class="faculty-semester-info" id="facSemesterInfo"></div>
                 <button type="button" class="leave-toggle-btn" id="leaveToggleBtn">Alteration</button>
               </div>
+
+            </div>
+
+            <!-- Right Group: Department Switcher, Workload Summary & Live Sync -->
+            <div class="faculty-actions-strip flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 shrink-0 flex-wrap">
+              <!-- Segment control for Departments -->
+              <div class="zs-segment-control shrink-0">
+                <button type="button" class="segment-btn active" id="dept-it-btn" data-dept="Information Technology">
+                  <span class="hidden sm:inline">Information Technology</span>
+                  <span class="sm:hidden">IT</span>
+                </button>
+                <button type="button" class="segment-btn" id="dept-ce-btn" data-dept="Computer Engineering">
+                  <span class="hidden sm:inline">Computer Engineering</span>
+                  <span class="sm:hidden">CE</span>
+                </button>
+              </div>
+
+              <!-- Workload Summary Button -->
+              <a href="<?php echo function_exists('base_url') ? base_url('workload-summary') : './workload-summary'; ?>" class="h-7 sm:h-7.5 px-2 sm:px-2.5 rounded-full glass-pill text-[11px] font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 workload-summary-seg-btn whitespace-nowrap" style="text-decoration:none;">
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10M12 20V4M6 20v-6" />
+                </svg>
+                <span class="hidden xs:inline sm:inline">Workload Summary</span>
+                <span class="xs:hidden sm:hidden">Summary</span>
+              </a>
+
+              <!-- Sync Live Sheet Button -->
+              <button type="button" onclick="quickSyncSheet(event, 'faculty')" class="h-7 sm:h-7.5 px-2 sm:px-2.5 rounded-full glass-pill text-[11px] font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer whitespace-nowrap" title="Download latest Google Sheet file, remove old file, and refresh">
+                <svg class="w-3.5 h-3.5 quick-sync-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span class="quick-sync-text hidden sm:inline">Sync Live Sheet</span>
+                <span class="sm:hidden">Sync</span>
+              </button>
             </div>
           </div>
 
@@ -820,8 +813,16 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         // Update UI text triggers
         selectedFacultyText.innerText = `${faculty.name} (${initials})`;
         facAvatar.innerText = initials;
-        facName.innerText = faculty.name;
-        facDeptBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]"></span> ${faculty.department === "Both" ? "Department of CE & IT" : `Department of ${faculty.department}`}`;
+        if (facName) facName.innerText = faculty.name;
+        
+        const rawDept = (faculty.department || '').trim();
+        let deptLabel = rawDept;
+        if (rawDept.toLowerCase() === 'both' || rawDept.toLowerCase() === 'it & ce' || rawDept.toLowerCase() === 'ce & it') {
+          deptLabel = 'Department of IT & CE';
+        } else if (!rawDept.toLowerCase().startsWith('department of')) {
+          deptLabel = `Department of ${rawDept}`;
+        }
+        if (facDeptBadge) facDeptBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]"></span> ${deptLabel}`;
         
         const facDesignation = document.getElementById("facDesignation");
         if (facDesignation) {
@@ -829,7 +830,15 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         }
         const facSemesterInfo = document.getElementById("facSemesterInfo");
         if (facSemesterInfo) {
-          facSemesterInfo.innerText = faculty.semesterInfo || '';
+          const semClean = (faculty.semesterInfo || '').trim();
+          const semVal = semClean.replace(/^semester\s*:\s*/i, '').trim();
+          if (semVal.length > 0) {
+            facSemesterInfo.innerText = semClean;
+            facSemesterInfo.style.display = '';
+          } else {
+            facSemesterInfo.innerText = '';
+            facSemesterInfo.style.display = 'none';
+          }
         }
 
         // Update document title dynamically

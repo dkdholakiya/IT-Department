@@ -135,7 +135,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
       <button
         id="mobileUserMenuBtn"
         type="button"
-        class="md:hidden h-10 pl-1.5 pr-2.5 rounded-full glass-pill flex items-center gap-1.5 text-[var(--text-primary)] hover:scale-105 active:scale-95 transition relative cursor-pointer"
+        class="md:hidden h-10 pl-1.5 pr-2.5 rounded-full glass-pill flex items-center gap-1.5 text-[var(--text-primary)] hover:scale-105 active:scale-95 transition relative cursor-pointer shrink-0"
         aria-label="Open User & Quick Actions Menu"
         title="Open Quick Actions & User Menu"
       >
@@ -151,8 +151,8 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
       </button>
     </div>
 
-    <!-- DESKTOP DYNAMIC COLOR PICKER POPOVER (Positioned cleanly under the Color Dot Button) -->
-    <div id="colorPickerPopover" class="hidden fixed md:absolute right-3 sm:right-6 md:right-16 lg:right-20 top-16 md:top-12 w-72 glass-card p-4 z-50 shadow-2xl border border-white/80">
+    <!-- DYNAMIC COLOR PICKER POPOVER (Positioned cleanly under the Color Dot Button on desktop & responsive on mobile) -->
+    <div id="colorPickerPopover" class="hidden fixed right-3 sm:right-6 md:right-16 lg:right-20 top-16 md:top-12 w-[calc(100vw-24px)] sm:w-72 max-w-sm glass-card p-4 z-50 shadow-2xl border border-white/80 dark:border-white/15">
       <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-black/10">
         <div>
           <span class="font-bold text-xs text-[var(--text-primary)] block">Theme & Font Color Studio</span>
@@ -172,7 +172,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
     </div>
 
     <!-- Notifications Dropdown Popover -->
-    <div id="notificationsPopover" class="hidden fixed md:absolute right-3 sm:right-6 md:right-2 lg:right-4 top-16 md:top-12 w-[calc(100vw-24px)] max-w-sm glass-card p-4 z-50 shadow-2xl border border-white/80">
+    <div id="notificationsPopover" class="hidden fixed md:absolute right-3 sm:right-6 md:right-2 lg:right-4 top-16 md:top-12 w-[calc(100vw-24px)] max-w-sm glass-card p-4 z-50 shadow-2xl border border-white/80 dark:border-white/15">
       <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-black/10">
         <div class="flex items-center gap-2">
           <span class="font-bold text-sm text-[var(--text-primary)]">System Alerts & Schedule Updates</span>
@@ -249,12 +249,12 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
         <input id="mobileCustomColorInput" type="color" value="#10B981" class="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent p-0" title="Pick any custom theme & font color" />
       </div>
       <div class="flex items-center gap-1.5">
-        <button type="button" data-theme-color="#10B981" class="color-Preset-btn w-6 h-6 rounded-full bg-[#10B981] ring-2 ring-offset-1 ring-[#10B981]" title="Emerald Default (#10B981)" aria-label="Emerald Default Theme"></button>
-        <button type="button" data-theme-color="#729C51" class="color-Preset-btn w-6 h-6 rounded-full bg-[#729C51]" title="Nature Green (#729C51)" aria-label="Nature Green Theme"></button>
-        <button type="button" data-theme-color="#0284C7" class="color-Preset-btn w-6 h-6 rounded-full bg-[#0284C7]" title="Ocean Blue (#0284C7)" aria-label="Ocean Blue Theme"></button>
-        <button type="button" data-theme-color="#7C3AED" class="color-Preset-btn w-6 h-6 rounded-full bg-[#7C3AED]" title="Royal Purple (#7C3AED)" aria-label="Royal Purple Theme"></button>
-        <button type="button" data-theme-color="#E11D48" class="color-Preset-btn w-6 h-6 rounded-full bg-[#E11D48]" title="Crimson Rose (#E11D48)" aria-label="Crimson Rose Theme"></button>
-        <button type="button" data-theme-color="#0D9488" class="color-Preset-btn w-6 h-6 rounded-full bg-[#0D9488]" title="Teal Lagoon (#0D9488)" aria-label="Teal Lagoon Theme"></button>
+        <button type="button" data-theme-color="#10B981" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#10B981] ring-2 ring-offset-1 ring-[#10B981] cursor-pointer" title="Emerald Default (#10B981)" aria-label="Emerald Default Theme"></button>
+        <button type="button" data-theme-color="#729C51" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#729C51] cursor-pointer" title="Nature Green (#729C51)" aria-label="Nature Green Theme"></button>
+        <button type="button" data-theme-color="#0284C7" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#0284C7] cursor-pointer" title="Ocean Blue (#0284C7)" aria-label="Ocean Blue Theme"></button>
+        <button type="button" data-theme-color="#7C3AED" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#7C3AED] cursor-pointer" title="Royal Purple (#7C3AED)" aria-label="Royal Purple Theme"></button>
+        <button type="button" data-theme-color="#E11D48" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#E11D48] cursor-pointer" title="Crimson Rose (#E11D48)" aria-label="Crimson Rose Theme"></button>
+        <button type="button" data-theme-color="#0D9488" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#0D9488] cursor-pointer" title="Teal Lagoon (#0D9488)" aria-label="Teal Lagoon Theme"></button>
       </div>
     </div>
   </div>

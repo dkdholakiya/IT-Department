@@ -63,8 +63,163 @@ body.theme-dark .custom-select-options::-webkit-scrollbar-thumb:hover {
 }
 
 /* ==========================================================================
-   2. UNIFIED FACULTY SELECTOR & PROFILE BAR (SINGLE ROW)
+   2. UNIFIED FACULTY SELECTOR & PROFILE HEADER TOOLBAR
    ========================================================================== */
+.tt-header-toolbar {
+  position: relative !important;
+  z-index: 1000 !important;
+  overflow: visible !important;
+  transition: all 0.2s ease;
+}
+
+/* Desktop: >= 1200px - ALL IN ONE SINGLE ROW (Matches reference image) */
+@media (min-width: 1200px) {
+  .tt-header-toolbar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+  }
+
+  .faculty-bar-left-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+    flex-shrink: 0 !important;
+    min-width: 0 !important;
+  }
+
+  .faculty-bar-selector {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 1001 !important;
+    overflow: visible !important;
+  }
+
+  .faculty-profile-strip {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  .faculty-actions-strip {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Tablet: 768px - 1199px - Clean 2-group wrap */
+@media (max-width: 1199px) and (min-width: 768px) {
+  .tt-header-toolbar {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+  }
+
+  .faculty-bar-left-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    flex: 1 1 auto !important;
+  }
+
+  .faculty-actions-strip {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Mobile: < 768px - Touch-optimized fluid stacking */
+@media (max-width: 767px) {
+  .tt-header-toolbar {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  .faculty-bar-left-group {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .faculty-bar-selector {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .custom-select-wrapper {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .custom-select-trigger {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  #selectedFacultyText {
+    max-width: calc(100vw - 160px) !important;
+  }
+
+  .custom-select-options {
+    position: absolute !important;
+    top: calc(100% + 4px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .faculty-profile-strip {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+  }
+
+  .faculty-actions-strip {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+  }
+
+  .faculty-dept-badge {
+    max-width: 220px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
+
 .faculty-bar-card {
   background: var(--glass-surface-strong, rgba(255, 255, 255, 0.92));
   border: 1.5px solid rgba(var(--color-primary-rgb), 0.35);
@@ -88,15 +243,24 @@ body.theme-dark .faculty-bar-card {
 .faculty-bar-selector {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-width: 280px;
-  max-width: 380px;
-  flex: 1 1 auto;
+  gap: 8px;
+  min-width: 240px;
+  max-width: 340px;
+  position: relative;
+  z-index: 50;
+}
+
+.faculty-profile-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .faculty-bar-divider {
   width: 1px;
-  height: 28px;
+  height: 24px;
   background: rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
 }
@@ -108,16 +272,15 @@ body.theme-dark .faculty-bar-divider {
 .faculty-bar-profile {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  flex: 2 1 auto;
+  gap: 8px;
+  flex-wrap: wrap;
   min-width: 0;
 }
 
 .faculty-bar-profile-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -140,24 +303,36 @@ body.theme-dark .faculty-bar-divider {
 }
 
 .custom-select-wrapper {
-  position: relative;
-  width: 100%;
+  position: relative !important;
+  width: auto;
+  min-width: 210px;
+  z-index: 1002 !important;
 }
 
 .custom-select-trigger {
   background: rgba(255, 255, 255, 0.95);
   border: 1.5px solid rgba(var(--color-primary-rgb), 0.42);
   color: var(--text-primary);
-  padding: 7px 14px;
-  font-size: 12.5px;
+  padding: 4px 11px;
+  font-size: 11.5px;
   font-weight: 700;
   border-radius: 9999px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  gap: 6px;
   justify-content: space-between;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 2px 8px rgba(var(--color-primary-rgb), 0.12), 0 1px 3px rgba(0, 0, 0, 0.03);
+  white-space: nowrap !important;
+}
+
+#selectedFacultyText {
+  white-space: nowrap !important;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 210px;
 }
 
 body.theme-dark .custom-select-trigger {
@@ -191,17 +366,19 @@ body.theme-dark .custom-select-trigger.active {
 
 .custom-select-options {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   left: 0;
-  right: 0;
+  min-width: 290px;
+  width: max-content;
+  max-width: 380px;
   background: var(--glass-surface-strong, rgba(255, 255, 255, 0.98));
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
   border: 1.5px solid rgba(var(--color-primary-rgb), 0.40);
   border-radius: 18px;
-  box-shadow: 0 18px 45px -4px rgba(var(--color-primary-rgb), 0.20), 0 6px 18px rgba(10, 9, 9, 0.08);
-  z-index: 100;
-  max-height: 320px;
+  box-shadow: 0 18px 45px -4px rgba(var(--color-primary-rgb), 0.25), 0 8px 24px rgba(0, 0, 0, 0.14);
+  z-index: 99999 !important;
+  max-height: 340px;
   overflow-y: auto;
   opacity: 0;
   visibility: hidden;
@@ -372,9 +549,9 @@ body.theme-dark .workload-summary-seg-btn {
 
 /* Profile Elements Inside the Unified Bar */
 .faculty-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 11px;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   border: 1.5px solid rgba(255, 255, 255, 0.7);
   box-shadow: 0 2px 8px rgba(var(--color-primary-rgb), 0.30);
@@ -382,7 +559,7 @@ body.theme-dark .workload-summary-seg-btn {
   align-items: center;
   justify-content: center;
   font-family: 'Share Tech', monospace;
-  font-size: 13px;
+  font-size: 11.5px;
   font-weight: 800;
   color: #ffffff;
   flex-shrink: 0;
@@ -406,14 +583,34 @@ body.theme-dark .workload-summary-seg-btn {
   white-space: nowrap;
 }
 
+.faculty-designation-pill,
 .faculty-designation-badge {
   font-family: 'Share Tech', monospace;
   font-size: 10.5px;
-  color: var(--text-muted);
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  background: rgba(var(--color-primary-rgb), 0.12);
+  border: 1.5px solid rgba(var(--color-primary-rgb), 0.38);
+  padding: 3px 9px;
+  border-radius: 9999px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  font-weight: 600;
-  display: block;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(var(--color-primary-rgb), 0.08);
+  display: inline-flex;
+  align-items: center;
+}
+
+body.theme-dark .faculty-designation-pill,
+body.theme-dark .faculty-designation-badge {
+  color: var(--color-primary-light);
+  background: rgba(var(--color-primary-rgb), 0.22);
+  border-color: rgba(var(--color-primary-rgb), 0.50);
+}
+
+.faculty-designation-pill:empty,
+.faculty-designation-badge:empty {
+  display: none !important;
 }
 
 .faculty-dept-badge {
@@ -451,6 +648,12 @@ body.theme-dark .faculty-dept-badge {
   border-radius: 8px;
   white-space: nowrap;
   box-shadow: 0 1px 4px rgba(var(--color-primary-rgb), 0.06);
+  display: inline-flex;
+  align-items: center;
+}
+
+.faculty-semester-info:empty {
+  display: none !important;
 }
 
 body.theme-dark .faculty-semester-info {
@@ -1298,7 +1501,7 @@ body.theme-dark .leave-no-proxies {
     padding: 10px 12px;
   }
 
-  .faculty-bar-selector {
+  .faculty-bar-card .faculty-bar-selector {
     max-width: 100%;
     width: 100%;
   }
@@ -1319,7 +1522,7 @@ body.theme-dark .leave-no-proxies {
 }
 
 @media (max-width: 768px) {
-  .zs-segment-control {
+  .faculty-bar-card .zs-segment-control {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;

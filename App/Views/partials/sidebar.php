@@ -15,6 +15,7 @@ $pageLabels = [
   'dashboard'           => 'Smart Dashboard',
   'calendar'            => 'Academic Calendar',
   'timetable'           => 'Timetable Schedules',
+  'workload-summary'    => 'Faculty Workload Audit',
   'report'              => 'Workload Reports',
   'ctlactivity'         => 'CTL Activity Dashboard',
   'ctldrive'            => 'Drive Folder Scanner',

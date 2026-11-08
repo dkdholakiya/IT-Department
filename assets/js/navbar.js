@@ -161,6 +161,9 @@
     const activeDot = document.getElementById('activeColorDot');
     if (activeDot) activeDot.style.backgroundColor = hex;
 
+    const mobileActiveDot = document.getElementById('mobileActiveColorDot');
+    if (mobileActiveDot) mobileActiveDot.style.backgroundColor = hex;
+
     const readout = document.getElementById('activeHexReadout');
     if (readout) readout.textContent = `Active Palette: ${hex.toUpperCase()}`;
 
@@ -253,26 +256,34 @@
     const colorPickerToggleBtn = document.getElementById('colorPickerToggleBtn');
     const colorPickerPopover = document.getElementById('colorPickerPopover');
     const customColorInput = document.getElementById('desktopCustomColorInput');
+    const mobileCustomColorInput = document.getElementById('mobileCustomColorInput');
 
-    if (colorPickerToggleBtn && colorPickerPopover) {
-      colorPickerToggleBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    function toggleColorStudioPopover(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (colorPickerPopover) {
         colorPickerPopover.classList.toggle('hidden');
-        document.getElementById('notificationsPopover')?.classList.add('hidden');
-      });
+      }
+      document.getElementById('notificationsPopover')?.classList.add('hidden');
+    }
+
+    if (colorPickerToggleBtn) {
+      colorPickerToggleBtn.addEventListener('click', toggleColorStudioPopover);
     }
 
     if (customColorInput) {
-      customColorInput.addEventListener('input', (e) => {
-        applyCustomColorPalette(e.target.value);
+      ['input', 'change'].forEach(evt => {
+        customColorInput.addEventListener(evt, (e) => {
+          applyCustomColorPalette(e.target.value);
+        });
       });
     }
 
-    const mobileCustomColorInput = document.getElementById('mobileCustomColorInput');
     if (mobileCustomColorInput) {
-      mobileCustomColorInput.addEventListener('input', (e) => {
-        applyCustomColorPalette(e.target.value);
+      ['input', 'change'].forEach(evt => {
+        mobileCustomColorInput.addEventListener(evt, (e) => {
+          applyCustomColorPalette(e.target.value);
+        });
       });
     }
 
@@ -367,7 +378,8 @@
       if (notificationsPopover && !notificationsPopover.contains(e.target) && e.target !== notificationsBtn && e.target !== mobileNotifBtn) {
         notificationsPopover.classList.add('hidden');
       }
-      if (colorPickerPopover && !colorPickerPopover.contains(e.target) && e.target !== colorPickerToggleBtn && !colorPickerToggleBtn?.contains(e.target)) {
+      if (colorPickerPopover && !colorPickerPopover.contains(e.target) &&
+          e.target !== colorPickerToggleBtn && !colorPickerToggleBtn?.contains(e.target)) {
         colorPickerPopover.classList.add('hidden');
       }
     });
