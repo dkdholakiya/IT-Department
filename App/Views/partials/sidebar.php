@@ -12,13 +12,14 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
 $activePage = $active_page ?? 'dashboard';
 
 $pageLabels = [
-  'dashboard'   => 'Smart Dashboard',
-  'calendar'    => 'Academic Calendar',
-  'timetable'   => 'Timetable Schedules',
-  'report'      => 'Workload Reports',
-  'ctlactivity' => 'CTL Activity Dashboard',
-  'ctldrive'    => 'Drive Folder Scanner',
-  'faculty'     => 'Faculty List',
+  'dashboard'           => 'Smart Dashboard',
+  'calendar'            => 'Academic Calendar',
+  'timetable'           => 'Timetable Schedules',
+  'report'              => 'Workload Reports',
+  'ctlactivity'         => 'CTL Activity Dashboard',
+  'ctldrive'            => 'Drive Folder Scanner',
+  'faculty'             => 'Faculty List',
+  'zero-student-report' => 'Zero Student Log',
 ];
 $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Navigation');
 ?>
@@ -189,6 +190,18 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
         </span>
         <span class="sidebar-nav-label-wrap expanded-only lg:hidden min-w-0 flex-1 pr-2">
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Faculty List</span>
+        </span>
+      </a>
+
+      <!-- Nav 8: Zero Student Log -->
+      <a href="<?php echo htmlspecialchars($baseUrl); ?>zero-student-report" style="--stagger: 8;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'zero-student-report') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Zero Student Log">
+        <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'zero-student-report') ? 'text-white' : 'text-current'; ?> shrink-0">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"/>
+          </svg>
+        </span>
+        <span class="sidebar-nav-label-wrap expanded-only lg:hidden min-w-0 flex-1 pr-2">
+          <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Zero Student Log</span>
         </span>
       </a>
 

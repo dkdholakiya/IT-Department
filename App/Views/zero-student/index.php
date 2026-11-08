@@ -1,297 +1,350 @@
 <?php
-$page_title = 'Zero Student Log — CE & IT Department';
-$page_description = 'Zero Student Report Management for classes where zero students reported as per timetable.';
+$page_title = 'Zero Student Log Directory — CE & IT Department';
+$page_description = 'Incident directory of timetable sessions where zero students were present as per academic timetable.';
 $page_css = [
-    'assets/css/portal.css',
     'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
     'assets/css/zero-student-report.css',
 ];
-$extra_head = '<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>' . "\n" .
-    '<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>';
-include 'head.php';
+$extra_head = '<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>' .
+              '<script src="' . (function_exists('v_asset') ? v_asset('assets/vendor/xlsx/xlsx.full.min.js') : 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js') . '"></script>';
+include dirname(__DIR__) . '/partials/dashboard-head.php';
 ?>
 
-    <!-- Background particles -->
-    <div class="particles" aria-hidden="true">
-        <div class="particle" style="width:4px; height:4px; left:8%;  background:rgba(192,57,43,0.5);  animation: rise 20s linear infinite;"></div>
-        <div class="particle" style="width:3px; height:3px; left:22%; background:rgba(255,255,255,0.2); animation: rise 25s linear -6s infinite;"></div>
-        <div class="particle" style="width:5px; height:5px; left:38%; background:rgba(37,99,235,0.5);  animation: rise 18s linear -3s infinite;"></div>
-        <div class="particle" style="width:3px; height:3px; left:55%; background:rgba(255,255,255,0.15);animation: rise 22s linear -10s infinite;"></div>
-        <div class="particle" style="width:4px; height:4px; left:68%; background:rgba(124,58,237,0.45);animation: rise 28s linear -1s infinite;"></div>
-        <div class="particle" style="width:3px; height:3px; left:80%; background:rgba(255,255,255,0.18);animation: rise 24s linear -8s infinite;"></div>
-        <div class="particle" style="width:5px; height:5px; left:90%; background:rgba(192,57,43,0.4);  animation: rise 19s linear -4s infinite;"></div>
-    </div>
+  <!-- MAIN WRAPPER: Matches Dashboard, Calendar, CTL Activity, Timetable & Faculty (1600px Max-Width, 100vh on Desktop, Zero Edge Bleed) -->
+  <div class="max-w-[1600px] w-full mx-auto px-3 sm:px-5 lg:px-6 pt-[72px] sm:pt-[76px] lg:pt-3.5 pb-6 sm:pb-8 lg:pb-3.5 min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row gap-2.5 sm:gap-3 lg:gap-4 overflow-x-hidden lg:overflow-hidden">
 
-    <!-- Glow orbs -->
-    <div class="orb orb-1" aria-hidden="true"></div>
-    <div class="orb orb-2" aria-hidden="true"></div>
-    <div class="orb orb-3" aria-hidden="true"></div>
-
-    <!-- Grid overlay -->
-    <div class="zs-grid-overlay" aria-hidden="true"></div>
-
-    <div class="zs-page" id="zsPage">
-
-        <!-- ── Page Header ── -->
-        <header class="rp-header">
-            <div class="rp-header-inner">
-                <a href="<?php echo base_url('/'); ?>" class="back-btn" id="backBtn">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path d="M19 12H5M12 5l-7 7 7 7" />
-                    </svg>
-                    Back to Portal
-                </a>
-
-                <div class="rp-header-center">
-                    <div class="rp-dept-badge" id="rp-dept-badge">
-                        <span class="rp-badge-dot"></span>
-                        <span id="rp-dept-badge-text">Department of Information Technology</span>
-                    </div>
-                    <h1 class="rp-title">Zero Student Report</h1>
-                </div>
-
-                <span class="portal-badge">Timetable Tool</span>
-            </div>
-        </header>
-
-        <!-- ── Main Centered Card Layout ── -->
-        <main class="zs-main">
-            <div class="zs-form-card">
-                <div class="zs-form-header" style="justify-content: space-between; align-items: center;">
-                    <div style="display: flex; align-items: center; gap: 14px; flex: 1;">
-                        <div class="zs-form-icon">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h2>Log Zero Class</h2>
-                            <p>Record a class where no students reported.</p>
-                        </div>
-                    </div>
-                    <button type="button" class="import-pdf-btn" id="import-pdf-btn">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="17 8 12 3 7 8"/>
-                            <line x1="12" y1="3" x2="12" y2="15"/>
-                        </svg>
-                        <span>Import Excel</span>
-                    </button>
-                    <input type="file" id="pdf-import-input" accept=".xlsx, .xls" style="display: none;">
-                </div>
-
-                <div class="zs-form-body">
-                    <div class="form-group">
-                        <label>Department / Branch Select</label>
-                        <div class="zs-segment-control">
-                            <button type="button" class="segment-btn active" id="dept-it-btn" data-dept="Information Technology">Information Technology</button>
-                            <button type="button" class="segment-btn" id="dept-ce-btn" data-dept="Computer Engineering">Computer Engineering</button>
-                        </div>
-                    </div>
-
-                    <div class="form-row-custom-3">
-                        <div class="form-group">
-                            <label for="entry-date">Session Date <span class="req">*</span></label>
-                            <input type="text" id="entry-date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="entry-sem">Semester <span class="req">*</span></label>
-                            <select id="entry-sem" required>
-                                <option value="" disabled selected>Select...</option>
-                                <option value="1">1</option>
-                                <option value="3">3</option>
-                                <option value="5">5</option>
-                                <option value="7">7</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="entry-branch">Branch/Class <span class="req">*</span></label>
-                            <div class="search-select-wrap">
-                                <input type="text" id="entry-branch" placeholder="e.g. CLASS C B.TECH(IT)(ICT)" autocomplete="off" required>
-                                <div class="search-dropdown-list" id="branchDropdownList"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row-3">
-                        <div class="form-group">
-                            <label for="entry-room">Classroom/Lab <span class="req">*</span></label>
-                            <div class="search-select-wrap">
-                                <input type="text" id="entry-room" placeholder="e.g. FF-11" autocomplete="off" required>
-                                <div class="search-dropdown-list" id="roomDropdownList"></div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="entry-subject">Subject Code/Name <span class="req">*</span></label>
-                            <div class="search-select-wrap">
-                                <input type="text" id="entry-subject" placeholder="e.g. CV" autocomplete="off" required>
-                                <div class="search-dropdown-list" id="subjectDropdownList"></div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="entry-faculty">Faculty Initials <span class="req">*</span></label>
-                            <div class="search-select-wrap">
-                                <input type="text" id="entry-faculty" placeholder="e.g. SDG" autocomplete="off" required>
-                                <div class="search-dropdown-list" id="facultyDropdownList"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row-3">
-                        <div class="form-group">
-                            <label for="entry-timein">Time In <span class="req">*</span></label>
-                            <input type="text" id="entry-timein" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="entry-timeout">Time Out <span class="req">*</span></label>
-                            <input type="text" id="entry-timeout" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="entry-students">No. of Students</label>
-                            <input type="text" id="entry-students" value="---" placeholder="e.g. --- or 10 or 0">
-                        </div>
-                    </div>
-
-                    <div class="form-row-2 form-row-remarks-cc">
-                        <div class="form-group">
-                            <label for="entry-remarks">Remarks</label>
-                            <input type="text" id="entry-remarks" value="NO STUDENTS">
-                        </div>
-                        <div class="form-group">
-                            <label for="entry-cc">CC Email Recipient(s) <span style="font-size: 10.5px; color: var(--text-dim); text-transform: none; font-weight: normal;">(Default: HOD & Incharge HOD)</span></label>
-                            <div class="search-select-wrap">
-                                <input type="text" id="entry-cc" placeholder="e.g. drchandarana@gmiu.edu.in, sbchauhan@gmiu.edu.in, ehunagar@gmiu.edu.in" autocomplete="off">
-                                <div class="search-dropdown-list" id="ccDropdownList"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="button" class="submit-btn" id="add-entry-btn">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M22 2L11 13" />
-                            <path d="M22 2L15 22l-4-9-9-4 20-7z" />
-                        </svg>
-                        <span>Submit Zero Student Log</span>
-                    </button>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <?php 
-        $footer_class = 'zs-footer';
-        include 'footer.php'; 
-        ?>
-
-    </div>
-
-    <?php 
-    $active_page = 'zero-student-report';
-    include 'fab-nav.php'; 
-    ?>
-
-    <!-- Faculty Member & Timetable Data source -->
-    <script src="assets/js/facultyData.js"></script>
-    <script src="assets/js/timetableData.js"></script>
+    <!-- Shared Samsung Edge Shortcut Sidebar -->
     <?php
-    $stCacheFile = __DIR__ . '/uploads/student_timetable/student_timetable_cache.json';
-    $studentTtDataJson = file_exists($stCacheFile) ? file_get_contents($stCacheFile) : 'null';
+    $active_page = 'zero-student-report';
+    $sidebar_mode = 'nav';
+    $sidebar_active_label = 'Zero Student Log';
+    include dirname(__DIR__) . '/partials/sidebar.php';
     ?>
-    <script>
-    window.studentTimetableData = <?php echo $studentTtDataJson; ?>;
-    </script>
 
-    <!-- Sheets Configuration Proxy loaded via JS -->
+    <!-- ================= RIGHT COLUMN: TOP NAVBAR + DIRECTORY WORKSPACE ================= -->
+    <div class="flex-1 min-h-0 min-w-0 flex flex-col gap-2.5 sm:gap-3 lg:gap-3">
 
-    <!-- Page Logic Script -->
-    <script src="assets/js/zero-student-report.js"></script>
+      <!-- ================= TOP NAVIGATION BAR (SHARED PARTIAL) ================= -->
+      <?php
+      $nav_title = 'Zero Student Reports';
+      $nav_subtitle = 'CE & IT Department • Incident Logs & Registry';
+      $nav_search_placeholder = 'Search faculty, subjects, rooms, class...';
+      $nav_back_url = function_exists('base_url') ? base_url('/dashboard') : './dashboard';
+      include dirname(__DIR__) . '/partials/navbar.php';
+      ?>
 
-    <!-- Session is managed server-side; no client-side clear needed -->
-    <script>
-        // Redundant FAB toggle logic removed
-    </script>
+      <!-- ================= MAIN WORKSPACE: GLASS DIRECTORY CONTAINER ================= -->
+      <main class="zs-main-workspace flex-1 min-h-0 min-w-0 p-3 sm:p-4 lg:p-5 flex flex-col justify-between overflow-hidden relative transition-all duration-300 gap-3">
 
-    <!-- ── Excel Import Preview Modal ── -->
-    <div class="zs-modal-overlay" id="pdfPreviewModal">
-        <div class="zs-modal-card">
-            <div class="zs-modal-header">
-                <h3>Verify Parsed Excel Records</h3>
-                <button class="zs-modal-close" id="pdfModalClose">&times;</button>
+        <!-- 1. TOP HEADER & CONTROLS TOOLBAR -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 pb-2.5 border-b border-black/5 dark:border-white/10 shrink-0">
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h2 class="text-base sm:text-xl md:text-2xl font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none">
+                Zero Attendance Incident Directory
+              </h2>
+              <span id="totalLogsBadge" class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10 shadow-sm shrink-0">
+                Loading...
+              </span>
             </div>
-            <div class="zs-modal-body">
-                <p class="zs-modal-intro">The following records match our faculty team initials. Please review and confirm the import.</p>
-                
-                <!-- CC Email Input for Batch Import -->
-                <div class="form-group" style="margin-bottom: 6px;">
-                    <label for="import-cc" style="font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">CC Email Recipient(s) <span style="font-size: 11px; color: #64748b; text-transform: none; font-weight: normal;">(Optional, for batch email dispatch)</span></label>
-                    <div class="search-select-wrap">
-                        <input type="text" id="import-cc" placeholder="e.g. drchandarana@gmiu.edu.in, sbchauhan@gmiu.edu.in, ehunagar@gmiu.edu.in" autocomplete="off" style="width: 100%; padding: 8px 12px; font-size: 13px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--zs-border); border-radius: 8px; color: #f8fafc;">
-                        <div class="search-dropdown-list" id="importCcDropdownList"></div>
-                    </div>
-                </div>
-                
-                <!-- Import Progress Section -->
-                <div class="zs-import-progress-container" id="importProgressContainer" style="display: none;">
-                    <div class="zs-progress-header">
-                        <span id="importProgressText">Importing records: 0 / 0</span>
-                        <span id="importProgressPercent">0%</span>
-                    </div>
-                    <div class="zs-progress-bar-bg">
-                        <div class="zs-progress-bar-fill" id="importProgressBarFill" style="width: 0%;"></div>
-                    </div>
-                </div>
+            <p class="text-[11px] sm:text-xs text-[var(--text-muted)] mt-1 hidden sm:block">
+              Live registry of timetable sessions where zero students reported. All records stored in JSON format with instant filtering.
+            </p>
+          </div>
 
-                <!-- Validation Summary Section -->
-                <div class="zs-validation-summary-container" id="validationSummaryContainer" style="display: none;">
-                    <h4 class="val-summary-title">Validation Summary</h4>
-                    <div class="val-summary-grid">
-                        <div>Total rows detected in Excel: <span id="val-total" class="val-num">0</span></div>
-                        <div>Eligible rows after filtering: <span id="val-eligible" class="val-num">0</span></div>
-                        <div>Rows imported: <span id="val-imported" class="val-num val-success-num">0</span></div>
-                        <div>Missing rows: <span id="val-missing" class="val-num val-danger-num">0</span></div>
-                        <div>Duplicate rows: <span id="val-duplicate" class="val-num val-warning-num">0</span></div>
-                    </div>
-                    <div id="val-status-box" class="val-status-box">
-                        <!-- Status text here -->
-                    </div>
-                    <div id="val-mismatch-details" class="val-mismatch-details" style="display: none;">
-                        <!-- List of missing/duplicate records -->
-                    </div>
-                </div>
+          <!-- Action Controls Group: Refresh, Export Excel, + Log Zero Class -->
+          <div class="flex items-center gap-1.5 sm:gap-2 self-start sm:self-auto flex-wrap">
+            <!-- Refresh Button -->
+            <button
+              type="button"
+              id="refreshRecordsBtn"
+              class="h-7 sm:h-8 px-2.5 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 shrink-0 cursor-pointer"
+              title="Reload live records from server"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+              </svg>
+              <span class="hidden md:inline">Refresh</span>
+            </button>
 
-                <div class="zs-table-container">
-                    <table class="zs-modal-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-pdf-rows" checked></th>
-                                <th style="width: 40px; text-align: center;">#</th>
-                                <th>Date</th>
-                                <th>Class/Lab</th>
-                                <th>Subject</th>
-                                <th>Faculty</th>
-                                <th>Branch</th>
-                                <th>Sem</th>
-                                <th>Time</th>
-                                <th>Students</th>
-                                <th>Remarks</th>
-                                <th style="text-align: center;">Dept</th>
-                                <th style="text-align: center;">TT Match</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pdf-parsed-rows-body">
-                            <!-- Rows will be injected here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="zs-modal-footer">
-                <button type="button" class="zs-modal-btn secondary" id="pdfModalCancel">Cancel</button>
-                <button type="button" class="zs-modal-btn primary" id="pdfModalImportBtn">Import Selected (0)</button>
-            </div>
+            <!-- Export Excel Button -->
+            <button
+              type="button"
+              id="exportExcelBtn"
+              class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+              title="Export filtered records to Excel"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <span class="hidden xs:inline">Export</span><span class="hidden md:inline">&nbsp;Excel</span>
+            </button>
+
+            <!-- + Log Zero Class (Directs to Create Page) -->
+            <a
+              href="<?php echo function_exists('base_url') ? base_url('/zero-student-create') : './zero-student-create'; ?>"
+              class="h-7 sm:h-8 px-3 sm:px-3.5 rounded-xl bg-[var(--color-primary)] text-white text-[10.5px] sm:text-[11px] font-bold hover:brightness-105 active:scale-95 transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer decoration-transparent"
+              title="Log a new Zero Student incident session"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+              </svg>
+              <span>Create Zero Log</span>
+            </a>
+          </div>
         </div>
-    </div>
-</body>
 
+        <!-- 2. KPI SUMMARY STATS CARDS -->
+        <div class="zs-kpi-grid shrink-0">
+          <!-- Total Logs -->
+          <div class="zs-kpi-card">
+            <div class="zs-kpi-icon icon-blue">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <div class="zs-kpi-val" id="kpiTotal">0</div>
+              <div class="zs-kpi-label">Total Incidents</div>
+            </div>
+          </div>
+
+          <!-- IT Incidents -->
+          <div class="zs-kpi-card">
+            <div class="zs-kpi-icon icon-amber">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 1-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <div class="zs-kpi-val" id="kpiIt">0</div>
+              <div class="zs-kpi-label">IT Department</div>
+            </div>
+          </div>
+
+          <!-- CE Incidents -->
+          <div class="zs-kpi-card">
+            <div class="zs-kpi-icon icon-indigo">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0H3"/>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <div class="zs-kpi-val" id="kpiCe">0</div>
+              <div class="zs-kpi-label">CE Department</div>
+            </div>
+          </div>
+
+          <!-- Today's Incidents -->
+          <div class="zs-kpi-card">
+            <div class="zs-kpi-icon icon-rose">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <div class="zs-kpi-val" id="kpiToday">0</div>
+              <div class="zs-kpi-label">Today's Logs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. COMPREHENSIVE FILTER TOOLBAR -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 shrink-0">
+          <!-- Left: Filter Dropdowns & Segment -->
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 flex-wrap sm:flex-nowrap">
+            <!-- Department Segment Control -->
+            <div class="inline-flex items-center p-0.5 rounded-full glass-pill border border-white/80 dark:border-white/10 shrink-0 gap-1">
+              <button type="button" id="deptFilterAll" class="fac-seg-btn active">
+                <span class="hidden md:inline">All Depts</span>
+                <span class="md:hidden">All</span>
+              </button>
+              <button type="button" id="deptFilterIt" class="fac-seg-btn">
+                <span class="hidden md:inline">IT</span>
+                <span class="md:hidden">IT</span>
+              </button>
+              <button type="button" id="deptFilterCe" class="fac-seg-btn">
+                <span class="hidden md:inline">CE</span>
+                <span class="md:hidden">CE</span>
+              </button>
+            </div>
+
+            <!-- Faculty Filter Dropdown -->
+            <select id="facultyFilterSelect" class="zs-filter-select text-xs min-w-[150px] sm:min-w-[180px]">
+              <option value="">All Faculty Members</option>
+              <!-- Injected via JavaScript from facultyData.js -->
+            </select>
+
+            <!-- Semester Filter Dropdown -->
+            <select id="semFilterSelect" class="zs-filter-select text-xs min-w-[110px]">
+              <option value="">All Semesters</option>
+              <option value="1">Semester 1</option>
+              <option value="3">Semester 3</option>
+              <option value="5">Semester 5</option>
+              <option value="7">Semester 7</option>
+            </select>
+
+            <!-- Session Date Filter -->
+            <input
+              type="text"
+              id="dateFilterInput"
+              class="zs-filter-input text-xs w-[115px] sm:w-[130px]"
+              placeholder="Filter by date..."
+              autocomplete="off"
+            />
+
+            <!-- Reset Filters Button -->
+            <button
+              type="button"
+              id="resetFiltersBtn"
+              class="zs-filter-btn ghost text-xs shrink-0"
+              title="Reset all filters"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              <span>Reset</span>
+            </button>
+          </div>
+
+          <!-- Right: Search Input Bar -->
+          <div class="w-full lg:w-72 shrink-0">
+            <div class="h-8 sm:h-9 px-3 rounded-full glass-pill flex items-center gap-2 border border-white/80 dark:border-white/10 shadow-sm w-full">
+              <svg class="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input
+                type="text"
+                id="recordSearchInput"
+                class="fac-search-input w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)]"
+                placeholder="Search faculty, subject, class, room..."
+                autocomplete="off"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. MAIN SCROLLABLE INCIDENTS TABLE -->
+        <div class="zs-dir-table-wrapper flex-1 min-h-0">
+          <table class="zs-dir-table">
+            <thead>
+              <tr>
+                <th class="w-10 text-center">#</th>
+                <th>Date & Time</th>
+                <th>Department</th>
+                <th>Class / Sem</th>
+                <th>Room</th>
+                <th>Subject</th>
+                <th>Faculty</th>
+                <th class="text-center">Students</th>
+                <th>Remarks</th>
+                <th class="text-right pr-4">Action</th>
+              </tr>
+            </thead>
+            <tbody id="recordsTableBody">
+              <!-- Dynamically populated via assets/js/zero-student-index.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 5. BOTTOM PAGINATION & METRICS FOOTER -->
+        <div class="pt-2 border-t border-black/5 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0">
+          <!-- Summary info text & rows-per-page -->
+          <div class="flex items-center gap-3 text-xs text-[var(--text-muted)]">
+            <span id="tableInfoText" class="font-semibold select-none">
+              Loading incident records...
+            </span>
+
+            <div class="hidden sm:flex items-center gap-1.5 pl-3 border-l border-black/10 dark:border-white/10">
+              <label for="pageSizeSelect" class="font-medium text-[11px] select-none">Rows:</label>
+              <select
+                id="pageSizeSelect"
+                class="px-2 py-0.5 rounded-lg glass-pill font-bold text-xs text-[var(--text-primary)] border border-white/80 dark:border-white/10 focus:outline-none cursor-pointer"
+              >
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="50">50</option>
+                <option value="all">All</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Page Navigation Buttons -->
+          <div id="paginationControls" class="flex items-center gap-1 shrink-0">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </main>
+
+    </div><!-- /Right Column -->
+
+  </div><!-- /Main Wrapper -->
+
+  <!-- ================= POPUP MODAL: INCIDENT DETAIL VIEW ================= -->
+  <div id="viewRecordModal" class="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-lg p-5 sm:p-6 rounded-3xl relative shadow-2xl border border-white/80 dark:border-white/10">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-black/10 dark:border-white/10">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-[var(--text-primary)]">Zero Attendance Incident Record</h3>
+          <p class="text-xs text-[var(--text-muted)]" id="modalRecordId">Record ID: #---</p>
+        </div>
+        <button type="button" id="closeDetailModalBtn" class="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div id="detailModalBody" class="space-y-3 text-xs">
+        <!-- Injected dynamically via JS -->
+      </div>
+
+      <div class="pt-4 mt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-end gap-2">
+        <button type="button" id="closeDetailModalBottomBtn" class="h-8 px-4 rounded-xl glass-pill font-bold text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= POPUP MODAL: DELETE CONFIRMATION ================= -->
+  <div id="deleteRecordModal" class="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-sm p-5 rounded-3xl relative shadow-2xl border border-white/80 dark:border-white/10 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/15 text-rose-500 mx-auto flex items-center justify-center mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-bold text-[var(--text-primary)]">Delete Incident Log?</h3>
+      <p class="text-xs text-[var(--text-muted)] mt-1 mb-4">
+        Are you sure you want to delete this incident record from the master JSON registry? This action cannot be undone.
+      </p>
+      <div class="flex items-center justify-center gap-2">
+        <button type="button" id="cancelDeleteBtn" class="h-8 px-4 rounded-xl glass-pill font-bold text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" id="confirmDeleteBtn" class="h-8 px-4 rounded-xl bg-rose-500 text-white font-bold text-xs hover:bg-rose-600 transition shadow-sm cursor-pointer">
+          Delete Record
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Injected JSON Records Data from PHP Backend -->
+  <script>
+    window.initialZeroRecords = <?php echo json_encode($records ?? [], JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+  </script>
+
+  <!-- ================= APPLICATION JAVASCRIPT: Modular Architecture ================= -->
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/navbar.js') : 'assets/js/navbar.js'; ?>"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/facultyData.js') : 'assets/js/facultyData.js'; ?>"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/zero-student-index.js') : 'assets/js/zero-student-index.js'; ?>"></script>
+</body>
 </html>

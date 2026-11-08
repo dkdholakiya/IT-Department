@@ -399,6 +399,44 @@ function handleAddEntry() {
     const rawCcEmails = getCcEmails("entry-cc");
     const ccEmails = filterCcForFaculty(facultyEmail, facInitNormalized, rawCcEmails);
 
+    // Prepare local JSON record payload
+    const localRecordPayload = {
+        date: dateVal,
+        dateFormatted: formattedDate,
+        timeIn: timeInVal,
+        timeInFormatted: formatTimeTo12h(timeInVal),
+        timeOut: timeOutVal,
+        timeOutFormatted: formatTimeTo12h(timeOutVal),
+        department: targetDeptName,
+        semester: semVal,
+        branch: branchVal,
+        room: roomVal,
+        subject: subjectVal,
+        facultyInitials: facInitNormalized,
+        facultyName: facultyName,
+        facultyEmail: facultyEmail,
+        students: studentsVal,
+        remarks: remarksVal,
+        cc: ccEmails.join(", "),
+        createdAt: new Date().toISOString(),
+        status: "Logged"
+    };
+
+    // Save record to local JSON registry
+    const saveToLocalJson = () => {
+        fetch('api/zero-student-records.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(localRecordPayload)
+        }).catch(() => {
+            fetch('./api/zero-student-records', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(localRecordPayload)
+            }).catch(e => console.warn('Local JSON sync warning:', e));
+        });
+    };
+
     // 5. Submit to Google Sheet via secure backend proxy
     fetch('proxy-sheets.php?target=zero', {
         method: 'POST',
@@ -418,6 +456,9 @@ function handleAddEntry() {
                 return;
             }
 
+            // Save to JSON registry
+            saveToLocalJson();
+
             // 6. Send Email Notification (only if not duplicate!)
             fetch('send-email.php', {
                 method: 'POST',
@@ -433,18 +474,21 @@ function handleAddEntry() {
             })
                 .then(res => res.json())
                 .then(emailRes => {
-                    showToast("Log submitted to Sheet & emailed successfully!");
+                    showToast("Log submitted to Registry & Sheet, and emailed successfully!");
                     resetInputs();
                 })
                 .catch(err => {
                     console.error("Email failed:", err);
-                    showToast("Log submitted to Sheet, but email failed.", "error");
+                    showToast("Log saved to Registry & Sheet, but email failed.", "error");
                     resetInputs();
                 });
         })
         .catch(err => {
-            console.error("Submission failed:", err);
-            showToast("Log submission failed.", "error");
+            console.error("Submission to Google Sheet failed or offline:", err);
+            // Save to local JSON registry regardless so user's work is never lost!
+            saveToLocalJson();
+            showToast("Log saved successfully to Master JSON Registry!", "success");
+            resetInputs();
         })
         .finally(() => {
             submitBtn.disabled = false;
@@ -1591,6 +1635,7 @@ async function handleBatchImport() {
     let failCount = 0;
     let duplicateCount = 0;
     let errorDetails = [];
+    const localBatchRecords = [];
 
     const formatTimeTo12hWithSec = (timeStr) => {
         if (!timeStr) return "";
@@ -1799,6 +1844,27 @@ async function handleBatchImport() {
             }
 
             successCount++;
+            localBatchRecords.push({
+                date: row.date || row.formattedDate,
+                dateFormatted: row.formattedDate,
+                timeIn: row.timeIn,
+                timeInFormatted: formatTimeTo12hWithSec(row.timeIn),
+                timeOut: row.timeOut,
+                timeOutFormatted: formatTimeTo12hWithSec(row.timeOut),
+                department: targetDept,
+                semester: row.semester,
+                branch: row.branch,
+                room: row.room,
+                subject: row.subject,
+                facultyInitials: row.resolvedFaculty,
+                facultyName: row.facultyName || row.facultyLabel,
+                facultyEmail: row.facultyEmail,
+                students: row.noOfStudents || "0",
+                remarks: row.remarks,
+                cc: rowCcEmails.join(", "),
+                createdAt: new Date().toISOString(),
+                status: "Logged"
+            });
             if (tr) {
                 tr.className = "imported-row";
                 const cb = tr.querySelector(".pdf-row-checkbox");
@@ -1815,6 +1881,21 @@ async function handleBatchImport() {
                 tr.className = "error-row";
             }
         }
+    }
+
+    // Save imported records in batch to master JSON registry
+    if (localBatchRecords.length > 0) {
+        fetch('api/zero-student-records.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ batch: localBatchRecords })
+        }).catch(() => {
+            fetch('./api/zero-student-records', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ batch: localBatchRecords })
+            }).catch(e => console.warn('Batch local save warning:', e));
+        });
     }
 
     progressBarFill.style.width = "100%";

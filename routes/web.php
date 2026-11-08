@@ -30,6 +30,10 @@ $r->addRoute('GET', '/dashboard.php', 'DashboardController@index');
 // ── Protected Pages ──
 $r->addRoute('GET', '/zero-student-report', 'ZeroStudentController@index');
 $r->addRoute('GET', '/zero-student-report.php', 'ZeroStudentController@index');
+$r->addRoute(['GET', 'POST'], '/zero-student-create', 'ZeroStudentController@create');
+$r->addRoute(['GET', 'POST'], '/zero-student-create.php', 'ZeroStudentController@create');
+$r->addRoute(['GET', 'POST', 'DELETE', 'OPTIONS'], '/api/zero-student-records', 'ZeroStudentController@records');
+$r->addRoute(['GET', 'POST', 'DELETE', 'OPTIONS'], '/api/zero-student-records.php', 'ZeroStudentController@records');
 
 $r->addRoute('GET', '/ctlactivity', 'CtlActivityController@index');
 $r->addRoute('GET', '/ctlactivity.php', 'CtlActivityController@index');
