@@ -131,6 +131,22 @@ if (!empty($page_css)) {
     })();
   </script>
 
+  <!-- Immediate Desktop Sidebar State Preloader (Eliminates Sidebar Delayed Expansion / Flash on Refresh) -->
+  <script>
+    (function() {
+      try {
+        var desktopMode = localStorage.getItem('portal_sidebar_desktop_mode');
+        if (window.innerWidth >= 1024) {
+          if (desktopMode === 'expanded') {
+            document.documentElement.classList.add('sidebar-desktop-expanded', 'sidebar-no-transition');
+          } else if (desktopMode === 'hidden') {
+            document.documentElement.classList.add('sidebar-desktop-hidden', 'sidebar-no-transition');
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- High-Definition Dynamic Favicons -->
   <link rel="icon" type="image/svg+xml" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.svg') : 'assets/images/favicon.svg'; ?>">
   <link rel="icon" type="image/png" sizes="32x32" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-32x32.png') : 'assets/images/favicon-32x32.png'; ?>">

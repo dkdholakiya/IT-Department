@@ -25,7 +25,7 @@ if (!defined('SECURE_ACCESS')) {
     define('SECURE_ACCESS', true);
 }
 
-// Ensure includes like 'fab-nav.php', 'footer.php', 'theme-toggle.php' resolve from App/Views/partials
+// Ensure includes resolve cleanly from App/Views/partials, App/Services, and BASE_PATH
 set_include_path(get_include_path() . PATH_SEPARATOR . APP_PATH . '/Views/partials' . PATH_SEPARATOR . APP_PATH . '/Services' . PATH_SEPARATOR . BASE_PATH);
 
 // 3. Dynamic Subdirectory-Aware BASE_URL

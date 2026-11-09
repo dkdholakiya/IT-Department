@@ -24,7 +24,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
     <!-- Left: Hamburger Menu (Mobile/Tablet) + Brand Logo + Desktop Sidebar Toggle Button -->
     <div class="flex items-center gap-2 sm:gap-3 min-w-0">
       <!-- Mobile / Tablet Left Samsung Shortcut Menu Toggle -->
-      <button id="mobileMenuBtn" type="button" class="lg:hidden w-10 h-10 rounded-full glass-pill flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition-all duration-300 shrink-0" aria-label="Open Navigation Sidebar" title="Open Samsung Shortcut Side Menu">
+      <button id="mobileMenuBtn" type="button" class="lg:hidden w-10 h-10 rounded-full side-menu-glass flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition-all duration-300 shrink-0" aria-label="Open Navigation Sidebar" title="Open Samsung Shortcut Side Menu">
         <svg id="mobileMenuHamburgerIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
           <path id="hamburgerLine1" stroke-linecap="round" stroke-linejoin="round" d="M4 6.5h16" />
           <path id="hamburgerLine2" stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
@@ -33,7 +33,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
       </button>
 
       <!-- Navigation Title Capsule (Title & Subtitle + Desktop Sidebar Toggle Controls) -->
-      <div class="glass-pill rounded-full h-12 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
+      <div class="side-menu-glass rounded-full h-12 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
         <!-- Title & Subtitle -->
         <div class="min-w-0 max-w-[125px] xs:max-w-[170px] sm:max-w-none text-left">
           <span class="text-[13.5px] sm:text-[15.5px] lg:text-[17px] font-bold tracking-tight text-[var(--text-primary)] block leading-tight truncate"><?php echo htmlspecialchars($navTitle); ?></span>
@@ -83,7 +83,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
       <!-- DESKTOP / TABLET RIGHT BAR -->
       <div class="hidden md:flex items-center gap-2">
         <!-- Portal Link Button -->
-        <a href="<?php echo htmlspecialchars($navBackUrl); ?>" id="portalBackLink" class="h-10 px-3.5 rounded-full glass-pill flex items-center gap-1.5 text-xs font-semibold text-[var(--text-primary)] hover:bg-white/90 transition shrink-0" title="Return to Main Portal">
+        <a href="<?php echo htmlspecialchars($navBackUrl); ?>" id="portalBackLink" class="h-10 px-3.5 rounded-full side-menu-glass flex items-center gap-1.5 text-xs font-semibold text-[var(--text-primary)] hover:scale-105 transition shrink-0" title="Return to Main Portal">
           <svg class="w-3.5 h-3.5 text-[var(--color-primary)]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
@@ -99,33 +99,56 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
           <span>AI Assistant</span>
         </button>
 
-        <!-- Utility Pill: Dynamic Color Chooser + Notification Bell -->
-        <div class="h-10 px-1.5 rounded-full glass-pill flex items-center gap-1 relative">
-          <!-- Dynamic Theme Color Picker Button -->
-          <button id="colorPickerToggleBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-primary)] hover:bg-black/5 transition relative cursor-pointer" title="Choose Theme & Font Color Combination" aria-label="Choose Theme Color">
-            <span id="activeColorDot" class="w-4 h-4 rounded-full border-2 border-white shadow-sm pointer-events-none" style="background-color: var(--color-primary);"></span>
+        <!-- Card 1: Separate Notification Bell Card (In its own glass pill) -->
+        <button
+          id="notificationsBtn"
+          type="button"
+          class="w-10 h-10 rounded-full side-menu-glass flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition relative cursor-pointer shrink-0"
+          title="System Alerts & Telemetry Notifications"
+          aria-label="Notifications"
+        >
+          <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+          </svg>
+          <span id="notifBadge" class="w-2 h-2 rounded-full bg-[var(--color-alert)] absolute top-2 right-2 ring-2 ring-white dark:ring-slate-900 pointer-events-none"></span>
+        </button>
+
+        <!-- Card 2: Combined Appearance Card (Color Studio + Theme Switcher in One Glass Pill) -->
+        <div class="h-10 px-1.5 rounded-full side-menu-glass flex items-center gap-1 shrink-0">
+          <!-- 1. Color Picker with Elegant Artist Palette Icon & Active Color Indicator -->
+          <button
+            id="colorPickerToggleBtn"
+            type="button"
+            class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition relative cursor-pointer shrink-0"
+            title="Choose Theme & Font Color Combination"
+            aria-label="Choose Theme Color"
+          >
+            <svg class="w-4 h-4 pointer-events-none text-[var(--text-primary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+            </svg>
+            <span id="activeColorDot" class="w-2 h-2 rounded-full border border-white dark:border-slate-800 shadow-sm absolute bottom-1 right-1 pointer-events-none" style="background-color: var(--color-primary);"></span>
           </button>
 
-          <!-- Notifications Bell -->
-          <button id="notificationsBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-primary)] hover:bg-black/5 transition relative cursor-pointer" title="System Alerts & Telemetry Notifications" aria-label="Notifications">
-            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+          <!-- 2. Single Theme Toggle (Sleek Professional Thin-Line Moon / Sun Icon) -->
+          <button
+            id="themeToggleBtn"
+            type="button"
+            class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition cursor-pointer shrink-0"
+            title="Switch to Dark Mode"
+            aria-label="Toggle Light / Dark Theme"
+          >
+            <!-- Moon Icon: Shown when Light Theme is active (Delicate Professional 16px Lucide/Google SVG) -->
+            <svg id="themeMoonIcon" class="w-4 h-4 pointer-events-none transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
             </svg>
-            <span id="notifBadge" class="w-2 h-2 rounded-full bg-[var(--color-alert)] absolute top-1.5 right-1.5 ring-2 ring-white pointer-events-none"></span>
-          </button>
-        </div>
-
-        <!-- Theme Switcher Pill (Dark Moon / Light Sun) -->
-        <div class="h-10 px-1.5 rounded-full glass-pill flex items-center gap-0.5">
-          <button id="themeDarkBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition cursor-pointer" title="Dark Glass Theme" aria-label="Dark Mode">
-            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-            </svg>
-          </button>
-          <button id="themeLightBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center bg-white text-[#0A0909] shadow-sm transition cursor-pointer" title="Light Glass Theme" aria-label="Light Glass Mode">
-            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+            <!-- Sun Icon: Shown when Dark Theme is active (Delicate Professional 16px Lucide/Google SVG) -->
+            <svg id="themeSunIcon" class="w-4 h-4 hidden pointer-events-none text-amber-400 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="4"/>
-              <path stroke-linecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
             </svg>
           </button>
         </div>
@@ -135,7 +158,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
       <button
         id="mobileUserMenuBtn"
         type="button"
-        class="md:hidden h-10 pl-1.5 pr-2.5 rounded-full glass-pill flex items-center gap-1.5 text-[var(--text-primary)] hover:scale-105 active:scale-95 transition relative cursor-pointer shrink-0"
+        class="md:hidden h-10 pl-1.5 pr-2.5 rounded-full side-menu-glass flex items-center gap-1.5 text-[var(--text-primary)] hover:scale-105 active:scale-95 transition relative cursor-pointer shrink-0"
         aria-label="Open User & Quick Actions Menu"
         title="Open Quick Actions & User Menu"
       >
@@ -151,8 +174,8 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
       </button>
     </div>
 
-    <!-- DYNAMIC COLOR PICKER POPOVER (Positioned cleanly under the Color Dot Button on desktop & responsive on mobile) -->
-    <div id="colorPickerPopover" class="hidden fixed right-3 sm:right-6 md:right-16 lg:right-20 top-16 md:top-12 w-[calc(100vw-24px)] sm:w-72 max-w-sm glass-card p-4 z-50 shadow-2xl border border-white/80 dark:border-white/15">
+    <!-- DYNAMIC COLOR PICKER POPOVER (Positioned cleanly under the Color Studio Button) -->
+    <div id="colorPickerPopover" class="hidden fixed right-3 sm:right-6 md:right-4 lg:right-6 top-16 md:top-14 w-[calc(100vw-24px)] sm:w-72 max-w-sm glass-card p-4 z-50 shadow-2xl border border-white/80 dark:border-white/15">
       <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-black/10">
         <div>
           <span class="font-bold text-xs text-[var(--text-primary)] block">Theme & Font Color Studio</span>
@@ -172,7 +195,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
     </div>
 
     <!-- Notifications Dropdown Popover -->
-    <div id="notificationsPopover" class="hidden fixed md:absolute right-3 sm:right-6 md:right-2 lg:right-4 top-16 md:top-12 w-[calc(100vw-24px)] max-w-sm glass-card p-4 z-50 shadow-2xl border border-white/80 dark:border-white/15">
+    <div id="notificationsPopover" class="hidden fixed md:absolute right-3 sm:right-6 md:right-16 lg:right-20 top-16 md:top-14 w-[calc(100vw-24px)] max-w-sm glass-card p-4 z-50 shadow-2xl border border-white/80 dark:border-white/15">
       <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-black/10">
         <div class="flex items-center gap-2">
           <span class="font-bold text-sm text-[var(--text-primary)]">System Alerts & Schedule Updates</span>
@@ -217,7 +240,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
         <span>AI Assistant</span>
       </button>
 
-      <button id="mobileNotifBtn" type="button" class="h-10 px-3 rounded-full glass-pill flex items-center gap-1.5 text-xs font-semibold text-[var(--text-primary)] relative" aria-label="Mobile Notifications">
+      <button id="mobileNotifBtn" type="button" class="h-10 px-3 rounded-full side-menu-glass flex items-center gap-1.5 text-xs font-semibold text-[var(--text-primary)] relative" aria-label="Mobile Notifications">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
         </svg>
@@ -225,23 +248,26 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
         <span class="w-2 h-2 rounded-full bg-[var(--color-alert)]"></span>
       </button>
 
-      <div class="h-10 px-1 rounded-full glass-pill flex items-center gap-0.5">
-        <button id="mobileThemeDarkBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-muted)]" aria-label="Mobile Dark Mode">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-          </svg>
-        </button>
-        <button id="mobileThemeLightBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center bg-white text-[#0A0909] shadow-sm" aria-label="Mobile Light Mode">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="4"/>
-            <path stroke-linecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-          </svg>
-        </button>
-      </div>
+      <!-- Mobile Single Theme Switcher Button -->
+      <button
+        id="mobileThemeToggleBtn"
+        type="button"
+        class="h-10 w-10 rounded-full side-menu-glass flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition cursor-pointer shrink-0"
+        aria-label="Toggle Light / Dark Theme"
+        title="Toggle Theme"
+      >
+        <svg id="mobileThemeMoonIcon" class="w-4 h-4 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg id="mobileThemeSunIcon" class="w-4 h-4 hidden pointer-events-none text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+      </button>
     </div>
 
     <!-- Row C: Mobile Theme Color Chooser Bar -->
-    <div class="p-2.5 rounded-2xl glass-pill flex items-center justify-between gap-2">
+    <div class="p-2.5 rounded-2xl side-menu-glass flex items-center justify-between gap-2">
       <div class="flex items-center gap-2">
         <label for="mobileCustomColorInput" class="text-xs font-bold text-[var(--text-primary)] cursor-pointer flex items-center gap-1.5">
           <span>🎨 Theme Color:</span>

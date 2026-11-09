@@ -16,7 +16,7 @@ if (file_exists($parserFile)) {
 $uploadMessage = '';
 $uploadSuccess = false;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['timetable_file'])) {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_FILES['timetable_file'])) {
     $file = $_FILES['timetable_file'];
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     

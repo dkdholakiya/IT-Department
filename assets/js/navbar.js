@@ -195,17 +195,54 @@
     document.body.classList.toggle('theme-dark', navbarState.theme === 'dark');
     document.documentElement.classList.toggle('dark', navbarState.theme === 'dark');
 
+    const isDark = navbarState.theme === 'dark';
+
+    // 1. Update Desktop Single Toggle Button (Shows Moon in Light Mode; Shows Sun in Dark Mode)
+    const desktopToggleBtn = document.getElementById('themeToggleBtn');
+    const moonIcon = document.getElementById('themeMoonIcon');
+    const sunIcon = document.getElementById('themeSunIcon');
+    if (desktopToggleBtn) {
+      desktopToggleBtn.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+    }
+    if (moonIcon && sunIcon) {
+      if (isDark) {
+        moonIcon.classList.add('hidden');
+        sunIcon.classList.remove('hidden');
+      } else {
+        moonIcon.classList.remove('hidden');
+        sunIcon.classList.add('hidden');
+      }
+    }
+
+    // 2. Update Mobile Single Toggle Button
+    const mobileToggleBtn = document.getElementById('mobileThemeToggleBtn');
+    const mobileMoonIcon = document.getElementById('mobileThemeMoonIcon');
+    const mobileSunIcon = document.getElementById('mobileThemeSunIcon');
+    if (mobileToggleBtn) {
+      mobileToggleBtn.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+    }
+    if (mobileMoonIcon && mobileSunIcon) {
+      if (isDark) {
+        mobileMoonIcon.classList.add('hidden');
+        mobileSunIcon.classList.remove('hidden');
+      } else {
+        mobileMoonIcon.classList.remove('hidden');
+        mobileSunIcon.classList.add('hidden');
+      }
+    }
+
+    // 3. Backward compatibility for any dual-button elements
     const activeBtnClass = 'w-8 h-8 rounded-full flex items-center justify-center bg-white text-[#0A0909] shadow-sm transition';
     const inactiveBtnClass = 'w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition';
 
     ['themeLightBtn', 'mobileThemeLightBtn'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.className = (navbarState.theme === 'light') ? activeBtnClass : inactiveBtnClass;
+      if (el) el.className = (!isDark) ? activeBtnClass : inactiveBtnClass;
     });
 
     ['themeDarkBtn', 'mobileThemeDarkBtn'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.className = (navbarState.theme === 'dark') ? activeBtnClass : inactiveBtnClass;
+      if (el) el.className = (isDark) ? activeBtnClass : inactiveBtnClass;
     });
 
     applyCustomColorPalette(navbarState.primaryHex);
@@ -241,7 +278,23 @@
       });
     }
 
-    // 3. Theme switch buttons
+    // 3. Theme switch buttons (Single Toggle + Dual button backward compatibility)
+    function handleThemeToggle() {
+      const nextTheme = navbarState.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(nextTheme);
+      showPortalToast(nextTheme === 'dark' ? 'Switched to Dark Glass Mode' : 'Switched to Glass Light Mode');
+    }
+
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', handleThemeToggle);
+    }
+
+    const mobileThemeToggleBtn = document.getElementById('mobileThemeToggleBtn');
+    if (mobileThemeToggleBtn) {
+      mobileThemeToggleBtn.addEventListener('click', handleThemeToggle);
+    }
+
     const themeLightBtn = document.getElementById('themeLightBtn');
     const themeDarkBtn = document.getElementById('themeDarkBtn');
     const mobileThemeLightBtn = document.getElementById('mobileThemeLightBtn');

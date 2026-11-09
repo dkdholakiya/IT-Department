@@ -43,46 +43,6 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         <!-- Scrollable Interior Workspace -->
         <div id="mainReportContent" class="flex-1 min-h-0 min-w-0 flex flex-col gap-3.5 overflow-y-auto rp-custom-scroll pr-1 sm:pr-2">
 
-          <!-- 1. TOP HEADER & QUICK ACTIONS TOOLBAR -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/5 dark:border-white/10 shrink-0">
-            <div>
-              <div class="flex items-center gap-2 flex-wrap">
-                <h2 class="text-base sm:text-xl md:text-2xl font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none">
-                  Departmental Report Management
-                </h2>
-                <span class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10 shadow-sm shrink-0">
-                  4-Step Workflow
-                </span>
-                <span id="draftStatusBadge" class="hidden px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] sm:text-[11px] font-bold border border-emerald-500/20 shrink-0">
-                  Draft Saved
-                </span>
-              </div>
-              <p class="text-[11.5px] sm:text-xs text-[var(--text-muted)] mt-1 hidden sm:block">
-                Academic events, expert talks, industrial visits, and achievement documentation with real-time email dispatch & official PDF archive.
-              </p>
-            </div>
-
-            <!-- Quick Action Toolbar Buttons -->
-            <div class="flex items-center gap-2 self-end sm:self-auto flex-wrap">
-              <button type="button" onclick="saveDraft()" class="h-8 sm:h-9 px-3 sm:px-4 rounded-full glass-pill text-xs font-bold text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 cursor-pointer shadow-sm" title="Save draft to local storage">
-                <i class="bi bi-save2 text-[var(--color-primary)]"></i>
-                <span>Save Draft</span>
-              </button>
-              <button type="button" onclick="openPreviewModal()" class="h-8 sm:h-9 px-3 sm:px-4 rounded-full glass-pill text-xs font-bold text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 cursor-pointer shadow-sm" title="Preview compiled report">
-                <i class="bi bi-eye"></i>
-                <span class="hidden xs:inline">Preview</span>
-              </button>
-              <button type="button" onclick="triggerPrint()" class="h-8 sm:h-9 px-3 sm:px-4 rounded-full glass-pill text-xs font-bold text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 cursor-pointer shadow-sm" title="Print / PDF Export">
-                <i class="bi bi-printer"></i>
-                <span class="hidden xs:inline">Print / PDF</span>
-              </button>
-              <button type="button" onclick="resetReportForm()" class="h-8 sm:h-9 px-3 sm:px-4 rounded-full glass-pill text-xs font-bold text-red-500 hover:bg-red-500/10 transition flex items-center gap-1.5 cursor-pointer shadow-sm" title="Reset all fields">
-                <i class="bi bi-arrow-counterclockwise"></i>
-                <span class="hidden sm:inline">Reset</span>
-              </button>
-            </div>
-          </div>
-
           <!-- 2. MODERN BENTO GLASS WORKFLOW STEPPER -->
           <div class="stepper-wrapper shrink-0">
             <!-- Hidden backward-compatible progress bar element so existing JS never throws null error -->

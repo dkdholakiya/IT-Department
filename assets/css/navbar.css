@@ -10,24 +10,36 @@
  */
 
 /* ==========================================================================
-   1. FIXED HEADER & GLASS PILLS
+   1. FIXED HEADER & BUTTON GLASS PILLS (Exact same glass effect as sidebar menu)
    ========================================================================== */
 #topNavbar {
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.glass-pill {
-  background: var(--glass-pill, rgba(255, 255, 255, 0.84));
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1.5px solid var(--glass-border, rgba(255, 255, 255, 0.92));
-  box-shadow: 0 4px 14px rgba(10, 9, 9, 0.04);
+/* Individual navbar buttons/pills receive the exact same frosted glass style as sidebar menu */
+#topNavbar .glass-pill,
+#topNavbar .side-menu-glass {
+  background: var(--side-menu-pill-glass) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid var(--side-menu-border) !important;
+  box-shadow: var(--side-menu-shadow) !important;
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
+  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-body.theme-dark .glass-pill {
-  background: var(--glass-pill, rgba(24, 36, 27, 0.88));
-  border-color: var(--glass-border, rgba(var(--color-primary-rgb), 0.32));
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+#topNavbar .glass-pill:hover,
+#topNavbar .side-menu-glass:hover {
+  border-color: rgba(var(--color-primary-rgb), 0.45) !important;
+}
+
+body.theme-dark #topNavbar .glass-pill,
+body.theme-dark #topNavbar .side-menu-glass {
+  background: var(--side-menu-pill-glass) !important;
+  border-color: var(--side-menu-border) !important;
+  box-shadow: var(--side-menu-shadow) !important;
 }
 
 /* Live Telemetry Pulse Dot */

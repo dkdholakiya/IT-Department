@@ -135,6 +135,8 @@
     if (sidebarState.desktopSidebarMode === 'expanded') {
       sidebar.classList.remove('lg:hidden');
       sidebar.classList.add('desktop-expanded');
+      document.documentElement.classList.add('sidebar-desktop-expanded');
+      document.documentElement.classList.remove('sidebar-desktop-hidden');
       if (toggleIcon) toggleIcon.classList.add('rotate-180');
       if (toggleBtn) {
         toggleBtn.classList.add('bg-[var(--color-primary)]', 'text-white');
@@ -147,6 +149,8 @@
     } else if (sidebarState.desktopSidebarMode === 'hidden') {
       sidebar.classList.remove('desktop-expanded');
       sidebar.classList.add('lg:hidden');
+      document.documentElement.classList.remove('sidebar-desktop-expanded');
+      document.documentElement.classList.add('sidebar-desktop-hidden');
       if (toggleIcon) toggleIcon.classList.remove('rotate-180');
       if (toggleBtn) {
         toggleBtn.classList.remove('bg-[var(--color-primary)]', 'text-white');
@@ -159,6 +163,7 @@
     } else {
       // Default: 'compact' (Icons Only Dock)
       sidebar.classList.remove('lg:hidden', 'desktop-expanded');
+      document.documentElement.classList.remove('sidebar-desktop-expanded', 'sidebar-desktop-hidden');
       if (toggleIcon) toggleIcon.classList.remove('rotate-180');
       if (toggleBtn) {
         toggleBtn.classList.remove('bg-[var(--color-primary)]', 'text-white');
@@ -188,6 +193,13 @@
 
     // Apply persisted desktop mode
     syncDesktopSidebarMode();
+
+    // Release the preload transition lock so subsequent user toggles animate smoothly
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        document.documentElement.classList.remove('sidebar-no-transition');
+      });
+    });
 
     // Mobile pull handle click
     const handle = document.getElementById('samsungEdgeHandle');

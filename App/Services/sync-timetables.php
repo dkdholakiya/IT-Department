@@ -621,9 +621,8 @@ $ftSize = $ftCurrentFile ? number_format(filesize($ftDir . $ftCurrentFile) / 102
     <title>One-Click Google Sheets Timetable Syncer — GMIU</title>
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo v_asset('assets/css/portal.css'); ?>">
+    <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme.css'); ?>">
     <link rel="stylesheet" href="<?php echo v_asset('assets/css/faculty.css'); ?>">
-    <link rel="stylesheet" href="<?php echo v_asset('assets/css/theme-light.css'); ?>">
     <style>
         body {
             background-color: #060d1f;

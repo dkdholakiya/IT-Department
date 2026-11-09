@@ -34,29 +34,23 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         
         <div id="mainSyllabusContent" class="flex-1 min-h-0 min-w-0 flex flex-col gap-3 overflow-y-auto syl-custom-scroll pr-1">
 
-          <!-- 1. TOP CARD: TARGET DEPARTMENT SELECTOR & LIVE URL SCRAPER INPUT -->
-          <div class="glass-card p-3 sm:p-4 rounded-2xl border border-white/80 dark:border-white/10 flex flex-col gap-3 shrink-0">
-            <!-- Header Row: Title on Left, Department Select on Right -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-black/5 dark:border-white/10">
-              <div>
-                <h2 class="text-sm sm:text-base font-bold font-serif text-[var(--text-primary)] leading-tight">
-                  Check Course Syllabus &amp; Exam Papers
-                </h2>
-                <p class="text-[11px] text-[var(--text-muted)] mt-0.5">
-                  Choose a department or paste any GMIU student-corner URL to fetch, verify, and parse official subject codes and credit tables in real time.
-                </p>
-              </div>
+          <!-- 1. TOP TOOLBAR: TARGET DEPARTMENT SELECTOR & LIVE URL SCRAPER INPUT (ALL IN ONE ROW) -->
+          <div class="glass-card p-2 sm:p-2.5 rounded-2xl border border-white/80 dark:border-white/10 shrink-0">
+            <!-- Legacy Filter Hook (Hidden) -->
+            <div id="deptFilter" class="hidden" aria-hidden="true"></div>
 
+            <!-- Single Unified Row: Department Select + Scrape URL Input + Fetch Button -->
+            <form id="scrapeForm" class="flex flex-col sm:flex-row items-center gap-2 w-full">
               <!-- Department Dropdown Selection -->
-              <div class="flex items-center gap-2 self-stretch sm:self-auto shrink-0 w-full sm:w-auto">
-                <label for="deptSelect" class="text-[11px] font-bold text-[var(--text-muted)] flex items-center gap-1.5 shrink-0">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <div class="flex items-center gap-1.5 w-full sm:w-auto shrink-0">
+                <label for="deptSelect" class="text-[11px] font-bold text-[var(--text-muted)] flex items-center gap-1 shrink-0">
+                  <svg class="w-3.5 h-3.5 text-[var(--color-primary)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M4 6h16M7 12h10M10 18h4"/>
                   </svg>
-                  <span>Department:</span>
+                  <span>Dept:</span>
                 </label>
-                <div class="relative flex-1 sm:flex-initial min-w-0 w-full sm:w-auto">
-                  <select id="deptSelect" class="w-full sm:w-auto max-w-full h-8 pl-3 pr-8 rounded-xl glass-pill syl-dept-select text-xs font-semibold text-[var(--text-primary)] border border-white/80 dark:border-white/10 focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] cursor-pointer truncate">
+                <div class="relative flex-1 sm:flex-initial min-w-0 w-full sm:w-[220px] md:w-[260px]">
+                  <select id="deptSelect" class="w-full h-9 pl-3 pr-8 rounded-xl glass-pill syl-dept-select text-xs font-semibold text-[var(--text-primary)] border border-white/80 dark:border-white/10 focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] cursor-pointer truncate">
                     <optgroup label="── Under-Graduation (UG) ──">
                       <option value="https://gmiu.edu.in/gmiu/website/faculty/faculty-of-engineering-amp-technology/under-graduation-computer-engineering/student-corner" selected>
                         Computer Engineering (UG)
@@ -88,16 +82,11 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   </svg>
                 </div>
               </div>
-            </div>
 
-            <!-- Legacy Filter Hook (Hidden) -->
-            <div id="deptFilter" class="hidden" aria-hidden="true"></div>
-
-            <!-- Scrape URL Input + Fetch Button Row -->
-            <form id="scrapeForm" class="flex flex-col sm:flex-row items-stretch gap-2">
-              <div class="relative flex-1 min-w-0 flex items-center">
+              <!-- Scrape URL Input (Flex-1 fills remaining space) -->
+              <div class="relative flex-1 min-w-0 w-full flex items-center">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4 text-[var(--color-primary)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                   </svg>
@@ -115,10 +104,11 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                 <button type="button" id="btnClear" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] text-base font-bold p-1 cursor-pointer leading-none" title="Clear input" aria-label="Clear input">&times;</button>
               </div>
 
+              <!-- Fetch Syllabus Submit Button -->
               <button
                 type="submit"
                 id="btnSubmit"
-                class="h-9 px-4 rounded-xl syl-submit-btn text-xs font-bold hover:brightness-105 active:scale-95 transition flex items-center justify-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+                class="w-full sm:w-auto h-9 px-4 rounded-xl syl-submit-btn text-xs font-bold hover:brightness-105 active:scale-95 transition flex items-center justify-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
               >
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                   <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
@@ -285,8 +275,8 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
   </div>
 
   <!-- Shared Sidebar and Navbar Scripts -->
-  <script src="assets/js/sidebar.js" defer></script>
-  <script src="assets/js/navbar.js" defer></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/navbar.js') : 'assets/js/navbar.js'; ?>"></script>
 
   <!-- Syllabus Scraper and Data Handler Script -->
   <script>
