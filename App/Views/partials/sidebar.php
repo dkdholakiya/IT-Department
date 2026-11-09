@@ -21,6 +21,8 @@ $pageLabels = [
   'ctldrive'            => 'Drive Folder Scanner',
   'faculty'             => 'Faculty List',
   'zero-student-report' => 'Zero Student Log',
+  'student-timetable'   => 'Student Timetable',
+  'syllabus-papers'     => 'Syllabus & Exam Papers',
 ];
 $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Navigation');
 ?>
