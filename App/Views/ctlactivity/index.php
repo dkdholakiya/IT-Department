@@ -32,56 +32,11 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
 
         <div id="mainDashboardContent" class="flex-1 min-h-0 min-w-0 flex flex-col gap-3 overflow-y-auto ctl-custom-scroll pr-1">
 
-          <!-- 1. TOP HEADER & CONTROLS TOOLBAR -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-black/5 dark:border-white/10 shrink-0">
-            <div>
-              <div class="flex items-center gap-2 flex-wrap">
-                <h2 class="text-base sm:text-xl font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none">
-                  CTL Activity Tracking & Report
-                </h2>
-                <span id="totalActivitiesBadge" class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10 shadow-sm shrink-0">
-                  Awaiting File Upload
-                </span>
-              </div>
-              <p class="text-[11px] sm:text-xs text-[var(--text-muted)] mt-1 hidden sm:block">
-                Upload department master sheet, assign coordinator, verify submission criteria, and dispatch analytics reports.
-              </p>
-            </div>
+          <!-- Hidden badge hook for JS compatibility -->
+          <span id="totalActivitiesBadge" class="hidden" aria-hidden="true"></span>
 
-            <!-- Header Action Buttons -->
-            <div class="flex items-center gap-2 shrink-0 self-start sm:self-auto">
-              <!-- Direct ERP Button -->
-              <button
-                type="button"
-                id="directErpBtn"
-                class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
-                title="Direct ERP Links Quick Access"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                  <polyline points="15 3 21 3 21 9"></polyline>
-                  <line x1="10" y1="14" x2="21" y2="3"></line>
-                </svg>
-                <span>Direct ERP Links</span>
-              </button>
-
-              <!-- Reset Filters Button -->
-              <button
-                type="button"
-                id="resetFiltersBtn"
-                class="h-7 sm:h-8 px-2 sm:px-2.5 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 shrink-0 cursor-pointer"
-                title="Reset table filters"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
-                </svg>
-                <span class="hidden md:inline">Reset</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- 2. TOP BENTO GRID: UPLOAD MASTER SHEET & FACULTY COORDINATOR PROFILE -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 shrink-0">
+          <!-- 1. TOP BENTO GRID: UPLOAD MASTER SHEET & FACULTY COORDINATOR PROFILE -->
+          <div class="ctl-bento-grid grid grid-cols-1 lg:grid-cols-12 gap-3 shrink-0 relative z-40">
 
             <!-- Card A: Upload Dropzone (5 Columns on Desktop) -->
             <div class="lg:col-span-5 glass-card p-3 sm:p-4 rounded-2xl flex flex-col justify-between border border-white/80 dark:border-white/10">
@@ -121,10 +76,41 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   </button>
                 </div>
               </div>
+
+              <!-- Card A Action Controls: Direct ERP Links & Reset (Under Master Sheet Dropzone) -->
+              <div class="flex items-center gap-2 pt-2.5 mt-2.5 border-t border-black/5 dark:border-white/10 shrink-0">
+                <!-- Direct ERP Button -->
+                <button
+                  type="button"
+                  id="directErpBtn"
+                  class="flex-1 h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+                  title="Direct ERP Links Quick Access"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                  <span>Direct ERP Links</span>
+                </button>
+
+                <!-- Reset Filters Button -->
+                <button
+                  type="button"
+                  id="resetFiltersBtn"
+                  class="h-7 sm:h-8 px-3 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center justify-center gap-1.5 cursor-pointer"
+                  title="Reset table filters"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                  </svg>
+                  <span>Reset</span>
+                </button>
+              </div>
             </div>
 
             <!-- Card B: Faculty Coordinator & Dispatch Center (7 Columns on Desktop) -->
-            <div class="lg:col-span-7 glass-card p-3 sm:p-4 rounded-2xl flex flex-col justify-between border border-white/80 dark:border-white/10 gap-2.5">
+            <div class="ctl-dispatch-card lg:col-span-7 glass-card p-3 sm:p-4 rounded-2xl flex flex-col justify-between border border-white/80 dark:border-white/10 gap-2.5 relative z-40">
               <div class="flex items-center justify-between">
                 <span class="text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-muted)]">Prepared By &amp; Dispatch Options</span>
                 <button type="button" id="resetCCBtn" class="text-[10.5px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] transition cursor-pointer" title="Reset CC recipients to department defaults">
@@ -213,7 +199,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
           </div>
 
           <!-- 3. KPI METRICS CARDS GRID (6 Cards) -->
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5 shrink-0">
+          <div class="ctl-kpi-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5 shrink-0 relative z-10">
             <!-- Total Activities -->
             <div class="ctl-kpi-card ctl-kpi-total p-2.5 sm:p-3">
               <span class="text-[9.5px] sm:text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] block">Total Activities</span>
@@ -252,7 +238,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
           </div>
 
           <!-- 4. ADVANCED FILTER TOOLBAR -->
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 p-2 rounded-2xl glass-card border border-white/80 dark:border-white/10 shrink-0">
+          <div class="ctl-filter-toolbar flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 p-2 rounded-2xl glass-card border border-white/80 dark:border-white/10 shrink-0 relative z-[5]">
             <div class="flex items-center flex-wrap gap-2 flex-1 min-w-0">
               <!-- Approval Status Select -->
               <div class="flex items-center gap-1.5 min-w-[140px] flex-1 sm:flex-initial">
@@ -295,7 +281,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
           </div>
 
           <!-- 5. GLASS DATA TABLE WRAPPER -->
-          <div class="flex-1 min-h-[260px] rounded-2xl glass-card overflow-hidden border border-white/80 dark:border-white/10 flex flex-col">
+          <div class="ctl-table-container flex-1 min-h-[260px] rounded-2xl glass-card overflow-hidden border border-white/80 dark:border-white/10 flex flex-col relative z-0">
             <div class="flex-1 overflow-auto ctl-table-scroll">
               <table class="ctl-table">
                 <thead>
@@ -343,7 +329,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
   </div>
 
   <!-- ================= DIRECT ERP LINK POPUP MODAL ================= -->
-  <div id="erpModalOverlay" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4" aria-hidden="true" role="dialog" aria-labelledby="erpModalTitle">
+  <div id="erpModalOverlay" class="fixed inset-0 z-[1050] bg-black/50 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4" aria-hidden="true" role="dialog" aria-labelledby="erpModalTitle">
     <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-2xl max-h-[85vh] rounded-3xl shadow-2xl border border-white/80 dark:border-white/10 flex flex-col overflow-hidden">
       
       <!-- Modal Header -->
@@ -410,7 +396,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
   </div>
 
   <!-- ================= UNIVERSAL TOAST NOTIFICATION ================= -->
-  <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-[#0A0909] text-white text-xs font-semibold shadow-2xl border border-white/15 transition-all">
+  <div id="toastBanner" class="fixed bottom-5 right-5 z-[1100] hidden items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-[#0A0909] text-white text-xs font-semibold shadow-2xl border border-white/15 transition-all">
     <span id="toastDot" class="w-2 h-2 rounded-full bg-[var(--color-primary-light)]"></span>
     <span id="toastMessage">Action completed</span>
   </div>

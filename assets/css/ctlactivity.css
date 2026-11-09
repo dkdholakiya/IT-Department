@@ -97,11 +97,38 @@ body.theme-dark .ctl-dropzone {
 }
 
 /* ==========================================================================
-   3. FACULTY DROPDOWN & CC TAGGING SYSTEM
+   3. FACULTY DROPDOWN & CC TAGGING SYSTEM & STACKING HIERARCHY
    ========================================================================== */
-.search-select-wrap,
+.ctl-bento-grid {
+  position: relative;
+  z-index: 40;
+}
+
+.ctl-dispatch-card {
+  position: relative;
+  z-index: 40;
+}
+
+.search-select-wrap {
+  position: relative;
+  z-index: 42;
+}
+
+.search-select-wrap.dropdown-open,
+.search-select-wrap:focus-within,
+.search-select-wrap:has(.search-dropdown-list.show) {
+  z-index: 65 !important;
+}
+
 .cc-select-wrap {
   position: relative;
+  z-index: 45;
+}
+
+.cc-select-wrap.dropdown-open,
+.cc-select-wrap:focus-within,
+.cc-select-wrap:has(.search-dropdown-list.show) {
+  z-index: 70 !important;
 }
 
 .search-dropdown-list {
@@ -112,22 +139,38 @@ body.theme-dark .ctl-dropzone {
   right: 0;
   max-height: 240px;
   overflow-y: auto;
-  z-index: 50;
-  background: var(--glass-surface-strong, rgba(255, 255, 255, 0.96));
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
   border: 1.5px solid var(--glass-border);
   border-radius: 18px;
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 20px 48px -6px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 body.theme-dark .search-dropdown-list {
-  background: rgba(22, 34, 26, 0.96);
-  border-color: rgba(var(--color-primary-rgb), 0.35);
+  background: rgba(20, 30, 23, 0.98);
+  border-color: rgba(var(--color-primary-rgb), 0.4);
+  box-shadow: 0 20px 48px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .search-dropdown-list.show {
   display: block;
+}
+
+.ctl-kpi-grid {
+  position: relative;
+  z-index: 10;
+}
+
+.ctl-filter-toolbar {
+  position: relative;
+  z-index: 5;
+}
+
+.ctl-table-container {
+  position: relative;
+  z-index: 1;
 }
 
 .ctl-dropdown-item {

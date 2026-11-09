@@ -600,15 +600,19 @@
 
     if (!facultySearch || typeof facultyData === 'undefined') return;
 
+    const facultyWrap = facultySearch.closest('.search-select-wrap');
+
     renderDropdown(facultyData);
 
     facultySearch.addEventListener('focus', function () {
       facultyDropdownList.classList.add('show');
+      if (facultyWrap) facultyWrap.classList.add('dropdown-open');
       filterFaculty();
     });
 
     facultySearch.addEventListener('input', function () {
       facultyDropdownList.classList.add('show');
+      if (facultyWrap) facultyWrap.classList.add('dropdown-open');
       filterFaculty();
       if (this.value.trim() === '') {
         clearSelection();
@@ -618,6 +622,7 @@
     document.addEventListener('click', function (e) {
       if (!e.target.closest('.search-select-wrap')) {
         facultyDropdownList.classList.remove('show');
+        if (facultyWrap) facultyWrap.classList.remove('dropdown-open');
         validateSearchInput();
       }
     });
@@ -669,6 +674,7 @@
       facultySearch.classList.remove('ctl-input-error');
       if (facultyError) facultyError.classList.add('hidden');
       facultyDropdownList.classList.remove('show');
+      if (facultyWrap) facultyWrap.classList.remove('dropdown-open');
 
       // Update document title dynamically
       const isCe = (member.initials === 'DRC' || member.name.includes('Dhaval Chandarana'))
@@ -784,11 +790,13 @@
 
     ccSearch.addEventListener('focus', function () {
       ccDropdownList.classList.add('show');
+      if (ccSelectWrap) ccSelectWrap.classList.add('dropdown-open');
       filterCC();
     });
 
     ccSearch.addEventListener('input', function () {
       ccDropdownList.classList.add('show');
+      if (ccSelectWrap) ccSelectWrap.classList.add('dropdown-open');
       filterCC();
     });
 
@@ -800,6 +808,7 @@
           addCCTag(val);
           this.value = '';
           ccDropdownList.classList.remove('show');
+          if (ccSelectWrap) ccSelectWrap.classList.remove('dropdown-open');
         }
       }
     });
@@ -807,6 +816,7 @@
     document.addEventListener('click', function (e) {
       if (!e.target.closest('.cc-select-wrap')) {
         ccDropdownList.classList.remove('show');
+        if (ccSelectWrap) ccSelectWrap.classList.remove('dropdown-open');
       }
     });
 
@@ -844,6 +854,7 @@
             addCCTag(member.email);
             ccSearch.value = '';
             ccDropdownList.classList.remove('show');
+            if (ccSelectWrap) ccSelectWrap.classList.remove('dropdown-open');
           }
         });
         ccDropdownList.appendChild(item);

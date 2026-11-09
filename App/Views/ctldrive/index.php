@@ -40,21 +40,10 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         <!-- ================= 1. LEFT COLUMN: CONTROLS & CONFIGURATION (5 COLS ON DESKTOP) ================= -->
         <section class="lg:col-span-5 glass-card p-3.5 sm:p-5 flex flex-col gap-3.5 overflow-y-auto ctldrive-custom-scroll relative">
 
-          <!-- Card Header & Badge -->
-          <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-black/5 dark:border-white/10 shrink-0">
-            <div>
-              <h2 class="text-base sm:text-lg font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none">
-                Google Drive Scanner
-              </h2>
-              <p class="text-[11px] sm:text-xs text-[var(--text-muted)] mt-1 hidden sm:block">
-                Scan parent folder, analyze recursive structure & export analysis report.
-              </p>
-            </div>
-            <!-- Connection Status Badge -->
-            <div id="connection-status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 shrink-0">
-              <span id="connection-status-dot" class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
-              <span id="connection-status-text">Ready to Authorize</span>
-            </div>
+          <!-- Hidden Connection Status Hooks for JS compatibility -->
+          <div id="connection-status-badge" class="hidden" aria-hidden="true">
+            <span id="connection-status-dot"></span>
+            <span id="connection-status-text"></span>
           </div>
 
           <!-- Section 1: Connection Controls -->

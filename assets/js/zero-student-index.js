@@ -210,6 +210,71 @@
       });
     }
 
+    // Search bar clear button
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    if (recordSearchInput && clearSearchBtn) {
+      recordSearchInput.addEventListener('input', () => {
+        clearSearchBtn.classList.toggle('hidden', !recordSearchInput.value);
+      });
+      clearSearchBtn.addEventListener('click', () => {
+        recordSearchInput.value = '';
+        clearSearchBtn.classList.add('hidden');
+        searchQuery = '';
+        currentPage = 1;
+        applyFilters();
+      });
+    }
+
+    // Offcanvas Standalone Fallback Controller
+    const offcanvasEl = document.getElementById('offcanvasRight');
+    const filterOffcanvasBtn = document.getElementById('filterOffcanvasBtn');
+
+    function toggleCustomOffcanvas(show) {
+      if (!offcanvasEl) return;
+      let backdrop = document.getElementById('offcanvasBackdrop');
+      if (show) {
+        if (!backdrop) {
+          backdrop = document.createElement('div');
+          backdrop.id = 'offcanvasBackdrop';
+          backdrop.className = 'offcanvas-backdrop fade';
+          document.body.appendChild(backdrop);
+          backdrop.addEventListener('click', () => toggleCustomOffcanvas(false));
+        }
+        offcanvasEl.classList.add('showing');
+        setTimeout(() => {
+          offcanvasEl.classList.remove('showing');
+          offcanvasEl.classList.add('show');
+          backdrop.classList.add('show');
+        }, 10);
+      } else {
+        offcanvasEl.classList.add('hiding');
+        if (backdrop) backdrop.classList.remove('show');
+        setTimeout(() => {
+          offcanvasEl.classList.remove('show', 'hiding');
+          if (backdrop && backdrop.parentNode) {
+            backdrop.parentNode.removeChild(backdrop);
+          }
+        }, 300);
+      }
+    }
+
+    if (filterOffcanvasBtn) {
+      filterOffcanvasBtn.addEventListener('click', (e) => {
+        if (typeof bootstrap === 'undefined' || !bootstrap.Offcanvas) {
+          e.preventDefault();
+          toggleCustomOffcanvas(!offcanvasEl.classList.contains('show'));
+        }
+      });
+    }
+
+    document.querySelectorAll('[data-bs-dismiss="offcanvas"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (typeof bootstrap === 'undefined' || !bootstrap.Offcanvas) {
+          toggleCustomOffcanvas(false);
+        }
+      });
+    });
+
     // Modal close listeners
     if (closeDetailModalBtn) closeDetailModalBtn.addEventListener('click', closeViewModal);
     if (closeDetailModalBottomBtn) closeDetailModalBottomBtn.addEventListener('click', closeViewModal);
@@ -392,6 +457,33 @@
     });
 
     renderTable();
+    updateFilterIndicators();
+  }
+
+  // --- UPDATE ACTIVE FILTER INDICATORS & BADGES ---
+  function updateFilterIndicators() {
+    const activeDeptText = document.getElementById('activeDeptText');
+    if (activeDeptText) {
+      activeDeptText.textContent =
+        activeDept === 'Information Technology' ? 'Information Technology' :
+        activeDept === 'Computer Engineering' ? 'Computer Engineering' :
+        'All Departments';
+    }
+
+    const hasActiveFilters = (activeDept !== 'all') ||
+      Boolean(selectedFaculty) ||
+      Boolean(selectedSem) ||
+      Boolean(selectedDate);
+
+    const activeFilterBadge = document.getElementById('activeFilterBadge');
+    if (activeFilterBadge) {
+      activeFilterBadge.classList.toggle('hidden', !hasActiveFilters);
+    }
+
+    const offcanvasActiveBadge = document.getElementById('offcanvasActiveBadge');
+    if (offcanvasActiveBadge) {
+      offcanvasActiveBadge.classList.toggle('hidden', !hasActiveFilters);
+    }
   }
 
   // --- UPDATE KPI COUNTERS ---
@@ -671,7 +763,7 @@
   window.goToZeroPage = (page) => {
     currentPage = page;
     renderTable();
-  };
+  };;
   window.resetZeroFilters = resetAllFilters;
 
   // --- MODAL: VIEW DETAILS ---

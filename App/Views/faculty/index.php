@@ -29,151 +29,130 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
       <!-- ================= MAIN WORKSPACE: GLASS FACULTY DIRECTORY & TABLE ================= -->
       <main class="fac-main-workspace flex-1 min-h-0 min-w-0 glass-card p-3 sm:p-5 flex flex-col justify-between overflow-hidden relative transition-all duration-300">
 
-        <!-- 1. TOP HEADER & CONTROLS TOOLBAR -->
-        <div class="flex flex-col gap-3 pb-3 border-b border-black/5 dark:border-white/10 shrink-0">
+        <!-- 1. TOP HEADER & CONTROLS TOOLBAR (Consolidated Single Row on Desktop) -->
+        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-2.5 pb-2.5 border-b border-black/5 dark:border-white/10 shrink-0">
           
-          <!-- Top Row: Title + Live Badge & Action Buttons -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
-            <div>
-              <div class="flex items-center gap-2 flex-wrap">
-                <h2 class="text-base sm:text-xl md:text-2xl font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none">
-                  Faculty Directory & Records
-                </h2>
-                <span id="totalFacultyBadge" class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10 shadow-sm shrink-0">
-                  Loading...
-                </span>
-              </div>
-              <p class="text-[11.5px] sm:text-xs text-[var(--text-muted)] mt-1 hidden sm:block">
-                Academic staff list with designations, cabins, contact details, and single-click administrative actions.
-              </p>
+          <!-- Hidden total badge for JS reactivity compatibility -->
+          <span id="totalFacultyBadge" class="hidden" aria-hidden="true"></span>
+
+          <!-- Left: Department Segment & Status Filter Segment (In place of removed title block) -->
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 shrink-0 flex-wrap sm:flex-nowrap">
+            <!-- Department Pills -->
+            <div class="inline-flex items-center p-0.5 rounded-full glass-pill border border-white/80 dark:border-white/10 shrink-0">
+              <button
+                type="button"
+                id="deptFilterAll"
+                class="fac-seg-btn active"
+              >
+                <span class="hidden md:inline">All Departments</span>
+                <span class="md:hidden">All</span>
+              </button>
+              <button
+                type="button"
+                id="deptFilterIt"
+                class="fac-seg-btn"
+              >
+                <span class="hidden md:inline">Information Technology</span>
+                <span class="md:hidden">IT</span>
+              </button>
+              <button
+                type="button"
+                id="deptFilterCe"
+                class="fac-seg-btn"
+              >
+                <span class="hidden md:inline">Computer Engineering</span>
+                <span class="md:hidden">CE</span>
+              </button>
             </div>
 
-            <!-- Action Buttons: + Add Faculty, Export Excel, Reset Defaults -->
-            <div class="flex items-center gap-1.5 sm:gap-2 self-start sm:self-auto flex-wrap">
-              <!-- Reset Button -->
+            <!-- Status Filter Pills -->
+            <div class="inline-flex items-center p-0.5 rounded-full glass-pill border border-white/80 dark:border-white/10 shrink-0">
               <button
                 type="button"
-                id="resetFacultyDefaultsBtn"
-                class="h-7 sm:h-8 px-2 sm:px-2.5 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 shrink-0 cursor-pointer"
-                title="Reset back to default faculty list"
+                id="statusFilterAll"
+                class="fac-seg-btn active"
+                title="Show all records"
               >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
-                </svg>
-                <span class="hidden md:inline">Reset Defaults</span>
+                All
               </button>
-
-              <!-- Export Excel Button -->
               <button
                 type="button"
-                id="exportExcelBtn"
-                class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
-                title="Export filtered faculty list to Excel"
+                id="statusFilterActive"
+                class="fac-seg-btn"
+                title="Filter active faculty only"
               >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-                <span class="hidden xs:inline">Export</span><span class="hidden md:inline">&nbsp;Excel</span>
+                Active
               </button>
-
-              <!-- + Add Faculty Button -->
               <button
                 type="button"
-                id="addFacultyBtn"
-                class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl bg-[var(--color-primary)] text-white text-[10.5px] sm:text-[11px] font-bold hover:brightness-105 active:scale-95 transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
-                title="Add a new faculty member"
+                id="statusFilterInactive"
+                class="fac-seg-btn"
+                title="Filter inactive faculty only"
               >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-                </svg>
-                <span>Add Faculty</span>
+                Inactive
               </button>
             </div>
           </div>
 
-          <!-- Bottom Row: Filter Tabs & Search Bar -->
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 sm:gap-2.5">
-            
-            <!-- Left: Department Segment & Status Filter Segment (horizontally scrollable without ugly scrollbar) -->
-            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 w-full md:w-auto shrink-0">
-              <!-- Department Pills -->
-              <div class="inline-flex items-center p-0.5 rounded-full glass-pill border border-white/80 dark:border-white/10 shrink-0">
-                <button
-                  type="button"
-                  id="deptFilterAll"
-                  class="fac-seg-btn active"
-                >
-                  <span class="hidden md:inline">All Departments</span>
-                  <span class="md:hidden">All</span>
-                </button>
-                <button
-                  type="button"
-                  id="deptFilterIt"
-                  class="fac-seg-btn"
-                >
-                  <span class="hidden md:inline">Information Technology</span>
-                  <span class="md:hidden">IT</span>
-                </button>
-                <button
-                  type="button"
-                  id="deptFilterCe"
-                  class="fac-seg-btn"
-                >
-                  <span class="hidden md:inline">Computer Engineering</span>
-                  <span class="md:hidden">CE</span>
-                </button>
-              </div>
-
-              <!-- Status Filter Pills -->
-              <div class="inline-flex items-center p-0.5 rounded-full glass-pill border border-white/80 dark:border-white/10 shrink-0">
-                <button
-                  type="button"
-                  id="statusFilterAll"
-                  class="fac-seg-btn active"
-                  title="Show all records"
-                >
-                  All
-                </button>
-                <button
-                  type="button"
-                  id="statusFilterActive"
-                  class="fac-seg-btn"
-                  title="Filter active faculty only"
-                >
-                  Active
-                </button>
-                <button
-                  type="button"
-                  id="statusFilterInactive"
-                  class="fac-seg-btn"
-                  title="Filter inactive faculty only"
-                >
-                  Inactive
-                </button>
-              </div>
+          <!-- Right: Search Input + Action Buttons (Reset Defaults, Export Excel, + Add Faculty) -->
+          <div class="flex items-center gap-1.5 sm:gap-2 self-start xl:self-center flex-wrap shrink-0">
+            <!-- Search Bar -->
+            <div class="relative flex items-center h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl glass-pill border border-white/80 dark:border-white/10 shadow-sm w-36 sm:w-44 lg:w-48 shrink-0 transition focus-within:ring-1 focus-within:ring-[var(--color-primary)]">
+              <svg class="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0 mr-1.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input
+                type="text"
+                id="facultySearchInput"
+                class="fac-search-input w-full bg-transparent text-[11px] sm:text-xs font-semibold text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none"
+                placeholder="Search faculty..."
+                autocomplete="off"
+              />
             </div>
 
-            <!-- Right: Search Input -->
-            <div class="w-full md:w-64 lg:w-72 shrink-0">
-              <div class="h-8 sm:h-9 px-3 rounded-full glass-pill flex items-center gap-2 border border-white/80 dark:border-white/10 shadow-sm w-full">
-                <svg class="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <circle cx="11" cy="11" r="8"/>
-                  <path d="m21 21-4.35-4.35"/>
-                </svg>
-                <input
-                  type="text"
-                  id="facultySearchInput"
-                  class="fac-search-input"
-                  placeholder="Search name, ID, room..."
-                  autocomplete="off"
-                />
-              </div>
-            </div>
+            <!-- Reset Defaults Button -->
+            <button
+              type="button"
+              id="resetFacultyDefaultsBtn"
+              class="h-7 sm:h-8 px-2 sm:px-2.5 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 shrink-0 cursor-pointer"
+              title="Reset back to default faculty list"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+              </svg>
+              <span class="hidden md:inline">Reset Defaults</span>
+            </button>
 
+            <!-- Export Excel Button -->
+            <button
+              type="button"
+              id="exportExcelBtn"
+              class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+              title="Export filtered faculty list to Excel"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <span class="hidden xs:inline">Export</span><span class="hidden md:inline">&nbsp;Excel</span>
+            </button>
+
+            <!-- + Add Faculty Button -->
+            <button
+              type="button"
+              id="addFacultyBtn"
+              class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl bg-[var(--color-primary)] text-white text-[10.5px] sm:text-[11px] font-bold hover:brightness-105 active:scale-95 transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+              title="Add a new faculty member"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+              </svg>
+              <span>Add Faculty</span>
+            </button>
           </div>
 
         </div>

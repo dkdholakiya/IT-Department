@@ -39,35 +39,26 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         <!-- Scrollable Interior Workspace -->
         <div id="zsPage" class="flex-1 min-h-0 min-w-0 flex flex-col justify-between gap-3 sm:gap-4 overflow-y-auto zs-custom-scroll pr-0 sm:pr-1">
 
-          <!-- 1. TOP HEADER & CONTROLS TOOLBAR -->
-          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-black/5 dark:border-white/10 shrink-0">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2 flex-wrap">
-                <!-- Back Link to Incident Directory -->
-                <a href="<?php echo function_exists('base_url') ? base_url('/zero-student-report') : './zero-student-report'; ?>" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl glass-pill text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition" title="Back to Incident Records Directory">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-                  </svg>
-                  <span>Directory</span>
-                </a>
-
-                <h2 class="text-base sm:text-xl md:text-2xl font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none">
-                  Log Zero Attendance Class
-                </h2>
-
-                <!-- Live Department Status Badge -->
-                <div class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10 shadow-sm flex items-center gap-1.5 shrink-0" id="rp-dept-badge">
-                  <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] animate-pulse"></span>
-                  <span id="rp-dept-badge-text">Department of Information Technology</span>
-                </div>
-              </div>
-              <p class="text-[11px] sm:text-xs text-[var(--text-muted)] mt-1 hidden sm:block">
-                Fill the session details below to append this incident to the live registry, notify HOD & faculty, and sync to master spreadsheet.
-              </p>
+          <!-- 1. TOP CONTROLS & NAVIGATION TOOLBAR (Replaces Redundant In-Page Title) -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-black/5 dark:border-white/10 shrink-0">
+            <!-- Left: Back Link to Incident Directory -->
+            <div class="flex items-center gap-2">
+              <a
+                href="<?php echo function_exists('base_url') ? base_url('/zero-student-report') : './zero-student-report'; ?>"
+                class="h-8 px-3 rounded-xl glass-pill text-xs font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+                title="Back to Incident Records Directory"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+                </svg>
+                <span>Incident Directory</span>
+              </a>
+              <!-- Hidden element to maintain JS compatibility without error -->
+              <span id="rp-dept-badge-text" class="hidden" aria-hidden="true"></span>
             </div>
 
             <!-- Action Controls Group: Segment Switcher + Excel Import Button -->
-            <div class="flex items-center justify-between sm:justify-end gap-2 w-full lg:w-auto shrink-0 flex-wrap sm:flex-nowrap">
+            <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto shrink-0 flex-wrap sm:flex-nowrap">
               <!-- Department Switcher Segment -->
               <div class="zs-segment-control flex-1 sm:flex-initial sm:min-w-[270px]">
                 <button type="button" class="segment-btn active" id="dept-it-btn" data-dept="Information Technology" title="Switch to Information Technology">

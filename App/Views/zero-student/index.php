@@ -36,29 +36,121 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
       <!-- ================= MAIN WORKSPACE: GLASS DIRECTORY CONTAINER ================= -->
       <main class="zs-main-workspace flex-1 min-h-0 min-w-0 p-3 sm:p-4 lg:p-5 flex flex-col justify-between overflow-hidden relative transition-all duration-300 gap-3">
 
-        <!-- 1. TOP HEADER & CONTROLS TOOLBAR -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 pb-2.5 border-b border-black/5 dark:border-white/10 shrink-0">
-          <div class="min-w-0">
-            <div class="flex items-center gap-2 flex-wrap">
-              <h2 class="text-base sm:text-xl md:text-2xl font-bold font-serif tracking-tight text-[var(--text-primary)] leading-none">
-                Zero Attendance Incident Directory
-              </h2>
-              <span id="totalLogsBadge" class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10 shadow-sm shrink-0">
-                Loading...
-              </span>
+        <!-- 1. TOP KPI SUMMARY METRICS & ACTION TOOLBAR (Replaces Redundant Page Title) -->
+        <div class="zs-header-toolbar flex flex-col 2xl:flex-row 2xl:items-center justify-between gap-2.5 pb-2.5 border-b border-black/5 dark:border-white/10 shrink-0">
+
+          <!-- 4 KPI Summary Cards (In Place of Redundant Page Title) -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 flex-1 min-w-0">
+
+            <!-- KPI 1: Total Incidents -->
+            <div class="zs-kpi-card zs-kpi-primary">
+              <div class="min-w-0 flex-1">
+                <span class="text-[9px] sm:text-[9.5px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] block truncate">Total Incidents</span>
+                <div class="text-base sm:text-xl font-bold font-serif text-[var(--text-primary)] mt-0.5 leading-none" id="kpiTotal">0</div>
+                <span class="text-[9.5px] text-[var(--color-primary)] font-semibold mt-1 block truncate">Master Registry</span>
+              </div>
+              <div class="zs-kpi-icon-wrap">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
+                </svg>
+              </div>
             </div>
-            <p class="text-[11px] sm:text-xs text-[var(--text-muted)] mt-1 hidden sm:block">
-              Live registry of timetable sessions where zero students reported. All records stored in JSON format with instant filtering.
-            </p>
+
+            <!-- KPI 2: IT Department Incidents -->
+            <div class="zs-kpi-card zs-kpi-blue">
+              <div class="min-w-0 flex-1">
+                <span class="text-[9px] sm:text-[9.5px] font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400 block truncate">IT Department</span>
+                <div class="text-base sm:text-xl font-bold font-serif text-blue-600 dark:text-blue-400 mt-0.5 leading-none" id="kpiIt">0</div>
+                <span class="text-[9.5px] text-[var(--text-muted)] font-medium mt-1 block truncate">Information Technology</span>
+              </div>
+              <div class="zs-kpi-icon-wrap">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 1-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- KPI 3: CE Department Incidents -->
+            <div class="zs-kpi-card zs-kpi-amber">
+              <div class="min-w-0 flex-1">
+                <span class="text-[9px] sm:text-[9.5px] font-extrabold uppercase tracking-wider text-amber-600 dark:text-amber-400 block truncate">CE Department</span>
+                <div class="text-base sm:text-xl font-bold font-serif text-amber-600 dark:text-amber-400 mt-0.5 leading-none" id="kpiCe">0</div>
+                <span class="text-[9.5px] text-[var(--text-muted)] font-medium mt-1 block truncate">Computer Engineering</span>
+              </div>
+              <div class="zs-kpi-icon-wrap">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0H3"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- KPI 4: Today's Incidents -->
+            <div class="zs-kpi-card zs-kpi-rose">
+              <div class="min-w-0 flex-1">
+                <span class="text-[9px] sm:text-[9.5px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400 block truncate">Today's Logs</span>
+                <div class="text-base sm:text-xl font-bold font-serif text-rose-600 dark:text-rose-400 mt-0.5 leading-none" id="kpiToday">0</div>
+                <span class="text-[9.5px] text-[var(--text-muted)] font-medium mt-1 block truncate">Today's Sessions</span>
+              </div>
+              <div class="zs-kpi-icon-wrap">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </div>
+            </div>
+
           </div>
 
-          <!-- Action Controls Group: Refresh, Export Excel, + Log Zero Class -->
-          <div class="flex items-center gap-1.5 sm:gap-2 self-start sm:self-auto flex-wrap">
+          <!-- Hidden badge to prevent JS null errors -->
+          <span id="totalLogsBadge" class="hidden" aria-hidden="true"></span>
+
+          <!-- Action Controls Group: Search, Filter (Left of Refresh), Refresh, Export Excel, + Log Zero Class -->
+          <div class="flex items-center gap-1.5 sm:gap-2 self-start 2xl:self-center flex-wrap shrink-0">
+
+            <!-- Search Bar -->
+            <div class="relative flex items-center h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl glass-pill border border-white/80 dark:border-white/10 shadow-sm w-36 sm:w-44 lg:w-48 shrink-0 transition focus-within:ring-1 focus-within:ring-[var(--color-primary)]">
+              <svg class="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0 mr-1.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input
+                type="text"
+                id="recordSearchInput"
+                class="w-full bg-transparent text-[11px] sm:text-xs font-semibold text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none"
+                placeholder="Search incidents..."
+                autocomplete="off"
+              />
+              <button
+                type="button"
+                id="clearSearchBtn"
+                class="hidden ml-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] text-xs font-bold cursor-pointer"
+                title="Clear search"
+              >
+                ✕
+              </button>
+            </div>
+
+            <!-- Filter Button (Left side of Refresh button, triggers Offcanvas Right) -->
+            <button
+              type="button"
+              id="filterOffcanvasBtn"
+              class="relative h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasRight"
+              aria-controls="offcanvasRight"
+              title="Filter and Refine Incidents"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.539.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.378-1.007.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+              </svg>
+              <span>Filter</span>
+              <span id="activeFilterBadge" class="hidden w-2 h-2 rounded-full bg-[var(--color-primary)] ring-2 ring-white dark:ring-gray-900"></span>
+            </button>
+
             <!-- Refresh Button -->
             <button
               type="button"
               id="refreshRecordsBtn"
-              class="h-7 sm:h-8 px-2.5 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 shrink-0 cursor-pointer"
+              class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[10.5px] sm:text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 shrink-0 cursor-pointer"
               title="Reload live records from server"
             >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -95,137 +187,6 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               </svg>
               <span>Create Zero Log</span>
             </a>
-          </div>
-        </div>
-
-        <!-- 2. KPI SUMMARY STATS CARDS -->
-        <div class="zs-kpi-grid shrink-0">
-          <!-- Total Logs -->
-          <div class="zs-kpi-card">
-            <div class="zs-kpi-icon icon-blue">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="zs-kpi-val" id="kpiTotal">0</div>
-              <div class="zs-kpi-label">Total Incidents</div>
-            </div>
-          </div>
-
-          <!-- IT Incidents -->
-          <div class="zs-kpi-card">
-            <div class="zs-kpi-icon icon-amber">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 1-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="zs-kpi-val" id="kpiIt">0</div>
-              <div class="zs-kpi-label">IT Department</div>
-            </div>
-          </div>
-
-          <!-- CE Incidents -->
-          <div class="zs-kpi-card">
-            <div class="zs-kpi-icon icon-indigo">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0H3"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="zs-kpi-val" id="kpiCe">0</div>
-              <div class="zs-kpi-label">CE Department</div>
-            </div>
-          </div>
-
-          <!-- Today's Incidents -->
-          <div class="zs-kpi-card">
-            <div class="zs-kpi-icon icon-rose">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="zs-kpi-val" id="kpiToday">0</div>
-              <div class="zs-kpi-label">Today's Logs</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. COMPREHENSIVE FILTER TOOLBAR -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 shrink-0">
-          <!-- Left: Filter Dropdowns & Segment -->
-          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 flex-wrap sm:flex-nowrap">
-            <!-- Department Segment Control -->
-            <div class="inline-flex items-center p-0.5 rounded-full glass-pill border border-white/80 dark:border-white/10 shrink-0 gap-1">
-              <button type="button" id="deptFilterAll" class="fac-seg-btn active">
-                <span class="hidden md:inline">All Depts</span>
-                <span class="md:hidden">All</span>
-              </button>
-              <button type="button" id="deptFilterIt" class="fac-seg-btn">
-                <span class="hidden md:inline">IT</span>
-                <span class="md:hidden">IT</span>
-              </button>
-              <button type="button" id="deptFilterCe" class="fac-seg-btn">
-                <span class="hidden md:inline">CE</span>
-                <span class="md:hidden">CE</span>
-              </button>
-            </div>
-
-            <!-- Faculty Filter Dropdown -->
-            <select id="facultyFilterSelect" class="zs-filter-select text-xs min-w-[150px] sm:min-w-[180px]">
-              <option value="">All Faculty Members</option>
-              <!-- Injected via JavaScript from facultyData.js -->
-            </select>
-
-            <!-- Semester Filter Dropdown -->
-            <select id="semFilterSelect" class="zs-filter-select text-xs min-w-[110px]">
-              <option value="">All Semesters</option>
-              <option value="1">Semester 1</option>
-              <option value="3">Semester 3</option>
-              <option value="5">Semester 5</option>
-              <option value="7">Semester 7</option>
-            </select>
-
-            <!-- Session Date Filter -->
-            <input
-              type="text"
-              id="dateFilterInput"
-              class="zs-filter-input text-xs w-[115px] sm:w-[130px]"
-              placeholder="Filter by date..."
-              autocomplete="off"
-            />
-
-            <!-- Reset Filters Button -->
-            <button
-              type="button"
-              id="resetFiltersBtn"
-              class="zs-filter-btn ghost text-xs shrink-0"
-              title="Reset all filters"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
-              <span>Reset</span>
-            </button>
-          </div>
-
-          <!-- Right: Search Input Bar -->
-          <div class="w-full lg:w-72 shrink-0">
-            <div class="h-8 sm:h-9 px-3 rounded-full glass-pill flex items-center gap-2 border border-white/80 dark:border-white/10 shadow-sm w-full">
-              <svg class="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="m21 21-4.35-4.35"/>
-              </svg>
-              <input
-                type="text"
-                id="recordSearchInput"
-                class="fac-search-input w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)]"
-                placeholder="Search faculty, subject, class, room..."
-                autocomplete="off"
-              />
-            </div>
           </div>
         </div>
 
@@ -336,12 +297,185 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
     </div>
   </div>
 
+  <!-- ================= BOOTSTRAP 5 OFFCANVAS RIGHT: INCIDENT FILTER & REFINE DRAWER ================= -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <!-- Drawer Header -->
+    <div class="offcanvas-header px-5 py-4 border-b border-black/5 dark:border-white/10 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-primary)]/5 border border-[var(--color-primary)]/30 text-[var(--color-primary)] flex items-center justify-center shadow-sm shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.539.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.378-1.007.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h5 class="text-sm font-bold font-serif text-[var(--text-primary)] leading-tight" id="offcanvasRightLabel">
+              Filter & Sort Incidents
+            </h5>
+            <span id="offcanvasActiveBadge" class="hidden px-2 py-0.5 rounded-full text-[9.5px] font-extrabold bg-[var(--color-primary)]/15 text-[var(--color-primary)] border border-[var(--color-primary)]/30">
+              Active
+            </span>
+          </div>
+          <p class="text-[11px] text-[var(--text-muted)] mt-0.5 leading-tight">Refine zero attendance incident logs</p>
+        </div>
+      </div>
+      <button type="button" class="w-8 h-8 rounded-full glass-pill hover:bg-black/10 dark:hover:bg-white/10 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition active:scale-95 cursor-pointer" data-bs-dismiss="offcanvas" aria-label="Close">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Drawer Body -->
+    <div class="offcanvas-body p-5 space-y-5 flex flex-col justify-between overflow-y-auto">
+      <div class="space-y-5">
+
+        <!-- 1. Department Filter -->
+        <div>
+          <div class="flex items-center justify-between mb-2.5">
+            <label class="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+              <span>Department</span>
+            </label>
+            <span class="text-[11px] font-bold text-[var(--color-primary)]" id="activeDeptText">All Departments</span>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <!-- All Departments -->
+            <button type="button" id="deptFilterAll" class="wl-drawer-card active" data-dept="all">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <div class="font-bold text-xs text-[var(--text-primary)]">All Departments</div>
+                  <div class="text-[10px] text-[var(--text-muted)]">Combined IT & CE incidents</div>
+                </div>
+              </div>
+              <div class="wl-drawer-radio"></div>
+            </button>
+
+            <!-- IT Dept -->
+            <button type="button" id="deptFilterIt" class="wl-drawer-card" data-dept="Information Technology">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <div class="font-bold text-xs text-[var(--text-primary)]">Information Technology</div>
+                  <div class="text-[10px] text-[var(--text-muted)]">IT faculty members & sessions</div>
+                </div>
+              </div>
+              <div class="wl-drawer-radio"></div>
+            </button>
+
+            <!-- CE Dept -->
+            <button type="button" id="deptFilterCe" class="wl-drawer-card" data-dept="Computer Engineering">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H6.75A2.25 2.25 0 0 0 4.5 6.75v10.5a2.25 2.25 0 0 0 2.25 2.25Zm.75-12h9v9h-9v-9Z" />
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <div class="font-bold text-xs text-[var(--text-primary)]">Computer Engineering</div>
+                  <div class="text-[10px] text-[var(--text-muted)]">CE faculty members & sessions</div>
+                </div>
+              </div>
+              <div class="wl-drawer-radio"></div>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Faculty Filter Dropdown -->
+        <div>
+          <label class="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] block mb-2">
+            Faculty Member
+          </label>
+          <div class="relative">
+            <select
+              id="facultyFilterSelect"
+              class="w-full h-10 px-3 pr-8 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs font-semibold text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] cursor-pointer"
+            >
+              <option value="">All Faculty Members</option>
+              <!-- Dynamically populated via JS -->
+            </select>
+          </div>
+        </div>
+
+        <!-- 3. Semester Filter Dropdown -->
+        <div>
+          <label class="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] block mb-2">
+            Academic Semester
+          </label>
+          <div class="relative">
+            <select
+              id="semFilterSelect"
+              class="w-full h-10 px-3 pr-8 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs font-semibold text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] cursor-pointer"
+            >
+              <option value="">All Semesters</option>
+              <option value="1">Semester 1</option>
+              <option value="3">Semester 3</option>
+              <option value="5">Semester 5</option>
+              <option value="7">Semester 7</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 4. Session Date Filter -->
+        <div>
+          <label class="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] block mb-2">
+            Incident Session Date
+          </label>
+          <div class="relative">
+            <input
+              type="text"
+              id="dateFilterInput"
+              class="w-full h-10 px-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs font-semibold text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] cursor-pointer"
+              placeholder="Select session date..."
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Drawer Footer Actions -->
+      <div class="pt-4 border-t border-black/5 dark:border-white/10 flex items-center gap-2.5">
+        <button
+          type="button"
+          id="resetFiltersBtn"
+          class="flex-1 h-9 rounded-xl glass-pill font-bold text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center justify-center gap-1.5 cursor-pointer"
+          title="Reset all filters"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+          </svg>
+          <span>Reset</span>
+        </button>
+        <button
+          type="button"
+          id="applyFiltersBtn"
+          class="flex-1 h-9 rounded-xl bg-[var(--color-primary)] text-white font-bold text-xs hover:brightness-105 active:scale-95 transition flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+          data-bs-dismiss="offcanvas"
+          title="Apply filter criteria and close drawer"
+        >
+          <span>Apply Filters</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Injected JSON Records Data from PHP Backend -->
   <script>
     window.initialZeroRecords = <?php echo json_encode($records ?? [], JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
   </script>
 
   <!-- ================= APPLICATION JAVASCRIPT: Modular Architecture ================= -->
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') : 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/navbar.js') : 'assets/js/navbar.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/facultyData.js') : 'assets/js/facultyData.js'; ?>"></script>
