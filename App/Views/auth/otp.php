@@ -18,6 +18,13 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <title>6-Digit OTP Verification — Smart Management Dashboard</title>
+  <!-- High-Definition Application Favicons -->
+  <link rel="icon" type="image/png" sizes="64x64" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-64x64.png') : $baseUrl . 'assets/images/favicon-64x64.png'; ?>">
+  <link rel="shortcut icon" type="image/png" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-64x64.png') : $baseUrl . 'assets/images/favicon-64x64.png'; ?>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-32x32.png') : $baseUrl . 'assets/images/favicon-32x32.png'; ?>">
+  <link rel="icon" type="image/png" sizes="16x16" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-16x16.png') : $baseUrl . 'assets/images/favicon-16x16.png'; ?>">
+  <link rel="icon" type="image/svg+xml" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.svg') : $baseUrl . 'assets/images/favicon.svg'; ?>">
+  <link rel="apple-touch-icon" sizes="180x180" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/apple-touch-icon.png') : $baseUrl . 'assets/images/apple-touch-icon.png'; ?>">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
     tailwind.config = {
@@ -369,28 +376,30 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             </form>
           </div>
 
-          <!-- Bottom Action Area (Docked at Bottom, Full Width) -->
-          <div class="mt-5 sm:mt-auto pt-3.5 sm:pt-4 border-t border-black/10 dark:border-white/10 w-full shrink-0">
-            <button
-              id="verifyOtpSubmitBtn"
-              type="button"
-              class="mobile-continue-btn"
-            >
-              <span id="verifySubmitBtnText">Continue</span>
-              <svg id="verifyArrowIcon" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-              <!-- Spinner Icon (Hidden by Default) -->
-              <svg id="verifySpinnerIcon" class="hidden w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-              </svg>
-            </button>
+          <!-- Bottom Action Area (Docked at Bottom, Fixed in Responsive) -->
+          <div class="auth-action-dock mt-5 sm:mt-auto pt-3.5 sm:pt-4 border-t border-black/10 dark:border-white/10 w-full shrink-0">
+            <div class="auth-action-dock-inner">
+              <button
+                id="verifyOtpSubmitBtn"
+                type="button"
+                class="mobile-continue-btn"
+              >
+                <span id="verifySubmitBtnText">Continue</span>
+                <svg id="verifyArrowIcon" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+                <!-- Spinner Icon (Hidden by Default) -->
+                <svg id="verifySpinnerIcon" class="hidden w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+              </button>
 
-            <p class="text-xs text-[var(--text-muted)] text-center mt-3 font-medium">
-              Want to sign in with password?
-              <a href="<?php echo $baseUrl; ?>login" class="font-bold text-[var(--color-primary)] hover:underline transition cursor-pointer">Back to Login</a>
-            </p>
+              <p class="text-xs text-[var(--text-muted)] text-center mt-3 font-medium">
+                Want to sign in with password?
+                <a href="<?php echo $baseUrl; ?>login" class="font-bold text-[var(--color-primary)] hover:underline transition cursor-pointer">Back to Login</a>
+              </p>
+            </div>
           </div>
         </div>
 
@@ -401,7 +410,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
   </main>
 
   <!-- ================= CHANGE EMAIL MODAL ================= -->
-  <div id="changeEmailModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+  <div id="changeEmailModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-[70] hidden flex items-center justify-center p-4">
     <div class="glass-card-strong w-full max-w-sm p-6 rounded-3xl shadow-2xl relative text-left">
       <div class="flex items-center justify-between pb-2 mb-3 border-b border-black/10 dark:border-white/10">
         <div class="flex items-center gap-2">

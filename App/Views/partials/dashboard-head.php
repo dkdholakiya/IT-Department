@@ -148,10 +148,10 @@ if (!empty($page_css)) {
   </script>
 
   <!-- High-Definition Dynamic Favicons -->
+  <link rel="icon" type="image/png" sizes="64x64" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-64x64.png') : 'assets/images/favicon-64x64.png'; ?>">
+  <link rel="shortcut icon" type="image/png" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-64x64.png') : 'assets/images/favicon-64x64.png'; ?>">
   <link rel="icon" type="image/svg+xml" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.svg') : 'assets/images/favicon.svg'; ?>">
   <link rel="icon" type="image/png" sizes="32x32" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-32x32.png') : 'assets/images/favicon-32x32.png'; ?>">
-  <link rel="shortcut icon" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.ico') : 'assets/images/favicon.ico'; ?>" type="image/x-icon">
-  <link rel="icon" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.ico') : 'assets/images/favicon.ico'; ?>" type="image/x-icon">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>

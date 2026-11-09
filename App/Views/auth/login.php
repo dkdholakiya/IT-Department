@@ -16,6 +16,13 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <title>Login & Authentication — Smart Management Dashboard</title>
+  <!-- High-Definition Application Favicons -->
+  <link rel="icon" type="image/png" sizes="64x64" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-64x64.png') : $baseUrl . 'assets/images/favicon-64x64.png'; ?>">
+  <link rel="shortcut icon" type="image/png" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-64x64.png') : $baseUrl . 'assets/images/favicon-64x64.png'; ?>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-32x32.png') : $baseUrl . 'assets/images/favicon-32x32.png'; ?>">
+  <link rel="icon" type="image/png" sizes="16x16" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-16x16.png') : $baseUrl . 'assets/images/favicon-16x16.png'; ?>">
+  <link rel="icon" type="image/svg+xml" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.svg') : $baseUrl . 'assets/images/favicon.svg'; ?>">
+  <link rel="apple-touch-icon" sizes="180x180" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/apple-touch-icon.png') : $baseUrl . 'assets/images/apple-touch-icon.png'; ?>">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
     tailwind.config = {
@@ -404,23 +411,25 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             </div>
 
 
-            <!-- Bottom Action Area (Docked at Bottom, Matching Mockup) -->
-            <div class="mt-4 sm:mt-auto pt-3 border-t border-black/10 dark:border-white/10 w-full shrink-0">
-              <button
-                id="loginSubmitBtn"
-                type="button"
-                class="mobile-continue-btn"
-              >
-                <span id="loginSubmitBtnText">Continue</span>
-                <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
-              </button>
+            <!-- Bottom Action Area (Docked at Bottom, Fixed in Responsive) -->
+            <div class="auth-action-dock mt-4 sm:mt-auto pt-3 border-t border-black/10 dark:border-white/10 w-full shrink-0">
+              <div class="auth-action-dock-inner">
+                <button
+                  id="loginSubmitBtn"
+                  type="button"
+                  class="mobile-continue-btn"
+                >
+                  <span id="loginSubmitBtnText">Continue</span>
+                  <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </button>
 
-              <p class="text-xs text-[var(--text-muted)] text-center mt-2 font-medium">
-                Don't have an account?
-                <a href="<?php echo $baseUrl; ?>signup" id="linkToSignUp" class="font-bold text-[var(--color-primary)] hover:underline transition cursor-pointer">Sign up</a>
-              </p>
+                <p class="text-xs text-[var(--text-muted)] text-center mt-2 font-medium">
+                  Don't have an account?
+                  <a href="<?php echo $baseUrl; ?>signup" id="linkToSignUp" class="font-bold text-[var(--color-primary)] hover:underline transition cursor-pointer">Sign up</a>
+                </p>
+              </div>
             </div>
           </div>
 
@@ -581,23 +590,25 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             </div>
 
 
-            <!-- Bottom Action Area (Docked at the Bottom, Full Width) -->
-            <div class="mt-5 sm:mt-auto pt-3.5 sm:pt-4 border-t border-black/10 dark:border-white/10 w-full shrink-0">
-              <button
-                id="signUpSubmitBtn"
-                type="button"
-                class="mobile-continue-btn"
-              >
-                <span id="signUpSubmitBtnText">Create Account</span>
-                <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
-              </button>
+            <!-- Bottom Action Area (Docked at the Bottom, Fixed in Responsive) -->
+            <div class="auth-action-dock mt-5 sm:mt-auto pt-3.5 sm:pt-4 border-t border-black/10 dark:border-white/10 w-full shrink-0">
+              <div class="auth-action-dock-inner">
+                <button
+                  id="signUpSubmitBtn"
+                  type="button"
+                  class="mobile-continue-btn"
+                >
+                  <span id="signUpSubmitBtnText">Create Account</span>
+                  <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </button>
 
-              <p class="text-xs text-[var(--text-muted)] text-center mt-3 font-medium">
-                Already have an account?
-                <a href="<?php echo $baseUrl; ?>login" id="linkToLogin" class="font-bold text-[var(--color-primary)] hover:underline transition cursor-pointer">Log In</a>
-              </p>
+                <p class="text-xs text-[var(--text-muted)] text-center mt-3 font-medium">
+                  Already have an account?
+                  <a href="<?php echo $baseUrl; ?>login" id="linkToLogin" class="font-bold text-[var(--color-primary)] hover:underline transition cursor-pointer">Log In</a>
+                </p>
+              </div>
             </div>
           </div>
 
@@ -610,7 +621,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
   </main>
 
   <!-- ================= FORGOT PASSWORD MODAL ================= -->
-  <div id="forgotPwdModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+  <div id="forgotPwdModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-[70] hidden flex items-center justify-center p-4">
     <div class="glass-card-strong w-full max-w-sm p-6 rounded-3xl shadow-2xl relative text-left">
       <div class="flex items-center justify-between pb-2 mb-3 border-b border-black/10 dark:border-white/10">
         <div class="flex items-center gap-2">

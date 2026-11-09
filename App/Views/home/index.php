@@ -9,11 +9,12 @@
   <title>CE & IT Department — Interactive 3D Portal | Made by DK Dholakiya</title>
 
   <!-- High-Definition Dynamic Favicons (Crisp & Big in All Browser Tabs) -->
+  <link rel="icon" type="image/png" sizes="64x64" href="<?= base_url('assets/images/favicon-64x64.png') ?>">
+  <link rel="shortcut icon" type="image/png" href="<?= base_url('assets/images/favicon-64x64.png') ?>">
   <link rel="icon" type="image/svg+xml" href="<?= base_url('assets/images/favicon.svg') ?>">
   <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('assets/images/favicon-32x32.png') ?>">
   <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('assets/images/favicon-16x16.png') ?>">
   <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('assets/images/apple-touch-icon.png') ?>">
-  <link rel="shortcut icon" href="<?= base_url('assets/images/favicon.ico') ?>" type="image/x-icon">
 
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
