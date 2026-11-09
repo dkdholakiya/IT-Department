@@ -21,7 +21,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
 <header id="topNavbar" class="fixed lg:relative top-0 left-0 right-0 z-30 lg:z-auto px-3 sm:px-5 lg:px-0 py-2.5 lg:py-0 bg-[var(--bg-mesh-3)]/85 lg:bg-transparent backdrop-blur-xl lg:backdrop-blur-none border-b border-white/50 lg:border-none shrink-0">
   <div class="max-w-[1600px] mx-auto flex items-center justify-between gap-2 sm:gap-3 w-full relative">
 
-    <!-- Left: Hamburger Menu (Mobile/Tablet) + Brand Logo + Desktop Sidebar Toggle Button -->
+    <!-- Left: Hamburger Menu (Mobile/Tablet) + Animated Brand Logo + Card 1: Separate Title Glass Card -->
     <div class="flex items-center gap-2 sm:gap-3 min-w-0">
       <!-- Mobile / Tablet Left Samsung Shortcut Menu Toggle -->
       <button id="mobileMenuBtn" type="button" class="lg:hidden w-10 h-10 rounded-full side-menu-glass flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition-all duration-300 shrink-0" aria-label="Open Navigation Sidebar" title="Open Samsung Shortcut Side Menu">
@@ -32,12 +32,35 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
         </svg>
       </button>
 
-      <!-- Navigation Title Capsule (Title & Subtitle + Desktop Sidebar Toggle Controls) -->
-      <div class="side-menu-glass rounded-full h-12 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
+      <!-- Brand Logo Link (Outside on Left - Responsive Only with Identical Desktop Floating & Glowing AI Robot Animation) -->
+      <a href="<?php echo htmlspecialchars($baseUrl); ?>dashboard" id="mobileNavBrandLogo" class="md:hidden w-10 h-10 sm:w-11 sm:h-11 rounded-full side-menu-glass flex items-center justify-center shrink-0 shadow-sm transition-all duration-300 overflow-hidden cursor-pointer group" title="<?php echo htmlspecialchars($navTitle); ?>">
+        <div class="sidebar-ai-float relative w-8 h-6 flex items-center justify-center shrink-0 pointer-events-none">
+          <svg viewBox="0 0 46 32" class="sidebar-ai-robot w-7 h-5 overflow-visible" fill="none">
+            <defs>
+              <linearGradient id="navbarAiLogoRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="var(--color-primary-light, #9b3dff)" />
+                <stop offset="100%" stop-color="var(--color-primary, #2ca9ff)" />
+              </linearGradient>
+            </defs>
+            <!-- Outer white/pearl capsule shell -->
+            <rect x="1" y="1" width="44" height="30" rx="15" fill="#ffffff" stroke="var(--glass-border-strong, rgba(16, 185, 129, 0.45))" stroke-width="1.2" />
+            <!-- Dynamic colored rim matching theme primary -->
+            <rect x="3.8" y="3.8" width="38.4" height="24.4" rx="12.2" fill="url(#navbarAiLogoRimGrad)" />
+            <!-- Deep black glossy visor -->
+            <rect x="6.6" y="6.6" width="32.8" height="18.8" rx="9.4" fill="#08080d" />
+            <!-- Two white capsule eyes with lifelike blink -->
+            <rect class="sidebar-ai-eye" x="14.2" y="10.8" width="5.0" height="10.4" rx="2.5" fill="#ffffff" />
+            <rect class="sidebar-ai-eye" x="26.8" y="10.8" width="5.0" height="10.4" rx="2.5" fill="#ffffff" />
+          </svg>
+        </div>
+      </a>
+
+      <!-- Card 1: Navigation Title Glass Card (Separate Card with Glass Effect in Responsive!) -->
+      <div class="side-menu-glass rounded-full h-11 sm:h-12 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
         <!-- Title & Subtitle -->
         <div class="min-w-0 max-w-[125px] xs:max-w-[170px] sm:max-w-none text-left">
-          <span class="text-[13.5px] sm:text-[15.5px] lg:text-[17px] font-bold tracking-tight text-[var(--text-primary)] block leading-tight truncate"><?php echo htmlspecialchars($navTitle); ?></span>
-          <span class="text-[9.5px] sm:text-[10.5px] font-medium text-[var(--text-muted)] flex items-center gap-1.5 truncate">
+          <span class="text-[13px] sm:text-[15.5px] lg:text-[17px] font-bold tracking-tight text-[var(--text-primary)] block leading-tight truncate"><?php echo htmlspecialchars($navTitle); ?></span>
+          <span class="text-[9px] sm:text-[10.5px] font-medium text-[var(--text-muted)] flex items-center gap-1.5 truncate">
             <span class="relative inline-flex w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] live-dot shrink-0"></span>
             <span id="activeZoneHeaderLabel" class="truncate"><?php echo htmlspecialchars($navSubtitle); ?></span>
           </span>
@@ -77,7 +100,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
 
 
 
-    <!-- Right: Desktop Controls (md+) + Mobile Single Right-Side User Icon Button (< md) -->
+    <!-- Right: Desktop Controls (md+) + Card 2: Separate Mobile Right-Side User Menu Glass Card (< md) -->
     <div class="flex items-center gap-2 shrink-0">
 
       <!-- DESKTOP / TABLET RIGHT BAR -->
@@ -154,7 +177,7 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
         </div>
       </div>
 
-      <!-- MOBILE RIGHT-SIDE USER ICON BUTTON (Clicking opens downside menu panel) -->
+      <!-- Card 2: Separate Mobile Right-Side User Menu Glass Pill (< md) - Glass Effect as it is! -->
       <button
         id="mobileUserMenuBtn"
         type="button"
@@ -165,12 +188,12 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
         <img
           src="data:image/webp;base64,UklGRoADAABXRUJQVlA4IHQDAABQEwCdASpIAEgAPk0eikQioaEa28UAKATEsYBbQcmm2JIfYeZH4TL9JZ4SCKj80FL5PkxxSUoHsWj/akvbPVMgC2UCoSYtTnPzu6eNKwl6JJQVjfpfTiQb736NIgoPlkD7s4CKzca9Q8en5mOD9Mi3W9iHyIkhYapixdNXQE5VMncuCPFVGa/xGNb+A5v1JTIzpIM8RA1y6DpNPdhspwXL4GGAAP79elCCa5mpT5tfH+3pn5r9kKncStykW9LpNOVg3Z744eXfA79u1AR9E9L9b7Hu2+iK2nt7piU52Ol8VJUJSMtR+/74ZJ+BuQH0usp0gUAaabq21xYnMYEVB1C/WQVzhqfeKXWj+7K20eBSOqgeazhy7hJ4FqLkDMlosit692wRUqmiO/veeTwgvryJOCros8BjaHQMhAcsuAKvhNOwXnTCksVRPvWA1duJR2m/JuDYcPykBTdTAdpYgK8EI8aivUqra+7zwr0uiI/IeXDsi4B2xr0wMjQ2CkSni5TBwPs4jZ9MY0S4Yb2PuqFXAnIjA5z4rXNu16LUZAKzkiI1ZqUJPyb2w+Y1kWOUBrp/w2vJNVQLKHa4OXMbFKDSOkw/lWZPvIAJv84Lurm4uwuQ6SnsGWV6BzPNpLwsPRyfNAN7jB9q9ZVh1/XJGKEhPtXPg7JkbPCwVAM1mGZ2Zi3Srf6aryNWXuhKys4tPq6fKV9aGVoM/hhw0e+AhwdudgJMZce5EgZQ0M04iJtd30ez4j4f1iyepx+C39HRytHp1vyzTDqSagmY//TN/hqvefyz6tccSg1LHP1jbTYkJfuui9VZrby176zog/JP1V6Z/46FNBGx1bHqJheRESb1YUZp1pnUTOD5ek+kBZFqHZykmwVr/j7RpGG2YRi2GuJyXfnGDZ9WgDuUOeRBRuBoGVdl5wq0vK6nigwGCJGl2l69HGcEtxQMraHQ9Mjetnl75dNRbCeriN4Zvo7MLbeC6n7WJCze/v5Je8tYFXX16krLyk/YJc0W6xqiPk2aU6WjzY5u8ts5q6EgQInUaFMRDfEgdnWHvkAxc4ZVKrTbXROac2nmY2q5dx9P6UPUMIemzorSX4h8x6kIsbgSR62N793MdzUfKkyisCi78OmhpOmXMK4DFTHzvECGPSEwBubP8ZDtqW8//Me2mDvQ+NK8aQvAAA=="
           alt="User Menu"
-          class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--color-primary)] pointer-events-none"
+          class="w-7 h-7 rounded-full object-cover ring-1.5 ring-[var(--color-primary)] pointer-events-none"
         />
         <svg id="mobileUserMenuChevron" class="w-3.5 h-3.5 text-[var(--text-secondary)] transition-transform duration-200 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/>
         </svg>
-        <span class="w-2 h-2 rounded-full bg-[var(--color-alert)] absolute top-1 right-1 ring-1 ring-white pointer-events-none"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-alert)] absolute top-1 right-1 ring-1 ring-white dark:ring-slate-900 pointer-events-none"></span>
       </button>
     </div>
 

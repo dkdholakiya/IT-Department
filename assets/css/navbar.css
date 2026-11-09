@@ -42,6 +42,107 @@ body.theme-dark #topNavbar .side-menu-glass {
   box-shadow: var(--side-menu-shadow) !important;
 }
 
+/* Desktop-Matching AI Robot Animation for Mobile Navbar Logo */
+@keyframes sidebarAiFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(-1.4deg);
+  }
+}
+
+.sidebar-ai-float {
+  animation: sidebarAiFloat 2.6s ease-in-out infinite;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+@keyframes sidebarAiGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px rgba(var(--color-primary-rgb, 16, 185, 129), 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 4.5px rgba(var(--color-primary-rgb, 16, 185, 129), 0.9));
+  }
+}
+
+.sidebar-ai-robot {
+  animation: sidebarAiGlow 3.2s ease-in-out infinite;
+  transform-origin: center center;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.28s ease;
+  will-change: transform, filter;
+}
+
+@keyframes sidebarAiBlink {
+  0%, 87%, 94%, 100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  90.5% {
+    transform: scaleY(0.08);
+    opacity: 0.55;
+  }
+}
+
+.sidebar-ai-eye {
+  animation: sidebarAiBlink 3.8s ease-in-out infinite;
+  transform-origin: center center;
+  transform-box: fill-box;
+  transition: filter 0.25s ease;
+  will-change: transform, opacity;
+}
+
+#mobileNavBrandLogo:hover {
+  transform: translateY(-1.5px) scale(1.06);
+  border-color: rgba(var(--color-primary-rgb, 16, 185, 129), 0.55) !important;
+}
+
+#mobileNavBrandLogo:hover .sidebar-ai-robot {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 6px rgba(var(--color-primary-rgb, 16, 185, 129), 0.95));
+}
+
+#mobileNavBrandLogo:hover .sidebar-ai-eye {
+  filter: drop-shadow(0 0 3px #ffffff);
+}
+
+#mobileNavBrandLogo:active {
+  transform: scale(0.92);
+  transition-duration: 0.12s;
+}
+
+/* Smooth Floating Up/Down Animation for Logo Icon (Matching Desktop Animation) */
+@keyframes brandIconFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.brand-logo-floating {
+  animation: brandIconFloat 2.6s ease-in-out infinite;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-logo-icon {
+  filter: drop-shadow(0 0 8px rgba(155, 61, 255, 0.55)) drop-shadow(0 0 14px rgba(44, 169, 255, 0.35));
+  transition: filter 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.brand-logo-icon:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 12px rgba(155, 61, 255, 0.85)) drop-shadow(0 0 20px rgba(44, 169, 255, 0.6));
+}
+
+body.theme-dark .brand-logo-icon {
+  filter: drop-shadow(0 0 10px rgba(155, 61, 255, 0.65)) drop-shadow(0 0 18px rgba(44, 169, 255, 0.45));
+}
+
 /* Live Telemetry Pulse Dot */
 .live-dot {
   box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.7);

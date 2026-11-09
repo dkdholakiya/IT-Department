@@ -15,7 +15,7 @@
   // --- STATE ---
   const sidebarState = {
     isOpenMobile: false,
-    mobileExpandedNames: localStorage.getItem('portal_sidebar_mobile_expanded') === 'true',
+    mobileExpandedNames: true, // In responsive, always show full side menu with names
     desktopSidebarMode: localStorage.getItem('portal_sidebar_desktop_mode') || 'compact'
   };
 
@@ -58,8 +58,10 @@
     document.getElementById('notificationsPopover')?.classList.add('hidden');
 
     if (sidebar) {
-      sidebar.classList.remove('samsung-menu-closed');
-      sidebar.classList.add('samsung-menu-open');
+      sidebar.classList.remove('samsung-menu-closed', 'samsung-icon-only');
+      sidebar.classList.add('samsung-menu-open', 'samsung-expanded-names');
+      const expandIcon = document.getElementById('expandSidebarNamesIcon');
+      if (expandIcon) expandIcon.classList.add('rotate-180');
     }
     if (backdrop) {
       backdrop.classList.remove('hidden');
@@ -183,8 +185,8 @@
     const sidebar = document.getElementById('mainSidebar');
     if (!sidebar) return;
 
-    // Apply persisted mobile capsule state
-    if (sidebarState.mobileExpandedNames) {
+    // In responsive, always show full side menu with names (never icon-only)
+    if (window.innerWidth < 1024 || sidebarState.mobileExpandedNames) {
       sidebar.classList.remove('samsung-icon-only');
       sidebar.classList.add('samsung-expanded-names');
       const icon = document.getElementById('expandSidebarNamesIcon');

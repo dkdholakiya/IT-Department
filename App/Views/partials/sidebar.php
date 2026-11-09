@@ -49,22 +49,25 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
 <aside
   id="mainSidebar"
   aria-label="Side Menu"
-  class="samsung-menu-closed samsung-icon-only fixed lg:static inset-y-0 my-auto lg:my-0 h-fit max-h-[calc(100dvh-20px)] lg:max-h-none lg:h-full left-[10px] z-50 w-[76px] lg:w-[56px] p-2.5 lg:py-0 lg:px-0 flex flex-col justify-between items-center gap-2.5 lg:gap-3 shrink-0 overflow-y-auto overflow-x-hidden select-none"
+  class="samsung-menu-closed samsung-expanded-names fixed lg:static inset-y-0 my-auto lg:my-0 h-fit max-h-[calc(100dvh-20px)] lg:max-h-none lg:h-full left-[10px] z-50 w-[284px] lg:w-[56px] p-2.5 lg:py-0 lg:px-0 flex flex-col justify-between items-center gap-2.5 lg:gap-3 shrink-0 overflow-y-auto overflow-x-hidden select-none"
 >
-  <!-- Instant Desktop Sidebar Mode Evaluator (Synchronous DOM setup before child rendering) -->
+  <!-- Instant Desktop & Mobile Sidebar Mode Evaluator (Synchronous DOM setup before child rendering) -->
   <script>
     (function() {
       try {
-        var m = localStorage.getItem('portal_sidebar_desktop_mode');
+        var sidebar = document.getElementById('mainSidebar');
+        if (!sidebar) return;
         if (window.innerWidth >= 1024) {
-          var sidebar = document.getElementById('mainSidebar');
-          if (sidebar) {
-            if (m === 'expanded') {
-              sidebar.classList.add('desktop-expanded');
-            } else if (m === 'hidden') {
-              sidebar.classList.add('lg:hidden');
-            }
+          var m = localStorage.getItem('portal_sidebar_desktop_mode');
+          if (m === 'expanded') {
+            sidebar.classList.add('desktop-expanded');
+          } else if (m === 'hidden') {
+            sidebar.classList.add('lg:hidden');
           }
+        } else {
+          // Responsive always shows full menu names (never icon-only)
+          sidebar.classList.remove('samsung-icon-only');
+          sidebar.classList.add('samsung-expanded-names');
         }
       } catch (e) {}
     })();

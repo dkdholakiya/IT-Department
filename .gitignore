@@ -20,6 +20,7 @@ assets/js/timetableData.js
 # Logs and temporary files
 *.log
 error_log
+*.zip
 
 # Composer
 vendor/
