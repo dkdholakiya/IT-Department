@@ -33,32 +33,12 @@
 
   // --- 1. TOAST NOTIFICATION HELPER ---
   function showToast(message, isSuccess = true) {
-    const banner = document.getElementById('toastBanner');
-    const msgEl = document.getElementById('toastMessage');
-    const dot = document.getElementById('toastDot');
-
-    if (!banner || !msgEl) {
-      if (typeof window.showPortalToast === 'function') {
-        window.showPortalToast(message);
-      }
-      return;
+    if (window.PortalToast && typeof window.PortalToast.show === 'function') {
+      return window.PortalToast.show(message, isSuccess ? 'success' : 'error');
     }
-
-    msgEl.textContent = message;
-    if (dot) {
-      dot.className = isSuccess
-        ? 'w-2 h-2 rounded-full bg-[var(--color-primary)]'
-        : 'w-2 h-2 rounded-full bg-[var(--color-alert)]';
+    if (typeof window.showPortalToast === 'function') {
+      return window.showPortalToast(message, isSuccess ? 'success' : 'error');
     }
-
-    banner.classList.remove('hidden');
-    banner.classList.add('flex', 'opacity-100', 'translate-y-0');
-
-    clearTimeout(window.__ctlToastTimeout);
-    window.__ctlToastTimeout = setTimeout(() => {
-      banner.classList.remove('opacity-100', 'translate-y-0');
-      banner.classList.add('hidden');
-    }, 3200);
   }
   window.showCtlToast = showToast;
 

@@ -1,0 +1,318 @@
+/**
+ * Department of CE & IT — Smart Management Dashboard & Portal
+ * Universal Bootstrap 5 Toast Notification System Stylesheet
+ *
+ * Placed in Top-Right Corner with Auto-Stacking, Glassmorphic Aesthetics,
+ * Dark/Light Mode Adaptability, and Color Coding (Green=Right, Red=Wrong, Theme, etc.)
+ */
+
+/* 1. TOAST CONTAINER (Top-Right Pinned) */
+.toast-portal-root {
+  position: relative;
+  z-index: 999999;
+}
+
+.toast-container.position-fixed.top-0.end-0,
+#portalToastContainer {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.65rem !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+  max-height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: none;
+}
+
+#portalToastContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* 2. TOAST CARD BASE */
+.toast.toast-portal {
+  pointer-events: auto !important;
+  position: relative;
+  width: 360px;
+  max-width: calc(100vw - 2rem);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.16), 0 3px 10px -2px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease, margin 0.25s ease;
+  transform: translateY(-14px) scale(0.96);
+  opacity: 0;
+}
+
+/* Entry Animation */
+.toast.toast-portal.show {
+  transform: translateY(0) scale(1) !important;
+  opacity: 1 !important;
+}
+
+/* Dismiss Exit Animation */
+.toast.toast-portal.toast-dismissing {
+  transform: translateX(36px) scale(0.94) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Left Status Color Accent Bar */
+.toast.toast-portal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--toast-accent-color, var(--color-primary, #10B981));
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+/* 3. TOAST HEADER */
+.toast.toast-portal .toast-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem 0.55rem 0.95rem;
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: #0F172A;
+  font-weight: 600;
+}
+
+/* Desktop Brand Logo (Bootstrap img.rounded.me-2) */
+.toast.toast-portal .toast-brand-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  border-radius: 6px;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  padding: 1.5px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  margin-right: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.toast.toast-portal:hover .toast-brand-logo {
+  transform: scale(1.06);
+}
+
+.toast.toast-portal .toast-header strong.toast-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #0F172A;
+  margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.toast.toast-portal .toast-header small.toast-time {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: #64748B;
+  white-space: nowrap;
+  margin-left: 0.4rem;
+  margin-right: 0.25rem;
+}
+
+/* Status Icon Badge */
+.toast.toast-portal .toast-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  background-color: var(--toast-badge-bg, rgba(16, 185, 129, 0.14));
+  color: var(--toast-accent-color, #10B981);
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.toast.toast-portal .toast-status-badge svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  fill: currentColor;
+}
+
+/* Close Button */
+.toast.toast-portal .btn-close {
+  box-sizing: content-box;
+  width: 0.75rem;
+  height: 0.75rem;
+  padding: 0.25rem;
+  color: #64748B;
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%2364748B'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/0.75rem auto no-repeat;
+  border: 0;
+  border-radius: 0.375rem;
+  opacity: 0.65;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.toast.toast-portal .btn-close:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* 4. TOAST BODY */
+.toast.toast-portal .toast-body {
+  padding: 0.65rem 1rem 0.75rem 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #334155;
+  word-break: break-word;
+}
+
+/* ==============================================================
+   5. COLOR STATUS VARIANTS
+   ============================================================== */
+
+/* GREEN: Success / Right / Wright */
+.toast.toast-portal.toast-success,
+.toast.toast-portal.toast-wright,
+.toast.toast-portal.toast-right {
+  --toast-accent-color: #10B981;
+  --toast-badge-bg: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+/* RED: Wrong / Error / Danger / Denied */
+.toast.toast-portal.toast-error,
+.toast.toast-portal.toast-danger,
+.toast.toast-portal.toast-wrong {
+  --toast-accent-color: #EF4444;
+  --toast-badge-bg: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.28);
+}
+
+/* AMBER: Warning / Alert / Notice */
+.toast.toast-portal.toast-warning,
+.toast.toast-portal.toast-warn,
+.toast.toast-portal.toast-alert {
+  --toast-accent-color: #F59E0B;
+  --toast-badge-bg: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+/* BLUE: Info / Note */
+.toast.toast-portal.toast-info {
+  --toast-accent-color: #0284C7;
+  --toast-badge-bg: rgba(2, 132, 199, 0.14);
+  border-color: rgba(2, 132, 199, 0.25);
+}
+
+/* DYNAMIC PORTAL THEME (Default) */
+.toast.toast-portal.toast-theme {
+  --toast-accent-color: var(--color-primary, #10B981);
+  --toast-badge-bg: rgba(var(--color-primary-rgb, 16, 185, 129), 0.14);
+  border-color: rgba(var(--color-primary-rgb, 16, 185, 129), 0.28);
+}
+
+/* EXTRA DEFAULT PRESETS */
+.toast.toast-portal.toast-purple,
+.toast.toast-portal.toast-violet {
+  --toast-accent-color: #7C3AED;
+  --toast-badge-bg: rgba(124, 58, 237, 0.14);
+  border-color: rgba(124, 58, 237, 0.25);
+}
+
+.toast.toast-portal.toast-pink,
+.toast.toast-portal.toast-rose {
+  --toast-accent-color: #EC4899;
+  --toast-badge-bg: rgba(236, 72, 153, 0.14);
+  border-color: rgba(236, 72, 153, 0.25);
+}
+
+.toast.toast-portal.toast-teal {
+  --toast-accent-color: #0D9488;
+  --toast-badge-bg: rgba(13, 148, 136, 0.14);
+  border-color: rgba(13, 148, 136, 0.25);
+}
+
+.toast.toast-portal.toast-orange {
+  --toast-accent-color: #F97316;
+  --toast-badge-bg: rgba(249, 115, 22, 0.14);
+  border-color: rgba(249, 115, 22, 0.25);
+}
+
+.toast.toast-portal.toast-indigo {
+  --toast-accent-color: #6366F1;
+  --toast-badge-bg: rgba(99, 102, 241, 0.14);
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+/* ==============================================================
+   6. DARK MODE GLASSMORPHISM
+   ============================================================== */
+html.dark .toast.toast-portal,
+body.theme-dark .toast.toast-portal {
+  background: rgba(18, 18, 22, 0.94);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 38px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+html.dark .toast.toast-portal .toast-header,
+body.theme-dark .toast.toast-portal .toast-header {
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  color: #F8FAFC;
+}
+
+html.dark .toast.toast-portal .toast-brand-logo,
+body.theme-dark .toast.toast-portal .toast-brand-logo {
+  background: #18181c;
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+html.dark .toast.toast-portal .toast-header strong.toast-title,
+body.theme-dark .toast.toast-portal .toast-header strong.toast-title {
+  color: #F8FAFC;
+}
+
+html.dark .toast.toast-portal .toast-header small.toast-time,
+body.theme-dark .toast.toast-portal .toast-header small.toast-time {
+  color: #94A3B8;
+}
+
+html.dark .toast.toast-portal .toast-body,
+body.theme-dark .toast.toast-portal .toast-body {
+  color: #E2E8F0;
+}
+
+html.dark .toast.toast-portal .btn-close,
+body.theme-dark .toast.toast-portal .btn-close {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%2394A3B8'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+}
+
+/* Mobile responsiveness */
+@media (max-width: 576px) {
+  #portalToastContainer {
+    padding: 0.65rem !important;
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+  .toast.toast-portal {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+

@@ -201,7 +201,7 @@ function handleAuthClick() {
         renderDeptPresets(currentDeptPreset);
         updateConnectionBadge(true, 'Connected (Session Active 24h)');
         logConsole('Authorization successful (Session active for 24h). Ready to scan.', 'success');
-        if (window.showPortalToast) window.showPortalToast('Google Drive Connected Successfully');
+        if (window.showPortalToast) window.showPortalToast('Google Drive Connected Successfully', 'success');
     };
 
     if (gapi.client.getToken() === null) {
@@ -241,7 +241,7 @@ function handleSignoutClick() {
     updateConnectionBadge(false, 'Disconnected');
     logConsole('Signed out successfully from Google Drive.', 'info');
     clearResults();
-    if (window.showPortalToast) window.showPortalToast('Signed out of Google Drive');
+    if (window.showPortalToast) window.showPortalToast('Signed out of Google Drive', 'info');
 }
 
 function clearResults() {
@@ -974,7 +974,7 @@ async function startScan() {
         const downloadBtn = document.getElementById('download-btn');
         if (downloadBtn) downloadBtn.style.display = 'inline-flex';
 
-        if (window.showPortalToast) window.showPortalToast('Scan Complete! ' + totalDocs + ' documents found.');
+        if (window.showPortalToast) window.showPortalToast('Scan Complete! ' + totalDocs + ' documents found.', 'success');
 
     } catch (err) {
         console.error("Scan error:", err);
@@ -990,8 +990,10 @@ async function startScan() {
             if (scanContainer) scanContainer.style.display = 'none';
             updateConnectionBadge(false, 'Session Expired');
             logConsole('❌ Session expired. Please click Authorize & Connect to reconnect.', 'warn');
+            if (window.showPortalToast) window.showPortalToast('Session expired. Please reconnect Google Drive.', 'error');
         } else {
             logConsole('❌ Error processing request. Check console log or API Permissions.', 'warn');
+            if (window.showPortalToast) window.showPortalToast('Error processing request. Check permissions.', 'error');
         }
     } finally {
         setScanButtonScanning(false);
@@ -1272,7 +1274,7 @@ function downloadExcelReport() {
     });
 
     XLSX.writeFile(workbook, "Drive_Folder_Scan_Report.xlsx");
-    if (window.showPortalToast) window.showPortalToast('Excel Report Downloaded');
+    if (window.showPortalToast) window.showPortalToast('Excel Report Downloaded', 'success');
 }
 
 // -------------------------------------------------------------
@@ -1811,14 +1813,14 @@ function initEmailSend() {
                     <span>Sent Successfully!</span>
                 `;
                 sendBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
-                if (window.showPortalToast) window.showPortalToast('Report Emailed Successfully!');
+                if (window.showPortalToast) window.showPortalToast('Report Emailed Successfully!', 'success');
             } else {
                 throw new Error(data.error || 'Server reported error');
             }
         })
         .catch(err => {
             console.error('Email send failed:', err);
-            alert("Email service is offline or returned an error! \n\nDetails: " + err.message);
+            if (window.showPortalToast) window.showPortalToast('Email dispatch failed: ' + err.message, 'error');
             sendBtn.innerHTML = `
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>

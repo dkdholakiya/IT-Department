@@ -977,36 +977,14 @@
     showToast(`Exported ${exportRows.length} incident records to Excel!`);
   }
 
-  // --- TOAST NOTIFICATION UTILITY ---
+  // --- TOAST NOTIFICATION UTILITY (Delegates to Universal Top-Right Bootstrap 5 Toast Engine) ---
   function showToast(message, type = 'success') {
-    let container = document.getElementById('toast-container');
-    if (!container) {
-      container = document.createElement('div');
-      container.id = 'toast-container';
-      container.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:99999;display:flex;flex-direction:column;gap:8px;pointer-events:none;';
-      document.body.appendChild(container);
+    if (window.PortalToast && typeof window.PortalToast.show === 'function') {
+      return window.PortalToast.show(message, type);
     }
-
-    const toast = document.createElement('div');
-    const isError = type === 'error';
-    const bg = isError ? 'background:rgba(225,29,72,0.95);' : 'background:rgba(15,23,42,0.92);';
-    toast.style.cssText = `${bg}color:#fff;padding:10px 18px;border-radius:14px;font-size:12px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.2);backdrop-filter:blur(12px);display:flex;align-items:center;gap:8px;transform:translateY(16px);opacity:0;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);pointer-events:auto;`;
-    toast.innerHTML = `
-      <span>${isError ? '⚠️' : '✓'}</span>
-      <span>${escapeHtml(message)}</span>
-    `;
-
-    container.appendChild(toast);
-    requestAnimationFrame(() => {
-      toast.style.transform = 'translateY(0)';
-      toast.style.opacity = '1';
-    });
-
-    setTimeout(() => {
-      toast.style.transform = 'translateY(16px)';
-      toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 350);
-    }, 3200);
+    if (typeof window.showPortalToast === 'function') {
+      return window.showPortalToast(message, type);
+    }
   }
 
   // --- SANITIZE HTML ---

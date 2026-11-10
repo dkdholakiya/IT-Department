@@ -130,27 +130,14 @@
     }
   }
 
-  // Toast Notification
+  // Toast Notification (Delegates to Universal Top-Right Bootstrap 5 Toast Engine)
   function showToast(message, isAlert = false) {
-    const toast = document.getElementById('toastBanner');
-    const toastMsg = document.getElementById('toastMessage');
-    const toastDot = document.getElementById('toastDot');
-    if (!toast || !toastMsg) return;
-
-    toastMsg.textContent = message;
-    if (toastDot) {
-      toastDot.className = isAlert 
-        ? 'w-2 h-2 rounded-full bg-[var(--color-alert)]'
-        : 'w-2 h-2 rounded-full bg-[var(--color-primary-light)]';
+    if (window.PortalToast && typeof window.PortalToast.show === 'function') {
+      return window.PortalToast.show(message, isAlert ? 'error' : 'success');
     }
-    toast.classList.remove('hidden');
-    toast.classList.add('flex');
-
-    if (toast._timer) clearTimeout(toast._timer);
-    toast._timer = setTimeout(() => {
-      toast.classList.add('hidden');
-      toast.classList.remove('flex');
-    }, 3200);
+    if (typeof window.showPortalToast === 'function') {
+      return window.showPortalToast(message, isAlert ? 'error' : 'success');
+    }
   }
 
   // Calculate Counts

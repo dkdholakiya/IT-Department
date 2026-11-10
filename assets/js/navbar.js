@@ -21,24 +21,14 @@
     mobileUserTrayOpen: false
   };
 
-  // --- 1. TOAST HELPER ---
-  function showPortalToast(message) {
-    let toast = document.getElementById('portalToastNotification');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.id = 'portalToastNotification';
-      toast.className = 'fixed bottom-5 right-5 z-[9999] px-4 py-2.5 rounded-2xl glass-pill text-xs font-bold text-[var(--text-primary)] shadow-2xl border border-white/70 transition-all duration-300 opacity-0 translate-y-3 pointer-events-none flex items-center gap-2';
-      document.body.appendChild(toast);
+  // --- 1. TOAST HELPER (Delegates to Universal Top-Right Bootstrap 5 Toast Engine) ---
+  function showPortalToast(message, type, options) {
+    if (window.PortalToast && typeof window.PortalToast.show === 'function') {
+      return window.PortalToast.show(message, type, options);
     }
-    toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-[var(--color-primary)]"></span><span>${message}</span>`;
-    toast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
-    toast.classList.add('opacity-100', 'translate-y-0');
-
-    clearTimeout(window.__portalToastTimeout);
-    window.__portalToastTimeout = setTimeout(() => {
-      toast.classList.remove('opacity-100', 'translate-y-0');
-      toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
-    }, 2800);
+    if (typeof window.showToast === 'function' && window.showToast !== showPortalToast) {
+      return window.showToast(message, type, options);
+    }
   }
   window.showPortalToast = showPortalToast;
 

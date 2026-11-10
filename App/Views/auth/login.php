@@ -46,6 +46,12 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
   <link rel="stylesheet" href="<?php echo v_asset('assets/css/auth.css'); ?>">
   <!-- Global Typography (Playfair Display) -->
   <link rel="stylesheet" href="<?php echo v_asset('assets/css/font.css'); ?>">
+  <!-- Universal Bootstrap 5 Toast Notification System -->
+  <link rel="stylesheet" href="<?php echo v_asset('assets/css/toast.css'); ?>">
+  <script>
+    window.PORTAL_LOGO_URL = '<?php echo function_exists("v_asset") ? v_asset("assets/images/favicon-64x64.png") : $baseUrl . "assets/images/favicon-64x64.png"; ?>';
+  </script>
+  <script src="<?php echo v_asset('assets/js/toast.js'); ?>"></script>
   <!-- Default Page Theme Color: Royal Violet (R:124 G:58 B:237) -->
   <style>:root { --color-primary: #7C3AED; --color-primary-rgb: 124, 58, 237; --color-primary-dark: #6D28D9; --color-primary-light: #A78BFA; }</style>
   <!-- Immediate Dark/Light Theme Initialization to eliminate flash -->
@@ -754,11 +760,8 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
     </div>
   </div>
 
-  <!-- TOAST NOTIFICATION -->
-  <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 px-4 py-3 rounded-2xl bg-[#0A0909] text-white text-xs font-semibold shadow-2xl border border-white/20 transition-all">
-    <span class="w-2 h-2 rounded-full bg-[var(--color-primary-light)]"></span>
-    <span id="toastMessage">Action completed</span>
-  </div>
+  <!-- Shared Top-Right Bootstrap 5 Toast Container -->
+  <?php include dirname(__DIR__) . '/partials/toast.php'; ?>
 
   <!-- High-Performance Video Engine (HLS Chunks + Faststart Stream Manager) -->
   <script src="<?php echo $baseUrl; ?>assets/js/hls.min.js"></script>
@@ -785,20 +788,11 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       const tabLoginBtn = document.getElementById('tabLoginBtn');
       const tabSignUpBtn = document.getElementById('tabSignUpBtn');
 
-      // Toast Notification Helper
-      let toastTimer = null;
-      function showToast(msg) {
-        const banner = document.getElementById('toastBanner');
-        const text = document.getElementById('toastMessage');
-        if (!banner || !text) return;
-        text.textContent = msg;
-        banner.classList.remove('hidden');
-        banner.classList.add('flex');
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-          banner.classList.add('hidden');
-          banner.classList.remove('flex');
-        }, 3200);
+      // Toast Notification Helper (Delegates to Universal Top-Right Bootstrap 5 Toast Engine)
+      function showToast(msg, type) {
+        if (window.PortalToast && typeof window.PortalToast.show === 'function') {
+          return window.PortalToast.show(msg, type);
+        }
       }
 
       // --- 2. THEME & COLOR PALETTE ENGINE ---
@@ -1292,6 +1286,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           loginErrorBanner.classList.remove('hidden');
           loginErrorBanner.classList.add('flex');
           loginErrorText.textContent = 'Please enter your email or username.';
+          showToast('Please enter your email or username.', 'error');
           if (loginEmail) loginEmail.focus();
           return;
         }
@@ -1300,6 +1295,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           loginErrorBanner.classList.remove('hidden');
           loginErrorBanner.classList.add('flex');
           loginErrorText.textContent = 'Please enter your password.';
+          showToast('Please enter your password.', 'error');
           if (loginPassword) loginPassword.focus();
           return;
         }
@@ -1330,7 +1326,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             loginSuccessBanner.classList.remove('hidden');
             loginSuccessBanner.classList.add('flex');
             loginSuccessText.textContent = data.message || (data.has_pending_otp ? 'Credentials verified! 6-digit OTP code dispatched to your email.' : 'Login successful! Redirecting to Dashboard...');
-            showToast(data.has_pending_otp ? ('✓ 6-Digit OTP dispatched to ' + (data.email || 'your email')) : '✓ Login successful! Redirecting...');
+            showToast(data.has_pending_otp ? ('✓ 6-Digit OTP dispatched to ' + (data.email || 'your email')) : '✓ Login successful! Redirecting...', 'success');
 
             // Dynamically reveal OTP tab in the segmented navigation menu only if OTP is enabled
             if (data.has_pending_otp) {
@@ -1351,9 +1347,11 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             throw new Error((data && data.error) ? data.error : 'Invalid credentials. Please verify your email and password.');
           }
         } catch (err) {
+          const errMsg = err.message || 'Invalid credentials. Please verify your details.';
           loginErrorBanner.classList.remove('hidden');
           loginErrorBanner.classList.add('flex');
-          loginErrorText.textContent = err.message || 'Invalid credentials. Please verify your details.';
+          loginErrorText.textContent = errMsg;
+          showToast(errMsg, 'error');
 
           authCard.classList.remove('shake-error');
           void authCard.offsetWidth;
@@ -1497,6 +1495,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         signUpErrorBanner.classList.remove('hidden');
         signUpErrorBanner.classList.add('flex');
         signUpErrorText.textContent = msg;
+        showToast(msg, 'error');
 
         authCard.classList.remove('shake-error');
         void authCard.offsetWidth;
@@ -1572,6 +1571,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           forgotErrorBanner.classList.remove('hidden');
           forgotErrorBanner.classList.add('flex');
         }
+        showToast(msg, 'error');
         if (forgotSuccessBanner) forgotSuccessBanner.classList.add('hidden');
       }
 

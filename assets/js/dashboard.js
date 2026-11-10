@@ -48,23 +48,14 @@
     ]
   };
 
-  // Helper Toast Notification
-  function showToast(message) {
-    if (typeof window.showPortalToast === 'function') {
-      window.showPortalToast(message);
-      return;
+  // Helper Toast Notification (Delegates to Universal Top-Right Bootstrap 5 Toast Engine)
+  function showToast(message, type) {
+    if (window.PortalToast && typeof window.PortalToast.show === 'function') {
+      return window.PortalToast.show(message, type);
     }
-    const banner = document.getElementById('toastBanner');
-    const text = document.getElementById('toastMessage');
-    if (!banner || !text) return;
-    text.textContent = message;
-    banner.classList.remove('hidden');
-    banner.classList.add('flex');
-    clearTimeout(window.__dashboardToastTimer);
-    window.__dashboardToastTimer = setTimeout(() => {
-      banner.classList.add('hidden');
-      banner.classList.remove('flex');
-    }, 2800);
+    if (typeof window.showPortalToast === 'function') {
+      return window.showPortalToast(message, type);
+    }
   }
 
   // --- 2. WATER FLOW TELEMETRY (16 PILL BARS) ---

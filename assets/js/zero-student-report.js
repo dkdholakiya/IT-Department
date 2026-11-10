@@ -496,29 +496,14 @@ function handleAddEntry() {
         });
 }
 
-// ── Toast Alert Helper ──
+// ── Toast Alert Helper (Delegates to Universal Top-Right Bootstrap 5 Toast Engine) ──
 function showToast(message, type = "success") {
-    const existing = document.querySelector(".toast-msg");
-    if (existing) existing.remove();
-
-    const toast = document.createElement("div");
-    toast.className = `toast-msg ${type}`;
-    toast.innerHTML = `
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            ${type === 'success'
-            ? '<polyline points="20 6 9 17 4 12"/>'
-            : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
-        </svg>
-        <span>${message}</span>
-    `;
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-        toast.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-        toast.style.opacity = "0";
-        toast.style.transform = "translateY(20px)";
-        setTimeout(() => toast.remove(), 400);
-    }, 3500);
+    if (window.PortalToast && typeof window.PortalToast.show === 'function') {
+        return window.PortalToast.show(message, type);
+    }
+    if (typeof window.showPortalToast === 'function') {
+        return window.showPortalToast(message, type);
+    }
 }
 
 // ── Faculty Autocomplete Search Logic ──

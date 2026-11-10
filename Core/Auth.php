@@ -41,7 +41,7 @@ class Auth
                 exit;
             }
 
-            $loginUrl = function_exists('base_url') ? base_url('login') : '/login';
+            $loginUrl = function_exists('base_url') ? base_url('login?notice=auth_required') : '/login?notice=auth_required';
             header("Location: {$loginUrl}");
             exit;
         }

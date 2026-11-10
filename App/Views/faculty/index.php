@@ -505,13 +505,6 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
   </div>
 
 
-  <!-- 4. UNIVERSAL TOAST NOTIFICATION -->
-  <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 px-4 py-3 rounded-2xl bg-[#0A0909] text-white text-xs font-semibold shadow-2xl border border-white/15 transition-all">
-    <span id="toastDot" class="w-2 h-2 rounded-full bg-[var(--color-primary-light)]"></span>
-    <span id="toastMessage">Action completed</span>
-  </div>
-
-
   <!-- ================= APPLICATION JAVASCRIPT ================= -->
   <script>
     window.serverFacultyList = <?php echo json_encode($facultyList ?? []); ?>;

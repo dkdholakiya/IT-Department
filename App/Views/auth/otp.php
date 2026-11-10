@@ -48,6 +48,12 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
   <link rel="stylesheet" href="<?php echo v_asset('assets/css/auth.css'); ?>">
   <!-- Global Typography (PT Serif) -->
   <link rel="stylesheet" href="<?php echo v_asset('assets/css/font.css'); ?>">
+  <!-- Universal Bootstrap 5 Toast Notification System -->
+  <link rel="stylesheet" href="<?php echo v_asset('assets/css/toast.css'); ?>">
+  <script>
+    window.PORTAL_LOGO_URL = '<?php echo function_exists("v_asset") ? v_asset("assets/images/favicon-64x64.png") : $baseUrl . "assets/images/favicon-64x64.png"; ?>';
+  </script>
+  <script src="<?php echo v_asset('assets/js/toast.js'); ?>"></script>
   <!-- Default Page Theme Color: Ocean Blue (R:2 G:132 B:199) -->
   <style>:root { --color-primary: #0284C7; --color-primary-rgb: 2, 132, 199; --color-primary-dark: #0369A1; --color-primary-light: #38BDF8; }</style>
   <!-- Immediate Dark/Light Theme Initialization to eliminate flash -->
@@ -443,11 +449,8 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
     </div>
   </div>
 
-  <!-- TOAST NOTIFICATION -->
-  <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 px-4 py-3 rounded-2xl bg-[#0A0909] text-white text-xs font-semibold shadow-2xl border border-white/20 transition-all">
-    <span class="w-2 h-2 rounded-full bg-[var(--color-primary-light)]"></span>
-    <span id="toastMessage">Action completed</span>
-  </div>
+  <!-- Shared Top-Right Bootstrap 5 Toast Container -->
+  <?php include dirname(__DIR__) . '/partials/toast.php'; ?>
 
   <!-- High-Performance Video Engine (HLS Chunks + Faststart Stream Manager) -->
   <script src="<?php echo $baseUrl; ?>assets/js/hls.min.js"></script>
@@ -467,20 +470,11 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         countdownInterval: null
       };
 
-      // Toast Notification Helper
-      let toastTimer = null;
-      function showToast(msg) {
-        const banner = document.getElementById('toastBanner');
-        const text = document.getElementById('toastMessage');
-        if (!banner || !text) return;
-        text.textContent = msg;
-        banner.classList.remove('hidden');
-        banner.classList.add('flex');
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-          banner.classList.add('hidden');
-          banner.classList.remove('flex');
-        }, 3200);
+      // Toast Notification Helper (Delegates to Universal Top-Right Bootstrap 5 Toast Engine)
+      function showToast(msg, type) {
+        if (window.PortalToast && typeof window.PortalToast.show === 'function') {
+          return window.PortalToast.show(msg, type);
+        }
       }
 
       // --- 2. THEME & COLOR PALETTE ENGINE ---
@@ -770,6 +764,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             errorBanner.classList.remove('hidden');
             errorBanner.classList.add('flex');
           }
+          showToast('Please enter all 6 digits of the OTP code.', 'error');
           digitBoxes.forEach(b => {
             if (b && !b.value) b.classList.add('error');
           });
@@ -796,7 +791,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
               successBanner.classList.remove('hidden');
               successBanner.classList.add('flex');
             }
-            showToast('✓ Identity verified! Redirecting to Dashboard...');
+            showToast('✓ Identity verified! Redirecting to Dashboard...', 'success');
             setTimeout(() => {
               window.location.href = data.redirect || state.targetUrl;
             }, 150);
@@ -810,14 +805,17 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             errorBanner.classList.remove('hidden');
             errorBanner.classList.add('flex');
           }
+          showToast(errMsg, 'error');
           digitBoxes.forEach(b => { if (b) b.classList.add('error'); });
 
         } catch (err) {
+          const errMsg = 'Server verification error. Please retry.';
           if (errorBanner) {
-            errorText.textContent = 'Server verification error. Please retry.';
+            errorText.textContent = errMsg;
             errorBanner.classList.remove('hidden');
             errorBanner.classList.add('flex');
           }
+          showToast(errMsg, 'error');
           digitBoxes.forEach(b => { if (b) b.classList.add('error'); });
         } finally {
           if (submitBtn) submitBtn.disabled = false;

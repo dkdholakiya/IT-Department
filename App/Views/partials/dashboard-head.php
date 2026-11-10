@@ -170,6 +170,13 @@ if (!empty($page_css)) {
   <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/theme.css') : 'assets/css/theme.css'; ?>">
   <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/navbar.css') : 'assets/css/navbar.css'; ?>">
   <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/sidebar.css') : 'assets/css/sidebar.css'; ?>">
+  <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/toast.css') : 'assets/css/toast.css'; ?>">
+
+  <!-- Universal Toast Notification System Engine (Bootstrap 5 Toast Top-Right) -->
+  <script>
+    window.PORTAL_LOGO_URL = '<?php echo function_exists("v_asset") ? v_asset("assets/images/favicon-64x64.png") : "assets/images/favicon-64x64.png"; ?>';
+  </script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/toast.js') : 'assets/js/toast.js'; ?>"></script>
 
   <!-- Global Typography -->
   <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/font.css') : 'assets/css/font.css'; ?>">
@@ -197,4 +204,14 @@ if (!empty($page_css)) {
       }
     } catch(e) {}
   </script>
+  <?php
+  // Check and dispatch PHP session flash notifications if present
+  if (session_status() === PHP_SESSION_NONE) { @session_start(); }
+  $flashMsg = $_SESSION['flash_message'] ?? $_SESSION['flash_success'] ?? $_SESSION['flash_error'] ?? null;
+  $flashType = isset($_SESSION['flash_error']) ? 'error' : (isset($_SESSION['flash_success']) ? 'success' : 'theme');
+  if ($flashMsg) {
+      unset($_SESSION['flash_message'], $_SESSION['flash_success'], $_SESSION['flash_error']);
+      echo '<script>window.addEventListener("DOMContentLoaded", function() { if (window.PortalToast) { window.PortalToast.show(' . json_encode($flashMsg) . ', ' . json_encode($flashType) . '); } });</script>';
+  }
+  ?>
 <?php endif; ?>

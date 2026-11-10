@@ -415,3 +415,6 @@ $isLoggedIn = class_exists('Core\Auth') && \Core\Auth::isAuthenticated();
   </div>
 </header>
 
+<!-- Shared Top-Right Bootstrap 5 Toast Container -->
+<?php include __DIR__ . '/toast.php'; ?>
+

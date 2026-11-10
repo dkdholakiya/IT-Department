@@ -1103,18 +1103,6 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         </div>
     </div>
 
-    <!-- Global Floating Toast Notification -->
-    <div class="gmiu-toast" id="gmiuToast">
-        <i class="bi bi-check-circle-fill text-success fs-5"></i>
-        <span id="toastMessage">Draft successfully saved.</span>
-    </div>
-
-    <!-- Universal Modern Dashboard Toast Notification -->
-    <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-[#0A0909] text-white text-xs font-semibold shadow-2xl border border-white/15 transition-all">
-      <span id="toastDot" class="w-2 h-2 rounded-full bg-[var(--color-primary-light)]"></span>
-      <span id="portalToastMsg">Action completed</span>
-    </div>
-
     <!-- ── Print Report Preview Area (Targeted by CSS @media print) ── -->
     <div id="printReportArea">
         <div class="print-header">
@@ -3408,6 +3396,20 @@ Department of CE & IT`;
 
                     try {
                         const draft = JSON.parse(rawDraft);
+                        if (!draft || typeof draft !== "object") return;
+
+                        // Only restore if draft contains actual user input
+                        const hasMeaningfulContent = Boolean(
+                            (draft.facultySearch && draft.facultySearch.trim()) ||
+                            (draft.reportTitle && draft.reportTitle.trim()) ||
+                            (draft.briefObjective && draft.briefObjective.trim()) ||
+                            (draft.participantsCount && String(draft.participantsCount).trim())
+                        );
+
+                        if (!hasMeaningfulContent) {
+                            localStorage.removeItem("gmiu_it_report_draft");
+                            return;
+                        }
 
                         // Populate Section 1
                         document.getElementById("facultySearch").value = draft.facultySearch || "";
@@ -4787,30 +4789,16 @@ Department of CE & IT`;
             }
         }
 
-        // ── Custom Toast Helper ──
+        // ── Universal Top-Right Bootstrap 5 Toast Helper ──
         function showToast(message, type = null) {
-            const toast = document.getElementById("gmiuToast");
-            const toastMsg = document.getElementById("toastMessage");
-            if (!toast || !toastMsg) return;
-
-            toastMsg.innerText = message;
-            const icon = toast.querySelector("i");
             const isError = type === 'error' || (typeof message === 'string' && message.toUpperCase().startsWith("ERROR"));
-
-            if (isError) {
-                toast.classList.add("toast-error");
-                toast.classList.remove("toast-success");
-                if (icon) icon.className = "bi bi-exclamation-triangle-fill text-danger fs-5";
-            } else {
-                toast.classList.add("toast-success");
-                toast.classList.remove("toast-error");
-                if (icon) icon.className = "bi bi-check-circle-fill text-success fs-5";
+            const resolvedType = isError ? 'error' : (type || 'success');
+            if (window.PortalToast && typeof window.PortalToast.show === 'function') {
+                return window.PortalToast.show(message, resolvedType);
             }
-
-            toast.classList.add("show");
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 3800);
+            if (typeof window.showPortalToast === 'function') {
+                return window.showPortalToast(message, resolvedType);
+            }
         }
 
         // Helper to get today's date in YYYY-MM-DD format

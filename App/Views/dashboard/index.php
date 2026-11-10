@@ -475,12 +475,6 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
     </div>
   </div>
 
-  <!-- TOAST NOTIFICATION -->
-  <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 px-4 py-3 rounded-2xl bg-[#0A0909] text-white text-xs font-semibold shadow-2xl border border-white/15 transition-all">
-    <span class="w-2 h-2 rounded-full bg-[var(--color-primary-light)]"></span>
-    <span id="toastMessage">Action completed</span>
-  </div>
-
   <!-- ================= APPLICATION JAVASCRIPT ================= -->
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/navbar.js') : 'assets/js/navbar.js'; ?>"></script>
