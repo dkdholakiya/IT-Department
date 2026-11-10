@@ -94,21 +94,27 @@
 
 /* Desktop Brand Logo (Bootstrap img.rounded.me-2) */
 .toast.toast-portal .toast-brand-logo {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  border-radius: 6px;
-  flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
-  padding: 1.5px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  margin-right: 0.5rem;
-  transition: transform 0.2s ease;
+  display: inline-block !important;
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  object-fit: contain !important;
+  border-radius: 6px !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  background: #ffffff !important;
+  padding: 1.5px !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  margin-right: 0.5rem !important;
+  transition: transform 0.2s ease !important;
+  vertical-align: middle !important;
 }
 
 .toast.toast-portal:hover .toast-brand-logo {
-  transform: scale(1.06);
+  transform: scale(1.08) !important;
 }
 
 .toast.toast-portal .toast-header strong.toast-title {

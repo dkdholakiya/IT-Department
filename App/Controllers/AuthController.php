@@ -150,6 +150,9 @@ class AuthController extends Controller
             }
             $targetUrl = $intendedUrl ?: (function_exists('base_url') ? base_url('dashboard') : '/dashboard');
 
+            $displayName = $user['name'] ?? $user['username'] ?? 'User';
+            $_SESSION['flash_success'] = 'Welcome back, ' . $displayName . '! Login successful.';
+
             if (session_id()) {
                 session_write_close();
             }
@@ -292,6 +295,14 @@ class AuthController extends Controller
 
         $redirectUrl = $_SESSION['intended_url'] ?? (function_exists('base_url') ? base_url('dashboard') : '/dashboard');
         unset($_SESSION['intended_url']);
+        unset($_SESSION['pending_login']);
+
+        $displayName = $user['name'] ?? $user['username'] ?? 'User';
+        $_SESSION['flash_success'] = 'Welcome back, ' . $displayName . '! Login successful.';
+
+        if (session_id()) {
+            session_write_close();
+        }
 
         $this->json([
             "success"  => true,

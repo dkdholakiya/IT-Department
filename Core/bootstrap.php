@@ -48,9 +48,10 @@ if (!defined('BASE_URL')) {
     define('BASE_URL', $baseUrl);
 }
 
-// 4. Session Initialization with Security Best Practices
+// 4. Session Initialization with Security Best Practices (24-Hour Session Lifetime)
 ini_set('session.cookie_httponly', 1);
 ini_set('session.use_only_cookies', 1);
+ini_set('session.gc_maxlifetime', 86400); // 24 hours in seconds
 
 $isHttps = (
     (!empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] == 1)) ||
@@ -59,6 +60,19 @@ $isHttps = (
 );
 if ($isHttps) {
     ini_set('session.cookie_secure', 1);
+}
+
+if (PHP_VERSION_ID >= 70300) {
+    session_set_cookie_params([
+        'lifetime' => 86400, // 24 hours
+        'path'     => '/',
+        'domain'   => '',
+        'secure'   => $isHttps,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+} else {
+    session_set_cookie_params(86400, '/', '', $isHttps, true);
 }
 
 if (session_status() === PHP_SESSION_NONE) {

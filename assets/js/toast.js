@@ -19,6 +19,9 @@
     theme: `<svg viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>`
   };
 
+  // --- HIGH-DEFINITION EMBEDDED DESKTOP LOGO DATA URI (100% BULLETPROOF ZERO-FAIL FALLBACK) ---
+  const DEFAULT_LOGO_DATA_URI = 'data:image/png;base64,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';
+
   // --- ESCAPE HTML HELPER ---
   function escapeHtml(str) {
     if (typeof str !== 'string') return String(str ?? '');
@@ -62,8 +65,13 @@
 
     // 2. Resolve relative to base URL or current root
     const base = window.APP_BASE_URL || window.portalBaseUrl || '';
-    const cleanBase = base ? (base.endsWith('/') ? base : base + '/') : '';
-    return cleanBase + 'assets/images/favicon-64x64.png';
+    if (base) {
+      const cleanBase = base.endsWith('/') ? base : base + '/';
+      return cleanBase + 'assets/images/favicon-64x64.png';
+    }
+
+    // 3. Fall back to global or embedded default logo
+    return window.PORTAL_DEFAULT_LOGO || DEFAULT_LOGO_DATA_URI;
   }
 
   // --- RESOLVE TYPE, TITLE & ACCENT ---
@@ -122,9 +130,9 @@
       }
     }
 
-    // Resolve desktop brand logo
+    // Resolve desktop brand logo (Always guarantee crisp icon, fallback to embedded data URI)
     let logo = opts.logo;
-    if (logo === undefined) {
+    if (!logo) {
       logo = getPortalLogoUrl();
     }
 
@@ -165,9 +173,10 @@
       toastEl.style.borderColor = config.customColor + '44';
     }
 
-    const logoHtml = config.logo ? `
-      <img src="${escapeHtml(config.logo)}" class="rounded me-2 toast-brand-logo" alt="Portal Logo" width="22" height="22" onerror="this.style.display='none'">
-    ` : '';
+    const logoSrc = config.logo || DEFAULT_LOGO_DATA_URI;
+    const logoHtml = `
+      <img src="${escapeHtml(logoSrc)}" class="rounded me-2 toast-brand-logo" alt="Desktop Logo" width="22" height="22" onerror="this.onerror=null; this.src='${DEFAULT_LOGO_DATA_URI}';">
+    `;
 
     toastEl.innerHTML = `
       <div class="toast-header">
@@ -302,6 +311,11 @@
       // 1. Logout notice
       if (params.get('notice') === 'logged_out' || params.get('logged_out') === '1') {
         PortalToast.info('You have been logged out successfully.', 'Logged Out');
+        triggered = true;
+      }
+      // 1b. Successful login notice
+      else if (params.get('notice') === 'login_success' || params.get('login') === 'success') {
+        PortalToast.success('Login successful! Welcome to the portal.', 'Login Successful');
         triggered = true;
       }
       // 2. Account deactivated notice

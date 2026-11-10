@@ -39,9 +39,11 @@ if (!empty($authUser['initials'])) {
     if (empty($authInitials)) $authInitials = 'FM';
 }
 $isLoggedIn = class_exists('Core\Auth') && \Core\Auth::isAuthenticated();
+$sessionExpiresAt = $isLoggedIn && method_exists('Core\Auth', 'sessionExpiresAt') ? \Core\Auth::sessionExpiresAt() : null;
 ?>
 <script>
   window.PORTAL_USER = <?php echo json_encode($authUser ?? null, JSON_UNESCAPED_UNICODE); ?>;
+  window.PORTAL_SESSION_EXPIRES_AT = <?php echo json_encode($sessionExpiresAt); ?>;
 </script>
 
 <!-- ================= FIXED TOP NAVIGATION BAR (Pinned at z-30 on Mobile; Relative in Flow on Desktop) ================= -->

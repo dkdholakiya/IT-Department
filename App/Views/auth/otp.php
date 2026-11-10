@@ -671,8 +671,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           document.getElementById('fullOtpCode').value = getOtpValue();
 
           if (cleanDigits.length === 6) {
-            showToast('6-digit code pasted successfully.');
-            // Automatically trigger verification on full paste
+            // Automatically trigger verification on full paste without duplicate preliminary toast
             setTimeout(verifyOtpCode, 200);
           }
         });
@@ -756,14 +755,10 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         const spinnerIcon = document.getElementById('verifySpinnerIcon');
 
         clearErrorState();
+        if (errorBanner) errorBanner.classList.add('hidden');
         if (successBanner) successBanner.classList.add('hidden');
 
         if (otp.length < 6) {
-          if (errorBanner) {
-            errorText.textContent = 'Please enter all 6 digits of the OTP code.';
-            errorBanner.classList.remove('hidden');
-            errorBanner.classList.add('flex');
-          }
           showToast('Please enter all 6 digits of the OTP code.', 'error');
           digitBoxes.forEach(b => {
             if (b && !b.value) b.classList.add('error');
@@ -787,34 +782,20 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           const data = await res.json().catch(() => null);
 
           if (data && data.success) {
-            if (successBanner) {
-              successBanner.classList.remove('hidden');
-              successBanner.classList.add('flex');
-            }
-            showToast('✓ Identity verified! Redirecting to Dashboard...', 'success');
+            showToast('✓ Identity verified! Entering Dashboard...', 'success');
             setTimeout(() => {
               window.location.href = data.redirect || state.targetUrl;
-            }, 150);
+            }, 180);
             return;
           }
 
-          // Error handling
+          // Error handling (Unified Top-Right Toast)
           const errMsg = (data && data.error) ? data.error : 'Invalid 6-digit OTP code. Please check your email.';
-          if (errorBanner) {
-            errorText.textContent = errMsg;
-            errorBanner.classList.remove('hidden');
-            errorBanner.classList.add('flex');
-          }
           showToast(errMsg, 'error');
           digitBoxes.forEach(b => { if (b) b.classList.add('error'); });
 
         } catch (err) {
           const errMsg = 'Server verification error. Please retry.';
-          if (errorBanner) {
-            errorText.textContent = errMsg;
-            errorBanner.classList.remove('hidden');
-            errorBanner.classList.add('flex');
-          }
           showToast(errMsg, 'error');
           digitBoxes.forEach(b => { if (b) b.classList.add('error'); });
         } finally {

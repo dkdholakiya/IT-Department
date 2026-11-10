@@ -426,6 +426,38 @@
         colorPickerPopover.classList.add('hidden');
       }
     });
+
+    // 9. 24-Hour Session Expiration Monitor
+    initSessionExpirationMonitor();
+  }
+
+  // --- 8. 24-HOUR SESSION EXPIRATION MONITOR ---
+  function initSessionExpirationMonitor() {
+    if (!window.PORTAL_SESSION_EXPIRES_AT || typeof window.PORTAL_SESSION_EXPIRES_AT !== 'number') return;
+
+    function checkExpiration() {
+      const nowSec = Math.floor(Date.now() / 1000);
+      if (nowSec >= window.PORTAL_SESSION_EXPIRES_AT) {
+        clearInterval(sessionCheckTimer);
+        if (window.showPortalToast) {
+          window.showPortalToast('Your login session has expired after 24 hours. Redirecting to login...', 'warning');
+        }
+        setTimeout(() => {
+          const base = window.APP_BASE_URL || window.portalBaseUrl || './';
+          const cleanBase = base.endsWith('/') ? base : base + '/';
+          window.location.href = cleanBase + 'login?notice=session_expired';
+        }, 1200);
+      }
+    }
+
+    // Check periodically every 30 seconds
+    const sessionCheckTimer = setInterval(checkExpiration, 30000);
+
+    // Also check immediately when tab gains focus or becomes visible
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) checkExpiration();
+    });
+    window.addEventListener('focus', checkExpiration);
   }
 
   if (document.readyState === 'loading') {

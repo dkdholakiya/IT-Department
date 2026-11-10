@@ -12,6 +12,7 @@
  * - Dynamic Theme Color (Default portal theme from Color Studio)
  * - Custom Color presets (Purple, Pink, Orange, Teal, or custom Hex)
  */
+$toastLogoUrl = function_exists('v_asset') ? v_asset('assets/images/favicon-64x64.png') : (defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/assets/images/favicon-64x64.png' : 'assets/images/favicon-64x64.png');
 ?>
 <!-- ================= GLOBAL BOOTSTRAP TOAST CONTAINER (TOP-RIGHT) ================= -->
 <div aria-live="polite" aria-atomic="true" class="position-relative toast-portal-root">
@@ -19,4 +20,9 @@
     <!-- Dynamic Bootstrap 5 Toasts injected here by assets/js/toast.js -->
   </div>
 </div>
+<script>
+  if (!window.PORTAL_LOGO_URL) {
+    window.PORTAL_LOGO_URL = '<?php echo htmlspecialchars($toastLogoUrl, ENT_QUOTES, "UTF-8"); ?>';
+  }
+</script>
 
