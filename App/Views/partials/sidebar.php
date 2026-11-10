@@ -278,6 +278,12 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
   </div>
 
   <!-- 3. BOTTOM VERTICAL PILL SET (Settings & User Profile) -->
+  <?php
+    $authUser = class_exists('Core\Auth') ? \Core\Auth::user() : null;
+    $authName = $authUser['name'] ?? 'Faculty Member';
+    $authRole = ($authUser['role'] ?? '') === 'super_admin' ? 'Super Admin' : ($authUser['designation'] ?? 'Staff');
+    $authInitials = $authUser['initials'] ?? (empty($authName) ? 'FM' : strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $authName), 0, 2)));
+  ?>
   <div id="bottomCapsuleDock" class="samsung-shortcut-item side-menu-glass rounded-full p-1.5 flex flex-col items-center justify-center gap-2 transition-all duration-300" style="--stagger: 7;">
     <!-- 1. Setting Icon -->
     <button
@@ -303,19 +309,15 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
       id="openProfileBtn"
       type="button"
       class="sidebar-bottom-btn w-10 h-10 rounded-full text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 flex items-center justify-center gap-2.5 focus:outline-none group transition shrink-0 cursor-pointer"
-      title="User Profile: Imran Jakir"
+      title="User Profile: <?php echo htmlspecialchars($authName); ?> (<?php echo htmlspecialchars($authRole); ?>)"
       aria-label="User Profile"
     >
-      <span class="samsung-squircle w-9 h-9 rounded-full bg-white text-[#0A0909] border border-black/10 shadow-sm flex items-center justify-center overflow-hidden shrink-0 relative">
-        <img
-          src="data:image/webp;base64,UklGRoADAABXRUJQVlA4IHQDAABQEwCdASpIAEgAPk0eikQioaEa28UAKATEsYBbQcmm2JIfYeZH4TL9JZ4SCKj80FL5PkxxSUoHsWj/akvbPVMgC2UCoSYtTnPzu6eNKwl6JJQVjfpfTiQb736NIgoPlkD7s4CKzca9Q8en5mOD9Mi3W9iHyIkhYapixdNXQE5VMncuCPFVGa/xGNb+A5v1JTIzpIM8RA1y6DpNPdhspwXL4GGAAP79elCCa5mpT5tfH+3pn5r9kKncStykW9LpNOVg3Z744eXfA79u1AR9E9L9b7Hu2+iK2nt7piU52Ol8VJUJSMtR+/74ZJ+BuQH0usp0gUAaabq21xYnMYEVB1C/WQVzhqfeKXWj+7K20eBSOqgeazhy7hJ4FqLkDMlosit692wRUqmiO/veeTwgvryJOCros8BjaHQMhAcsuAKvhNOwXnTCksVRPvWA1duJR2m/JuDYcPykBTdTAdpYgK8EI8aivUqra+7zwr0uiI/IeXDsi4B2xr0wMjQ2CkSni5TBwPs4jZ9MY0S4Yb2PuqFXAnIjA5z4rXNu16LUZAKzkiI1ZqUJPyb2w+Y1kWOUBrp/w2vJNVQLKHa4OXMbFKDSOkw/lWZPvIAJv84Lurm4uwuQ6SnsGWV6BzPNpLwsPRyfNAN7jB9q9ZVh1/XJGKEhPtXPg7JkbPCwVAM1mGZ2Zi3Srf6aryNWXuhKys4tPq6fKV9aGVoM/hhw0e+AhwdudgJMZce5EgZQ0M04iJtd30ez4j4f1iyepx+C39HRytHp1vyzTDqSagmY//TN/hqvefyz6tccSg1LHP1jbTYkJfuui9VZrby176zog/JP1V6Z/46FNBGx1bHqJheRESb1YUZp1pnUTOD5ek+kBZFqHZykmwVr/j7RpGG2YRi2GuJyXfnGDZ9WgDuUOeRBRuBoGVdl5wq0vK6nigwGCJGl2l69HGcEtxQMraHQ9Mjetnl75dNRbCeriN4Zvo7MLbeC6n7WJCze/v5Je8tYFXX16krLyk/YJc0W6xqiPk2aU6WjzY5u8ts5q6EgQInUaFMRDfEgdnWHvkAxc4ZVKrTbXROac2nmY2q5dx9P6UPUMIemzorSX4h8x6kIsbgSR62N793MdzUfKkyisCi78OmhpOmXMK4DFTHzvECGPSEwBubP8ZDtqW8//Me2mDvQ+NK8aQvAAA=="
-          alt="User Profile"
-          class="w-full h-full object-cover rounded-full"
-        />
+      <span class="samsung-squircle w-9 h-9 rounded-full bg-[var(--color-primary)] text-white border border-white/20 shadow-sm flex items-center justify-center overflow-hidden shrink-0 relative font-bold text-xs">
+        <span><?php echo htmlspecialchars($authInitials); ?></span>
       </span>
       <div class="sidebar-nav-label-wrap expanded-only lg:hidden min-w-0 flex-1 pr-2 text-left">
-        <p class="sidebar-nav-label font-bold text-[12.5px] text-[var(--text-primary)] leading-tight whitespace-nowrap">Imran Jakir</p>
-        <p class="sidebar-user-role text-[11px] font-bold whitespace-nowrap mt-0.5">Lead Agronomist</p>
+        <p class="sidebar-nav-label font-bold text-[12.5px] text-[var(--text-primary)] leading-tight whitespace-nowrap truncate"><?php echo htmlspecialchars($authName); ?></p>
+        <p class="sidebar-user-role text-[11px] font-bold whitespace-nowrap mt-0.5 text-[var(--color-primary)]"><?php echo htmlspecialchars($authRole); ?></p>
       </div>
     </button>
   </div>

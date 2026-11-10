@@ -17,10 +17,22 @@ return [
     'smtp_email_ce' => 'admincecse@gmiu.edu.in',
     'smtp_password_ce' => 'wrws fjmw sqig bxxn',
 
+    // Login OTP Authentication Toggle
+    // 1 = Enabled: Requires 6-digit email OTP verification before dashboard access
+    // 0 = Disabled: Direct login with email & password, no OTP sent, redirects directly to dashboard
+    'loginn_otp' => 1,
+
     'mail_enabled' => 1, // Toggle: 1 to enable email system, 0 to disable
     'zero_mail_enabled' => 1, // Toggle: 1 to enable email for zero student report, 0 to disable
-    'otp_enabled' => 1, // Toggle: 1 to require 6-digit email OTP verification before submitting report, 0 to bypass
+    'otp_enabled' => 0, // Toggle: 1 to require 6-digit email OTP verification before submitting report, 0 to bypass
+   
+   
+
+    
     'ctl_excel_server_error' => 0, // Toggle: 1 to simulate Server Error after Excel upload in CTL activity, 0 to process normally
+
+
+
 
     // Google Sheets Apps Script Web App URLs 
     'sheets_webapp_url' => 'https://script.google.com/macros/s/AKfycbzgEUHcbbF7k5gp8RyEJxwzPiUeTeu6wLIZOPbNn-ALnsGPPzyNEKVx9q5ZnHKESHEUxA/exec',

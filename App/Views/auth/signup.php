@@ -9,6 +9,12 @@
  */
 $page_label = $page_label ?? 'Smart Management Dashboard';
 $baseUrl = function_exists('base_url') ? base_url('/') : './';
+
+// User requirement: "signup page not now make"
+if (!headers_sent()) {
+    header('Location: ' . (function_exists('base_url') ? base_url('login?notice=signup_disabled') : '/login?notice=signup_disabled'));
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

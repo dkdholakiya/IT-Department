@@ -15,7 +15,34 @@ $navTitle = $nav_title ?? 'AI Greenhouse';
 $navSubtitle = $nav_subtitle ?? 'Zone A • Hydroponic Bay';
 $navBackUrl = $nav_back_url ?? $baseUrl;
 $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modules...';
+
+$authUser = class_exists('Core\Auth') ? \Core\Auth::user() : null;
+$authName = $authUser['name'] ?? 'Faculty Member';
+$authRole = ($authUser['role'] ?? '') === 'super_admin' ? 'Super Admin' : ($authUser['designation'] ?? 'Staff');
+if (!empty($authUser['initials'])) {
+    $authInitials = strtoupper($authUser['initials']);
+} else {
+    $words = preg_split('/\s+/', trim($authName));
+    $filtered = array_filter($words, function($w) {
+        $clean = strtolower(rtrim($w, '.'));
+        return !in_array($clean, ['prof', 'dr', 'mr', 'mrs', 'ms', 'er']);
+    });
+    if (empty($filtered)) $filtered = $words;
+    $authInitials = '';
+    foreach ($filtered as $w) {
+        $c = preg_replace('/[^A-Za-z]/', '', $w);
+        if (!empty($c)) {
+            $authInitials .= strtoupper($c[0]);
+        }
+    }
+    $authInitials = substr($authInitials, 0, 3);
+    if (empty($authInitials)) $authInitials = 'FM';
+}
+$isLoggedIn = class_exists('Core\Auth') && \Core\Auth::isAuthenticated();
 ?>
+<script>
+  window.PORTAL_USER = <?php echo json_encode($authUser ?? null, JSON_UNESCAPED_UNICODE); ?>;
+</script>
 
 <!-- ================= FIXED TOP NAVIGATION BAR (Pinned at z-30 on Mobile; Relative in Flow on Desktop) ================= -->
 <header id="topNavbar" class="fixed lg:relative top-0 left-0 right-0 z-30 lg:z-auto px-3 sm:px-5 lg:px-0 py-2.5 lg:py-0 bg-[var(--bg-mesh-3)]/85 lg:bg-transparent backdrop-blur-xl lg:backdrop-blur-none border-b border-white/50 lg:border-none shrink-0">
@@ -175,6 +202,55 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
             </svg>
           </button>
         </div>
+
+        <!-- Card 3: Combined User Profile & Quick Logout Pill (Desktop / Tablet) -->
+        <?php if ($isLoggedIn): ?>
+          <div
+            id="navbarUserPill"
+            class="h-10 pl-2 pr-1.5 rounded-full side-menu-glass flex items-center gap-2.5 shrink-0 select-none shadow-xs group"
+            title="Signed in as <?php echo htmlspecialchars($authName . ' (' . $authRole . ')'); ?>"
+          >
+            <!-- Left Side: User Avatar, Name & Role Info -->
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="w-7 h-7 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center font-bold text-[10.5px] shadow-xs shrink-0 ring-1 ring-white/30 dark:ring-white/10">
+                <?php echo htmlspecialchars($authInitials); ?>
+              </span>
+              <div class="flex flex-col text-left leading-none pr-0.5 min-w-0">
+                <span class="text-xs sm:text-[12.5px] font-bold text-[var(--text-primary)] max-w-[125px] md:max-w-[155px] lg:max-w-[195px] xl:max-w-[240px] truncate leading-tight"><?php echo htmlspecialchars($authName); ?></span>
+                <span class="text-[9.5px] sm:text-[10px] font-bold text-[var(--color-primary)] mt-0.5 truncate leading-tight"><?php echo htmlspecialchars($authRole); ?></span>
+              </div>
+            </div>
+
+            <!-- Subtle Vertical Divider -->
+            <div class="w-[1px] h-4.5 bg-black/10 dark:bg-white/15 shrink-0"></div>
+
+            <!-- Right Side: Logout Action Button (Icon Only) -->
+            <a
+              id="navbarLogoutBtn"
+              href="<?php echo htmlspecialchars($baseUrl); ?>logout"
+              class="w-7 h-7 rounded-full side-menu-icon-glass text-rose-500 hover:bg-rose-500 hover:text-white dark:hover:bg-rose-600 transition-all duration-200 flex items-center justify-center hover:scale-110 active:scale-95 shrink-0 shadow-xs cursor-pointer group/logout"
+              title="Sign Out (<?php echo htmlspecialchars($authName); ?>)"
+              aria-label="Logout"
+            >
+              <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover/logout:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </a>
+          </div>
+        <?php else: ?>
+          <a
+            href="<?php echo htmlspecialchars($baseUrl); ?>login"
+            class="h-10 px-3.5 rounded-full side-menu-glass flex items-center gap-1.5 text-xs font-bold text-[var(--color-primary)] hover:scale-105 transition shrink-0 shadow-xs"
+            title="Sign In to Faculty Portal"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H3" />
+            </svg>
+            <span>Sign In</span>
+          </a>
+        <?php endif; ?>
       </div>
 
       <!-- Card 2: Separate Mobile Right-Side User Menu Glass Pill (< md) - Glass Effect as it is! -->
@@ -306,6 +382,36 @@ $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modu
         <button type="button" data-theme-color="#0D9488" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#0D9488] cursor-pointer" title="Teal Lagoon (#0D9488)" aria-label="Teal Lagoon Theme"></button>
       </div>
     </div>
+
+    <!-- Row D: Mobile User Session & Logout Action Bar -->
+    <?php if ($isLoggedIn): ?>
+      <div class="p-2.5 rounded-2xl side-menu-glass flex items-center justify-between gap-2.5 border border-black/5 dark:border-white/10 shadow-sm">
+        <div class="flex items-center gap-2.5 min-w-0 flex-1">
+          <div class="w-9 h-9 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs ring-1 ring-white/30 dark:ring-white/10">
+            <?php echo htmlspecialchars($authInitials); ?>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-xs font-bold text-[var(--text-primary)] truncate leading-tight"><?php echo htmlspecialchars($authName); ?></p>
+            <p class="text-[10.5px] font-semibold text-[var(--color-primary)] truncate mt-0.5"><?php echo htmlspecialchars($authRole); ?></p>
+          </div>
+        </div>
+        <a
+          id="mobileNavbarLogoutBtn"
+          href="<?php echo htmlspecialchars($baseUrl); ?>logout"
+          class="h-9 px-3.5 rounded-full side-menu-glass border border-rose-500/30 text-rose-500 hover:bg-rose-500 hover:text-white text-xs font-bold flex items-center gap-2 transition-all duration-200 active:scale-95 shrink-0 shadow-xs group"
+          title="Sign out of session"
+        >
+          <span class="w-5 h-5 rounded-full bg-rose-500/10 group-hover:bg-transparent flex items-center justify-center shrink-0">
+            <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+          </span>
+          <span>Logout</span>
+        </a>
+      </div>
+    <?php endif; ?>
   </div>
 </header>
 

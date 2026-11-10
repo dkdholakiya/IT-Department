@@ -25,6 +25,7 @@ class ZeroStudentController extends Controller
      */
     public function index(): void
     {
+        Auth::check('Zero Student Directory');
         $records = $this->getRecordsData();
         $this->view('zero-student.index', ['records' => $records]);
     }
@@ -34,6 +35,7 @@ class ZeroStudentController extends Controller
      */
     public function create(): void
     {
+        Auth::check('Create Zero Student Record');
         $this->view('zero-student.create');
     }
 

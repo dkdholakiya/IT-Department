@@ -703,18 +703,27 @@
 
       <!-- Desktop Header Buttons (Perfect on Desktop screens md+) -->
       <div class="hidden md:flex items-center gap-2.5">
-        <a href="<?= base_url('login') ?>" id="top-login-btn" class="px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition shadow-xs">
-          Login
-        </a>
-        <a href="<?= base_url('dashboard') ?>" id="top-adopt-btn" class="adopt-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold tracking-wide shadow-sm">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="9" rx="1"/>
-            <rect x="14" y="3" width="7" height="5" rx="1"/>
-            <rect x="14" y="12" width="7" height="9" rx="1"/>
-            <rect x="3" y="16" width="7" height="5" rx="1"/>
-          </svg>
-          <span>Dashboard</span>
-        </a>
+        <?php
+          $isLoggedIn = class_exists('Core\Auth') && \Core\Auth::isAuthenticated();
+        ?>
+        <?php if ($isLoggedIn): ?>
+          <a href="<?= base_url('dashboard') ?>" id="top-adopt-btn" class="adopt-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold tracking-wide shadow-sm">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="9" rx="1"/>
+              <rect x="14" y="3" width="7" height="5" rx="1"/>
+              <rect x="14" y="12" width="7" height="9" rx="1"/>
+              <rect x="3" y="16" width="7" height="5" rx="1"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="<?= base_url('logout') ?>" id="top-login-btn" class="px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition shadow-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10" title="Sign out of faculty session">
+            Logout
+          </a>
+        <?php else: ?>
+          <a href="<?= base_url('login') ?>" id="top-login-btn" class="px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition shadow-xs">
+            Login
+          </a>
+        <?php endif; ?>
       </div>
     </div>
   </header>
@@ -2074,18 +2083,24 @@
   <div class="md:hidden fixed bottom-3 sm:bottom-4 inset-x-0 z-30 flex flex-col items-center gap-2 px-4 pointer-events-none">
     <!-- Floating Action Dock -->
     <div class="mobile-dock pointer-events-auto flex items-center justify-between gap-2.5 w-full max-w-[340px] p-1.5 rounded-full">
-      <a href="<?= base_url('login') ?>" id="mobile-login-btn" class="mobile-login-btn flex-1 text-center py-2 px-4 rounded-full text-xs sm:text-sm font-semibold tracking-wide transition">
-        Login
-      </a>
-      <a href="<?= base_url('dashboard') ?>" id="mobile-adopt-btn" class="adopt-btn flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-full text-xs sm:text-sm font-semibold tracking-wide shadow-md">
-        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="7" height="9" rx="1"/>
-          <rect x="14" y="3" width="7" height="5" rx="1"/>
-          <rect x="14" y="12" width="7" height="9" rx="1"/>
-          <rect x="3" y="16" width="7" height="5" rx="1"/>
-        </svg>
-        <span>Dashboard</span>
-      </a>
+      <?php if ($isLoggedIn): ?>
+        <a href="<?= base_url('dashboard') ?>" id="mobile-adopt-btn" class="adopt-btn flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-full text-xs sm:text-sm font-semibold tracking-wide shadow-md">
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="9" rx="1"/>
+            <rect x="14" y="3" width="7" height="5" rx="1"/>
+            <rect x="14" y="12" width="7" height="9" rx="1"/>
+            <rect x="3" y="16" width="7" height="5" rx="1"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="<?= base_url('logout') ?>" id="mobile-login-btn" class="mobile-login-btn flex-1 text-center py-2 px-4 rounded-full text-xs sm:text-sm font-semibold tracking-wide transition text-rose-400">
+          Logout
+        </a>
+      <?php else: ?>
+        <a href="<?= base_url('login') ?>" id="mobile-login-btn" class="mobile-login-btn w-full text-center py-2 px-4 rounded-full text-xs sm:text-sm font-semibold tracking-wide transition">
+          Login
+        </a>
+      <?php endif; ?>
     </div>
 
     <!-- Mobile Signature Badge -->

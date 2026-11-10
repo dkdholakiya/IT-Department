@@ -13,6 +13,16 @@ $r->addRoute('GET', '/index.php', 'HomeController@index');
 
 $r->addRoute('GET', '/faculty', 'FacultyController@index');
 $r->addRoute('GET', '/faculty.php', 'FacultyController@index');
+$r->addRoute(['GET', 'OPTIONS'], '/api/faculty', 'FacultyController@apiList');
+$r->addRoute(['GET', 'OPTIONS'], '/api/faculty.php', 'FacultyController@apiList');
+$r->addRoute(['POST', 'OPTIONS'], '/api/faculty/save', 'FacultyController@apiSave');
+$r->addRoute(['POST', 'OPTIONS'], '/api/faculty/save.php', 'FacultyController@apiSave');
+$r->addRoute(['POST', 'OPTIONS'], '/api/faculty/toggle-status', 'FacultyController@apiToggleStatus');
+$r->addRoute(['POST', 'OPTIONS'], '/api/faculty/toggle-status.php', 'FacultyController@apiToggleStatus');
+$r->addRoute(['POST', 'OPTIONS'], '/api/faculty/delete', 'FacultyController@apiDelete');
+$r->addRoute(['POST', 'OPTIONS'], '/api/faculty/delete.php', 'FacultyController@apiDelete');
+$r->addRoute(['POST', 'OPTIONS'], '/api/faculty/send-credentials', 'FacultyController@apiSendCredentials');
+$r->addRoute(['POST', 'OPTIONS'], '/api/faculty/send-credentials.php', 'FacultyController@apiSendCredentials');
 
 $r->addRoute('GET', '/calendar', 'CalendarController@index');
 $r->addRoute('GET', '/calendar.php', 'CalendarController@index');
@@ -60,6 +70,9 @@ $r->addRoute(['GET', 'POST'], '/login.php', 'AuthController@login');
 $r->addRoute(['GET', 'POST'], '/signin', 'AuthController@login');
 $r->addRoute(['GET', 'POST'], '/signin.php', 'AuthController@login');
 
+$r->addRoute(['GET', 'POST'], '/logout', 'AuthController@logout');
+$r->addRoute(['GET', 'POST'], '/logout.php', 'AuthController@logout');
+
 $r->addRoute(['GET', 'POST'], '/signup', 'AuthController@signup');
 $r->addRoute(['GET', 'POST'], '/signup.php', 'AuthController@signup');
 $r->addRoute(['GET', 'POST'], '/register', 'AuthController@signup');
@@ -70,8 +83,22 @@ $r->addRoute(['GET', 'POST'], '/otp.php', 'AuthController@otp');
 $r->addRoute(['GET', 'POST'], '/verify-otp', 'AuthController@otp');
 $r->addRoute(['GET', 'POST'], '/verify-otp.php', 'AuthController@otp');
 
-$r->addRoute(['GET', 'POST', 'OPTIONS'], '/verify-password', 'AuthController@verifyPassword');
-$r->addRoute(['GET', 'POST', 'OPTIONS'], '/verify-password.php', 'AuthController@verifyPassword');
+// Dedicated JSON Auth API endpoints
+$r->addRoute(['POST', 'OPTIONS'], '/api/auth/login-request', 'AuthController@loginRequest');
+$r->addRoute(['POST', 'OPTIONS'], '/api/auth/login-request.php', 'AuthController@loginRequest');
+$r->addRoute(['POST', 'OPTIONS'], '/api/auth/verify-otp', 'AuthController@verifyLoginOtp');
+$r->addRoute(['POST', 'OPTIONS'], '/api/auth/verify-otp.php', 'AuthController@verifyLoginOtp');
+$r->addRoute(['POST', 'OPTIONS'], '/api/auth/resend-otp', 'AuthController@resendLoginOtp');
+$r->addRoute(['POST', 'OPTIONS'], '/api/auth/resend-otp.php', 'AuthController@resendLoginOtp');
+$r->addRoute(['GET', 'OPTIONS'], '/api/auth/check-status', 'AuthController@checkAuthStatus');
+$r->addRoute(['GET', 'OPTIONS'], '/api/auth/check-status.php', 'AuthController@checkAuthStatus');
+$r->addRoute(['GET', 'OPTIONS'], '/api/auth/captcha', 'AuthController@generateCaptcha');
+$r->addRoute(['GET', 'OPTIONS'], '/api/auth/captcha.php', 'AuthController@generateCaptcha');
+$r->addRoute(['POST', 'OPTIONS'], '/api/auth/forgot-password', 'AuthController@forgotPassword');
+$r->addRoute(['POST', 'OPTIONS'], '/api/auth/forgot-password.php', 'AuthController@forgotPassword');
+
+$r->addRoute(['GET', 'POST', 'OPTIONS'], '/verify-password', 'AuthController@loginRequest');
+$r->addRoute(['GET', 'POST', 'OPTIONS'], '/verify-password.php', 'AuthController@loginRequest');
 $r->addRoute(['POST', 'OPTIONS'], '/register-account', 'AuthController@registerAccount');
 $r->addRoute(['POST', 'OPTIONS'], '/register-account.php', 'AuthController@registerAccount');
 

@@ -20,7 +20,7 @@ ServerSignature Off
 # 2. UNIVERSAL SHIELD: BLOCK SENSITIVE FILES, REPOSITORIES & DEPENDENCIES
 # ------------------------------------------------------------------------------
 # Block critical configuration, credential, dependency manifests, and scripts
-<FilesMatch "^(\.env|\.git|\.github|\.pwd|\.htaccess|\.htpasswd|\.gitignore|composer\.(json|lock)|package(-lock)?\.json|yarn\.lock|plan\.md|README\.md|set_page_colors\.py)$">
+<FilesMatch "^(\.env|\.git|\.github|\.pwd|\.htaccess|\.htpasswd|\.gitignore|composer\.(json|lock)|package(-lock)?\.json|yarn\.lock|plan\.md|README\.md|set_page_colors\.py|users\.json)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>

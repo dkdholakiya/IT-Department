@@ -5,11 +5,27 @@ use Core\Controller;
 
 class ErrorController extends Controller
 {
+    private function isApiRequest(): bool
+    {
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+        return (
+            strpos($uri, '/api/') !== false ||
+            strpos($accept, 'application/json') !== false ||
+            strpos($contentType, 'application/json') !== false
+        );
+    }
+
     /**
      * 404 Not Found Error
      */
     public function notFound(): void
     {
+        if ($this->isApiRequest()) {
+            $this->json(['success' => false, 'error' => 'API endpoint not found.'], 404);
+            return;
+        }
         http_response_code(404);
         $this->view('errors.404', [
             'status' => 404,
@@ -23,6 +39,10 @@ class ErrorController extends Controller
      */
     public function methodNotAllowed(): void
     {
+        if ($this->isApiRequest()) {
+            $this->json(['success' => false, 'error' => 'HTTP method not allowed for this route.'], 405);
+            return;
+        }
         http_response_code(405);
         $this->view('errors.405', [
             'status' => 405,
@@ -38,6 +58,10 @@ class ErrorController extends Controller
      */
     public function serverError(string $message = ''): void
     {
+        if ($this->isApiRequest()) {
+            $this->json(['success' => false, 'error' => $message ?: 'An unexpected server error occurred.'], 500);
+            return;
+        }
         http_response_code(500);
         $this->view('errors.500', [
             'status' => 500,

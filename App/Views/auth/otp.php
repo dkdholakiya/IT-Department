@@ -280,14 +280,16 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           <div class="p-0.5 rounded-full bg-black/10 dark:bg-white/10 flex items-center text-[11px] sm:text-xs font-bold shrink-0">
             <a
               href="<?php echo $baseUrl; ?>login"
-              class="px-2 sm:px-3 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none"
+              class="px-2.5 sm:px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none"
             >Log In</a>
             <span
-              class="px-2 sm:px-3 py-1 rounded-full bg-white text-[#0A0909] shadow-sm whitespace-nowrap leading-none font-bold"
+              class="px-2.5 sm:px-3.5 py-1 rounded-full bg-white text-[#0A0909] shadow-sm whitespace-nowrap leading-none font-bold"
             >OTP</span>
             <a
-              href="<?php echo $baseUrl; ?>signup"
-              class="px-2 sm:px-3 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none"
+              href="javascript:void(0);"
+              onclick="if(typeof showToast==='function'){showToast('Faculty registration is managed by department administrators.');} return false;"
+              class="px-2.5 sm:px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none"
+              title="Sign Up"
             >Sign Up</a>
           </div>
         </div>
@@ -724,31 +726,25 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         }
 
         try {
-          const res = await fetch(`${state.baseUrl}/otp-service`, {
+          const res = await fetch(`${state.baseUrl}/api/auth/resend-otp`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'send_otp',
-              email: state.email,
-              faculty_name: 'Authorized Faculty'
-            })
+            headers: { 'Content-Type': 'application/json' }
           });
 
-          const data = await res.json().catch(() => ({ success: true }));
+          const data = await res.json().catch(() => ({ success: false, error: 'Network communication failed.' }));
 
           if (data && data.success) {
-            showToast('Fresh 6-digit OTP dispatched to email.');
+            showToast(data.message || 'Fresh 6-digit OTP dispatched to your registered email.');
             digitBoxes.forEach(b => { if (b) { b.value = ''; b.classList.remove('filled', 'error'); } });
             if (digitBoxes[0]) digitBoxes[0].focus();
-            startCountdown(59);
-          } else {
-            showToast(data.error || 'Failed to dispatch OTP. Retrying...');
             startCountdown(30);
+          } else {
+            showToast(data.error || 'Failed to dispatch OTP. Please wait before retrying.');
+            startCountdown(20);
           }
         } catch (err) {
-          // Graceful fallback for offline / mock testing
-          showToast('OTP code re-sent to ' + state.email);
-          startCountdown(59);
+          showToast('Failed to connect to authentication server.');
+          startCountdown(20);
         } finally {
           if (resendBtn) resendBtn.textContent = 'Resend OTP Code';
         }
@@ -782,43 +778,33 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
 
         // Set Loading State
         if (submitBtn) submitBtn.disabled = true;
-        if (submitText) submitText.textContent = 'Verifying Token...';
+        if (submitText) submitText.textContent = 'Verifying Passcode...';
         if (arrowIcon) arrowIcon.classList.add('hidden');
         if (spinnerIcon) spinnerIcon.classList.remove('hidden');
 
         try {
-          const res = await fetch(`${state.baseUrl}/otp-service`, {
+          const res = await fetch(`${state.baseUrl}/api/auth/verify-otp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'verify_otp',
-              email: state.email,
-              otp: otp
-            })
+            body: JSON.stringify({ otp: otp })
           });
 
-          let data = null;
-          try {
-            data = await res.json();
-          } catch (e) {
-            data = null;
-          }
+          const data = await res.json().catch(() => null);
 
-          // If backend returns success OR if user inputs demo bypass token '123456'
-          if ((data && data.success) || otp === '123456' || (data && data.bypass)) {
+          if (data && data.success) {
             if (successBanner) {
               successBanner.classList.remove('hidden');
               successBanner.classList.add('flex');
             }
-            showToast('Security verified! Redirecting to Dashboard...');
+            showToast('✓ Identity verified! Redirecting to Dashboard...');
             setTimeout(() => {
-              window.location.href = state.targetUrl;
-            }, 900);
+              window.location.href = data.redirect || state.targetUrl;
+            }, 150);
             return;
           }
 
           // Error handling
-          const errMsg = (data && data.error) ? data.error : 'Invalid 6-digit OTP code. (Test bypass: 123456)';
+          const errMsg = (data && data.error) ? data.error : 'Invalid 6-digit OTP code. Please check your email.';
           if (errorBanner) {
             errorText.textContent = errMsg;
             errorBanner.classList.remove('hidden');
@@ -827,19 +813,8 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           digitBoxes.forEach(b => { if (b) b.classList.add('error'); });
 
         } catch (err) {
-          // Graceful network fallback for offline/development test
-          if (otp === '123456') {
-            if (successBanner) {
-              successBanner.classList.remove('hidden');
-              successBanner.classList.add('flex');
-            }
-            showToast('Token verified. Redirecting...');
-            setTimeout(() => { window.location.href = state.targetUrl; }, 900);
-            return;
-          }
-
           if (errorBanner) {
-            errorText.textContent = 'Invalid OTP code. Please enter the valid 6 digits (or demo: 123456).';
+            errorText.textContent = 'Server verification error. Please retry.';
             errorBanner.classList.remove('hidden');
             errorBanner.classList.add('flex');
           }

@@ -218,14 +218,21 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
   <!-- ================= POPUP MODALS CONTAINER ================= -->
 
   <!-- 1. VIEW FACULTY DETAILS MODAL -->
-  <div id="viewFacultyModal" class="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-md p-5 sm:p-6 rounded-3xl relative shadow-2xl border border-white/80">
+  <div id="viewFacultyModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-3xl lg:max-w-4xl p-5 sm:p-7 rounded-3xl relative shadow-2xl border border-white/80 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 mb-3 border-b border-black/10 dark:border-white/10">
-        <div>
-          <h3 class="text-base font-bold text-[var(--text-primary)]">Faculty Profile Details</h3>
-          <p class="text-xs text-[var(--text-muted)]">Full mentor credentials & contact record</p>
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-[var(--color-primary)]/15 text-[var(--color-primary)] flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-[var(--text-primary)]">Faculty Profile Details</h3>
+            <p class="text-[11px] text-[var(--text-muted)]">Full mentor credentials & contact record</p>
+          </div>
         </div>
-        <button type="button" class="close-modal-trigger w-8 h-8 rounded-full glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)]" aria-label="Close">
+        <button type="button" class="close-modal-trigger w-8 h-8 rounded-full glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" aria-label="Close">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -233,153 +240,234 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
       </div>
 
       <div id="viewModalBody">
-        <!-- Injected dynamically -->
-      </div>
-
-      <div class="pt-3 border-t border-black/5 dark:border-white/10 flex justify-end">
-        <button type="button" class="close-modal-trigger px-4 py-2 rounded-xl glass-pill font-bold text-xs text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition">
-          Close Profile
-        </button>
+        <!-- Injected dynamically via JS -->
       </div>
     </div>
   </div>
 
 
-  <!-- 2. ADD / EDIT FACULTY FORM MODAL -->
-  <div id="facultyFormModal" class="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-lg p-5 sm:p-6 rounded-3xl relative shadow-2xl border border-white/80 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-3 mb-4 border-b border-black/10 dark:border-white/10">
-        <div>
-          <h3 id="formModalTitle" class="text-base font-bold text-[var(--text-primary)]">Add New Faculty</h3>
-          <p class="text-xs text-[var(--text-muted)]">Configure department role & mentor parameters</p>
+  <!-- 2. SHOW CREDENTIALS MODAL -->
+  <div id="credentialsModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-xl p-5 sm:p-6 rounded-3xl relative shadow-2xl border border-white/80 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-black/10 dark:border-white/10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-[var(--text-primary)]">Portal Sign-In Credentials</h3>
+            <p class="text-[11px] text-[var(--text-muted)]">Confidential authentication credentials</p>
+          </div>
         </div>
-        <button type="button" class="close-modal-trigger w-8 h-8 rounded-full glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)]" aria-label="Close">
+        <button type="button" class="close-modal-trigger w-8 h-8 rounded-full glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" aria-label="Close">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
-      <form id="facultyForm" class="space-y-3.5 text-xs">
-        <!-- Full Name -->
-        <div>
-          <label for="inputName" class="block font-bold text-[var(--text-primary)] mb-1">Full Name <span class="text-red-500">*</span></label>
-          <input
-            type="text"
-            id="inputName"
-            required
-            class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium"
-            placeholder="e.g. Prof. Dhaval Chandarana"
-          />
-        </div>
+      <div id="credentialsModalBody">
+        <!-- Injected dynamically via JS -->
+      </div>
+    </div>
+  </div>
 
-        <!-- Row: Initials & Employee ID -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+
+  <!-- 3. ADD / EDIT FACULTY FORM MODAL -->
+  <div id="facultyFormModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4">
+    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-4xl lg:max-w-5xl p-4 sm:p-6 rounded-3xl relative shadow-2xl border border-white/80 max-h-[94vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-black/10 dark:border-white/10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-2xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+            </svg>
+          </div>
           <div>
-            <label for="inputInitials" class="block font-bold text-[var(--text-primary)] mb-1">Initials / Short Code</label>
+            <h3 id="formModalTitle" class="text-sm sm:text-base font-bold text-[var(--text-primary)]">Configure Faculty Profile</h3>
+            <p class="text-[10.5px] text-[var(--text-muted)]">Configure department role & credentials</p>
+          </div>
+        </div>
+        <button type="button" class="close-modal-trigger w-7 h-7 sm:w-8 sm:h-8 rounded-full glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition" aria-label="Close">
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="facultyForm" class="space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+          <!-- Row 1: Full Name (2 cols) & Initials (1 col) -->
+          <div class="sm:col-span-2 lg:col-span-2">
+            <label for="inputName" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Full Name <span class="text-red-500">*</span></label>
+            <input
+              type="text"
+              id="inputName"
+              required
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium text-xs"
+              placeholder="e.g. Prof. Tarjanee Vyas"
+            />
+          </div>
+
+          <div>
+            <label for="inputInitials" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Initials / Short Code</label>
             <input
               type="text"
               id="inputInitials"
-              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono uppercase"
-              placeholder="e.g. DRC"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono uppercase text-xs"
+              placeholder="e.g. TMV"
             />
           </div>
+
+          <!-- Row 2: Employee ID, Designation, Department -->
           <div>
-            <label for="inputEmpId" class="block font-bold text-[var(--text-primary)] mb-1">Employee ID</label>
+            <label for="inputEmpId" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Employee ID</label>
             <input
               type="text"
               id="inputEmpId"
-              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono"
-              placeholder="e.g. #5036"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono text-xs"
+              placeholder="e.g. #10395"
             />
           </div>
-        </div>
 
-        <!-- Row: Designation & Department -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
           <div>
-            <label for="inputDesignation" class="block font-bold text-[var(--text-primary)] mb-1">Designation / Role</label>
+            <label for="inputDesignation" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Designation / Role</label>
             <input
               type="text"
               id="inputDesignation"
-              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium"
-              placeholder="e.g. Assistant Professor"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium text-xs"
+              placeholder="e.g. Sub Incharge HOD IT"
             />
           </div>
+
           <div>
-            <label for="inputDepartment" class="block font-bold text-[var(--text-primary)] mb-1">Department</label>
+            <label for="inputDepartment" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Department</label>
             <select
               id="inputDepartment"
-              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-semibold cursor-pointer"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-semibold text-xs cursor-pointer"
             >
               <option value="Information Technology">Information Technology</option>
               <option value="Computer Engineering">Computer Engineering</option>
               <option value=" IT & CE ">IT & CE (Both)</option>
             </select>
           </div>
-        </div>
 
-        <!-- Row: Cabin Room & Status -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+          <!-- Row 3: Cabin / Room, Status, Security Role -->
           <div>
-            <label for="inputSetting" class="block font-bold text-[var(--text-primary)] mb-1">Cabin / Setting Room</label>
+            <label for="inputSetting" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Cabin / Setting Room</label>
             <input
               type="text"
               id="inputSetting"
-              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium"
-              placeholder="e.g. FF-38"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium text-xs"
+              placeholder="e.g. FF-37"
             />
           </div>
+
           <div>
-            <label for="inputStatus" class="block font-bold text-[var(--text-primary)] mb-1">Status</label>
+            <label for="inputStatus" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Status</label>
             <select
               id="inputStatus"
-              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-semibold cursor-pointer"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-semibold text-xs cursor-pointer"
             >
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
           </div>
-        </div>
 
-        <!-- Row: Email & Phone -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
           <div>
-            <label for="inputEmail" class="block font-bold text-[var(--text-primary)] mb-1">Email Address</label>
+            <label for="inputRole" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Portal Security Role</label>
+            <select
+              id="inputRole"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-semibold text-xs cursor-pointer"
+            >
+              <option value="staff">Staff Member</option>
+              <option value="super_admin">Super Administrator</option>
+            </select>
+          </div>
+
+          <!-- Row 4: Email, Mobile, Username -->
+          <div>
+            <label for="inputEmail" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Email Address</label>
             <input
               type="email"
               id="inputEmail"
-              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
-              placeholder="e.g. mentor@gmiu.edu.in"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium text-xs"
+              placeholder="e.g. tmvyas@gmiu.edu.in"
             />
           </div>
+
           <div>
-            <label for="inputPhone" class="block font-bold text-[var(--text-primary)] mb-1">Mobile Number</label>
+            <label for="inputPhone" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Mobile Number</label>
             <input
               type="text"
               id="inputPhone"
-              class="w-full px-3.5 py-2.5 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono"
-              placeholder="e.g. 98765 43210"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono text-xs"
+              placeholder="e.g. 81409 67331"
+            />
+          </div>
+
+          <div>
+            <label for="inputUsername" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Portal Username</label>
+            <input
+              type="text"
+              id="inputUsername"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono lowercase text-xs"
+              placeholder="e.g. tmvyas"
+            />
+          </div>
+
+          <!-- Row 5: Password, Semester, Master Drive URL -->
+          <div>
+            <label for="inputPassword" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Login Password <span class="text-[10px] font-normal text-[var(--text-muted)]">(Default: Mobile)</span></label>
+            <input
+              type="text"
+              id="inputPassword"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono text-xs"
+              placeholder="Leave blank to use mobile"
+            />
+          </div>
+
+          <div>
+            <label for="inputSemClass" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Semester / Master Folder</label>
+            <input
+              type="text"
+              id="inputSemClass"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-medium text-xs"
+              placeholder="e.g. Diploma 5th Sem - B (IT)"
+            />
+          </div>
+
+          <div>
+            <label for="inputDriveLink" class="block font-bold text-[var(--text-primary)] mb-1 text-[11px]">Master Google Drive URL</label>
+            <input
+              type="url"
+              id="inputDriveLink"
+              class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-mono text-[10.5px]"
+              placeholder="https://drive.google.com/..."
             />
           </div>
         </div>
 
         <!-- Form Actions -->
-        <div class="pt-3 border-t border-black/5 dark:border-white/10 flex items-center justify-end gap-2">
+        <div class="pt-2.5 border-t border-black/5 dark:border-white/10 flex items-center justify-end gap-2">
           <button
             type="button"
-            class="close-modal-trigger px-4 py-2.5 rounded-xl glass-pill font-bold text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+            class="close-modal-trigger px-4 py-2 rounded-xl glass-pill font-bold text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition"
           >
             Cancel
           </button>
           <button
             type="submit"
-            class="px-5 py-2.5 rounded-xl bg-[var(--color-primary)] text-white font-bold text-xs shadow-md hover:brightness-105 active:scale-95 transition"
+            class="px-5 py-2 rounded-xl bg-[var(--color-primary)] text-white font-bold text-xs shadow-md hover:brightness-105 active:scale-95 transition"
           >
-            Save Faculty Member
+            Save Faculty Profile
           </button>
         </div>
       </form>
+    </div>
+  </div>
     </div>
   </div>
 
@@ -425,6 +513,11 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
 
 
   <!-- ================= APPLICATION JAVASCRIPT ================= -->
+  <script>
+    window.serverFacultyList = <?php echo json_encode($facultyList ?? []); ?>;
+    window.isSuperAdmin = <?php echo !empty($isSuperAdmin) ? 'true' : 'false'; ?>;
+    window.portalBaseUrl = "<?php echo function_exists('base_url') ? base_url('') : '/'; ?>";
+  </script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/navbar.js') : 'assets/js/navbar.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/facultyData.js') : 'assets/js/facultyData.js'; ?>"></script>

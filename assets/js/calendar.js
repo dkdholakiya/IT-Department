@@ -499,17 +499,27 @@
         `;
       });
     } else if (type === 'profile') {
-      modalTitle.textContent = 'Imran Jakir — Faculty & Lead';
-      modalSubtitle.textContent = 'CE & IT Department Portal • User Profile';
+      const uName = window.PORTAL_USER?.name || 'Faculty Member';
+      const uRole = window.PORTAL_USER?.role === 'super_admin' ? 'Super Administrator' : (window.PORTAL_USER?.designation || 'Faculty Staff');
+      const uEmail = window.PORTAL_USER?.email || '';
+      const uDept = window.PORTAL_USER?.department || 'IT & CE Department';
+      const uInitials = window.PORTAL_USER?.initials || uName.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase() || 'FM';
+
+      modalTitle.textContent = `${uName} — Faculty Profile`;
+      modalSubtitle.textContent = `CE & IT Department Portal • ${uRole}`;
       modalBody.innerHTML = `
         <div class="flex items-center gap-4">
-          <div class="w-14 h-14 rounded-full bg-[var(--color-primary)]/15 text-[var(--color-primary-dark, #065F46)] flex items-center justify-center font-bold text-lg ring-2 ring-[var(--color-primary)] overflow-hidden shrink-0">
-            <img src="${document.querySelector('#openProfileBtn img')?.src || ''}" alt="Imran Jakir" class="w-full h-full object-cover" />
+          <div class="w-14 h-14 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center font-bold text-lg ring-2 ring-[var(--color-primary)] overflow-hidden shrink-0 shadow-sm">
+            ${uInitials}
           </div>
           <div class="text-xs">
-            <p class="font-bold text-sm text-[var(--text-primary)]">Imran Jakir</p>
-            <p class="text-[var(--text-muted)]">Lead Agronomist & Department Administrator</p>
-            <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-[var(--color-primary)]/15 text-[var(--color-primary-dark, #065F46)] font-bold text-[10px]">Active Shift • CE & IT</span>
+            <p class="font-bold text-sm text-[var(--text-primary)]">${uName}</p>
+            <p class="text-[var(--text-muted)]">${uRole} &bull; ${uDept}</p>
+            ${uEmail ? `<p class="text-[var(--color-primary)] font-medium mt-0.5 font-mono">${uEmail}</p>` : ''}
+            <div class="flex items-center gap-2 mt-2">
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold text-[10px]">Active Shift • CE & IT</span>
+              <a href="${typeof baseUrl !== 'undefined' ? baseUrl : './'}logout" class="inline-block px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-500 hover:bg-rose-500 hover:text-white font-bold text-[10px] transition cursor-pointer">Sign Out</a>
+            </div>
           </div>
         </div>
       `;

@@ -135,15 +135,15 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
           <!-- Top Nav Bar -->
           <div class="flex items-center justify-between">
             <a
-              href="<?php echo $baseUrl; ?>dashboard"
+              href="<?php echo $baseUrl; ?>"
               class="h-8 sm:h-9 px-2.5 sm:px-4 rounded-full video-glass-card text-[var(--text-primary)] hover:text-[var(--color-primary)] active:scale-95 text-[11px] sm:text-xs font-bold flex items-center gap-1.5 sm:gap-2 shadow-sm transition shrink-0"
-              title="Return to Smart Management Dashboard"
+              title="Return to Home Page"
             >
               <svg class="w-3.5 h-3.5 text-[var(--color-primary)] shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              <span class="hidden min-[380px]:inline">Back to dashboard</span>
-              <span class="inline min-[380px]:hidden">Dashboard</span>
+              <span class="hidden min-[380px]:inline">Go Home Page</span>
+              <span class="inline min-[380px]:hidden">Home</span>
             </a>
 
             <!-- Controls: Palette Chooser + Dark/Light Mode -->
@@ -304,13 +304,18 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             <a
               id="tabLoginBtn"
               href="<?php echo $baseUrl; ?>login"
-              class="px-2 sm:px-3 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm whitespace-nowrap leading-none"
+              class="px-2.5 sm:px-3.5 py-1 rounded-full transition cursor-pointer bg-white text-[#0A0909] shadow-sm whitespace-nowrap leading-none"
             >Log In</a>
-            <a href="<?php echo $baseUrl; ?>otp" class="px-2 sm:px-3 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none">OTP</a>
+            <a
+              id="tabOtpBtn"
+              href="<?php echo $baseUrl; ?>otp<?php echo !empty($pending_email) ? '?email=' . urlencode($pending_email) : ''; ?>"
+              class="<?php echo !empty($has_pending_otp) ? '' : 'hidden'; ?> px-2.5 sm:px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none"
+            >OTP</a>
             <a
               id="tabSignUpBtn"
-              href="<?php echo $baseUrl; ?>signup"
-              class="px-2 sm:px-3 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none"
+              href="javascript:void(0);"
+              class="px-2.5 sm:px-3.5 py-1 rounded-full transition cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap leading-none"
+              title="Sign Up"
             >Sign Up</a>
           </div>
         </div>
@@ -323,12 +328,12 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             <!-- Top Content: Headline & Form Inputs (Mockup Design) -->
             <div class="w-full">
               <div class="text-center mb-3 sm:mb-4">
-                <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--text-primary)] leading-tight font-serif auth-heading">Login with email address</h2>
-                <p class="text-xs text-[var(--text-muted)] mt-1 font-editorial auth-subtitle">Sign in to access your portal & telemetry dashboard.</p>
+                <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--text-primary)] leading-tight font-serif auth-heading">Faculty Portal Sign In</h2>
+                <p class="text-xs text-[var(--text-muted)] mt-1 font-editorial auth-subtitle">Enter your official credentials. 6-digit OTP will be sent to your email.</p>
               </div>
 
               <form id="loginForm" class="mt-3 sm:mt-4 space-y-3 sm:space-y-3.5" onsubmit="return false;">
-                <!-- Email Address (Two-Tier Card Matching Mockup) -->
+                <!-- Email Address or Username -->
                 <div class="mobile-input-card">
                   <div class="mobile-input-icon">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -336,13 +341,13 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
                     </svg>
                   </div>
                   <div class="mobile-input-body">
-                    <label for="loginEmail" class="mobile-input-label">Email Address</label>
+                    <label for="loginEmail" class="mobile-input-label">Email Address or Username</label>
                     <input
                       id="loginEmail"
-                      type="email"
-                      placeholder="nazarisara@yahoo.com"
+                      type="text"
+                      placeholder="Enter your email or username"
                       required
-                      autocomplete="email"
+                      autocomplete="username"
                       class="mobile-input-field"
                     />
                   </div>
@@ -353,7 +358,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
                   </button>
                 </div>
 
-                <!-- Password (Two-Tier Card Matching Mockup) -->
+                <!-- Password -->
                 <div class="mobile-input-card">
                   <div class="mobile-input-icon">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -365,7 +370,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
                     <input
                       id="loginPassword"
                       type="password"
-                      placeholder="••••••••••••"
+                      placeholder="Enter your password"
                       required
                       autocomplete="current-password"
                       class="mobile-input-field"
@@ -398,7 +403,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
                   <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                   </svg>
-                  <span id="loginErrorText">Invalid credentials. Try "admin123"</span>
+                  <span id="loginErrorText">Invalid email/username or password.</span>
                 </div>
 
                 <div id="loginSuccessBanner" class="hidden items-center gap-2 p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
@@ -426,8 +431,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
                 </button>
 
                 <p class="text-xs text-[var(--text-muted)] text-center mt-2 font-medium">
-                  Don't have an account?
-                  <a href="<?php echo $baseUrl; ?>signup" id="linkToSignUp" class="font-bold text-[var(--color-primary)] hover:underline transition cursor-pointer">Sign up</a>
+                  Faculty Verification Protocol &bull; CE & IT Department
                 </p>
               </div>
             </div>
@@ -621,37 +625,132 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
   </main>
 
   <!-- ================= FORGOT PASSWORD MODAL ================= -->
-  <div id="forgotPwdModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-[70] hidden flex items-center justify-center p-4">
-    <div class="glass-card-strong w-full max-w-sm p-6 rounded-3xl shadow-2xl relative text-left">
-      <div class="flex items-center justify-between pb-2 mb-3 border-b border-black/10 dark:border-white/10">
-        <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  <div id="forgotPwdModal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[70] hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="glass-card-strong w-full max-w-md p-5 sm:p-6 rounded-3xl shadow-2xl relative text-left border border-white/50 dark:border-white/10">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-black/10 dark:border-white/10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] flex items-center justify-center shrink-0 shadow-sm border border-[var(--color-primary)]/30">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
             </svg>
           </div>
-          <h3 class="text-sm font-bold text-[var(--text-primary)]">Reset Operator Password</h3>
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-[var(--text-primary)] font-serif leading-tight">Recover Credentials</h3>
+            <p class="text-[11px] text-[var(--text-muted)] font-medium">Verify your email & captcha to receive your password</p>
+          </div>
         </div>
-        <button id="closeForgotModalBtn" type="button" class="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs font-bold" aria-label="Close">✕</button>
+        <button id="closeForgotModalBtn" type="button" class="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition" aria-label="Close">✕</button>
       </div>
-
-      <p class="text-xs text-[var(--text-muted)] mb-3">Enter your registered email address to receive password reset OTP token:</p>
 
       <form id="forgotForm" onsubmit="return false;" class="space-y-3">
-        <input
-          id="resetEmailInput"
-          type="email"
-          placeholder="operator@gmiu.edu.in"
-          required
-          class="w-full h-10 px-3.5 rounded-xl auth-input text-xs font-semibold"
-        />
-        <button id="sendResetBtn" type="submit" class="w-full h-10 rounded-full bg-[var(--color-primary)] text-white text-xs font-bold hover:brightness-105 transition shadow-md">
-          Send Recovery Token
+        <!-- Faculty Email Input -->
+        <div>
+          <label for="resetEmailInput" class="block text-xs font-bold text-[var(--text-secondary)] mb-1">
+            Registered Faculty Email Address
+          </label>
+          <div class="relative">
+            <input
+              id="resetEmailInput"
+              type="email"
+              placeholder="operator@gmiu.edu.in"
+              required
+              autocomplete="email"
+              class="w-full h-10 px-3.5 pl-9 rounded-xl auth-input text-xs font-semibold"
+            />
+            <svg class="w-4 h-4 text-[var(--text-muted)] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Google reCAPTCHA Verification Box -->
+        <div class="rounded-2xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900/90 p-3 shadow-md">
+          <div class="flex items-center justify-between">
+            <!-- Left: "I'm not a robot" Checkbox -->
+            <label id="recaptchaAnchor" class="flex items-center gap-3 cursor-pointer select-none group">
+              <div id="recaptchaBox" class="w-7 h-7 rounded-[4px] border-2 border-gray-400 dark:border-slate-500 bg-white dark:bg-slate-800 flex items-center justify-center transition-all group-hover:border-gray-600 dark:group-hover:border-slate-300 shadow-sm">
+                <!-- Checkmark Icon -->
+                <svg id="recaptchaCheckmark" class="w-5 h-5 text-emerald-600 hidden shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                </svg>
+                <!-- Spinner Icon -->
+                <div id="recaptchaSpinner" class="w-4 h-4 border-2 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin hidden"></div>
+              </div>
+              <span class="text-xs font-semibold text-gray-800 dark:text-gray-100">I'm not a robot</span>
+            </label>
+
+            <!-- Right: Google reCAPTCHA Brand Badge -->
+            <div class="flex flex-col items-center justify-center text-center pl-3 border-l border-gray-200 dark:border-slate-700 select-none">
+              <svg class="w-7 h-7" viewBox="0 0 48 48">
+                <!-- Google reCAPTCHA 3-segment symbol -->
+                <path fill="#4285F4" d="M24 4C13 4 4 13 4 24h6c0-7.7 6.3-14 14-14V4z"/>
+                <path fill="#34A853" d="M44 24c0-11-9-20-20-20v6c7.7 0 14 6.3 14 14h6z"/>
+                <path fill="#EA4335" d="M24 44c11 0 20-9 20-20h-6c0 7.7-6.3 14-14 14v6z"/>
+                <path fill="#FBBC05" d="M4 24c0 11 9 20 20 20v-6c-7.7 0-14-6.3-14-14H4z"/>
+              </svg>
+              <span class="text-[9px] font-bold text-gray-500 tracking-wider uppercase leading-none mt-1">reCAPTCHA</span>
+              <div class="text-[8px] text-gray-400 leading-none mt-0.5 space-x-1">
+                <span>Privacy</span><span>&bull;</span><span>Terms</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Captcha Visual Challenge Row -->
+          <div id="captchaChallengeContainer" class="mt-2.5 pt-2.5 border-t border-gray-200 dark:border-slate-800">
+            <div class="flex items-center justify-between text-[11px] font-bold text-[var(--text-secondary)] mb-1.5">
+              <span>Security Code Challenge</span>
+              <button id="refreshCaptchaBtn" type="button" class="text-[var(--color-primary)] hover:underline flex items-center gap-1 text-[11px] font-bold" title="Generate a fresh code">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                </svg>
+                <span>Refresh Code</span>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <!-- Visual SVG Container -->
+              <div id="captchaSvgContainer" class="flex-1 h-11 bg-white dark:bg-slate-800 rounded-xl border border-gray-300 dark:border-slate-700 flex items-center justify-center overflow-hidden shadow-inner select-none cursor-pointer" title="Click image to refresh captcha">
+                <span class="text-xs text-gray-400 animate-pulse">Loading captcha...</span>
+              </div>
+              <!-- Captcha Text Input -->
+              <input
+                id="captchaInput"
+                type="text"
+                maxlength="6"
+                placeholder="Code"
+                autocomplete="off"
+                required
+                class="w-28 sm:w-32 h-11 px-2.5 text-center tracking-widest uppercase font-mono font-black text-sm rounded-xl auth-input border border-gray-300 dark:border-slate-700"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback Alert Banners -->
+        <div id="forgotErrorBanner" class="hidden items-center gap-2 p-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-500 dark:text-red-400 text-xs font-semibold">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="forgotErrorText">Invalid captcha or email.</span>
+        </div>
+
+        <div id="forgotSuccessBanner" class="hidden items-center gap-2 p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+          </svg>
+          <span id="forgotSuccessText">Credentials sent to your registered email address!</span>
+        </div>
+
+        <!-- Submit Button -->
+        <button id="sendResetBtn" type="submit" class="w-full h-11 rounded-full bg-[var(--color-primary)] text-white text-xs font-bold hover:brightness-105 active:scale-95 transition shadow-lg flex items-center justify-center gap-2">
+          <span id="sendResetBtnText">Send Credentials to Email</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+          </svg>
         </button>
       </form>
-      <div id="resetSuccessMsg" class="hidden text-xs text-emerald-400 font-semibold mt-2 text-center">
-        ✓ Recovery instructions sent to your email.
-      </div>
     </div>
   </div>
 
@@ -1032,7 +1131,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       if (tabSignUpBtn) {
         tabSignUpBtn.addEventListener('click', (e) => {
           e.preventDefault();
-          switchAuthMode('signup');
+          showToast('Faculty registration is managed by department administrators.');
         });
       }
 
@@ -1185,52 +1284,76 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       const loginSuccessBanner = document.getElementById('loginSuccessBanner');
       const loginSuccessText = document.getElementById('loginSuccessText');
 
-      async function submitLogin(overridePassword) {
-        const pwd = (overridePassword !== undefined) ? overridePassword : (loginPassword ? loginPassword.value : '');
+      async function submitLogin() {
+        const loginVal = loginEmail ? loginEmail.value.trim() : '';
+        const pwd = loginPassword ? loginPassword.value.trim() : '';
+
+        if (!loginVal) {
+          loginErrorBanner.classList.remove('hidden');
+          loginErrorBanner.classList.add('flex');
+          loginErrorText.textContent = 'Please enter your email or username.';
+          if (loginEmail) loginEmail.focus();
+          return;
+        }
+
+        if (!pwd) {
+          loginErrorBanner.classList.remove('hidden');
+          loginErrorBanner.classList.add('flex');
+          loginErrorText.textContent = 'Please enter your password.';
+          if (loginPassword) loginPassword.focus();
+          return;
+        }
 
         loginErrorBanner.classList.add('hidden');
         loginSuccessBanner.classList.add('hidden');
 
         const originalText = loginSubmitBtnText.textContent;
-        loginSubmitBtnText.textContent = 'Verifying...';
+        loginSubmitBtnText.textContent = 'Verifying credentials...';
         loginSubmitBtn.disabled = true;
 
         try {
-          const response = await fetch(state.baseUrl + "/verify-password", {
+          const response = await fetch(state.baseUrl + "/api/auth/login-request", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ password: pwd })
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({ login: loginVal, password: pwd })
           });
 
-          const data = await response.json();
+          const rawText = await response.text();
+          let data = null;
+          try {
+            data = JSON.parse(rawText);
+          } catch (parseErr) {
+            throw new Error(response.status >= 500 ? 'Authentication service temporarily unavailable. Please retry.' : 'Unexpected response from server.');
+          }
 
-          if (data && data.success) {
+          if (response.ok && data && data.success) {
             loginSuccessBanner.classList.remove('hidden');
             loginSuccessBanner.classList.add('flex');
-            loginSuccessText.textContent = data.message || 'Authentication successful! Entering Dashboard...';
-            showToast('✓ Authentication verified. Welcome!');
+            loginSuccessText.textContent = data.message || (data.has_pending_otp ? 'Credentials verified! 6-digit OTP code dispatched to your email.' : 'Login successful! Redirecting to Dashboard...');
+            showToast(data.has_pending_otp ? ('✓ 6-Digit OTP dispatched to ' + (data.email || 'your email')) : '✓ Login successful! Redirecting...');
+
+            // Dynamically reveal OTP tab in the segmented navigation menu only if OTP is enabled
+            if (data.has_pending_otp) {
+              const tabOtpBtn = document.getElementById('tabOtpBtn');
+              if (tabOtpBtn) {
+                tabOtpBtn.classList.remove('hidden');
+                if (data.email) {
+                  tabOtpBtn.href = state.baseUrl + '/otp?email=' + encodeURIComponent(data.email);
+                }
+              }
+            }
 
             setTimeout(() => {
-              window.location.href = state.targetUrl;
-            }, 800);
+              window.location.href = data.redirect || (state.baseUrl + (data.has_pending_otp ? ('/otp?email=' + encodeURIComponent(data.email || loginVal)) : '/dashboard'));
+            }, 120);
             return;
           } else {
-            throw new Error((data && data.error) ? data.error : 'Invalid password.');
+            throw new Error((data && data.error) ? data.error : 'Invalid credentials. Please verify your email and password.');
           }
         } catch (err) {
-          if (pwd === 'admin123' || pwd === 'admin' || pwd === 'gmiu2026') {
-            loginSuccessBanner.classList.remove('hidden');
-            loginSuccessBanner.classList.add('flex');
-            showToast('✓ Operator access granted! Entering Dashboard...');
-            setTimeout(() => {
-              window.location.href = state.targetUrl;
-            }, 600);
-            return;
-          }
-
           loginErrorBanner.classList.remove('hidden');
           loginErrorBanner.classList.add('flex');
-          loginErrorText.textContent = err.message || 'Invalid credentials. Try "admin123".';
+          loginErrorText.textContent = err.message || 'Invalid credentials. Please verify your details.';
 
           authCard.classList.remove('shake-error');
           void authCard.offsetWidth;
@@ -1330,7 +1453,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         try {
           const response = await fetch(state.baseUrl + "/register-account", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
             body: JSON.stringify({
               firstName,
               lastName,
@@ -1341,9 +1464,15 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             })
           });
 
-          const data = await response.json();
+          const rawText = await response.text();
+          let data = null;
+          try {
+            data = JSON.parse(rawText);
+          } catch (e) {
+            throw new Error('Registration server returned an unexpected response. Please try again.');
+          }
 
-          if (data && data.success) {
+          if (response.ok && data && data.success) {
             signUpSuccessBanner.classList.remove('hidden');
             signUpSuccessBanner.classList.add('flex');
             signUpSuccessText.textContent = data.message || 'Operator profile registered successfully! Entering Dashboard...';
@@ -1399,17 +1528,71 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       }
 
 
-      // --- 9. FORGOT PASSWORD MODAL ---
+      // --- 9. FORGOT PASSWORD & CREDENTIAL RECOVERY MODAL ---
       const forgotPwdBtn = document.getElementById('forgotPwdBtn');
       const forgotPwdModal = document.getElementById('forgotPwdModal');
       const closeForgotModalBtn = document.getElementById('closeForgotModalBtn');
       const forgotForm = document.getElementById('forgotForm');
-      const resetSuccessMsg = document.getElementById('resetSuccessMsg');
+      const resetEmailInput = document.getElementById('resetEmailInput');
+      const captchaInput = document.getElementById('captchaInput');
+      const captchaSvgContainer = document.getElementById('captchaSvgContainer');
+      const refreshCaptchaBtn = document.getElementById('refreshCaptchaBtn');
+      const recaptchaAnchor = document.getElementById('recaptchaAnchor');
+      const recaptchaCheckmark = document.getElementById('recaptchaCheckmark');
+      const recaptchaSpinner = document.getElementById('recaptchaSpinner');
+      const forgotErrorBanner = document.getElementById('forgotErrorBanner');
+      const forgotErrorText = document.getElementById('forgotErrorText');
+      const forgotSuccessBanner = document.getElementById('forgotSuccessBanner');
+      const forgotSuccessText = document.getElementById('forgotSuccessText');
+      const sendResetBtn = document.getElementById('sendResetBtn');
+      const sendResetBtnText = document.getElementById('sendResetBtnText');
+
+      async function loadCaptcha() {
+        if (!captchaSvgContainer) return;
+        captchaSvgContainer.innerHTML = '<span class="text-xs text-gray-400 animate-pulse">Loading code...</span>';
+        try {
+          const res = await fetch(state.baseUrl + '/api/auth/captcha?_t=' + Date.now());
+          const data = await res.json();
+          if (data && data.success && data.svg) {
+            captchaSvgContainer.innerHTML = data.svg;
+            if (captchaInput) captchaInput.value = '';
+            if (recaptchaCheckmark) recaptchaCheckmark.classList.add('hidden');
+            if (recaptchaSpinner) recaptchaSpinner.classList.add('hidden');
+          } else {
+            throw new Error('Failed to load captcha');
+          }
+        } catch (e) {
+          captchaSvgContainer.innerHTML = '<span class="text-xs text-red-500 font-bold cursor-pointer">Click to retry</span>';
+        }
+      }
+
+      function showForgotError(msg) {
+        if (forgotErrorBanner && forgotErrorText) {
+          forgotErrorText.textContent = msg;
+          forgotErrorBanner.classList.remove('hidden');
+          forgotErrorBanner.classList.add('flex');
+        }
+        if (forgotSuccessBanner) forgotSuccessBanner.classList.add('hidden');
+      }
+
+      function hideForgotBanners() {
+        if (forgotErrorBanner) forgotErrorBanner.classList.add('hidden');
+        if (forgotSuccessBanner) forgotSuccessBanner.classList.add('hidden');
+      }
 
       if (forgotPwdBtn && forgotPwdModal) {
         forgotPwdBtn.addEventListener('click', () => {
+          hideForgotBanners();
+          if (captchaInput) captchaInput.value = '';
           forgotPwdModal.classList.remove('hidden');
-          if (resetSuccessMsg) resetSuccessMsg.classList.add('hidden');
+          loadCaptcha();
+          if (resetEmailInput) {
+            // Pre-fill with current login email if already typed
+            if (loginEmail && loginEmail.value.includes('@')) {
+              resetEmailInput.value = loginEmail.value.trim();
+            }
+            setTimeout(() => resetEmailInput.focus(), 100);
+          }
         });
       }
 
@@ -1420,13 +1603,127 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         });
       }
 
-      if (forgotForm && resetSuccessMsg) {
-        forgotForm.addEventListener('submit', () => {
-          resetSuccessMsg.classList.remove('hidden');
-          showToast('Recovery token generated & sent to email');
-          setTimeout(() => {
-            if (forgotPwdModal) forgotPwdModal.classList.add('hidden');
-          }, 1800);
+      if (refreshCaptchaBtn) {
+        refreshCaptchaBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          loadCaptcha();
+        });
+      }
+
+      if (captchaSvgContainer) {
+        captchaSvgContainer.addEventListener('click', () => loadCaptcha());
+      }
+
+      // Checkbox interactive behavior
+      if (recaptchaAnchor) {
+        recaptchaAnchor.addEventListener('click', () => {
+          if (recaptchaSpinner && recaptchaCheckmark) {
+            recaptchaSpinner.classList.remove('hidden');
+            recaptchaCheckmark.classList.add('hidden');
+            setTimeout(() => {
+              recaptchaSpinner.classList.add('hidden');
+              if (captchaInput && captchaInput.value.length >= 4) {
+                recaptchaCheckmark.classList.remove('hidden');
+              } else if (captchaInput) {
+                captchaInput.focus();
+              }
+            }, 600);
+          }
+        });
+      }
+
+      if (captchaInput) {
+        captchaInput.addEventListener('input', () => {
+          captchaInput.value = captchaInput.value.toUpperCase();
+          if (captchaInput.value.length >= 5) {
+            if (recaptchaCheckmark) recaptchaCheckmark.classList.remove('hidden');
+            if (recaptchaSpinner) recaptchaSpinner.classList.add('hidden');
+          }
+        });
+      }
+
+      // Submit credentials recovery request
+      async function submitForgotForm() {
+        hideForgotBanners();
+
+        const email = resetEmailInput ? resetEmailInput.value.trim() : '';
+        const captcha = captchaInput ? captchaInput.value.trim() : '';
+
+        if (!email) {
+          showForgotError('Please enter your registered faculty email address.');
+          if (resetEmailInput) resetEmailInput.focus();
+          return;
+        }
+
+        if (!captcha) {
+          showForgotError('Please enter the security captcha code shown.');
+          if (captchaInput) captchaInput.focus();
+          return;
+        }
+
+        const originalBtnText = sendResetBtnText ? sendResetBtnText.textContent : 'Send Credentials to Email';
+        if (sendResetBtnText) sendResetBtnText.textContent = 'Verifying & Dispatching...';
+        if (sendResetBtn) sendResetBtn.disabled = true;
+
+        try {
+          const response = await fetch(state.baseUrl + '/api/auth/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ email: email, captcha: captcha })
+          });
+
+          const rawText = await response.text();
+          let data = null;
+          try {
+            data = JSON.parse(rawText);
+          } catch (parseErr) {
+            console.error('Non-JSON response from forgot-password endpoint:', rawText);
+            if (response.status === 404) {
+              throw new Error('Credential recovery service endpoint not found (404). Please contact support.');
+            } else if (response.status >= 500) {
+              throw new Error('Mail server is temporarily unreachable (500). Please try again shortly.');
+            } else {
+              throw new Error('Server returned an unexpected response. Please refresh and try again.');
+            }
+          }
+
+          if (response.ok && data && data.success) {
+            if (recaptchaCheckmark) recaptchaCheckmark.classList.remove('hidden');
+            if (recaptchaSpinner) recaptchaSpinner.classList.add('hidden');
+
+            if (forgotSuccessBanner && forgotSuccessText) {
+              forgotSuccessText.textContent = data.message || 'Credentials sent to your registered email address!';
+              forgotSuccessBanner.classList.remove('hidden');
+              forgotSuccessBanner.classList.add('flex');
+            }
+
+            showToast('✓ Credentials dispatched to ' + (data.email || email));
+
+            setTimeout(() => {
+              if (forgotPwdModal) forgotPwdModal.classList.add('hidden');
+            }, 2800);
+          } else {
+            throw new Error((data && data.error) ? data.error : 'Failed to send credentials. Please try again.');
+          }
+        } catch (err) {
+          showForgotError(err.message || 'Verification error. Please try again.');
+          loadCaptcha();
+        } finally {
+          if (sendResetBtnText) sendResetBtnText.textContent = originalBtnText;
+          if (sendResetBtn) sendResetBtn.disabled = false;
+        }
+      }
+
+      if (forgotForm) {
+        forgotForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          submitForgotForm();
+        });
+      }
+      if (sendResetBtn) {
+        sendResetBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          submitForgotForm();
         });
       }
 
