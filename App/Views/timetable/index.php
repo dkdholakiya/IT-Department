@@ -72,15 +72,19 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               The schedule Excel file is missing from the uploads folder. Please place the timetable Excel sheet inside <code>uploads/timetable/</code> or click below to sync directly from Google Sheets.
             </p>
             <div class="flex items-center gap-3 flex-wrap justify-center mt-2">
+              <?php if (!class_exists('Core\Auth') || \Core\Auth::can('timetable.sync')): ?>
               <button type="button" onclick="quickSyncSheet(event, 'faculty')" class="h-9 px-4 rounded-full glass-pill text-xs font-bold bg-[var(--color-primary)] text-white hover:brightness-105 transition flex items-center gap-2 cursor-pointer shadow-sm">
                 <svg class="w-3.5 h-3.5 quick-sync-icon" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
                 <span class="quick-sync-text">⚡ Direct Download & Set New Sheet</span>
               </button>
+              <?php endif; ?>
+              <?php if (!class_exists('Core\Auth') || \Core\Auth::can('timetable.update')): ?>
               <a href="<?php echo function_exists('base_url') ? base_url('update-timetable') : './update-timetable'; ?>" class="h-9 px-4 rounded-full glass-pill text-xs font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center shadow-sm" style="text-decoration: none;">
                 Upload Local Excel File
               </a>
+              <?php endif; ?>
             </div>
           </div>
 
@@ -93,15 +97,19 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               The schedule Excel file is uploaded, but the database has not been compiled yet. Please run the sync utility to compile the timetable details.
             </p>
             <div class="flex items-center gap-3 flex-wrap justify-center mt-2">
+              <?php if (!class_exists('Core\Auth') || \Core\Auth::can('timetable.sync')): ?>
               <button type="button" onclick="quickSyncSheet(event, 'faculty')" class="h-9 px-4 rounded-full glass-pill text-xs font-bold bg-[var(--color-primary)] text-white hover:brightness-105 transition flex items-center gap-2 cursor-pointer shadow-sm">
                 <svg class="w-3.5 h-3.5 quick-sync-icon" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
                 <span class="quick-sync-text">⚡ Compile & Set Database</span>
               </button>
+              <?php endif; ?>
+              <?php if (!class_exists('Core\Auth') || \Core\Auth::can('timetable.update')): ?>
               <a href="<?php echo function_exists('base_url') ? base_url('update-timetable') : './update-timetable'; ?>" class="h-9 px-4 rounded-full glass-pill text-xs font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center shadow-sm" style="text-decoration: none;">
                 Sync Database
               </a>
+              <?php endif; ?>
             </div>
           </div>
 
@@ -148,7 +156,9 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   Department of IT & CE
                 </span>
                 <div class="faculty-semester-info" id="facSemesterInfo"></div>
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('timetable.alteration')): ?>
                 <button type="button" class="leave-toggle-btn" id="leaveToggleBtn">Alteration</button>
+                <?php endif; ?>
               </div>
 
             </div>
@@ -167,7 +177,8 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                 </button>
               </div>
 
-              <!-- Workload Summary Button -->
+              <!-- Workload Summary Button (Hidden if unauthorized) -->
+              <?php if (!class_exists('Core\Auth') || \Core\Auth::can('workload.view')): ?>
               <a href="<?php echo function_exists('base_url') ? base_url('workload-summary') : './workload-summary'; ?>" class="h-7 sm:h-7.5 px-2 sm:px-2.5 rounded-full glass-pill text-[11px] font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 workload-summary-seg-btn whitespace-nowrap" style="text-decoration:none;">
                 <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10M12 20V4M6 20v-6" />
@@ -175,8 +186,10 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                 <span class="hidden xs:inline sm:inline">Workload Summary</span>
                 <span class="xs:hidden sm:hidden">Summary</span>
               </a>
+              <?php endif; ?>
 
-              <!-- Sync Live Sheet Button -->
+              <!-- Sync Live Sheet Button (Hidden if unauthorized) -->
+              <?php if (!class_exists('Core\Auth') || \Core\Auth::can('timetable.sync')): ?>
               <button type="button" onclick="quickSyncSheet(event, 'faculty')" class="h-7 sm:h-7.5 px-2 sm:px-2.5 rounded-full glass-pill text-[11px] font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer whitespace-nowrap" title="Download latest Google Sheet file, remove old file, and refresh">
                 <svg class="w-3.5 h-3.5 quick-sync-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -184,6 +197,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                 <span class="quick-sync-text hidden sm:inline">Sync Live Sheet</span>
                 <span class="sm:hidden">Sync</span>
               </button>
+              <?php endif; ?>
             </div>
           </div>
 

@@ -997,18 +997,24 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                                                     onclick="saveDraft()">
                                                     <i class="bi bi-save2"></i> Save Draft
                                                 </button>
+                                                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('report.preview')): ?>
                                                 <button type="button" class="btn btn-gmiu-secondary btn-sm"
                                                     onclick="openPreviewModal()">
                                                     <i class="bi bi-eye"></i> Preview Report
                                                 </button>
+                                                <?php endif; ?>
+                                                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('report.print')): ?>
                                                 <button type="button" class="btn btn-gmiu-secondary btn-sm"
                                                     onclick="triggerPrint()">
                                                     <i class="bi bi-printer"></i> Print / PDF
                                                 </button>
+                                                <?php endif; ?>
+                                                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('report.reset')): ?>
                                                 <button type="button" class="btn btn-gmiu-secondary btn-sm text-danger"
                                                     onclick="resetReportForm()">
                                                     <i class="bi bi-arrow-counterclockwise"></i> Reset Form
                                                 </button>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -1017,8 +1023,10 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                                     <button type="button" class="btn btn-outline-light px-4"
                                         onclick="goToPrevSection(4)"><i class="bi bi-arrow-left me-2"></i> Previous
                                         Section</button>
+                                    <?php if (!class_exists('Core\Auth') || \Core\Auth::can('report.submit')): ?>
                                     <button type="submit" class="btn btn-gmiu-primary px-4" id="submitBtn"><i
                                             class="bi bi-cloud-arrow-up"></i> Submit & Send</button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

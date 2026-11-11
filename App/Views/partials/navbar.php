@@ -45,6 +45,12 @@ $sessionExpiresAt = $isLoggedIn && method_exists('Core\Auth', 'sessionExpiresAt'
 <script>
   window.PORTAL_USER = <?php echo json_encode($authUser ?? null, JSON_UNESCAPED_UNICODE); ?>;
   window.PORTAL_SESSION_EXPIRES_AT = <?php echo json_encode($sessionExpiresAt); ?>;
+  window.PORTAL_PERMISSIONS = <?php echo json_encode(class_exists('Core\Auth') ? \Core\Auth::userPermissions() : ['*'], JSON_UNESCAPED_UNICODE); ?>;
+  window.canPermission = function(perm) {
+    if (!window.PORTAL_PERMISSIONS) return true;
+    if (window.PORTAL_PERMISSIONS.indexOf('*') !== -1) return true;
+    return window.PORTAL_PERMISSIONS.indexOf(perm) !== -1;
+  };
 </script>
 
 <!-- ================= FIXED TOP NAVIGATION BAR (Pinned at z-30 on Mobile; Relative in Flow on Desktop) ================= -->

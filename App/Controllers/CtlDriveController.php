@@ -11,7 +11,7 @@ class CtlDriveController extends Controller
      */
     public function index(): void
     {
-        Auth::check('Drive Scanner');
+        Auth::requirePermission('ctldrive.view', 'Drive Scanner');
         $this->view('ctldrive.index');
     }
 }

@@ -23,6 +23,7 @@ $pageLabels = [
   'zero-student-report' => 'Zero Student Log',
   'student-timetable'   => 'Student Timetable',
   'syllabus-papers'     => 'Syllabus & Exam Papers',
+  'settings'            => 'Settings & Roles',
 ];
 $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Navigation');
 ?>
@@ -132,7 +133,10 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
   <div class="my-auto flex flex-col items-center w-full">
     <nav id="sideMenuNavPill" class="desktop-pill-nav side-menu-glass rounded-full p-1.5 flex flex-col items-center gap-1.5 transition-all duration-300">
 
+      <?php $canCheck = class_exists('Core\Auth'); ?>
+
       <!-- Nav 1: Smart Dashboard (Bento Space Dashboard) -->
+      <?php if (!$canCheck || \Core\Auth::can('dashboard.view')): ?>
       <a href="<?php echo htmlspecialchars($baseUrl); ?>dashboard" style="--stagger: 1;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'dashboard') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Smart Dashboard">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'dashboard') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -146,8 +150,10 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Smart Dashboard</span>
         </span>
       </a>
+      <?php endif; ?>
 
       <!-- Nav 2: Academic Calendar (Calendar with Binder Pins & Date Dots) -->
+      <?php if (!$canCheck || \Core\Auth::can('calendar.view')): ?>
       <a href="<?php echo htmlspecialchars($baseUrl); ?>calendar" style="--stagger: 2;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'calendar') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Academic Calendar">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'calendar') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -162,8 +168,10 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Academic Calendar</span>
         </span>
       </a>
+      <?php endif; ?>
 
       <!-- Nav 3: Timetable Management (Calendar Schedule with Live Clock) -->
+      <?php if (!$canCheck || \Core\Auth::can('timetable.view')): ?>
       <a href="<?php echo htmlspecialchars($baseUrl); ?>timetable" style="--stagger: 3;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'timetable') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Timetable Schedules">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'timetable') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -177,8 +185,10 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Timetables</span>
         </span>
       </a>
+      <?php endif; ?>
 
       <!-- Nav 4: Workload & CTL Report Submission (Document with Workload Analytics Bars) -->
+      <?php if (!$canCheck || \Core\Auth::can('report.view')): ?>
       <a href="<?php echo htmlspecialchars($baseUrl); ?>report" style="--stagger: 4;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'report') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Daily Workload Report">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'report') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -191,8 +201,10 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Workload Reports</span>
         </span>
       </a>
+      <?php endif; ?>
 
       <!-- Nav 5: CTL Activity Dashboard (Live Activity Pulse Monitor) -->
+      <?php if (!$canCheck || \Core\Auth::can('ctlactivity.view')): ?>
       <a href="<?php echo htmlspecialchars($baseUrl); ?>ctlactivity" style="--stagger: 5;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'ctlactivity') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="CTL Activity Dashboard">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'ctlactivity') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -203,8 +215,10 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">CTL Activity</span>
         </span>
       </a>
+      <?php endif; ?>
 
       <!-- Nav 6: Drive Folder Scanner (Folder with Integrated Scanner Lens) -->
+      <?php if (!$canCheck || \Core\Auth::can('ctldrive.view')): ?>
       <a href="<?php echo htmlspecialchars($baseUrl); ?>ctldrive" style="--stagger: 6;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'ctldrive') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Drive Folder Scanner">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'ctldrive') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -217,8 +231,10 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Drive Scanner</span>
         </span>
       </a>
+      <?php endif; ?>
 
       <!-- Nav 7: Faculty List (Academic Professors & Faculty Group) -->
+      <?php if (!$canCheck || \Core\Auth::can('faculty.list')): ?>
       <a href="<?php echo htmlspecialchars($baseUrl); ?>faculty" style="--stagger: 7;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'faculty') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Faculty List">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'faculty') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -232,8 +248,10 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Faculty List</span>
         </span>
       </a>
+      <?php endif; ?>
 
       <!-- Nav 8: Zero Student Log (Student Attendance Incident / Absentee Log) -->
+      <?php if (!$canCheck || \Core\Auth::can('zero_student.view')): ?>
       <a href="<?php echo htmlspecialchars($baseUrl); ?>zero-student-report" style="--stagger: 8;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'zero-student-report') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Zero Student Log">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'zero-student-report') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -247,8 +265,10 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Zero Student Log</span>
         </span>
       </a>
+      <?php endif; ?>
 
       <!-- Nav 9: Student Timetable (Academic Graduation Cap) -->
+      <?php if (!$canCheck || \Core\Auth::can('student_timetable.view')): ?>
       <a href="<?php echo htmlspecialchars($baseUrl); ?>student-timetable" style="--stagger: 9;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'student-timetable') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Student Timetables">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'student-timetable') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -260,8 +280,10 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Student Timetable</span>
         </span>
       </a>
+      <?php endif; ?>
 
       <!-- Nav 10: Syllabus & Exam Papers (Dual-Page Open Curriculum Book) -->
+      <?php if (!$canCheck || \Core\Auth::can('syllabus.view')): ?>
       <a href="<?php echo htmlspecialchars($baseUrl); ?>syllabus-papers" style="--stagger: 10;" class="samsung-shortcut-item sidebar-nav-btn w-10 h-10 rounded-full flex items-center justify-center gap-2.5 text-left text-xs font-semibold transition <?php echo ($activePage === 'syllabus-papers') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?>" title="Syllabus & Exam Papers">
         <span class="samsung-squircle w-9 h-9 rounded-full flex items-center justify-center <?php echo ($activePage === 'syllabus-papers') ? 'text-white' : 'text-current'; ?> shrink-0">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -273,6 +295,8 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
           <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap">Syllabus & Papers</span>
         </span>
       </a>
+      <?php endif; ?>
+     
 
     </nav>
   </div>
@@ -281,16 +305,24 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
   <?php
     $authUser = class_exists('Core\Auth') ? \Core\Auth::user() : null;
     $authName = $authUser['name'] ?? 'Faculty Member';
-    $authRole = ($authUser['role'] ?? '') === 'super_admin' ? 'Super Admin' : ($authUser['designation'] ?? 'Staff');
+    $rawRole = $authUser['role'] ?? 'faculty';
+    $roleDisplay = 'Faculty Member';
+    if ($canCheck) {
+        if (\Core\Auth::isSuperAdmin()) $roleDisplay = 'Super Admin';
+        elseif (\Core\Auth::isHod()) $roleDisplay = 'HOD';
+        elseif (\Core\Auth::isSubAdmin()) $roleDisplay = 'Sub Admin';
+        else $roleDisplay = $authUser['designation'] ?? 'Faculty';
+    }
     $authInitials = $authUser['initials'] ?? (empty($authName) ? 'FM' : strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $authName), 0, 2)));
   ?>
   <div id="bottomCapsuleDock" class="samsung-shortcut-item side-menu-glass rounded-full p-1.5 flex flex-col items-center justify-center gap-2 transition-all duration-300" style="--stagger: 7;">
-    <!-- 1. Setting Icon -->
-    <button
+    <!-- 1. Setting Icon Link (Hidden if user lacks settings.view permission) -->
+    <?php if ($canCheck && \Core\Auth::can('settings.view')): ?>
+    <a
       id="openSettingsBtn"
-      type="button"
-      class="sidebar-bottom-btn w-10 h-10 rounded-full text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 flex items-center justify-center gap-2.5 transition shrink-0 cursor-pointer"
-      title="Theme Color & Portal Settings"
+      href="<?php echo htmlspecialchars($baseUrl); ?>settings"
+      class="sidebar-bottom-btn w-10 h-10 rounded-full <?php echo ($activePage === 'settings') ? 'bg-[var(--sidebar-active-bg)] text-white shadow-sm' : 'text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'; ?> flex items-center justify-center gap-2.5 transition shrink-0 cursor-pointer"
+      title="Settings & Role Permissions"
       aria-label="Settings"
     >
       <span class="samsung-squircle w-9 h-9 rounded-full side-menu-icon-glass flex items-center justify-center shrink-0">
@@ -300,16 +332,17 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
         </svg>
       </span>
       <span class="sidebar-nav-label-wrap expanded-only lg:hidden min-w-0 flex-1 pr-2 text-left">
-        <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap text-[var(--text-primary)]">Settings & Theme</span>
+        <span class="sidebar-nav-label font-bold text-[12.5px] tracking-tight block leading-tight whitespace-nowrap text-[var(--text-primary)]">Settings & Roles</span>
       </span>
-    </button>
+    </a>
+    <?php endif; ?>
 
     <!-- 2. User Profile Icon -->
     <button
       id="openProfileBtn"
       type="button"
       class="sidebar-bottom-btn w-10 h-10 rounded-full text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 flex items-center justify-center gap-2.5 focus:outline-none group transition shrink-0 cursor-pointer"
-      title="User Profile: <?php echo htmlspecialchars($authName); ?> (<?php echo htmlspecialchars($authRole); ?>)"
+      title="User Profile: <?php echo htmlspecialchars($authName); ?> (<?php echo htmlspecialchars($roleDisplay); ?>)"
       aria-label="User Profile"
     >
       <span class="samsung-squircle w-9 h-9 rounded-full bg-[var(--color-primary)] text-white border border-white/20 shadow-sm flex items-center justify-center overflow-hidden shrink-0 relative font-bold text-xs">
@@ -317,7 +350,7 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
       </span>
       <div class="sidebar-nav-label-wrap expanded-only lg:hidden min-w-0 flex-1 pr-2 text-left">
         <p class="sidebar-nav-label font-bold text-[12.5px] text-[var(--text-primary)] leading-tight whitespace-nowrap truncate"><?php echo htmlspecialchars($authName); ?></p>
-        <p class="sidebar-user-role text-[11px] font-bold whitespace-nowrap mt-0.5 text-[var(--color-primary)]"><?php echo htmlspecialchars($authRole); ?></p>
+        <p class="sidebar-user-role text-[11px] font-bold whitespace-nowrap mt-0.5 text-[var(--color-primary)]"><?php echo htmlspecialchars($roleDisplay); ?></p>
       </div>
     </button>
   </div>

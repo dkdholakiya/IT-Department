@@ -89,6 +89,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               <div class="flex items-center justify-between gap-2 flex-wrap">
                 <span class="text-xs font-bold text-[var(--text-primary)]">Presets & Department:</span>
                 <div class="flex items-center gap-2">
+                  <?php if (!class_exists('Core\Auth') || \Core\Auth::can('ctldrive.view_links')): ?>
                   <button 
                     type="button" 
                     class="h-7 px-2.5 rounded-xl glass-pill text-[11px] font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1 cursor-pointer" 
@@ -101,6 +102,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                     </svg>
                     <span>facultyData.js Links</span>
                   </button>
+                  <?php endif; ?>
 
                   <!-- Department Selector Segment -->
                   <div class="inline-flex items-center p-0.5 rounded-full glass-pill border border-white/80 dark:border-white/10 shrink-0">
@@ -149,6 +151,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
                   </svg>
                 </div>
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('ctldrive.scan')): ?>
                 <button 
                   id="scan-btn" 
                   type="button"
@@ -161,12 +164,14 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   </svg>
                   <span>Scan Folders</span>
                 </button>
+                <?php endif; ?>
               </div>
             </div>
 
           </div>
 
           <!-- Section 3: Email Excel Report (revealed on scan or expandable) -->
+          <?php if (!class_exists('Core\Auth') || \Core\Auth::can('ctldrive.send_email')): ?>
           <div id="email-section" class="p-3.5 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 space-y-3" style="display: none;">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1.5">
@@ -241,6 +246,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               <span>Send Report via Email</span>
             </button>
           </div>
+          <?php endif; ?>
 
           <!-- Section 4: Live Console Logs -->
           <div class="space-y-1.5 mt-auto pt-2">
@@ -272,6 +278,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
             </div>
 
             <!-- Download Excel Report Button -->
+            <?php if (!class_exists('Core\Auth') || \Core\Auth::can('ctldrive.download')): ?>
             <button 
               id="download-btn" 
               type="button"
@@ -286,6 +293,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               </svg>
               <span>Download Excel Report (.xlsx)</span>
             </button>
+            <?php endif; ?>
           </div>
 
           <!-- Live 4-Card Summary Counters -->

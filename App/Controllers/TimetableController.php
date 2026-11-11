@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use Core\Controller;
+use Core\Auth;
 
 class TimetableController extends Controller
 {
@@ -10,6 +11,7 @@ class TimetableController extends Controller
      */
     public function faculty(): void
     {
+        Auth::requirePermission('timetable.view', 'Faculty Timetable');
         $this->view('timetable.index');
     }
 
@@ -18,6 +20,11 @@ class TimetableController extends Controller
      */
     public function student(): void
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            Auth::requirePermission('student_timetable.upload', 'Student Timetable Upload');
+        } else {
+            Auth::requirePermission('student_timetable.view', 'Student Timetable');
+        }
         $studentUploadDir = BASE_PATH . '/uploads/student_timetable/';
         if (!is_dir($studentUploadDir)) {
             @mkdir($studentUploadDir, 0777, true);
@@ -70,6 +77,7 @@ class TimetableController extends Controller
      */
     public function workloadSummary(): void
     {
+        Auth::requirePermission('workload.view', 'Faculty Workload Audit');
         $this->view('timetable.workload');
     }
 
@@ -78,6 +86,7 @@ class TimetableController extends Controller
      */
     public function updateTimetable(): void
     {
+        Auth::requirePermission('timetable.update', 'Timetable Compiler Status');
         $this->view('timetable.status');
     }
 }

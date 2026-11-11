@@ -548,6 +548,15 @@
 
     closeActionMenu();
 
+    function hasFacPerm(perm) {
+      if (window.isSuperAdmin) return true;
+      if (Array.isArray(window.userPermissions)) {
+        if (window.userPermissions.includes('*')) return true;
+        return window.userPermissions.includes(perm);
+      }
+      return false;
+    }
+
     const member = facultyList.find(m => m.id === id);
     if (!member) return;
 
@@ -559,58 +568,86 @@
     menu.className = 'action-icon-menu';
     menu.id = 'floatingActionMenu';
 
-    menu.innerHTML = `
-      <!-- 1. Key (View Credentials) -->
-      <button type="button" class="fac-action-icon-btn btn-cred-key" data-action="show-credentials" data-id="${member.id}" title="View Sign-In Credentials">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
-        </svg>
-      </button>
+    let menuButtonsHtml = '';
 
-      <!-- 2. Mail (Email Credentials) -->
-      <button type="button" class="fac-action-icon-btn btn-cred-mail" data-action="email-credentials" data-id="${member.id}" title="Send Credentials via Email">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-        </svg>
-      </button>
+    // 1. Key (View Credentials) - strictly permission controlled
+    if (hasFacPerm('faculty.view_credentials')) {
+      menuButtonsHtml += `
+        <button type="button" class="fac-action-icon-btn btn-cred-key" data-action="show-credentials" data-id="${member.id}" title="View Sign-In Credentials">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+          </svg>
+        </button>
+      `;
+    }
 
-      <!-- 3. Eye (View Details) -->
-      <button type="button" class="fac-action-icon-btn btn-action-view" data-action="view" data-id="${member.id}" title="View Faculty Profile">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
-          <circle cx="12" cy="12" r="3"/>
-        </svg>
-      </button>
+    // 2. Mail (Email Credentials) - strictly permission controlled
+    if (hasFacPerm('faculty.send_credentials')) {
+      menuButtonsHtml += `
+        <button type="button" class="fac-action-icon-btn btn-cred-mail" data-action="email-credentials" data-id="${member.id}" title="Send Credentials via Email">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+          </svg>
+        </button>
+      `;
+    }
 
-      <!-- 4. Edit (Edit Faculty) -->
-      <button type="button" class="fac-action-icon-btn btn-action-edit" data-action="edit" data-id="${member.id}" title="Edit Faculty Profile">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
-          <path d="m15 5 4 4"/>
-        </svg>
-      </button>
+    // 3. Eye (View Details) - profile view
+    if (hasFacPerm('faculty.profile') || hasFacPerm('faculty.list')) {
+      menuButtonsHtml += `
+        <button type="button" class="fac-action-icon-btn btn-action-view" data-action="view" data-id="${member.id}" title="View Faculty Profile">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      `;
+    }
 
-      <!-- 5. Toggle Status (Active / Inactive) -->
-      <button type="button" class="fac-action-icon-btn btn-action-status ${isInactive ? 'is-inactive' : ''}" data-action="toggle-status" data-id="${member.id}" title="${isInactive ? 'Mark as Active' : 'Mark as Inactive'}">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
-        </svg>
-      </button>
+    // 4. Edit (Edit Faculty) - edit permission
+    if (hasFacPerm('faculty.edit')) {
+      menuButtonsHtml += `
+        <button type="button" class="fac-action-icon-btn btn-action-edit" data-action="edit" data-id="${member.id}" title="Edit Faculty Profile">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+            <path d="m15 5 4 4"/>
+          </svg>
+        </button>
+      `;
+    }
 
-      <!-- 6. Delete Faculty -->
-      <button type="button" class="fac-action-icon-btn btn-action-delete" data-action="delete" data-id="${member.id}" title="Delete Faculty Profile">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-        </svg>
-      </button>
+    // 5. Toggle Status (Active / Inactive) - toggle permission
+    if (hasFacPerm('faculty.toggle_status')) {
+      menuButtonsHtml += `
+        <button type="button" class="fac-action-icon-btn btn-action-status ${isInactive ? 'is-inactive' : ''}" data-action="toggle-status" data-id="${member.id}" title="${isInactive ? 'Mark as Active' : 'Mark as Inactive'}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+          </svg>
+        </button>
+      `;
+    }
 
-      <!-- 7. Close Menu (X) -->
+    // 6. Delete Faculty - strictly blocked for HOD & Sub Admin
+    if (hasFacPerm('faculty.delete')) {
+      menuButtonsHtml += `
+        <button type="button" class="fac-action-icon-btn btn-action-delete" data-action="delete" data-id="${member.id}" title="Delete Faculty Profile">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+          </svg>
+        </button>
+      `;
+    }
+
+    // 7. Close Menu (X)
+    menuButtonsHtml += `
       <button type="button" class="fac-action-icon-btn btn-action-close" data-action="close" data-id="${member.id}" title="Close Actions">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
     `;
+
+    menu.innerHTML = menuButtonsHtml;
 
     document.body.appendChild(menu);
     activeMenuEl = menu;
@@ -1265,7 +1302,9 @@
         document.getElementById('inputUsername').value = member.username || (member.email ? member.email.split('@')[0] : member.id);
       }
       if (document.getElementById('inputRole')) {
-        document.getElementById('inputRole').value = member.role || 'staff';
+        let r = (member.role || 'faculty').toLowerCase();
+        if (r === 'staff') r = 'faculty';
+        document.getElementById('inputRole').value = r;
       }
       if (document.getElementById('inputPassword')) {
         document.getElementById('inputPassword').value = member.password || '';
@@ -1282,7 +1321,7 @@
       document.getElementById('inputDepartment').value = currentDept === 'all' ? 'Information Technology' : currentDept;
       document.getElementById('inputStatus').value = 'active';
       document.getElementById('inputSetting').value = 'FF-38';
-      if (document.getElementById('inputRole')) document.getElementById('inputRole').value = 'staff';
+      if (document.getElementById('inputRole')) document.getElementById('inputRole').value = 'faculty';
     }
 
     modal.classList.remove('hidden');
@@ -1304,7 +1343,7 @@
     const status = document.getElementById('inputStatus').value;
 
     const username = (document.getElementById('inputUsername')?.value || '').trim();
-    const role = (document.getElementById('inputRole')?.value || 'staff').trim();
+    const role = (document.getElementById('inputRole')?.value || 'faculty').trim();
     const password = (document.getElementById('inputPassword')?.value || '').trim();
     const semClass = (document.getElementById('inputSemClass')?.value || '').trim();
     const driveLink = (document.getElementById('inputDriveLink')?.value || '').trim();

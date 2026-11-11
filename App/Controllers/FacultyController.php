@@ -58,14 +58,15 @@ class FacultyController extends Controller
      */
     public function index(): void
     {
-        Auth::check('Faculty Directory');
+        Auth::requirePermission('faculty.list', 'Faculty Directory');
 
         $facultyList = $this->loadFacultyUsers();
 
         $this->view('faculty.index', [
-            'facultyList' => $facultyList,
-            'currentUser' => Auth::user(),
-            'isSuperAdmin' => Auth::isSuperAdmin()
+            'facultyList'     => $facultyList,
+            'currentUser'     => Auth::user(),
+            'isSuperAdmin'    => Auth::isSuperAdmin(),
+            'userPermissions' => Auth::userPermissions()
         ]);
     }
 
@@ -75,6 +76,7 @@ class FacultyController extends Controller
      */
     public function apiList(): void
     {
+        Auth::requirePermission('faculty.list', 'Faculty Directory API');
         $faculty = $this->loadFacultyUsers();
         $this->json([
             'success' => true,
@@ -92,8 +94,6 @@ class FacultyController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             exit(0);
         }
-
-        Auth::check('Faculty Management');
 
         $raw = file_get_contents('php://input');
         $input = json_decode($raw, true) ?: $_POST;
@@ -117,6 +117,13 @@ class FacultyController extends Controller
                 $existingIndex = $idx;
                 break;
             }
+        }
+
+        // Granular permission check: create vs edit
+        if ($existingIndex !== -1) {
+            Auth::requirePermission('faculty.edit', 'Edit Faculty Profile');
+        } else {
+            Auth::requirePermission('faculty.create', 'Create Faculty Member');
         }
 
         $email = trim($input['email'] ?? '');
@@ -227,7 +234,7 @@ class FacultyController extends Controller
             exit(0);
         }
 
-        Auth::check('Faculty Management');
+        Auth::requirePermission('faculty.toggle_status', 'Toggle Faculty Status');
 
         $raw = file_get_contents('php://input');
         $input = json_decode($raw, true) ?: $_POST;
@@ -282,7 +289,13 @@ class FacultyController extends Controller
             exit(0);
         }
 
-        Auth::check('Faculty Management');
+        Auth::requirePermission('faculty.delete', 'Delete Faculty Member');
+
+        // Explicit defense-in-depth: HOD and Sub Admin are strictly restricted from deleting records
+        if (Auth::isHod() || Auth::isSubAdmin()) {
+            $this->json(['success' => false, 'error' => 'HOD and Sub Admin roles are strictly restricted from deleting records.'], 403);
+            return;
+        }
 
         $raw = file_get_contents('php://input');
         $input = json_decode($raw, true) ?: $_POST;
@@ -336,7 +349,7 @@ class FacultyController extends Controller
             exit(0);
         }
 
-        Auth::check('Faculty Management');
+        Auth::requirePermission('faculty.send_credentials', 'Send Faculty Credentials');
 
         $raw = file_get_contents('php://input');
         $input = json_decode($raw, true) ?: $_POST;

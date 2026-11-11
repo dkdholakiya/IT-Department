@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use Core\Controller;
+use Core\Auth;
 
 class ReportController extends Controller
 {
@@ -10,6 +11,7 @@ class ReportController extends Controller
      */
     public function index(): void
     {
+        Auth::requirePermission('report.view', 'Workload Reports');
         $this->view('report.index');
     }
 }

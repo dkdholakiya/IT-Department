@@ -11,7 +11,7 @@ class DashboardController extends Controller
      */
     public function index(): void
     {
-        Auth::check('Smart Management Dashboard');
+        Auth::requirePermission('dashboard.view', 'Smart Management Dashboard');
         $this->view('dashboard.index');
     }
 }

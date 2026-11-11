@@ -158,6 +158,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               </div>
 
               <!-- Export All Details Button -->
+              <?php if (!class_exists('Core\Auth') || \Core\Auth::can('syllabus.export_all')): ?>
               <div class="stat-card p-2 sm:p-2.5 flex items-center justify-center">
                 <button
                   type="button"
@@ -173,6 +174,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   <span>Export All (CSV)</span>
                 </button>
               </div>
+              <?php endif; ?>
             </div>
 
             <!-- 4.2 Semester Tabs Navigation Pills -->
@@ -185,6 +187,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   <h3 id="activeSemTitle" class="text-xs sm:text-sm font-bold font-serif text-[var(--text-primary)]">Semester 1</h3>
                   <span id="activeCountBadge" class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10">0 Subjects</span>
                 </div>
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('syllabus.export_subject')): ?>
                 <button
                   type="button"
                   id="btnExportSubjectTable"
@@ -198,6 +201,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   </svg>
                   <span>Export CSV</span>
                 </button>
+                <?php endif; ?>
               </div>
               <div class="syl-table-scroll overflow-x-auto max-h-[380px]">
                 <table class="syl-table" role="grid">
@@ -225,6 +229,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   <h3 class="text-xs sm:text-sm font-bold font-serif text-[var(--text-primary)]">Previous Exam Papers</h3>
                   <span id="examCountBadge" class="px-2.5 py-0.5 rounded-full glass-pill text-[10px] sm:text-[11px] font-bold text-[var(--color-primary)] border border-white/80 dark:border-white/10">0 Papers</span>
                 </div>
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('syllabus.export_exam')): ?>
                 <button
                   type="button"
                   id="btnExportExamTable"
@@ -238,6 +243,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   </svg>
                   <span>Export CSV</span>
                 </button>
+                <?php endif; ?>
               </div>
               <div class="syl-table-scroll overflow-x-auto max-h-[340px]">
                 <table class="syl-exam-table" role="grid">

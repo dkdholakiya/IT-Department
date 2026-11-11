@@ -112,6 +112,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
             </div>
 
             <!-- Reset Defaults Button -->
+            <?php if (!class_exists('Core\Auth') || \Core\Auth::can('faculty.reset')): ?>
             <button
               type="button"
               id="resetFacultyDefaultsBtn"
@@ -123,6 +124,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               </svg>
               <span class="hidden md:inline">Reset Defaults</span>
             </button>
+            <?php endif; ?>
 
             <!-- Export Excel Button -->
             <button
@@ -142,6 +144,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
             </button>
 
             <!-- + Add Faculty Button -->
+            <?php if (!class_exists('Core\Auth') || \Core\Auth::can('faculty.create')): ?>
             <button
               type="button"
               id="addFacultyBtn"
@@ -153,6 +156,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               </svg>
               <span>Add Faculty</span>
             </button>
+            <?php endif; ?>
           </div>
 
         </div>
@@ -382,8 +386,10 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               id="inputRole"
               class="w-full px-3 py-2 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] font-semibold text-xs cursor-pointer"
             >
-              <option value="staff">Staff Member</option>
-              <option value="super_admin">Super Administrator</option>
+              <option value="faculty">Faculty Member (Staff)</option>
+              <option value="sub_admin">Sub Admin (View Only)</option>
+              <option value="hod">Head of Department (HOD - No Delete)</option>
+              <option value="super_admin">Super Administrator (Developer)</option>
             </select>
           </div>
 
@@ -509,6 +515,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
   <script>
     window.serverFacultyList = <?php echo json_encode($facultyList ?? []); ?>;
     window.isSuperAdmin = <?php echo !empty($isSuperAdmin) ? 'true' : 'false'; ?>;
+    window.userPermissions = <?php echo json_encode($userPermissions ?? (class_exists('Core\Auth') ? Core\Auth::userPermissions() : [])); ?>;
     window.portalBaseUrl = "<?php echo function_exists('base_url') ? base_url('') : '/'; ?>";
   </script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>

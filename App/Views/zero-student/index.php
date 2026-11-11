@@ -160,6 +160,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
             </button>
 
             <!-- Export Excel Button -->
+            <?php if (!class_exists('Core\Auth') || \Core\Auth::can('zero_student.export')): ?>
             <button
               type="button"
               id="exportExcelBtn"
@@ -175,8 +176,10 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               </svg>
               <span class="hidden xs:inline">Export</span><span class="hidden md:inline">&nbsp;Excel</span>
             </button>
+            <?php endif; ?>
 
             <!-- + Log Zero Class (Directs to Create Page) -->
+            <?php if (!class_exists('Core\Auth') || \Core\Auth::can('zero_student.create')): ?>
             <a
               href="<?php echo function_exists('base_url') ? base_url('/zero-student-create') : './zero-student-create'; ?>"
               class="h-7 sm:h-8 px-3 sm:px-3.5 rounded-xl bg-[var(--color-primary)] text-white text-[10.5px] sm:text-[11px] font-bold hover:brightness-105 active:scale-95 transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer decoration-transparent"
@@ -187,6 +190,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
               </svg>
               <span>Create Zero Log</span>
             </a>
+            <?php endif; ?>
           </div>
         </div>
 
@@ -472,6 +476,8 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
   <!-- Injected JSON Records Data from PHP Backend -->
   <script>
     window.initialZeroRecords = <?php echo json_encode($records ?? [], JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    window.canDeleteZeroStudent = <?php echo (class_exists('Core\Auth') && \Core\Auth::can('zero_student.delete')) ? 'true' : 'false'; ?>;
+    window.canExportZeroStudent = <?php echo (class_exists('Core\Auth') && \Core\Auth::can('zero_student.export')) ? 'true' : 'false'; ?>;
   </script>
 
   <!-- ================= APPLICATION JAVASCRIPT: Modular Architecture ================= -->

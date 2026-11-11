@@ -13,6 +13,210 @@ class Auth
     const SESSION_LIFETIME = 86400;
 
     /**
+     * Cached roles and permission matrices loaded from config/roles.json
+     * @var array|null
+     */
+    private static ?array $rolesConfig = null;
+
+    /**
+     * Load roles configuration from config/roles.json
+     */
+    public static function getRolesConfig(): array
+    {
+        if (self::$rolesConfig !== null) {
+            return self::$rolesConfig;
+        }
+
+        $base = defined('BASE_PATH') ? BASE_PATH : dirname(__DIR__);
+        $rolesFile = $base . '/config/roles.json';
+
+        if (file_exists($rolesFile)) {
+            $content = file_get_contents($rolesFile);
+            $parsed = json_decode($content, true);
+            if (is_array($parsed)) {
+                self::$rolesConfig = $parsed;
+                return self::$rolesConfig;
+            }
+        }
+
+        // Resilient fallback default role configuration
+        self::$rolesConfig = [
+            'modules' => [],
+            'roles' => [
+                'super_admin' => [
+                    'key' => 'super_admin',
+                    'name' => 'Super Admin (Developer)',
+                    'permissions' => ['*']
+                ],
+                'hod' => [
+                    'key' => 'hod',
+                    'name' => 'Head of Department (HOD)',
+                    'permissions' => []
+                ],
+                'sub_admin' => [
+                    'key' => 'sub_admin',
+                    'name' => 'Sub Admin',
+                    'permissions' => []
+                ],
+                'faculty' => [
+                    'key' => 'faculty',
+                    'name' => 'Faculty Member',
+                    'permissions' => ['dashboard.view', 'calendar.view', 'timetable.view', 'student_timetable.view', 'report.view', 'syllabus.view']
+                ]
+            ]
+        ];
+
+        return self::$rolesConfig;
+    }
+
+    /**
+     * Normalize role identifier for consistency.
+     * Legacy 'staff' is mapped to 'faculty'.
+     */
+    public static function normalizeRole(?string $role): string
+    {
+        $role = strtolower(trim($role ?? 'faculty'));
+        if ($role === 'staff' || empty($role)) {
+            return 'faculty';
+        }
+        return $role;
+    }
+
+    /**
+     * Extract all unique permission IDs across all modules.
+     */
+    public static function allPermissionIds(): array
+    {
+        $config = self::getRolesConfig();
+        $perms = [];
+        foreach ($config['modules'] ?? [] as $m) {
+            foreach ($m['permissions'] ?? [] as $p) {
+                if (!empty($p['id'])) {
+                    $perms[] = $p['id'];
+                }
+            }
+        }
+        return array_values(array_unique($perms));
+    }
+
+    /**
+     * Check if a specific permission is granted to a user.
+     * Super Admin has wildcard full access (*).
+     *
+     * @param string $permission Permission ID key (e.g. 'faculty.edit', 'dashboard.view')
+     * @param array|null $user Optional user data array (defaults to active session user)
+     * @return bool
+     */
+    public static function can(string $permission, ?array $user = null): bool
+    {
+        if ($user === null) {
+            $user = self::user();
+        }
+
+        if (empty($user) || !is_array($user)) {
+            return false;
+        }
+
+        $role = self::normalizeRole($user['role'] ?? 'faculty');
+
+        // Super Admin (Developer) bypasses all permission restrictions
+        if ($role === 'super_admin') {
+            return true;
+        }
+
+        $config = self::getRolesConfig();
+        $roleDef = $config['roles'][$role] ?? null;
+
+        if (!$roleDef || empty($roleDef['permissions']) || !is_array($roleDef['permissions'])) {
+            return false;
+        }
+
+        // Wildcard permission check
+        if (in_array('*', $roleDef['permissions'], true)) {
+            return true;
+        }
+
+        // Direct permission check
+        return in_array($permission, $roleDef['permissions'], true);
+    }
+
+    /**
+     * Retrieve all active permission keys granted to the current user.
+     *
+     * @param array|null $user
+     * @return array
+     */
+    public static function userPermissions(?array $user = null): array
+    {
+        if ($user === null) {
+            $user = self::user();
+        }
+
+        if (empty($user)) {
+            return [];
+        }
+
+        $role = self::normalizeRole($user['role'] ?? 'faculty');
+
+        // Super Admin has all permission IDs
+        if ($role === 'super_admin') {
+            return self::allPermissionIds();
+        }
+
+        $config = self::getRolesConfig();
+        $roleDef = $config['roles'][$role] ?? null;
+
+        return is_array($roleDef['permissions'] ?? null) ? $roleDef['permissions'] : [];
+    }
+
+    /**
+     * Enforce granular permission guard on protected controller action.
+     * Renders a 403 Forbidden page or returns 403 JSON if unauthorized.
+     *
+     * @param string $permission Permission key
+     * @param string $resourceLabel Descriptive resource label
+     */
+    public static function requirePermission(string $permission, string $resourceLabel = 'Protected Resource'): void
+    {
+        // 1. Enforce authentication first
+        self::check($resourceLabel);
+
+        // 2. Enforce permission
+        if (!self::can($permission)) {
+            $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') ||
+                      (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) ||
+                      (isset($_SERVER['CONTENT_TYPE']) && strpos($_SERVER['CONTENT_TYPE'], 'application/json') !== false);
+
+            if ($isAjax) {
+                while (ob_get_level()) { @ob_end_clean(); }
+                http_response_code(403);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode([
+                    'success' => false,
+                    'error'   => "Access Denied: You do not have permission [{$permission}] to access {$resourceLabel}."
+                ], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
+            while (ob_get_level()) { @ob_end_clean(); }
+            http_response_code(403);
+            header('Content-Type: text/html; charset=utf-8');
+
+            $status = 403;
+            $title = "Access Forbidden";
+            $description = "You do not have the required permission [{$permission}] to access {$resourceLabel}. Please contact your Department Administrator.";
+
+            $errorView = defined('APP_PATH') ? APP_PATH . '/Views/errors/error.php' : dirname(__DIR__) . '/App/Views/errors/error.php';
+            if (file_exists($errorView)) {
+                require $errorView;
+            } else {
+                echo "<!DOCTYPE html><html><head><meta charset='utf-8'><title>403 Forbidden</title></head><body style='font-family:sans-serif;padding:40px;text-align:center;'><h1>403 Forbidden</h1><p>{$description}</p><p><a href='/it/dashboard' style='color:#10b981;font-weight:bold;'>Return to Dashboard</a></p></body></html>";
+            }
+            exit;
+        }
+    }
+
+    /**
      * Check if user is authenticated; if not, redirect to login page.
      * Optionally enforce a specific role (e.g. 'super_admin').
      *
@@ -221,7 +425,7 @@ class Auth
     }
 
     /**
-     * Get active user's role ('super_admin' | 'staff').
+     * Get active user's raw role ('super_admin' | 'hod' | 'sub_admin' | 'faculty' | 'staff').
      */
     public static function role(): ?string
     {
@@ -229,11 +433,43 @@ class Auth
     }
 
     /**
-     * Check if active user has Super Admin role.
+     * Get active user's normalized role.
+     */
+    public static function userRole(): string
+    {
+        return self::normalizeRole(self::role());
+    }
+
+    /**
+     * Check if active user has Super Admin (Developer) role.
      */
     public static function isSuperAdmin(): bool
     {
-        return self::role() === 'super_admin';
+        return self::userRole() === 'super_admin';
+    }
+
+    /**
+     * Check if active user has Head of Department (HOD) role.
+     */
+    public static function isHod(): bool
+    {
+        return self::userRole() === 'hod';
+    }
+
+    /**
+     * Check if active user has Sub Admin role.
+     */
+    public static function isSubAdmin(): bool
+    {
+        return self::userRole() === 'sub_admin';
+    }
+
+    /**
+     * Check if active user has Faculty (Staff) role.
+     */
+    public static function isFaculty(): bool
+    {
+        return self::userRole() === 'faculty';
     }
 
     /**

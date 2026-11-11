@@ -329,6 +329,7 @@ function renderDeptPresets(dept) {
     });
 
     const currentVal = document.getElementById("folder-id-input") ? document.getElementById("folder-id-input").value.trim() : "";
+    const canScan = (typeof window.canPermission !== 'function') || window.canPermission('ctldrive.scan');
 
     if (deptItems.length === 0) {
         container.innerHTML = `
@@ -347,6 +348,22 @@ function renderDeptPresets(dept) {
         const initials = m.initials || "IT";
         const isMasterAdmin = (m.id === "adminit" || m.id === "admince");
 
+        const scanBtnHtml = canScan ? `
+            <button type="button" class="chip-scan-btn master-scan-btn" title="1-Click Scan Whole Department">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span>Master Scan</span>
+            </button>` : '';
+
+        const facultyScanBtnHtml = canScan ? `
+            <button type="button" class="chip-scan-btn" title="1-Click Scan">
+                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span>Scan</span>
+            </button>` : '';
+
         if (isMasterAdmin) {
             const isMasterCe = (m.id === "admince");
             const masterTitle = m.semClass || (isMasterCe ? "CE 2026-27 ODD Master Folder" : "I.T 2026-27 ODD Master Folder");
@@ -360,12 +377,7 @@ function renderDeptPresets(dept) {
                         <div class="chip-title font-bold text-xs truncate">${masterTitle}</div>
                         <div class="chip-sub text-[10px] font-semibold text-[var(--color-primary)]">⚡ Scan Whole ${dept} Department Folder</div>
                     </div>
-                    <button type="button" class="chip-scan-btn master-scan-btn" title="1-Click Scan Whole Department">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <polygon points="5 3 19 12 5 21 5 3"/>
-                        </svg>
-                        <span>Master Scan</span>
-                    </button>
+                    ${scanBtnHtml}
                 </div>
             `;
         } else {
@@ -380,12 +392,7 @@ function renderDeptPresets(dept) {
                         <div class="chip-title font-bold text-xs truncate">${initials}</div>
                         <div class="chip-sub text-[10px] truncate">${subText}</div>
                     </div>
-                    <button type="button" class="chip-scan-btn" title="1-Click Scan">
-                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <polygon points="5 3 19 12 5 21 5 3"/>
-                        </svg>
-                        <span>Scan</span>
-                    </button>
+                    ${facultyScanBtnHtml}
                 </div>
             `;
         }
@@ -430,7 +437,10 @@ function selectAndScanPreset(link, memberId, facultyName) {
         }
     }
 
-    startScan();
+    const canScan = (typeof window.canPermission !== 'function') || window.canPermission('ctldrive.scan');
+    if (canScan) {
+        startScan();
+    }
 }
 
 function selectAndScanMaster(link, dept) {
@@ -451,7 +461,10 @@ function selectAndScanMaster(link, dept) {
         }
     }
 
-    startScan();
+    const canScan = (typeof window.canPermission !== 'function') || window.canPermission('ctldrive.scan');
+    if (canScan) {
+        startScan();
+    }
 }
 
 // -------------------------------------------------------------
@@ -528,6 +541,7 @@ function renderModalDriveLinks() {
         return;
     }
 
+    const canScan = (typeof window.canPermission !== 'function') || window.canPermission('ctldrive.scan');
     let html = "";
     items.forEach(member => {
         const linkVal = (member.driveLink || "").trim();
@@ -535,6 +549,15 @@ function renderModalDriveLinks() {
         const badgeText = isDeptAdmin ? ((member.department || "").includes("Computer") ? "CE Dept" : "IT Dept") : (member.semClass ? member.semClass : (member.designation || "Faculty"));
 
         const safeName = (member.name || "").replace(/'/g, "\\'");
+        const scanBtnHtml = canScan ? `
+            <button type="button" class="h-8 px-3 rounded-xl glass-pill text-xs font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span>Scan</span>
+            </button>` : `
+            <span class="text-xs font-bold text-[var(--color-primary)] px-2">Select</span>`;
+
         html += `
             <div class="modal-drive-item flex items-center justify-between gap-3 p-3 rounded-2xl glass-pill hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer transition" onclick="selectModalDriveLink('${linkVal}', '${safeName}')">
                 <div class="flex items-center gap-3 min-w-0 flex-1">
@@ -548,12 +571,7 @@ function renderModalDriveLinks() {
                         <div class="text-[10px] font-mono text-[var(--text-muted)] opacity-75 truncate mt-0.5">${linkVal}</div>
                     </div>
                 </div>
-                <button type="button" class="h-8 px-3 rounded-xl glass-pill text-xs font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shrink-0">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <polygon points="5 3 19 12 5 21 5 3"/>
-                    </svg>
-                    <span>Scan</span>
-                </button>
+                ${scanBtnHtml}
             </div>
         `;
     });
@@ -578,7 +596,10 @@ function selectModalDriveLink(linkVal, facultyName) {
         }
     }
 
-    startScan();
+    const canScan = (typeof window.canPermission !== 'function') || window.canPermission('ctldrive.scan');
+    if (canScan) {
+        startScan();
+    }
 }
 
 function extractFolderId(input) {
@@ -734,6 +755,14 @@ function updateScanButtonText(text) {
 // Core Google Drive Recursive Scanner
 // -------------------------------------------------------------
 async function startScan() {
+    if (typeof window.canPermission === 'function' && !window.canPermission('ctldrive.scan')) {
+        if (window.showPortalToast) {
+            window.showPortalToast('Access Denied: You do not have permission to trigger folder scans.', 'error');
+        } else {
+            alert('Access Denied: You do not have permission to trigger folder scans.');
+        }
+        return;
+    }
     clearResults();
     const inputVal = document.getElementById('folder-id-input').value;
     const parentFolderId = extractFolderId(inputVal);

@@ -25,7 +25,7 @@ class ZeroStudentController extends Controller
      */
     public function index(): void
     {
-        Auth::check('Zero Student Directory');
+        Auth::requirePermission('zero_student.view', 'Zero Student Directory');
         $records = $this->getRecordsData();
         $this->view('zero-student.index', ['records' => $records]);
     }
@@ -35,7 +35,7 @@ class ZeroStudentController extends Controller
      */
     public function create(): void
     {
-        Auth::check('Create Zero Student Record');
+        Auth::requirePermission('zero_student.create', 'Create Zero Student Record');
         $this->view('zero-student.create');
     }
 
@@ -58,6 +58,12 @@ class ZeroStudentController extends Controller
             $input = json_decode(file_get_contents('php://input'), true);
             if (!$input && !empty($_POST)) {
                 $input = $_POST;
+            }
+
+            if (isset($input['batch']) && is_array($input['batch'])) {
+                Auth::requirePermission('zero_student.import', 'Batch Import Zero Student Records');
+            } else {
+                Auth::requirePermission('zero_student.create', 'Create Zero Student Record');
             }
 
             $records = $this->getRecordsData();
@@ -85,6 +91,7 @@ class ZeroStudentController extends Controller
         }
 
         if ($method === 'DELETE') {
+            Auth::requirePermission('zero_student.delete', 'Delete Zero Student Record');
             $id = $_GET['id'] ?? null;
             if (!$id) {
                 $input = json_decode(file_get_contents('php://input'), true);
@@ -101,6 +108,7 @@ class ZeroStudentController extends Controller
         }
 
         // Default GET: Return all records
+        Auth::requirePermission('zero_student.view', 'Zero Student Directory');
         $this->json([
             'success' => true,
             'count' => count($this->getRecordsData()),

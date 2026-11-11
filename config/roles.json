@@ -1,0 +1,593 @@
+{
+    "modules": [
+        {
+            "id": "faculty",
+            "name": "Faculty & User Management",
+            "icon": "users",
+            "description": "Manage faculty members, credentials, and departmental profiles",
+            "permissions": [
+                {
+                    "id": "faculty.list",
+                    "name": "User List View",
+                    "description": "Access faculty directory table and search filters",
+                    "type": "view"
+                },
+                {
+                    "id": "faculty.profile",
+                    "name": "User Profile View",
+                    "description": "Open and inspect full faculty profile details modal",
+                    "type": "view"
+                },
+                {
+                    "id": "faculty.create",
+                    "name": "Add New Faculty",
+                    "description": "Create and onboard new faculty staff accounts",
+                    "type": "create"
+                },
+                {
+                    "id": "faculty.edit",
+                    "name": "Edit Faculty Profile",
+                    "description": "Modify existing faculty details, designations, and contacts",
+                    "type": "edit"
+                },
+                {
+                    "id": "faculty.delete",
+                    "name": "Delete Faculty Member",
+                    "description": "Permanently remove a faculty profile (Strictly restricted)",
+                    "type": "delete"
+                },
+                {
+                    "id": "faculty.toggle_status",
+                    "name": "Active / Inactive Status Toggle",
+                    "description": "Activate or deactivate staff portal login access",
+                    "type": "toggle"
+                },
+                {
+                    "id": "faculty.view_credentials",
+                    "name": "View Sign-In Credentials",
+                    "description": "Reveal login usernames, passwords, and security keys",
+                    "type": "view"
+                },
+                {
+                    "id": "faculty.send_credentials",
+                    "name": "Send Mail Credentials",
+                    "description": "Dispatch automated login credentials email via Gmail SMTP",
+                    "type": "send"
+                },
+                {
+                    "id": "faculty.reset",
+                    "name": "Reset Directory Defaults",
+                    "description": "Restore faculty directory back to initial dataset",
+                    "type": "edit"
+                }
+            ]
+        },
+        {
+            "id": "dashboard",
+            "name": "Smart Management Dashboard",
+            "icon": "layout-dashboard",
+            "description": "Central smart bento dashboard with telemetry and environmental widgets",
+            "permissions": [
+                {
+                    "id": "dashboard.view",
+                    "name": "View Dashboard",
+                    "description": "Access smart bento dashboard and real-time overview metrics",
+                    "type": "view"
+                },
+                {
+                    "id": "dashboard.edit_setpoints",
+                    "name": "Adjust Environmental Setpoints",
+                    "description": "Modify greenhouse climate, moisture, light, and EC targets",
+                    "type": "edit"
+                },
+                {
+                    "id": "dashboard.water_flow",
+                    "name": "Adjust Irrigation Water Flow",
+                    "description": "Adjust active manifold valves and closed-loop telemetry",
+                    "type": "edit"
+                },
+                {
+                    "id": "dashboard.co2_enrich",
+                    "name": "Configure CO₂ Enrichment",
+                    "description": "Set stepped carbon dosing concentrations and schedules",
+                    "type": "edit"
+                },
+                {
+                    "id": "dashboard.cameras",
+                    "name": "Camera Zone Switching",
+                    "description": "Toggle between Cam 01 (Main Bay) and Cam 02 (North Wing)",
+                    "type": "view"
+                },
+                {
+                    "id": "dashboard.copilot",
+                    "name": "Autonomous Copilot Directives",
+                    "description": "Execute AI agritech copilot directives and voice commands",
+                    "type": "edit"
+                }
+            ]
+        },
+        {
+            "id": "calendar",
+            "name": "Academic Calendar",
+            "icon": "calendar",
+            "description": "Department academic calendar, term dates, and events",
+            "permissions": [
+                {
+                    "id": "calendar.view",
+                    "name": "View Calendar",
+                    "description": "Access interactive academic calendar and event details",
+                    "type": "view"
+                },
+                {
+                    "id": "calendar.print",
+                    "name": "Print Calendar / PDF",
+                    "description": "Print formatted academic calendar or save as PDF",
+                    "type": "export"
+                },
+                {
+                    "id": "calendar.copy",
+                    "name": "Copy Event Details",
+                    "description": "Copy date schedule and event summaries to clipboard",
+                    "type": "view"
+                }
+            ]
+        },
+        {
+            "id": "timetable",
+            "name": "Faculty Timetables",
+            "icon": "clock",
+            "description": "Master timetable schedules, live alterations, and compiler",
+            "permissions": [
+                {
+                    "id": "timetable.view",
+                    "name": "View Faculty Schedules",
+                    "description": "Access faculty timetables and daily schedules",
+                    "type": "view"
+                },
+                {
+                    "id": "timetable.sync",
+                    "name": "Quick Sync Google Sheet",
+                    "description": "Pull latest faculty timetable directly from master Google Sheet",
+                    "type": "sync"
+                },
+                {
+                    "id": "timetable.alteration",
+                    "name": "Toggle Alteration / Leave Mode",
+                    "description": "Mark leave alterations and substitute arrangements",
+                    "type": "edit"
+                },
+                {
+                    "id": "timetable.update",
+                    "name": "Timetable Compiler Status",
+                    "description": "Access the timetable synchronization status and compiler page",
+                    "type": "view"
+                }
+            ]
+        },
+        {
+            "id": "student_timetable",
+            "name": "Student Timetable",
+            "icon": "graduation-cap",
+            "description": "Class timetable grids, day cards, and Excel file parser",
+            "permissions": [
+                {
+                    "id": "student_timetable.view",
+                    "name": "View Student Timetable",
+                    "description": "Access student timetable table grids and daily cards",
+                    "type": "view"
+                },
+                {
+                    "id": "student_timetable.sync",
+                    "name": "Sync Master Sheet",
+                    "description": "Sync student timetables from live Google Sheet",
+                    "type": "sync"
+                },
+                {
+                    "id": "student_timetable.upload",
+                    "name": "Upload Excel Timetable",
+                    "description": "Upload new student timetable spreadsheet (.xlsx / .xls)",
+                    "type": "upload"
+                },
+                {
+                    "id": "student_timetable.print",
+                    "name": "Print / Export Timetable",
+                    "description": "Print formatted student schedule or export to PDF",
+                    "type": "export"
+                }
+            ]
+        },
+        {
+            "id": "workload",
+            "name": "Faculty Workload Audit",
+            "icon": "bar-chart-2",
+            "description": "Audit faculty teaching hours, workload analysis, and Excel exports",
+            "permissions": [
+                {
+                    "id": "workload.view",
+                    "name": "View Workload Audit",
+                    "description": "Access workload summary dashboard and faculty lecture counts",
+                    "type": "view"
+                },
+                {
+                    "id": "workload.export",
+                    "name": "Export Workload Excel",
+                    "description": "Download formatted faculty workload audit spreadsheet",
+                    "type": "export"
+                }
+            ]
+        },
+        {
+            "id": "report",
+            "name": "Daily Workload & CTL Reports",
+            "icon": "file-text",
+            "description": "Daily teaching activity reports, CTL log submissions, and drafts",
+            "permissions": [
+                {
+                    "id": "report.view",
+                    "name": "View Workload Report Form",
+                    "description": "Access the 4-step daily workload and lecture reporting wizard",
+                    "type": "view"
+                },
+                {
+                    "id": "report.submit",
+                    "name": "Submit & Send Report",
+                    "description": "Submit completed workload report to Google Sheets & send confirmation email",
+                    "type": "create"
+                },
+                {
+                    "id": "report.draft",
+                    "name": "Save Draft Report",
+                    "description": "Save in-progress report as a local draft",
+                    "type": "edit"
+                },
+                {
+                    "id": "report.preview",
+                    "name": "Preview Report Modal",
+                    "description": "Preview formatted report before submission",
+                    "type": "view"
+                },
+                {
+                    "id": "report.print",
+                    "name": "Print / PDF Export",
+                    "description": "Print report summary or export as PDF document",
+                    "type": "export"
+                },
+                {
+                    "id": "report.reset",
+                    "name": "Reset Form Fields",
+                    "description": "Clear all form inputs and restart reporting wizard",
+                    "type": "edit"
+                }
+            ]
+        },
+        {
+            "id": "syllabus",
+            "name": "Syllabus & Exam Papers",
+            "icon": "book-open",
+            "description": "Curriculum syllabi, subject schemes, and previous examination papers",
+            "permissions": [
+                {
+                    "id": "syllabus.view",
+                    "name": "View Syllabus & Papers",
+                    "description": "Search and inspect syllabus documents and exam papers",
+                    "type": "view"
+                },
+                {
+                    "id": "syllabus.export_all",
+                    "name": "Export Full Archive",
+                    "description": "Download entire syllabus curriculum and exam papers archive",
+                    "type": "export"
+                },
+                {
+                    "id": "syllabus.export_subject",
+                    "name": "Export Subject Syllabus Table",
+                    "description": "Export subject-wise syllabus scheme to spreadsheet/PDF",
+                    "type": "export"
+                },
+                {
+                    "id": "syllabus.export_exam",
+                    "name": "Export Exam Papers Table",
+                    "description": "Export examination question paper links table",
+                    "type": "export"
+                }
+            ]
+        },
+        {
+            "id": "zero_student",
+            "name": "Zero Student Incident Log",
+            "icon": "user-x",
+            "description": "Log, monitor, and audit zero-attendance classroom incidents",
+            "permissions": [
+                {
+                    "id": "zero_student.view",
+                    "name": "View Incident Directory",
+                    "description": "Access zero-student incident reports list and detail modal",
+                    "type": "view"
+                },
+                {
+                    "id": "zero_student.create",
+                    "name": "Create Incident Entry",
+                    "description": "Log a new zero-student lecture incident into the system",
+                    "type": "create"
+                },
+                {
+                    "id": "zero_student.import",
+                    "name": "Batch Import From Excel",
+                    "description": "Import batch incident records parsed from timetable files",
+                    "type": "upload"
+                },
+                {
+                    "id": "zero_student.delete",
+                    "name": "Delete Incident Record",
+                    "description": "Permanently delete an incident log (Strictly restricted)",
+                    "type": "delete"
+                },
+                {
+                    "id": "zero_student.export",
+                    "name": "Export Incidents Excel",
+                    "description": "Download zero-student incidents spreadsheet report",
+                    "type": "export"
+                }
+            ]
+        },
+        {
+            "id": "ctlactivity",
+            "name": "CTL Activity Dashboard",
+            "icon": "activity",
+            "description": "CTL teaching compliance, spreadsheet synchronization, and email alerts",
+            "permissions": [
+                {
+                    "id": "ctlactivity.view",
+                    "name": "View Activity Pulse",
+                    "description": "Access CTL activity monitoring dashboard and statistics",
+                    "type": "view"
+                },
+                {
+                    "id": "ctlactivity.replace",
+                    "name": "Upload / Replace Sheet",
+                    "description": "Upload a replacement CTL activity Excel sheet",
+                    "type": "upload"
+                },
+                {
+                    "id": "ctlactivity.send_email",
+                    "name": "Send Report Email",
+                    "description": "Dispatch departmental CTL activity alert email via SMTP",
+                    "type": "send"
+                },
+                {
+                    "id": "ctlactivity.erp_view",
+                    "name": "Direct ERP Lookup Modal",
+                    "description": "Open ERP lookup modal and filter semester records",
+                    "type": "view"
+                }
+            ]
+        },
+        {
+            "id": "ctldrive",
+            "name": "Drive Folder Scanner",
+            "icon": "folder-search",
+            "description": "Google Drive folder scanner, audit logs, and faculty drive links",
+            "permissions": [
+                {
+                    "id": "ctldrive.view",
+                    "name": "View Drive Scanner",
+                    "description": "Access Google Drive scanner interface and monitor logs",
+                    "type": "view"
+                },
+                {
+                    "id": "ctldrive.scan",
+                    "name": "Trigger Live Folder Scan",
+                    "description": "Initiate automated scanning of faculty master Drive folders",
+                    "type": "sync"
+                },
+                {
+                    "id": "ctldrive.download",
+                    "name": "Download Audit Report",
+                    "description": "Download completed Drive scanning audit report as Excel",
+                    "type": "export"
+                },
+                {
+                    "id": "ctldrive.send_email",
+                    "name": "Send Scanner Email",
+                    "description": "Dispatch scanner completion audit log email via SMTP",
+                    "type": "send"
+                },
+                {
+                    "id": "ctldrive.view_links",
+                    "name": "View Drive Links Modal",
+                    "description": "Inspect modal with all department faculty Drive folder links",
+                    "type": "view"
+                }
+            ]
+        },
+        {
+            "id": "settings",
+            "name": "Settings & Role Governance",
+            "icon": "settings",
+            "description": "System settings, role-based access control (RBAC), and staff permissions",
+            "permissions": [
+                {
+                    "id": "settings.view",
+                    "name": "View Settings Hub",
+                    "description": "Access Settings Hub and view governance overview cards",
+                    "type": "view"
+                },
+                {
+                    "id": "settings.roles",
+                    "name": "View Role & Permission Card",
+                    "description": "Open and inspect the interactive Role & Permission matrix",
+                    "type": "view"
+                },
+                {
+                    "id": "settings.edit_roles",
+                    "name": "Save Role Permissions",
+                    "description": "Modify and persist granular permission switches for any role",
+                    "type": "edit"
+                },
+                {
+                    "id": "settings.create_role",
+                    "name": "Create New Role",
+                    "description": "Define and add custom departmental security roles to the system",
+                    "type": "create"
+                },
+                {
+                    "id": "settings.delete_role",
+                    "name": "Delete Custom Role",
+                    "description": "Delete user-created custom roles and reassign assigned staff",
+                    "type": "delete"
+                },
+                {
+                    "id": "settings.assign_user",
+                    "name": "Reassign User Roles",
+                    "description": "Change any department staff member's security role",
+                    "type": "edit"
+                },
+                {
+                    "id": "settings.reset_defaults",
+                    "name": "Reset System Defaults",
+                    "description": "Restore all role permission matrices to standard defaults",
+                    "type": "edit"
+                }
+            ]
+        }
+    ],
+    "roles": {
+        "super_admin": {
+            "key": "super_admin",
+            "name": "Super Admin (Developer)",
+            "badge": "Master Full Access",
+            "badge_color": "purple",
+            "description": "Master developer role with full wildcard access (*) to every single page, endpoint, modal, and button. Can never be restricted.",
+            "is_system": true,
+            "allow_delete": true,
+            "permissions": [
+                "*"
+            ]
+        },
+        "hod": {
+            "key": "hod",
+            "name": "Head of Department (HOD)",
+            "badge": "Full Power - No Delete",
+            "badge_color": "blue",
+            "description": "Head of Department administrative role. Has full administrative power matching Super Admin, but CANNOT delete anything on this website (delete actions are strictly blocked).",
+            "is_system": true,
+            "allow_delete": false,
+            "permissions": [
+                "faculty.list",
+                "faculty.profile",
+                "faculty.create",
+                "faculty.edit",
+                "faculty.toggle_status",
+                "faculty.view_credentials",
+                "faculty.send_credentials",
+                "faculty.reset",
+                "dashboard.view",
+                "dashboard.edit_setpoints",
+                "dashboard.water_flow",
+                "dashboard.co2_enrich",
+                "dashboard.cameras",
+                "dashboard.copilot",
+                "calendar.view",
+                "calendar.print",
+                "calendar.copy",
+                "timetable.view",
+                "timetable.sync",
+                "timetable.alteration",
+                "timetable.update",
+                "student_timetable.view",
+                "student_timetable.sync",
+                "student_timetable.upload",
+                "student_timetable.print",
+                "workload.view",
+                "workload.export",
+                "report.view",
+                "report.submit",
+                "report.draft",
+                "report.preview",
+                "report.print",
+                "report.reset",
+                "syllabus.view",
+                "syllabus.export_all",
+                "syllabus.export_subject",
+                "syllabus.export_exam",
+                "zero_student.view",
+                "zero_student.create",
+                "zero_student.import",
+                "zero_student.export",
+                "ctlactivity.view",
+                "ctlactivity.replace",
+                "ctlactivity.send_email",
+                "ctlactivity.erp_view",
+                "ctldrive.view",
+                "ctldrive.scan",
+                "ctldrive.download",
+                "ctldrive.send_email",
+                "ctldrive.view_links",
+                "settings.view",
+                "settings.roles",
+                "settings.edit_roles",
+                "settings.assign_user",
+                "settings.create_role"
+            ]
+        },
+        "sub_admin": {
+            "key": "sub_admin",
+            "name": "Sub Admin",
+            "badge": "Universal View-Only",
+            "badge_color": "amber",
+            "description": "Departmental administrative observer. Can view all pages, lists, profiles, timetables, syllabi, reports, and inspect credentials, but CANNOT create, edit, delete, or toggle anything.",
+            "is_system": true,
+            "allow_delete": false,
+            "permissions": [
+                "faculty.list",
+                "faculty.profile",
+                "faculty.view_credentials",
+                "dashboard.view",
+                "dashboard.cameras",
+                "calendar.view",
+                "calendar.print",
+                "calendar.copy",
+                "timetable.view",
+                "timetable.update",
+                "student_timetable.view",
+                "student_timetable.print",
+                "workload.view",
+                "workload.export",
+                "report.view",
+                "report.preview",
+                "report.print",
+                "syllabus.view",
+                "syllabus.export_all",
+                "syllabus.export_subject",
+                "syllabus.export_exam",
+                "zero_student.view",
+                "zero_student.export",
+                "ctlactivity.view",
+                "ctlactivity.erp_view",
+                "ctldrive.view",
+                "ctldrive.download",
+                "ctldrive.view_links",
+                "settings.view",
+                "settings.roles"
+            ]
+        },
+        "faculty": {
+            "key": "faculty",
+            "name": "Faculty Member (Staff)",
+            "badge": "Academic Defaults",
+            "badge_color": "emerald",
+            "description": "Academic faculty teaching staff. By default has access strictly to Dashboard, Calendar, Syllabus & Papers, Student Timetable, Workload Report, and Timetable. Other permissions can be added manually.",
+            "is_system": true,
+            "allow_delete": false,
+            "permissions": [
+                "dashboard.view",
+                "calendar.view",
+                "timetable.view",
+                "student_timetable.view",
+                "report.view",
+                "syllabus.view",
+                "zero_student.view"
+            ]
+        }
+    }
+}

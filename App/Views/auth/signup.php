@@ -901,10 +901,18 @@ if (!headers_sent()) {
       }
 
       document.querySelectorAll('.color-preset-btn').forEach((btn) => {
+        btn.classList.add('flex', 'items-center', 'justify-center');
+        if (btn.classList.contains('ring-2')) {
+          btn.innerHTML = `<svg class="w-3.5 h-3.5 text-white block pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>`;
+        }
         btn.addEventListener('click', () => {
           const color = btn.getAttribute('data-theme-color');
-          document.querySelectorAll('.color-preset-btn').forEach(b => b.classList.remove('ring-2', 'ring-offset-1'));
+          document.querySelectorAll('.color-preset-btn').forEach(b => {
+            b.classList.remove('ring-2', 'ring-offset-1');
+            b.innerHTML = '';
+          });
           btn.classList.add('ring-2', 'ring-offset-1');
+          btn.innerHTML = `<svg class="w-3.5 h-3.5 text-white block pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>`;
           applyCustomColorPalette(color);
           showToast(`Applied Theme: ${color}`);
         });

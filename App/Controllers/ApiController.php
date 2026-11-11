@@ -49,6 +49,10 @@ class ApiController extends Controller
      */
     public function syncTimetables(): void
     {
+        $action = $_REQUEST['action'] ?? 'sync_all';
+        $requiredPerm = ($action === 'sync_student') ? 'student_timetable.sync' : 'timetable.sync';
+        Auth::requirePermission($requiredPerm, 'Sync Timetable Sheet');
+
         $serviceFile = APP_PATH . '/Services/sync-timetables.php';
         if (file_exists($serviceFile)) {
             require $serviceFile;

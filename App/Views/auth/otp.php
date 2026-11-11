@@ -534,10 +534,13 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
         if (customInput) customInput.value = hex;
 
         document.querySelectorAll('.color-preset-btn').forEach(btn => {
+          btn.classList.add('flex', 'items-center', 'justify-center');
           if (btn.getAttribute('data-theme-color').toLowerCase() === hex.toLowerCase()) {
             btn.classList.add('ring-2', 'ring-offset-1', 'ring-black/40', 'dark:ring-white/40');
+            btn.innerHTML = `<svg class="w-3.5 h-3.5 text-white block pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>`;
           } else {
             btn.classList.remove('ring-2', 'ring-offset-1', 'ring-black/40', 'dark:ring-white/40');
+            btn.innerHTML = '';
           }
         });
       }

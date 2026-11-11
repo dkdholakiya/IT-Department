@@ -71,15 +71,18 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                     <div id="loadedFileName" class="text-xs font-bold text-[var(--text-primary)] max-w-[220px] truncate">file.xlsx</div>
                     <div id="loadedFileSize" class="text-[10.5px] text-[var(--text-muted)] font-mono">0 KB</div>
                   </div>
+                  <?php if (!class_exists('Core\Auth') || \Core\Auth::can('ctlactivity.replace')): ?>
                   <button type="button" id="replaceFileBtn" class="px-2.5 py-1 rounded-lg glass-pill text-[10px] font-bold text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition cursor-pointer">
                     Replace Sheet
                   </button>
+                  <?php endif; ?>
                 </div>
               </div>
 
               <!-- Card A Action Controls: Direct ERP Links & Reset (Under Master Sheet Dropzone) -->
               <div class="flex items-center gap-2 pt-2.5 mt-2.5 border-t border-black/5 dark:border-white/10 shrink-0">
                 <!-- Direct ERP Button -->
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('ctlactivity.erp_view')): ?>
                 <button
                   type="button"
                   id="directErpBtn"
@@ -93,6 +96,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   </svg>
                   <span>Direct ERP Links</span>
                 </button>
+                <?php endif; ?>
 
                 <!-- Reset Filters Button -->
                 <button
@@ -181,6 +185,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                 </div>
 
                 <!-- Send Action Button -->
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('ctlactivity.send_email')): ?>
                 <button
                   type="button"
                   id="sendBtn"
@@ -193,6 +198,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   </svg>
                   <span>Send Report</span>
                 </button>
+                <?php endif; ?>
               </div>
             </div>
 

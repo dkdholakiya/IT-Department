@@ -244,6 +244,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                     role="menu"
                   >
                     <!-- Export to Excel Button -->
+                    <?php if (!class_exists('Core\Auth') || \Core\Auth::can('workload.export')): ?>
                     <button
                       type="button"
                       id="exportExcelBtn"
@@ -264,8 +265,8 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                         <div class="text-[9.5px] opacity-70 leading-tight">Download XLSX sheet</div>
                       </div>
                     </button>
-
                     <div class="my-1 border-t border-black/5 dark:border-white/10"></div>
+                    <?php endif; ?>
 
                     <!-- Print Summary Button -->
                     <button

@@ -37,6 +37,24 @@ $r->addRoute('GET', '/syllabus-papers.php', 'SyllabusController@index');
 $r->addRoute('GET', '/dashboard', 'DashboardController@index');
 $r->addRoute('GET', '/dashboard.php', 'DashboardController@index');
 
+// ── Settings & Roles Management ──
+$r->addRoute('GET', '/settings', 'SettingController@index');
+$r->addRoute('GET', '/settings.php', 'SettingController@index');
+$r->addRoute('GET', '/settings/roles', 'SettingController@roles');
+$r->addRoute('GET', '/settings/roles.php', 'SettingController@roles');
+$r->addRoute(['GET', 'OPTIONS'], '/api/settings/roles', 'SettingController@apiGetRoles');
+$r->addRoute(['GET', 'OPTIONS'], '/api/settings/roles.php', 'SettingController@apiGetRoles');
+$r->addRoute(['POST', 'OPTIONS'], '/api/settings/roles/save', 'SettingController@apiSaveRolePermissions');
+$r->addRoute(['POST', 'OPTIONS'], '/api/settings/roles/save.php', 'SettingController@apiSaveRolePermissions');
+$r->addRoute(['POST', 'OPTIONS'], '/api/settings/roles/create', 'SettingController@apiCreateRole');
+$r->addRoute(['POST', 'OPTIONS'], '/api/settings/roles/create.php', 'SettingController@apiCreateRole');
+$r->addRoute(['POST', 'OPTIONS'], '/api/settings/roles/delete', 'SettingController@apiDeleteRole');
+$r->addRoute(['POST', 'OPTIONS'], '/api/settings/roles/delete.php', 'SettingController@apiDeleteRole');
+$r->addRoute(['POST', 'OPTIONS'], '/api/settings/roles/assign-user', 'SettingController@apiAssignUserRole');
+$r->addRoute(['POST', 'OPTIONS'], '/api/settings/roles/assign-user.php', 'SettingController@apiAssignUserRole');
+$r->addRoute(['POST', 'OPTIONS'], '/api/settings/roles/reset-defaults', 'SettingController@apiResetDefaults');
+$r->addRoute(['POST', 'OPTIONS'], '/api/settings/roles/reset-defaults.php', 'SettingController@apiResetDefaults');
+
 // ── Protected Pages ──
 $r->addRoute('GET', '/zero-student-report', 'ZeroStudentController@index');
 $r->addRoute('GET', '/zero-student-report.php', 'ZeroStudentController@index');

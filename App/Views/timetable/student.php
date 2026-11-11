@@ -120,12 +120,15 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                 Please place your student timetable Excel file into the uploads directory or sync directly from Google Sheets.
               </p>
               <div class="flex items-center gap-2.5 flex-wrap justify-center mt-2">
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('student_timetable.sync')): ?>
                 <button type="button" onclick="quickSyncSheet(event, 'student')" class="h-8 px-4 rounded-xl bg-[var(--color-primary)] text-white text-xs font-bold hover:brightness-105 active:scale-95 transition flex items-center gap-1.5 shadow-sm cursor-pointer">
                   <svg class="w-3.5 h-3.5 quick-sync-icon" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                   <span class="quick-sync-text">⚡ 1-Click Sync Google Sheet</span>
                 </button>
+                <?php endif; ?>
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('student_timetable.update')): ?>
                 <form method="POST" enctype="multipart/form-data" class="inline-flex m-0 p-0">
                   <input type="file" name="timetable_file" accept=".xlsx,.xls" required class="hidden" id="excelFileInputEmpty" onchange="this.form.submit()">
                   <label for="excelFileInputEmpty" class="h-8 px-4 rounded-xl glass-pill text-xs font-bold text-[var(--text-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm cursor-pointer">
@@ -135,6 +138,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                     <span>Upload Timetable Excel</span>
                   </label>
                 </form>
+                <?php endif; ?>
               </div>
             </div>
 
@@ -178,14 +182,17 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                 </div>
 
                 <!-- Sync Live Sheet -->
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('student_timetable.sync')): ?>
                 <button type="button" onclick="quickSyncSheet(event, 'student')" class="h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[11px] sm:text-xs font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="Sync from master Google Sheet">
                   <svg class="w-3.5 h-3.5 quick-sync-icon" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                   <span class="quick-sync-text">Sync Live Sheet</span>
                 </button>
+                <?php endif; ?>
 
                 <!-- Print / Download PDF -->
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('student_timetable.print')): ?>
                 <button type="button" onclick="window.print();" class="h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[11px] sm:text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 cursor-pointer" title="Print or save as PDF">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
@@ -193,8 +200,10 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                   </svg>
                   <span>Print / PDF</span>
                 </button>
+                <?php endif; ?>
 
                 <!-- Upload File Button -->
+                <?php if (!class_exists('Core\Auth') || \Core\Auth::can('student_timetable.upload')): ?>
                 <form method="POST" enctype="multipart/form-data" class="inline-flex m-0 p-0">
                   <input type="file" name="timetable_file" accept=".xlsx,.xls" required class="hidden" id="excelFileInput" onchange="this.form.submit()">
                   <label for="excelFileInput" class="h-8 px-2.5 sm:px-3 rounded-xl glass-pill text-[11px] sm:text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 cursor-pointer" title="Upload replacement student timetable sheet">
@@ -204,6 +213,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                     <span>Upload Excel</span>
                   </label>
                 </form>
+                <?php endif; ?>
               </div>
 
             </div>

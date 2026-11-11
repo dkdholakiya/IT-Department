@@ -163,12 +163,18 @@
     const mobileCustomPicker = document.getElementById('mobileCustomColorInput');
     if (mobileCustomPicker) mobileCustomPicker.value = hex;
 
-    // Highlight active preset ring
+    // Highlight active preset ring and show centered checkmark
     document.querySelectorAll('.color-preset-btn').forEach(btn => {
       const match = btn.getAttribute('data-theme-color')?.toLowerCase() === hex.toLowerCase();
       btn.classList.toggle('ring-2', match);
       btn.classList.toggle('ring-offset-1', match);
       btn.classList.toggle('ring-current', match);
+      btn.classList.add('flex', 'items-center', 'justify-center');
+      if (match) {
+        btn.innerHTML = `<svg class="w-4 h-4 text-white block pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>`;
+      } else {
+        btn.innerHTML = '';
+      }
     });
 
     window.dispatchEvent(new CustomEvent('portal:theme-color-changed', {
