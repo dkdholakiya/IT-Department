@@ -4,15 +4,16 @@
  * Department of CE & IT — Smart Management Dashboard & Academic Portal
  *
  * Supported Variables:
- * @var string|null $nav_title              Brand / Header Title (defaults to 'AI Greenhouse')
- * @var string|null $nav_subtitle           Sub-header readout (defaults to 'Zone A • Hydroponic Bay')
+ * @var string|null $nav_title              Brand / Header Title (defaults to 'Engineering Dept CE & IT')
+ * @var string|null $nav_subtitle           Sub-header readout (defaults to 'CE & IT Academic Portal')
  * @var string|null $nav_back_url           URL for Portal Back button (defaults to base_url('/'))
  * @var string|null $nav_search_placeholder Search input placeholder text
  */
 
 $baseUrl = function_exists('base_url') ? base_url('/') : './';
-$navTitle = $nav_title ?? 'AI Greenhouse';
-$navSubtitle = $nav_subtitle ?? 'Zone A • Hydroponic Bay';
+$defaultNavTitle = function_exists('get_portal_brand_name') ? get_portal_brand_name() : 'Engineering Dept CE & IT';
+$navTitle = $nav_title ?? $defaultNavTitle;
+$navSubtitle = $nav_subtitle ?? 'CE & IT Academic Portal';
 $navBackUrl = $nav_back_url ?? $baseUrl;
 $navSearchPlaceholder = $nav_search_placeholder ?? 'Search metrics, events, modules...';
 

@@ -1,47 +1,56 @@
 /**
- * Global Font Configuration — PT Serif
+ * ============================================================================
+ * GLOBAL FONT CONFIGURATION (Single Source of Truth)
+ * ============================================================================
  * 
- * Replaces old typography with Google Font: 'PT Serif'
- * Applied across all views, controls, and modules in the project.
+ * To change the font across ALL Web Pages, Dashboard, and ALL Emails:
+ * 1. Change the Google Font URL in @import below:
+ * 2. Change the font stack in --font-primary below:
+ *
+ * The system automatically reads this file and propagates the font to:
+ * - All web views & dashboard
+ * - All server emails (OTP, Credentials recovery)
+ * - All report & notification emails (CTL, Zero Student, Drive scan, Reports)
+ * ============================================================================
  */
 
 @import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
+/* ── Global Font Variables (Single Source of Truth) ── */
+:root {
+  --font-primary: 'PT Serif', Georgia, 'Times New Roman', serif;
+  --font-body: var(--font-primary);
+  --font-heading: var(--font-primary);
+  --font-brand: var(--font-primary);
+  --font-serif: var(--font-primary);
+  --font-editorial: var(--font-primary);
+  --font-family-base: var(--font-primary);
+  --font-sans: var(--font-primary);
+}
+
 /* ── PT Serif Utility Helper Classes ── */
 .pt-serif-regular {
-  font-family: "PT Serif", Georgia, serif !important;
+  font-family: var(--font-primary) !important;
   font-weight: 400 !important;
   font-style: normal !important;
 }
 
 .pt-serif-bold {
-  font-family: "PT Serif", Georgia, serif !important;
+  font-family: var(--font-primary) !important;
   font-weight: 700 !important;
   font-style: normal !important;
 }
 
 .pt-serif-regular-italic {
-  font-family: "PT Serif", Georgia, serif !important;
+  font-family: var(--font-primary) !important;
   font-weight: 400 !important;
   font-style: italic !important;
 }
 
 .pt-serif-bold-italic {
-  font-family: "PT Serif", Georgia, serif !important;
+  font-family: var(--font-primary) !important;
   font-weight: 700 !important;
   font-style: italic !important;
-}
-
-/* ── Global Font Variables ── */
-:root {
-  --font-primary: 'PT Serif', Georgia, serif;
-  --font-body: 'PT Serif', Georgia, serif;
-  --font-heading: 'PT Serif', Georgia, serif;
-  --font-brand: 'PT Serif', Georgia, serif;
-  --font-serif: 'PT Serif', Georgia, serif;
-  --font-editorial: 'PT Serif', Georgia, serif;
-  --font-family-base: 'PT Serif', Georgia, serif;
-  --font-sans: 'PT Serif', Georgia, serif;
 }
 
 /* ── Global Root & Body Overrides ── */
@@ -50,23 +59,23 @@ body,
 body:not(.home-page),
 html[data-theme="light"] body,
 html[data-theme="dark"] body {
-  font-family: 'PT Serif', Georgia, 'Times New Roman', serif !important;
+  font-family: var(--font-primary) !important;
 }
 
-/* ── Apply PT Serif Across All Content & Structural Elements ── */
+/* ── Apply Primary Font Across All Content & Structural Elements ── */
 h1, h2, h3, h4, h5, h6,
 p, a, label, li, dt, dd,
 input, button, select, textarea,
 table, th, td, blockquote, cite,
 div, section, article, header, footer, nav, aside,
 span:not([class*="bi-"]):not(.bi) {
-  font-family: 'PT Serif', Georgia, 'Times New Roman', serif !important;
+  font-family: var(--font-primary) !important;
 }
 
-/* Ensure placeholder texts inherit PT Serif */
+/* Ensure placeholder texts inherit Primary Font */
 input::placeholder,
 textarea::placeholder {
-  font-family: 'PT Serif', Georgia, 'Times New Roman', serif !important;
+  font-family: var(--font-primary) !important;
 }
 
 /* Preserve bootstrap icons and svg symbols */

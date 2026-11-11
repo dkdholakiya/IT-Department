@@ -1245,15 +1245,13 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
     <script>
         // ── Helper Functions for Dynamic Department Title & Clean Activity Documentation Header ──
         function getDepartmentTitle(deptInput) {
-            const dept = (deptInput || "Information Technology").toUpperCase().trim();
-            if (dept.includes("BOTH") || (dept.includes("CE") && dept.includes("IT")) || (dept.includes("COMPUTER") && dept.includes("INFORMATION"))) {
-                return "DEPARTMENT OF CE & IT";
-            } else if (dept.includes("COMPUTER") || dept.includes("CE")) {
-                return "DEPARTMENT OF COMPUTER ENGINEERING";
+            const dept = (deptInput || "").toUpperCase().trim();
+            if (dept.includes("COMPUTER") || dept.includes("CE")) {
+                return "ENGINEERING DEPT CE & IT (CE)";
             } else if (dept.includes("INFORMATION") || dept.includes("IT")) {
-                return "DEPARTMENT OF INFORMATION TECHNOLOGY";
+                return "ENGINEERING DEPT CE & IT (IT)";
             } else {
-                return `DEPARTMENT OF ${dept}`;
+                return "ENGINEERING DEPT CE & IT";
             }
         }
 
@@ -2963,20 +2961,18 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                 });
             }
 
+            const mailFont = window.PORTAL_FONT_FAMILY || "'PT Serif', Georgia, serif";
             const deptTitle = getDepartmentTitle(dept);
             const docTitle = getCleanActivityTitle(reportType).toUpperCase();
 
             return `
             <style>
-                @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+                body, table, td, th, div, span, p, a, h1, h2, h3, h4, h5, h6 { font-family: ${mailFont} !important; }
             </style>
-            <link rel="preconnect" href="https://fonts.googleapis.com">
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-            <div style="font-family: 'Lora', Georgia, serif; line-height: 1.6; color: #333; max-width: 700px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                <div style="background-color: #8c1d1d; color: white; padding: 25px; text-align: center; font-family: 'Lora', Georgia, serif;">
-                    <h2 style="margin: 0; font-size: 22px; font-weight: bold; letter-spacing: 0.5px; font-family: 'Playfair Display', Georgia, serif; text-transform: uppercase;">${deptTitle}</h2>
-                    <div style="margin-top: 15px; display: inline-block; background-color: rgba(255, 255, 255, 0.2); padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; font-family: 'Playfair Display', Georgia, serif;">
+            <div style="font-family: ${mailFont}; line-height: 1.6; color: #333; max-width: 700px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <div style="background-color: #8c1d1d; color: white; padding: 25px; text-align: center; font-family: ${mailFont};">
+                    <h2 style="margin: 0; font-size: 22px; font-weight: bold; letter-spacing: 0.5px; font-family: ${mailFont}; text-transform: uppercase;">${deptTitle}</h2>
+                    <div style="margin-top: 15px; display: inline-block; background-color: rgba(255, 255, 255, 0.2); padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; font-family: ${mailFont};">
                         ${docTitle}
                     </div>
                 </div>
@@ -3615,6 +3611,7 @@ Department of CE & IT`;
                     cc: selectedCcEmails,
                     subject: subject,
                     html: htmlMessage,
+                    from_name: 'Engineering Dept CE & IT',
                     dept: document.getElementById("facultyDept").value === "Computer Engineering" ? "CE" : "IT"
                 })
             })

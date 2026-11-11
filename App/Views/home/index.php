@@ -640,9 +640,9 @@
   <!-- Top Navigation Header (Fully Responsive on All Screen Sizes) -->
   <header class="relative z-20 w-full max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12 pt-4 sm:pt-6 md:pt-8 flex items-center justify-between">
     <!-- Brand Glassmorphic Pill Capsule (Matching Reference Image to the pixel) -->
-    <div class="brand-glass-pill group" title="CE & IT Department Portal">
+    <div class="brand-glass-pill group" title="Engineering Dept CE & IT">
       <!-- Left: Floating Robot Icon with Smooth Up/Down Movement -->
-      <button id="brand-logo" type="button" class="brand-logo-floating focus:outline-none" title="CE & IT Department">
+      <button id="brand-logo" type="button" class="brand-logo-floating focus:outline-none" title="Engineering Dept CE & IT">
         <div class="relative w-8 h-6 sm:w-10 sm:h-7.5 flex items-center justify-center shrink-0">
           <svg viewBox="0 0 46 32" class="w-8 h-6 sm:w-10 sm:h-7.5 overflow-visible brand-logo-icon">
             <defs>
@@ -744,9 +744,9 @@
           <rect x="26.8" y="10.8" width="5.0" height="10.4" rx="2.5" fill="#ffffff" />
         </svg>
       </div>
-      <h2 id="modal-title" class="text-2xl font-bold text-[#141418] pt-serif-bold">Department of IT & CE — Engineering Portal</h2>
+      <h2 id="modal-title" class="text-2xl font-bold text-[#141418] pt-serif-bold">Engineering Dept CE & IT — Academic Portal</h2>
       <p id="modal-desc" class="mt-2 text-sm text-[#60606c] leading-relaxed">
-        Welcome to the official IT Department portal featuring the interactive 3D robot companion. Access the management dashboard, academic timetables, and department reports. Made by DK Dholakiya.
+        Welcome to the official Engineering Dept CE & IT portal featuring the interactive 3D robot companion. Access the management dashboard, academic timetables, and department reports. Made by DK Dholakiya.
       </p>
       <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
         <a href="<?= base_url('login') ?>" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-sky-500 text-white text-sm font-semibold hover:opacity-90 transition shadow-md">

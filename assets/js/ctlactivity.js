@@ -944,18 +944,19 @@
       }).length;
       const activeRejected = allData.filter(x => (x.approvalStatus || '').toLowerCase().includes('rejected') || (x.approvalStatus || '').toLowerCase().includes('reject')).length;
 
+      const mailFontFamily = window.PORTAL_FONT_FAMILY || "'PT Serif', Georgia, 'Times New Roman', serif";
       let tableRowsHtml = '';
       const dataToExport = activeData.length > 0 ? activeData : allData;
       dataToExport.forEach((item, index) => {
         const bg = index % 2 === 0 ? '#ffffff' : '#f8fafc';
         tableRowsHtml += `
           <tr style="background-color: ${bg};">
-            <td style="padding: 12px 14px; text-align: center; font-weight: 500; color: #64748b; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${index + 1}</td>
-            <td style="padding: 12px 14px; font-weight: 600; color: #0f172a; word-break: break-word; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${item.name}</td>
-            <td style="padding: 12px 14px; text-align: center; color: #334155; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${item.planDate || '-'}</td>
-            <td style="padding: 12px 14px; text-align: center; color: #334155; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${item.actualDate || '-'}</td>
-            <td style="padding: 12px 14px; text-align: center; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${getSubmissionPillsHtmlForEmail(item.submissionFlags)}</td>
-            <td style="padding: 12px 14px; text-align: center; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: 'Playfair Display', Georgia, serif;">${getApprovalPillHtmlForEmail(item.approvalStatus)}</td>
+            <td style="padding: 12px 14px; text-align: center; font-weight: 500; color: #64748b; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: ${mailFontFamily};">${index + 1}</td>
+            <td style="padding: 12px 14px; font-weight: 600; color: #0f172a; word-break: break-word; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: ${mailFontFamily};">${item.name}</td>
+            <td style="padding: 12px 14px; text-align: center; color: #334155; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: ${mailFontFamily};">${item.planDate || '-'}</td>
+            <td style="padding: 12px 14px; text-align: center; color: #334155; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: ${mailFontFamily};">${item.actualDate || '-'}</td>
+            <td style="padding: 12px 14px; text-align: center; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: ${mailFontFamily};">${getSubmissionPillsHtmlForEmail(item.submissionFlags)}</td>
+            <td style="padding: 12px 14px; text-align: center; border: 1px solid #cbd5e1; vertical-align: middle; background-color: ${bg}; font-family: ${mailFontFamily};">${getApprovalPillHtmlForEmail(item.approvalStatus)}</td>
           </tr>
         `;
       });
@@ -967,7 +968,7 @@
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-            body, table, td, th, div, span, p, a, h1, h2 { font-family: 'Playfair Display', Georgia, serif !important; }
+            body, table, td, th, div, span, p, a, h1, h2 { font-family: ${mailFontFamily} !important; }
             @media only screen and (max-width: 600px) {
               .email-container { padding: 12px 6px !important; }
               .card-wrapper { border-radius: 12px !important; }
@@ -981,12 +982,12 @@
             }
           </style>
         </head>
-        <body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: 'Playfair Display', Georgia, serif; color: #334155;">
+        <body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: ${mailFontFamily}; color: #334155;">
           <div class="email-container" style="background-color: #f8fafc; padding: 36px 16px;">
             <div class="card-wrapper" style="max-width: 1050px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);">
               <div class="header-banner" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 32px 24px; text-align: center;">
                 <h1 style="margin: 0; font-size: 24px; font-weight: 800; color: #ffffff;">CTL Activity Report Dashboard</h1>
-                <p style="margin: 8px 0 0; font-size: 13px; color: #94a3b8;">Department of ${isCe ? 'Computer Engineering' : 'Information Technology'}</p>
+                <p style="margin: 8px 0 0; font-size: 13px; color: #94a3b8;">Engineering Dept CE & IT &bull; Department of ${isCe ? 'Computer Engineering' : 'Information Technology'}</p>
               </div>
 
               <div class="faculty-card" style="margin: 24px 24px 0 24px; padding: 18px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">

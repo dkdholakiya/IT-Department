@@ -1,5 +1,5 @@
 <?php
-$page_title = 'AI Greenhouse — Smart Management Dashboard';
+$page_title = 'Engineering Dept CE & IT — Smart Management Dashboard';
 $page_css = ['assets/css/dashboard.css'];
 include dirname(__DIR__) . '/partials/dashboard-head.php';
 ?>
@@ -18,9 +18,9 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
     <div class="flex-1 min-h-0 min-w-0 flex flex-col gap-3 lg:gap-3">
 
       <?php
-      $nav_title = 'AI Greenhouse';
-      $nav_subtitle = 'Zone A • Hydroponic Bay';
-      $nav_search_placeholder = 'Search greenhouse metrics...';
+      $nav_title = 'Engineering Dept CE & IT';
+      $nav_subtitle = 'CE & IT Academic Portal';
+      $nav_search_placeholder = 'Search metrics, events, modules...';
       include dirname(__DIR__) . '/partials/navbar.php';
       ?>
 
@@ -28,7 +28,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
       <div id="activeFilterBanner" class="hidden items-center justify-between px-4 py-1.5 rounded-2xl glass-pill text-xs font-medium shrink-0">
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-[var(--color-primary)]"></span>
-          <span id="activeFilterText">Showing all greenhouse telemetry modules</span>
+          <span id="activeFilterText">Showing all telemetry modules</span>
         </div>
         <button id="resetFilterBtn" type="button" class="font-bold text-[var(--color-primary)] hover:underline">Show All Widgets</button>
       </div>

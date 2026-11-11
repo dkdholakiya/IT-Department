@@ -11,7 +11,8 @@
  * @var bool|null         $include_body Whether to output <body> tag (defaults to true)
  */
 
-$title = $page_title ?? 'CE & IT Department Portal';
+$defaultPortalTitle = function_exists('get_portal_brand_name') ? get_portal_brand_name() : 'Engineering Dept CE & IT';
+$title = $page_title ?? $defaultPortalTitle;
 $bodyClass = $body_class ?? 'antialiased selection:bg-[var(--color-primary)] selection:text-white lg:h-screen lg:w-screen lg:overflow-hidden';
 $includeBody = $include_body ?? true;
 
@@ -178,8 +179,12 @@ if (!empty($page_css)) {
   </script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/toast.js') : 'assets/js/toast.js'; ?>"></script>
 
-  <!-- Global Typography -->
+  <!-- Global Typography (Single Source of Truth) -->
   <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/font.css') : 'assets/css/font.css'; ?>">
+  <script>
+    window.PORTAL_FONT_CONFIG = <?php echo json_encode(function_exists('get_portal_font_config') ? get_portal_font_config() : ['font_family' => "'PT Serif', Georgia, 'Times New Roman', serif"]); ?>;
+    window.PORTAL_FONT_FAMILY = window.PORTAL_FONT_CONFIG.font_family;
+  </script>
 
   <!-- Page-Specific Stylesheets (e.g. dashboard.css, calendar.css) -->
   <?php foreach ($cssList as $css): ?>

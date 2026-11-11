@@ -746,16 +746,17 @@ class AuthController extends Controller
         $configFile = defined('CONFIG_PATH') ? CONFIG_PATH . '/app.php' : (defined('BASE_PATH') ? BASE_PATH . '/config/app.php' : dirname(__DIR__, 2) . '/config/app.php');
         $config = file_exists($configFile) ? (include $configFile) : [];
 
+        $brandName = function_exists('get_portal_brand_name') ? get_portal_brand_name() : 'Engineering Dept CE & IT';
         $isCe = ($deptCode === 'CE');
         if ($isCe) {
             $smtpUser = $config['smtp_email_ce'] ?? ($config['smtp_email'] ?? 'admincecse@gmiu.edu.in');
             $smtpPass = $config['smtp_password_ce'] ?? ($config['smtp_password'] ?? '');
-            $fromName = 'CE Department Portal';
+            $fromName = $brandName;
             $subject  = "Your Login Verification Code: {$otp}";
         } else {
             $smtpUser = $config['smtp_email'] ?? 'adminit@gmiu.edu.in';
             $smtpPass = $config['smtp_password'] ?? '';
-            $fromName = 'IT Department Portal';
+            $fromName = $brandName;
             $subject  = "Your Login Verification Code: {$otp}";
         }
 
@@ -862,17 +863,18 @@ class AuthController extends Controller
             $digitHtml .= "<span style=\"display: inline-block; width: 44px; height: 52px; line-height: 52px; margin: 0 4px; background: #ffffff; border: 2px solid #7c3aed; border-radius: 12px; font-size: 26px; font-weight: 800; color: #0f172a; text-align: center; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.15);\">{$d}</span>";
         }
 
+        $brandName    = function_exists('get_portal_brand_name') ? get_portal_brand_name() : 'Engineering Dept CE & IT';
         $deptFullName = ($deptCode === 'CE') ? 'DEPARTMENT OF COMPUTER ENGINEERING' : 'DEPARTMENT OF INFORMATION TECHNOLOGY';
-        $portalName   = ($deptCode === 'CE') ? 'CE Academic Portal' : 'IT Academic Portal';
+        $portalName   = 'Engineering Dept CE & IT';
 
-        return "
+        $html = "
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset=\"utf-8\">
-            <title>Login Verification Code</title>
+            <title>Login Verification Code — {$brandName}</title>
         </head>
-        <body style=\"margin:0; padding:0; background-color:#f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;\">
+        <body style=\"margin:0; padding:0; background-color:#f8fafc;\">
             <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color:#f8fafc; padding: 30px 10px;\">
                 <tr>
                     <td align=\"center\">
@@ -886,10 +888,10 @@ class AuthController extends Controller
                                         Faculty Authentication Protocol
                                     </div>
                                     <h1 style=\"color: #ffffff; margin: 0; font-size: 19px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;\">
-                                        {$deptFullName}
+                                        {$brandName}
                                     </h1>
                                     <p style=\"color: #94a3b8; margin: 6px 0 0 0; font-size: 13px;\">
-                                        {$portalName} &bull; Smart Management Dashboard
+                                        CE & IT Academic Portal &bull; Smart Management Dashboard
                                     </p>
                                 </td>
                             </tr>
@@ -922,7 +924,7 @@ class AuthController extends Controller
                             <tr>
                                 <td style=\"background-color: #f8fafc; padding: 18px 25px; text-align: center; border-top: 1px solid #e2e8f0;\">
                                     <p style=\"font-size: 11px; color: #94a3b8; margin: 0;\">
-                                        Automated Authentication Service &bull; Gyanmanjari Innovative University
+                                        Automated Authentication Service &bull; {$brandName} &bull; Gyanmanjari Innovative University
                                     </p>
                                 </td>
                             </tr>
@@ -933,6 +935,8 @@ class AuthController extends Controller
         </body>
         </html>
         ";
+
+        return function_exists('apply_portal_font_to_html') ? apply_portal_font_to_html($html) : $html;
     }
 
     /**
@@ -943,18 +947,19 @@ class AuthController extends Controller
         $configFile = defined('CONFIG_PATH') ? CONFIG_PATH . '/app.php' : (defined('BASE_PATH') ? BASE_PATH . '/config/app.php' : dirname(__DIR__, 2) . '/config/app.php');
         $config = file_exists($configFile) ? (include $configFile) : [];
 
+        $brandName = function_exists('get_portal_brand_name') ? get_portal_brand_name() : 'Engineering Dept CE & IT';
         $isCe = ($deptCode === 'CE');
         if ($isCe) {
             $smtpUser = $config['smtp_email_ce'] ?? ($config['smtp_email'] ?? 'admincecse@gmiu.edu.in');
             $smtpPass = $config['smtp_password_ce'] ?? ($config['smtp_password'] ?? '');
-            $fromName = 'CE Department Portal';
+            $fromName = $brandName;
         } else {
             $smtpUser = $config['smtp_email'] ?? 'adminit@gmiu.edu.in';
             $smtpPass = $config['smtp_password'] ?? '';
-            $fromName = 'IT Department Portal';
+            $fromName = $brandName;
         }
 
-        $subject  = "Your Faculty Portal Access Credentials — CE & IT Department";
+        $subject  = "Your Faculty Portal Access Credentials — {$brandName}";
         $htmlBody = $this->generateCredentialsEmailHtml($user, $deptCode);
 
         error_log("[FORGOT-PASSWORD] Credentials email sent to: {$user['email']} (User: {$user['username']})");
@@ -970,8 +975,9 @@ class AuthController extends Controller
         date_default_timezone_set('Asia/Kolkata');
         $timeStr = date('d M Y, h:i A');
 
+        $brandName    = function_exists('get_portal_brand_name') ? get_portal_brand_name() : 'Engineering Dept CE & IT';
         $deptFullName = ($deptCode === 'CE') ? 'DEPARTMENT OF COMPUTER ENGINEERING' : 'DEPARTMENT OF INFORMATION TECHNOLOGY';
-        $portalName   = ($deptCode === 'CE') ? 'CE Academic Portal' : 'IT Academic Portal';
+        $portalName   = 'Engineering Dept CE & IT';
         $loginUrl     = function_exists('base_url') ? base_url('login') : 'http://localhost/It/login';
 
         $name        = htmlspecialchars($user['name'] ?? 'Faculty Member');
@@ -982,14 +988,14 @@ class AuthController extends Controller
         $department  = htmlspecialchars($user['department'] ?? 'Information Technology');
         $role        = ($user['role'] ?? '') === 'super_admin' ? 'Super Administrator' : 'Faculty Member (Staff)';
 
-        return "
+        $html = "
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset=\"utf-8\">
-            <title>Your Faculty Portal Access Credentials</title>
+            <title>Your Faculty Portal Access Credentials — {$brandName}</title>
         </head>
-        <body style=\"margin:0; padding:0; background-color:#f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;\">
+        <body style=\"margin:0; padding:0; background-color:#f8fafc;\">
             <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color:#f8fafc; padding: 30px 10px;\">
                 <tr>
                     <td align=\"center\">
@@ -1003,10 +1009,10 @@ class AuthController extends Controller
                                         Account Credentials Recovery
                                     </div>
                                     <h1 style=\"color: #ffffff; margin: 0; font-size: 19px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;\">
-                                        {$deptFullName}
+                                        {$brandName}
                                     </h1>
                                     <p style=\"color: #94a3b8; margin: 6px 0 0 0; font-size: 13px;\">
-                                        {$portalName} &bull; Smart Management Dashboard
+                                        CE & IT Academic Portal &bull; Smart Management Dashboard
                                     </p>
                                 </td>
                             </tr>
@@ -1016,7 +1022,7 @@ class AuthController extends Controller
                                         Hello <strong>{$name}</strong>,
                                     </p>
                                     <p style=\"font-size: 14px; color: #475569; line-height: 1.6; margin: 0 0 20px 0;\">
-                                        You recently requested your login credentials for the <strong>CE & IT Smart Management Portal</strong>. Below are your official account access details:
+                                        You recently requested your login credentials for the <strong>{$brandName} Smart Management Portal</strong>. Below are your official account access details:
                                     </p>
 
                                     <!-- Credentials Box -->
@@ -1066,7 +1072,7 @@ class AuthController extends Controller
                             </tr>
                             <tr>
                                 <td style=\"background-color: #f1f5f9; padding: 18px 25px; text-align: center; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0;\">
-                                    Gyanmanjari Innovative University &bull; Faculty Smart Management Portal<br>
+                                    Gyanmanjari Innovative University &bull; {$brandName} Portal<br>
                                     Automated Credential Dispatch &bull; Confidential
                                 </td>
                             </tr>
@@ -1076,5 +1082,7 @@ class AuthController extends Controller
             </table>
         </body>
         </html>";
+
+        return function_exists('apply_portal_font_to_html') ? apply_portal_font_to_html($html) : $html;
     }
 }

@@ -8,24 +8,27 @@
 ignore_user_abort(true);
 set_time_limit(0);
 
+if (!defined('EMAIL_SERVICE_LIB_ONLY')) {
 // Add security hardening headers
-header("X-Frame-Options: SAMEORIGIN");
-header("X-Content-Type-Options: nosniff");
-header("X-XSS-Protection: 1; mode=block");
+if (!headers_sent()) {
+    header("X-Frame-Options: SAMEORIGIN");
+    header("X-Content-Type-Options: nosniff");
+    header("X-XSS-Protection: 1; mode=block");
 
-// Enable CORS and configure JSON response
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Content-Type: application/json");
+    // Enable CORS and configure JSON response
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+    header("Access-Control-Allow-Methods: POST, OPTIONS");
+    header("Content-Type: application/json");
+}
 
 // Handle OPTIONS preflight requests
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
     exit(0);
 }
 
 // Ensure the request method is POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     http_response_code(405);
     echo json_encode(["success" => false, "error" => "Method Not Allowed. Only POST requests are permitted."]);
     exit;
@@ -88,6 +91,10 @@ foreach ($emails_to_validate as $check_email) {
 }
 
 // Load secure config
+$core_helpers = defined('BASE_PATH') ? BASE_PATH . '/Core/helpers.php' : dirname(__DIR__, 2) . '/Core/helpers.php';
+if (file_exists($core_helpers)) {
+    require_once $core_helpers;
+}
 $config_file = defined('CONFIG_PATH') ? CONFIG_PATH . '/app.php' : (defined('BASE_PATH') ? BASE_PATH . '/config/app.php' : dirname(__DIR__, 2) . '/config/app.php');
 if (!file_exists($config_file)) {
     http_response_code(500);
@@ -126,16 +133,16 @@ if (empty($dept)) {
     }
 }
 
-// Default to IT SMTP credentials and From Name (adminit@gmiu.edu.in)
+// Default to SMTP credentials and unified From Name
+$brand_name = function_exists('get_portal_brand_name') ? get_portal_brand_name() : 'Engineering Dept CE & IT';
 $email = $config['smtp_email'] ?? '';
 $appPassword = $config['smtp_password'] ?? '';
-$from_name = 'IT Department';
+$from_name = $input['from_name'] ?? ($input['fromName'] ?? $brand_name);
 
 // If target department is Computer Engineering, use CE credentials (admincecse@gmiu.edu.in)
 if (strtoupper($dept) === 'CE') {
     $email = $config['smtp_email_ce'] ?? $email;
     $appPassword = $config['smtp_password_ce'] ?? $appPassword;
-    $from_name = 'CE Department';
 }
 
 if (empty($email) || empty($appPassword)) {
@@ -493,12 +500,17 @@ if (!empty($emails) && is_array($emails)) {
     }
     exit;
 }
+} // End if (!defined('EMAIL_SERVICE_LIB_ONLY'))
 
 
 /**
  * Direct SMTP socket client to send mail via Gmail SSL port 465
  */
-function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attachment = '', $filename = '', $from_name = 'IT Department', $attachments = []) {
+function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attachment = '', $filename = '', $from_name = 'Engineering Dept CE & IT', $attachments = []) {
+    // Automatically enforce unified font from font.css across all outgoing HTML emails
+    if (function_exists('apply_portal_font_to_html')) {
+        $html = apply_portal_font_to_html($html);
+    }
     $timeout = 15;
     $smtp = fsockopen("ssl://smtp.gmail.com", 465, $errno, $errstr, $timeout);
     if (!$smtp) {

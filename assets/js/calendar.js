@@ -506,7 +506,7 @@
       const uInitials = window.PORTAL_USER?.initials || uName.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase() || 'FM';
 
       modalTitle.textContent = `${uName} — Faculty Profile`;
-      modalSubtitle.textContent = `CE & IT Department Portal • ${uRole}`;
+      modalSubtitle.textContent = `Engineering Dept CE & IT • ${uRole}`;
       modalBody.innerHTML = `
         <div class="flex items-center gap-4">
           <div class="w-14 h-14 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center font-bold text-lg ring-2 ring-[var(--color-primary)] overflow-hidden shrink-0 shadow-sm">

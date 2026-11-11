@@ -14,7 +14,7 @@ header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Content-Type: application/json");
 
 // Handle CORS Preflight
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
     exit(0);
 }
 
@@ -24,6 +24,10 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Load Secure Configuration
+$core_helpers = defined('BASE_PATH') ? BASE_PATH . '/Core/helpers.php' : dirname(__DIR__, 2) . '/Core/helpers.php';
+if (file_exists($core_helpers)) {
+    require_once $core_helpers;
+}
 $config_file = defined('CONFIG_PATH') ? CONFIG_PATH . '/app.php' : (defined('BASE_PATH') ? BASE_PATH . '/config/app.php' : dirname(__DIR__, 2) . '/config/app.php');
 if (!file_exists($config_file)) {
     http_response_code(500);
@@ -107,16 +111,17 @@ if ($action === 'send_otp') {
     $dept_code = $is_ce ? 'CE' : 'IT';
 
     // Set SMTP credentials, sender name, and dynamic subject based on department
+    $brand_name = function_exists('get_portal_brand_name') ? get_portal_brand_name() : 'Engineering Dept CE & IT';
     if ($is_ce) {
         $smtp_email = $config['smtp_email_ce'] ?? ($config['smtp_email'] ?? '');
         $smtp_password = $config['smtp_password_ce'] ?? ($config['smtp_password'] ?? '');
-        $from_name = 'CE Department Verification';
-        $subject = "Your OTP for CE Report Verification";
+        $from_name = $brand_name;
+        $subject = "Your OTP for Report Verification — {$brand_name}";
     } else {
         $smtp_email = $config['smtp_email'] ?? '';
         $smtp_password = $config['smtp_password'] ?? '';
-        $from_name = 'IT Department Verification';
-        $subject = "Your OTP for IT Report Verification";
+        $from_name = $brand_name;
+        $subject = "Your OTP for Report Verification — {$brand_name}";
     }
 
     $html_body = generate_otp_email_html($otp, $faculty_name, $email, $dept_code);
@@ -191,6 +196,10 @@ if ($action === 'verify_otp') {
     exit;
 }
 
+if (empty($action) && defined('TESTING_MODE')) {
+    return;
+}
+
 http_response_code(400);
 echo json_encode(["success" => false, "error" => "Invalid endpoint action."]);
 exit;
@@ -208,19 +217,20 @@ function generate_otp_email_html($otp, $faculty_name, $email, $dept_code = 'IT')
         $digit_html .= "<span style=\"display: inline-block; width: 44px; height: 52px; line-height: 52px; margin: 0 4px; background: #ffffff; border: 2px solid #2563eb; border-radius: 10px; font-size: 26px; font-weight: 800; color: #0f172a; text-align: center; box-shadow: 0 3px 8px rgba(37, 99, 235, 0.12);\">{$d}</span>";
     }
 
+    $brand_name     = function_exists('get_portal_brand_name') ? get_portal_brand_name() : 'Engineering Dept CE & IT';
     $dept_full_name = ($dept_code === 'CE') ? 'DEPARTMENT OF COMPUTER ENGINEERING' : 'DEPARTMENT OF INFORMATION TECHNOLOGY';
-    $portal_name = ($dept_code === 'CE') ? 'CE Activity Portal' : 'IT Activity Portal';
-    $hub_name = ($dept_code === 'CE') ? 'CE Department Verification Hub' : 'IT Department Verification Hub';
+    $portal_name    = 'Engineering Dept CE & IT Portal';
+    $hub_name       = "{$brand_name} Verification Hub";
 
-    return "
+    $html = "
     <!DOCTYPE html>
     <html>
     <head>
         <meta charset=\"utf-8\">
         <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-        <title>Faculty Verification Code</title>
+        <title>Faculty Verification Code — {$brand_name}</title>
     </head>
-    <body style=\"margin:0; padding:0; background-color:#f1f5f9; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;\">
+    <body style=\"margin:0; padding:0; background-color:#f1f5f9;\">
         <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color:#f1f5f9; padding: 30px 10px;\">
             <tr>
                 <td align=\"center\">
@@ -235,11 +245,11 @@ function generate_otp_email_html($otp, $faculty_name, $email, $dept_code = 'IT')
                                 <div style=\"display: inline-block; padding: 6px 14px; background: rgba(37, 99, 235, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 50px; color: #93c5fd; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;\">
                                     Security Verification Protocol
                                 </div>
-                                <h1 style=\"color: #ffffff; margin: 0; font-size: 19px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; font-family: 'Segoe UI', Arial, sans-serif;\">
-                                    {$dept_full_name}
+                                <h1 style=\"color: #ffffff; margin: 0; font-size: 19px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;\">
+                                    {$brand_name}
                                 </h1>
                                 <p style=\"color: #94a3b8; margin: 6px 0 0 0; font-size: 13px; font-weight: 500;\">
-                                    Faculty Activity Report Authorization
+                                    CE & IT Academic Portal &bull; Faculty Activity Authorization
                                 </p>
                             </td>
                         </tr>
@@ -266,7 +276,7 @@ function generate_otp_email_html($otp, $faculty_name, $email, $dept_code = 'IT')
                                 <!-- Confidentiality Alert Box -->
                                 <div style=\"background-color: #fff8f8; border-left: 4px solid #ef4444; border-radius: 6px; padding: 12px 16px; margin: 24px 0 18px 0; text-align: left;\">
                                     <p style=\"font-size: 13px; color: #991b1b; margin: 0; font-weight: 600; line-height: 1.5;\">
-                                        🔒 <strong>Security Warning:</strong> This code will expire in <strong>5 minutes</strong>. Do not share this OTP code with anyone. IT personnel will never ask for your passcode.
+                                        🔒 <strong>Security Warning:</strong> This code will expire in <strong>5 minutes</strong>. Do not share this OTP code with anyone. Official personnel will never ask for your passcode.
                                     </p>
                                 </div>
 
@@ -294,12 +304,14 @@ function generate_otp_email_html($otp, $faculty_name, $email, $dept_code = 'IT')
     </body>
     </html>
     ";
+
+    return function_exists('apply_portal_font_to_html') ? apply_portal_font_to_html($html) : $html;
 }
 
 /**
  * Helper: Direct Socket SSL SMTP Email Sender for OTP
  */
-function send_otp_smtp_mail($to, $subject, $html, $username, $password, $from_name = 'IT Department Verification') {
+function send_otp_smtp_mail($to, $subject, $html, $username, $password, $from_name = 'Engineering Dept CE & IT') {
     $timeout = 15;
     $smtp = @fsockopen("ssl://smtp.gmail.com", 465, $errno, $errstr, $timeout);
     if (!$smtp) {

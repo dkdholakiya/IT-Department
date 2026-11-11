@@ -19,18 +19,22 @@ if (empty($recipientEmail) || empty($otp)) {
 }
 
 $baseDir = dirname(__DIR__);
+if (file_exists($baseDir . '/Core/helpers.php')) {
+    require_once $baseDir . '/Core/helpers.php';
+}
 $configFile = $baseDir . '/config/app.php';
 $config = file_exists($configFile) ? (include $configFile) : [];
 
+$brandName = function_exists('get_portal_brand_name') ? get_portal_brand_name() : 'Engineering Dept CE & IT';
 $isCe = ($deptCode === 'CE');
 if ($isCe) {
     $smtpUser = $config['smtp_email_ce'] ?? ($config['smtp_email'] ?? 'admincecse@gmiu.edu.in');
     $smtpPass = $config['smtp_password_ce'] ?? ($config['smtp_password'] ?? '');
-    $fromName = 'CE Department Portal';
+    $fromName = $brandName;
 } else {
     $smtpUser = $config['smtp_email'] ?? 'adminit@gmiu.edu.in';
     $smtpPass = $config['smtp_password'] ?? '';
-    $fromName = 'IT Department Portal';
+    $fromName = $brandName;
 }
 
 $subject  = "Your Login Verification Code: {$otp}";
@@ -44,16 +48,16 @@ foreach ($digits as $d) {
 }
 
 $deptFullName = ($deptCode === 'CE') ? 'DEPARTMENT OF COMPUTER ENGINEERING' : 'DEPARTMENT OF INFORMATION TECHNOLOGY';
-$portalName   = ($deptCode === 'CE') ? 'CE Academic Portal' : 'IT Academic Portal';
+$portalName   = 'Engineering Dept CE & IT';
 
 $htmlBody = "
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset=\"utf-8\">
-    <title>Login Verification Code</title>
+    <title>Login Verification Code — {$brandName}</title>
 </head>
-<body style=\"margin:0; padding:0; background-color:#f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;\">
+<body style=\"margin:0; padding:0; background-color:#f8fafc;\">
     <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color:#f8fafc; padding: 30px 10px;\">
         <tr>
             <td align=\"center\">
@@ -67,10 +71,10 @@ $htmlBody = "
                                 Faculty Authentication Protocol
                             </div>
                             <h1 style=\"color: #ffffff; margin: 0; font-size: 19px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;\">
-                                {$deptFullName}
+                                {$brandName}
                             </h1>
                             <p style=\"color: #94a3b8; margin: 6px 0 0 0; font-size: 13px;\">
-                                {$portalName} &bull; Smart Management Dashboard
+                                CE & IT Academic Portal &bull; Smart Management Dashboard
                             </p>
                         </td>
                     </tr>
@@ -103,7 +107,7 @@ $htmlBody = "
                     <tr>
                         <td style=\"background-color: #f8fafc; padding: 18px 25px; text-align: center; border-top: 1px solid #e2e8f0;\">
                             <p style=\"font-size: 11px; color: #94a3b8; margin: 0;\">
-                                Automated Authentication Service &bull; Gyanmanjari Innovative University
+                                Automated Authentication Service &bull; {$brandName} &bull; Gyanmanjari Innovative University
                             </p>
                         </td>
                     </tr>
@@ -113,6 +117,8 @@ $htmlBody = "
     </table>
 </body>
 </html>";
+
+$htmlBody = function_exists('apply_portal_font_to_html') ? apply_portal_font_to_html($htmlBody) : $htmlBody;
 
 if (empty($smtpUser) || empty($smtpPass)) {
     error_log("[ASYNC-MAIL] Warning: SMTP credentials missing.");

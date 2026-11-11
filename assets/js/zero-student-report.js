@@ -293,7 +293,7 @@ function handleAddEntry() {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
                 body, table, td, th, div, span, p, a, h1, h2 {
-                    font-family: 'Playfair Display', Georgia, serif !important;
+                    font-family: ${window.PORTAL_FONT_FAMILY || "'PT Serif', Georgia, serif"} !important;
                 }
             </style>
         </head>
@@ -303,7 +303,7 @@ function handleAddEntry() {
                     
                     <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 24px; text-align: center;">
                         <h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">Zero Student Timetable Log</h1>
-                        <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 12px;">Department of ${deptAbbr}</p>
+                        <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 12px;">Engineering Dept CE & IT &bull; ${deptAbbr}</p>
                     </div>
 
                     <div style="padding: 24px;">
@@ -1704,7 +1704,7 @@ async function handleBatchImport() {
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <style>
                         body, table, td, th, div, span, p, a, h1, h2 {
-                            font-family: 'Playfair Display', Georgia, serif !important;
+                            font-family: ${window.PORTAL_FONT_FAMILY || "'PT Serif', Georgia, serif"} !important;
                         }
                     </style>
                 </head>
@@ -1713,7 +1713,7 @@ async function handleBatchImport() {
                         <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);">
                             <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 24px; text-align: center;">
                                 <h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">Zero Student Timetable Log</h1>
-                                <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 12px;">Department of ${deptAbbr}</p>
+                                <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 12px;">Engineering Dept CE & IT &bull; ${deptAbbr}</p>
                             </div>
                             <div style="padding: 24px;">
                                 <table style="width: 100%; border-collapse: collapse; font-size: 13px; color: #334155;">
