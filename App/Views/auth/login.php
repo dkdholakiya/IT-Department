@@ -52,23 +52,25 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
     window.PORTAL_LOGO_URL = '<?php echo function_exists("v_asset") ? v_asset("assets/images/favicon-64x64.png") : $baseUrl . "assets/images/favicon-64x64.png"; ?>';
   </script>
   <script src="<?php echo v_asset('assets/js/toast.js'); ?>"></script>
+  <!-- Winter Snowfall Effect (Default: ON) -->
+  <script src="<?php echo v_asset('assets/js/snowfall.js'); ?>"></script>
   <!-- Default Page Theme Color: Royal Violet (R:124 G:58 B:237) -->
   <style>:root { --color-primary: #7C3AED; --color-primary-rgb: 124, 58, 237; --color-primary-dark: #6D28D9; --color-primary-light: #A78BFA; }</style>
   <!-- Immediate Dark/Light Theme Initialization to eliminate flash -->
   <script>
     (function() {
-      var savedTheme = localStorage.getItem('portal_auth_theme') || 'light';
-      if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else {
+      var savedTheme = localStorage.getItem('portal_auth_theme') || 'dark';
+      if (savedTheme === 'light') {
         document.documentElement.classList.remove('dark');
         document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
       }
     })();
   </script>
 </head>
-<body class="theme-light antialiased selection:bg-[var(--color-primary)] selection:text-white p-0 lg:p-7">
+<body class="theme-dark antialiased selection:bg-[var(--color-primary)] selection:text-white p-0 lg:p-7">
 
   <!-- ================= AMBIENT FROSTED GLASS BACKGROUND ORBS WITH FLUID ANIMATIONS ================= -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
@@ -773,7 +775,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       // --- 1. APPLICATION STATE ---
       const state = {
         mode: 'login', // 'login' | 'signup'
-        theme: localStorage.getItem('portal_auth_theme') || 'light',
+        theme: localStorage.getItem('portal_auth_theme') || 'dark',
         primaryHex: localStorage.getItem('portal_auth_color_login') || '#7C3AED',
         loginPwdVisible: false,
         signUpPwdVisible: false,

@@ -398,16 +398,16 @@ html.sidebar-no-transition #desktopSidebarToggleIcon {
 }
 
 body.theme-dark .sidebar-user-role {
-  color: var(--text-role, #6EE7B7) !important;
+  color: var(--text-role, var(--color-primary-light, #A78BFA)) !important;
 }
 
 .sidebar-header-kicker {
-  color: var(--text-role, #064E3B) !important;
+  color: var(--text-role, var(--color-primary, #7C3AED)) !important;
   transition: color 0.22s ease;
 }
 
 body.theme-dark .sidebar-header-kicker {
-  color: var(--text-role, #6EE7B7) !important;
+  color: var(--text-role, var(--color-primary-light, #A78BFA)) !important;
 }
 
 /* ==========================================================================

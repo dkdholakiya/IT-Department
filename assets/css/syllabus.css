@@ -278,7 +278,7 @@ body.theme-dark .syl-sem-tab {
 
 body.theme-dark .syl-table thead th,
 body.theme-dark .syl-exam-table thead th {
-  background: rgba(20, 30, 23, 0.95);
+  background: rgba(14, 14, 18, 0.95);
   border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
   color: var(--text-secondary);
 }

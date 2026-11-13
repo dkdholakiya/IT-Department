@@ -33,11 +33,11 @@ if (!empty($page_css)) {
   <script>
     (function() {
       try {
-        var theme = localStorage.getItem('portal_theme') || 'light';
-        if (theme === 'dark') {
-          document.documentElement.classList.add('dark');
-        } else {
+        var theme = localStorage.getItem('portal_theme') || 'dark';
+        if (theme === 'light') {
           document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
         }
 
         var hex = localStorage.getItem('portal_theme_color') || '#7C3AED';
@@ -113,14 +113,14 @@ if (!empty($page_css)) {
           root.style.setProperty('--card-outline-color', 'rgba(' + r + ', ' + g + ', ' + b + ', ' + borderAlpha + ')');
           root.style.setProperty('--btn-outline-color', 'rgba(' + r + ', ' + g + ', ' + b + ', ' + borderStrongAlpha + ')');
           root.style.setProperty('--glass-shadow', isDark 
-            ? '0 14px 34px -4px rgba(0, 0, 0, 0.60), 0 0 0 1px rgba(' + r + ', ' + g + ', ' + b + ', 0.28)' 
+            ? '0 16px 38px -6px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.06)' 
             : '0 10px 28px -6px rgba(' + r + ', ' + g + ', ' + b + ', 0.16), 0 2px 8px -1px rgba(10, 9, 9, 0.04)');
 
           if (isDark) {
-            root.style.setProperty('--bg-mesh-1', hslToHex((hue + 30) % 360, 45, 10));
-            root.style.setProperty('--bg-mesh-2', hslToHex(hue, 50, 12));
-            root.style.setProperty('--bg-mesh-3', hslToHex(hue, 35, 5));
-            root.style.setProperty('--bg-mesh-4', hslToHex(hue, 55, 14));
+            root.style.setProperty('--bg-mesh-1', '#050507');
+            root.style.setProperty('--bg-mesh-2', '#08080C');
+            root.style.setProperty('--bg-mesh-3', '#000000');
+            root.style.setProperty('--bg-mesh-4', '#0A0A0F');
           } else if (hex.toUpperCase() !== '#10B981') {
             root.style.setProperty('--bg-mesh-1', hslToHex((hue + 45) % 360, 52, 86));
             root.style.setProperty('--bg-mesh-2', hslToHex(hue, 48, 85));
@@ -179,6 +179,9 @@ if (!empty($page_css)) {
   </script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/toast.js') : 'assets/js/toast.js'; ?>"></script>
 
+  <!-- Winter Snowfall Canvas Engine & Controller (Default: ON, Non-blocking pointer-events) -->
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/snowfall.js') : 'assets/js/snowfall.js'; ?>"></script>
+
   <!-- Global Typography (Single Source of Truth) -->
   <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/font.css') : 'assets/css/font.css'; ?>">
   <script>
@@ -204,7 +207,7 @@ if (!empty($page_css)) {
 <body class="<?php echo htmlspecialchars($bodyClass); ?>">
   <script>
     try {
-      if (localStorage.getItem('portal_theme') === 'dark') {
+      if ((localStorage.getItem('portal_theme') || 'dark') === 'dark') {
         document.body.classList.add('theme-dark');
       }
     } catch(e) {}

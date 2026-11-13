@@ -1,0 +1,21 @@
+{
+  "name": "ce-it-academic-portal",
+  "version": "1.0.0",
+  "description": "Smart Management Dashboard & Academic Portal with Realistic Winter Snowfall Effect",
+  "scripts": {
+    "snowfall": "echo Winter Snowfall engine is active in assets/js/snowfall.js",
+    "install:snowfall": "npm install magic-snowflakes"
+  },
+  "dependencies": {
+    "magic-snowflakes": "^7.1.0"
+  },
+  "keywords": [
+    "snowfall",
+    "winter-effect",
+    "canvas-snowfall",
+    "portal"
+  ],
+  "author": "DK Dholakiya",
+  "license": "MIT"
+}
+

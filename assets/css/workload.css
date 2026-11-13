@@ -215,13 +215,13 @@ body.theme-dark .wl-seg-btn:hover {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted, #5C6F58);
+  color: var(--text-muted, #64748B);
   border-bottom: 1.5px solid rgba(0, 0, 0, 0.06);
   white-space: nowrap;
 }
 
 body.theme-dark .wl-table thead th {
-  background: var(--glass-surface-strong, rgba(20, 30, 23, 0.95));
+  background: var(--glass-surface-strong, rgba(16, 16, 22, 0.95));
   border-bottom: 1.5px solid rgba(255, 255, 255, 0.08);
   color: var(--text-muted);
 }

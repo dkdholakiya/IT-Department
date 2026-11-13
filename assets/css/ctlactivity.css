@@ -149,7 +149,7 @@ body.theme-dark .ctl-dropzone {
 }
 
 body.theme-dark .search-dropdown-list {
-  background: rgba(20, 30, 23, 0.98);
+  background: rgba(14, 14, 18, 0.98);
   border-color: rgba(var(--color-primary-rgb), 0.4);
   box-shadow: 0 20px 48px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
@@ -283,7 +283,7 @@ body.theme-dark .ctl-kpi-card {
 }
 
 body.theme-dark .ctl-table thead th {
-  background: rgba(20, 30, 23, 0.95);
+  background: rgba(14, 14, 18, 0.95);
   border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
   color: var(--text-secondary);
 }

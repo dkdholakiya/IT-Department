@@ -16,7 +16,7 @@
 
   // --- STATE ---
   const navbarState = {
-    theme: localStorage.getItem('portal_theme') || 'light',
+    theme: localStorage.getItem('portal_theme') || 'dark',
     primaryHex: localStorage.getItem('portal_theme_color') || '#7C3AED',
     mobileUserTrayOpen: false
   };
@@ -116,15 +116,15 @@
     root.style.setProperty('--card-outline-color', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${borderAlpha})`);
     root.style.setProperty('--btn-outline-color', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${borderStrongAlpha})`);
     root.style.setProperty('--glass-shadow', isDark 
-      ? `0 14px 34px -4px rgba(0, 0, 0, 0.60), 0 0 0 1px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.28)` 
+      ? '0 16px 38px -6px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.06)' 
       : `0 10px 28px -6px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.16), 0 2px 8px -1px rgba(10, 9, 9, 0.04)`);
 
     // Dynamic Ambient Mesh Wallpaper Colors
     if (navbarState.theme === 'dark') {
-      root.style.setProperty('--bg-mesh-1', hslToHex((hsl.h + 30) % 360, 45, 10));
-      root.style.setProperty('--bg-mesh-2', hslToHex(hsl.h, 50, 12));
-      root.style.setProperty('--bg-mesh-3', hslToHex(hsl.h, 35, 5));
-      root.style.setProperty('--bg-mesh-4', hslToHex(hsl.h, 55, 14));
+      root.style.setProperty('--bg-mesh-1', '#050507');
+      root.style.setProperty('--bg-mesh-2', '#08080C');
+      root.style.setProperty('--bg-mesh-3', '#000000');
+      root.style.setProperty('--bg-mesh-4', '#0A0A0F');
     } else {
       root.style.setProperty('--bg-mesh-1', hslToHex((hsl.h + 45) % 360, 52, 86));
       root.style.setProperty('--bg-mesh-2', hslToHex(hsl.h, 48, 85));

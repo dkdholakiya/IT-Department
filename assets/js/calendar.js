@@ -325,7 +325,7 @@
 
       item.innerHTML = `
         <div class="flex items-start justify-between gap-2">
-          <h4 class="font-bold text-sm sm:text-base text-[var(--color-primary-dark, #065F46)] dark:text-[var(--color-primary-light, #6EE7B7)] font-serif leading-tight">${e.name}</h4>
+          <h4 class="font-bold text-sm sm:text-base text-[var(--color-primary-dark, #6D28D9)] dark:text-[var(--color-primary-light, #A78BFA)] font-serif leading-tight">${e.name}</h4>
           <span class="cal-badge cal-badge-${e.type}">${e.badgeName}</span>
         </div>
         ${metaHtml}

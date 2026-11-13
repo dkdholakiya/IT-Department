@@ -37,7 +37,7 @@
 body.theme-dark .cal-nav-btn {
   background: rgba(255, 255, 255, 0.10);
   border-color: rgba(255, 255, 255, 0.16);
-  color: var(--text-primary, #F4FBF2);
+  color: var(--text-primary, #FFFFFF);
 }
 
 .cal-nav-btn:hover {
@@ -296,7 +296,7 @@ body.theme-dark .event-detail-item {
 
 body.theme-dark .cal-badge-custom {
   background: rgba(var(--color-primary-rgb), 0.25);
-  color: var(--color-primary-light, #6EE7B7);
+  color: var(--color-primary-light, #A78BFA);
   border-color: rgba(var(--color-primary-rgb), 0.40);
 }
 

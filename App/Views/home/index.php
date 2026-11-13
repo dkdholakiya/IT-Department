@@ -2359,7 +2359,7 @@
   <!-- ========================================================================= -->
   <!-- DOWNSIDE BOTTOM BAR (Identical Max-Width & Padding Alignment with Navbar Header) -->
   <!-- ========================================================================= -->
-  <div class="fixed bottom-[96px] sm:bottom-28 md:bottom-6 lg:bottom-8 inset-x-0 z-30 pointer-events-none">
+  <div class="fixed bottom-[118px] sm:bottom-[126px] md:bottom-6 lg:bottom-8 inset-x-0 z-30 pointer-events-none">
     <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12 flex items-end justify-center md:justify-between">
 
       <!-- LEFT: APK Download Button Pill Capsule (Centered on mobile, Left on desktop) -->
@@ -2465,5 +2465,7 @@
     </div>
   </div>
 
+  <!-- Winter Snowfall Canvas Engine & Controller (Default: ON) -->
+  <script src="<?= base_url('assets/js/snowfall.js') ?>"></script>
 </body>
 </html>

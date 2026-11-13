@@ -35,7 +35,7 @@
 
 body.theme-dark .student-tt-card table,
 html.dark .student-tt-card table {
-  background-color: rgba(16, 24, 18, 0.55);
+  background-color: rgba(12, 12, 16, 0.75);
   border-color: rgba(255, 255, 255, 0.08);
   color: #f8fafc;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);

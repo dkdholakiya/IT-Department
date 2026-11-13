@@ -172,6 +172,20 @@ $sessionExpiresAt = $isLoggedIn && method_exists('Core\Auth', 'sessionExpiresAt'
           <span id="notifBadge" class="w-2 h-2 rounded-full bg-[var(--color-alert)] absolute top-2 right-2 ring-2 ring-white dark:ring-slate-900 pointer-events-none"></span>
         </button>
 
+        <!-- Winter Snowfall Toggle Button (In its own glass pill next to notifications) -->
+        <button
+          id="snowfallToggleBtn"
+          type="button"
+          class="w-10 h-10 rounded-full side-menu-glass flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition relative cursor-pointer shrink-0"
+          title="Toggle Winter Snowfall (Default: ON)"
+          aria-label="Toggle Winter Snowfall"
+        >
+          <svg id="snowfallIcon" class="w-4 h-4 pointer-events-none transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M2 12h20M20 16l-4-4 4-4M4 8l4 4-4 4M16 4l-4 4-4-4M8 20l4-4 4 4"/>
+          </svg>
+          <span id="snowfallActiveDot" class="w-2 h-2 rounded-full bg-sky-400 absolute top-2 right-2 ring-2 ring-white dark:ring-slate-900 pointer-events-none transition-all duration-200 shadow-sm shadow-sky-400/50"></span>
+        </button>
+
         <!-- Card 2: Combined Appearance Card (Color Studio + Theme Switcher in One Glass Pill) -->
         <div class="h-10 px-1.5 rounded-full side-menu-glass flex items-center gap-1 shrink-0">
           <!-- 1. Color Picker with Elegant Artist Palette Icon & Active Color Indicator -->
@@ -354,6 +368,20 @@ $sessionExpiresAt = $isLoggedIn && method_exists('Core\Auth', 'sessionExpiresAt'
         </svg>
         <span>Alerts</span>
         <span class="w-2 h-2 rounded-full bg-[var(--color-alert)]"></span>
+      </button>
+
+      <!-- Mobile Snowfall Toggle Button -->
+      <button
+        id="mobileSnowfallToggleBtn"
+        type="button"
+        class="h-10 w-10 rounded-full side-menu-glass flex items-center justify-center text-[var(--text-primary)] hover:scale-105 active:scale-95 transition cursor-pointer shrink-0 relative"
+        aria-label="Toggle Winter Snowfall"
+        title="Toggle Winter Snowfall"
+      >
+        <svg class="w-4 h-4 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M2 12h20M20 16l-4-4 4-4M4 8l4 4-4 4M16 4l-4 4-4-4M8 20l4-4 4 4"/>
+        </svg>
+        <span id="mobileSnowfallActiveDot" class="w-2 h-2 rounded-full bg-sky-400 absolute top-2 right-2 ring-2 ring-white dark:ring-slate-900 pointer-events-none transition-all duration-200 shadow-sm shadow-sky-400/50"></span>
       </button>
 
       <!-- Mobile Single Theme Switcher Button -->
