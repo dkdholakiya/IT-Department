@@ -283,16 +283,101 @@
       filter: drop-shadow(0 4px 14px rgba(124, 61, 255, 0.5));
     }
 
-    #logoOuterShell {
+    #logoOuterShell,
+    #apkLogoOuterShell {
       fill: #ffffff;
       stroke: rgba(155, 61, 255, 0.45);
       stroke-width: 1.2px;
       transition: fill 0.3s ease, stroke 0.3s ease;
     }
-    body.light-mode #logoOuterShell {
+    body.light-mode #logoOuterShell,
+    body.light-mode #apkLogoOuterShell {
       fill: #ffffff;
       stroke: rgba(124, 61, 255, 0.32);
       stroke-width: 1.2px;
+    }
+
+    body.light-mode #apkActionBadge {
+      background: rgba(124, 61, 255, 0.10);
+      border-color: rgba(124, 61, 255, 0.25);
+      color: #7c3dff;
+    }
+
+    /* ── APK Download Button & Loader Animation (Model-Related) ── */
+    .brand-download-btn {
+      position: relative;
+      cursor: pointer !important;
+      overflow: hidden;
+      touch-action: manipulation;
+      padding: 4.5px 12px 4.5px 8px !important;
+      gap: 7px !important;
+    }
+    .brand-download-btn .brand-divider {
+      height: 18px !important;
+    }
+    .brand-download-btn:active {
+      transform: scale(0.97) translateY(0);
+    }
+    .brand-download-btn.downloading {
+      box-shadow: 0 14px 44px rgba(155, 61, 255, 0.45),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.6),
+                  0 0 36px rgba(44, 169, 255, 0.35);
+    }
+
+    /* Animated Robot Eye Blinking / Scanning during Download */
+    @keyframes apkRobotEyePulse {
+      0%, 100% {
+        transform: scaleY(1);
+        opacity: 1;
+      }
+      20% {
+        transform: scaleY(0.18);
+        opacity: 0.85;
+      }
+      40% {
+        transform: scaleY(1);
+        opacity: 1;
+      }
+      60% {
+        transform: scaleY(0.25);
+        opacity: 0.9;
+      }
+      80% {
+        transform: scaleY(1);
+        opacity: 1;
+      }
+    }
+    .apk-robot-eyes-active {
+      transform-origin: center;
+      animation: apkRobotEyePulse 0.75s ease-in-out infinite;
+    }
+
+    /* Robot Rim Glowing Pulse during Download */
+    @keyframes apkRimGlow {
+      0%, 100% {
+        filter: drop-shadow(0 0 10px rgba(155, 61, 255, 0.6));
+      }
+      50% {
+        filter: drop-shadow(0 0 22px rgba(44, 169, 255, 0.95)) drop-shadow(0 0 12px rgba(155, 61, 255, 0.8));
+      }
+    }
+    .apk-rim-active {
+      animation: apkRimGlow 1.1s ease-in-out infinite;
+    }
+
+    /* Shimmer Progress Track Animation */
+    @keyframes apkProgressShimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+    .apk-progress-shimmer {
+      background: linear-gradient(90deg, #9b3dff 0%, #6e6bff 25%, #2ca9ff 50%, #10b981 75%, #9b3dff 100%);
+      background-size: 250% 100%;
+      animation: apkProgressShimmer 1.6s linear infinite;
     }
 
     /* Theme-Adaptive Brand Titles */
@@ -1297,6 +1382,10 @@
         const pal = PALETTES[theme] || PALETTES.default;
         if (logoStop1) logoStop1.setAttribute('stop-color', pal.logo1);
         if (logoStop2) logoStop2.setAttribute('stop-color', pal.logo2);
+        const apkLogoStop1 = document.getElementById('apkLogoStop1');
+        const apkLogoStop2 = document.getElementById('apkLogoStop2');
+        if (apkLogoStop1) apkLogoStop1.setAttribute('stop-color', pal.logo1);
+        if (apkLogoStop2) apkLogoStop2.setAttribute('stop-color', pal.logo2);
 
         if (focusStop1 && focusStop2 && focusStop3) {
           if (theme === 'green') {
@@ -2072,6 +2161,194 @@
       window.addEventListener('resize', onWindowResize);
       onWindowResize();
 
+      // ==========================================
+      // APK DIRECT DOWNLOAD HANDLER WITH IN-BUTTON LOADER
+      // ==========================================
+      function initApkDownload() {
+        const btn = document.getElementById('apkDownloadBtn');
+        if (!btn) return;
+
+        const progressBg = document.getElementById('apkDownloadProgressBg');
+        const progressBar = document.getElementById('apkProgressBar');
+        const robotSvg = document.getElementById('apkAppLogoSvg') || document.getElementById('apkRobotSvg');
+        const eyeL = document.getElementById('apkAndroidEyeL') || document.getElementById('apkRobotEyeL');
+        const eyeR = document.getElementById('apkAndroidEyeR') || document.getElementById('apkRobotEyeR');
+        const titleEl = document.getElementById('apkTitleText');
+        const subtitleEl = document.getElementById('apkSubtitleText');
+        const statusDot = document.getElementById('apkStatusDot');
+        const versionBadge = document.getElementById('apkVersionBadge');
+        const arrowIcon = document.getElementById('apkDownloadArrowIcon');
+        const checkIcon = document.getElementById('apkCheckIcon');
+
+        const APK_DIRECT_URL = 'https://web2apkpro.com/direct_download.php?code=4C823BE';
+        const APK_FALLBACK_URL = 'https://web2apkpro.com/download/4C823BE/Engineering';
+
+        let isDownloading = false;
+        let downloadTimer = null;
+
+        // Interactive hover: Model glances toward bottom-left and nods
+        btn.addEventListener('pointerenter', () => {
+          if (!isDownloading && !isAiDemoMode) {
+            triggerNodYes();
+            cursorState.targetX = 0.22;
+            cursorState.targetY = 0.85;
+          }
+        });
+
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (isDownloading) return;
+          isDownloading = true;
+
+          // 1. Model reaction: head nods affirmatively & looks down
+          triggerNodYes();
+          if (!isAiDemoMode) {
+            cursorState.targetX = 0.20;
+            cursorState.targetY = 0.88;
+          }
+
+          // 2. Button state: downloading
+          btn.classList.add('downloading');
+          if (robotSvg) robotSvg.classList.add('apk-rim-active');
+          if (eyeL) eyeL.classList.add('apk-robot-eyes-active');
+          if (eyeR) eyeR.classList.add('apk-robot-eyes-active');
+
+          if (statusDot) {
+            statusDot.classList.remove('bg-emerald-400');
+            statusDot.classList.add('bg-purple-400');
+          }
+
+          if (versionBadge) {
+            versionBadge.textContent = '0%';
+          }
+
+          const startTime = performance.now();
+          const TOTAL_DURATION = 2400; // 2.4 seconds smooth loader
+
+          function updateLoader(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(1.0, elapsed / TOTAL_DURATION);
+            const percent = Math.round(progress * 100);
+
+            // Smooth easing curve
+            const eased = 1 - Math.pow(1 - progress, 2.5);
+
+            if (progressBg) {
+              progressBg.style.transform = `scaleX(${eased})`;
+            }
+            if (progressBar) {
+              progressBar.style.width = `${Math.round(eased * 100)}%`;
+            }
+            if (versionBadge) {
+              versionBadge.textContent = `${percent}%`;
+            }
+
+            // Real-time status text updates
+            if (percent < 25) {
+              if (titleEl) titleEl.textContent = 'Connecting...';
+              if (subtitleEl) subtitleEl.textContent = 'LOCATING APK SERVER';
+            } else if (percent < 70) {
+              if (titleEl) titleEl.textContent = 'Downloading...';
+              if (subtitleEl) subtitleEl.textContent = 'ENGINEERING.APK (14.3 MB)';
+            } else if (percent < 95) {
+              if (titleEl) titleEl.textContent = 'Verifying...';
+              if (subtitleEl) subtitleEl.textContent = 'CHECKSUM VERIFIED';
+            } else if (percent < 100) {
+              if (titleEl) titleEl.textContent = 'Finalizing...';
+              if (subtitleEl) subtitleEl.textContent = 'PACKAGE READY';
+            }
+
+            if (progress < 1.0) {
+              downloadTimer = requestAnimationFrame(updateLoader);
+            } else {
+              // 100% Complete!
+              finishDownload();
+            }
+          }
+
+          function finishDownload() {
+            // Model nod celebratory gesture
+            triggerNodYes();
+
+            if (titleEl) titleEl.textContent = 'Download Started!';
+            if (subtitleEl) subtitleEl.textContent = 'CHECK BROWSER DOWNLOADS';
+            if (versionBadge) {
+              versionBadge.textContent = '✓ READY';
+              versionBadge.className = 'text-[7px] sm:text-[7.5px] font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500 text-white uppercase shadow-xs shrink-0 leading-none';
+            }
+
+            if (statusDot) {
+              statusDot.classList.remove('bg-purple-400');
+              statusDot.classList.add('bg-emerald-400');
+            }
+
+            if (arrowIcon) arrowIcon.classList.add('hidden');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+
+            if (progressBar) {
+              progressBar.style.background = 'linear-gradient(90deg, #10b981, #34d399)';
+            }
+
+            // Trigger real direct APK file download
+            try {
+              const dlAnchor = document.createElement('a');
+              dlAnchor.href = APK_DIRECT_URL;
+              dlAnchor.download = 'Engineering.apk';
+              dlAnchor.target = '_blank';
+              dlAnchor.rel = 'noopener noreferrer';
+              document.body.appendChild(dlAnchor);
+              dlAnchor.click();
+              setTimeout(() => { dlAnchor.remove(); }, 1200);
+            } catch (err) {
+              window.location.assign(APK_FALLBACK_URL);
+            }
+
+            // Reset after 4.5 seconds
+            setTimeout(() => {
+              btn.classList.remove('downloading');
+              if (robotSvg) robotSvg.classList.remove('apk-rim-active');
+              if (eyeL) eyeL.classList.remove('apk-robot-eyes-active');
+              if (eyeR) eyeR.classList.remove('apk-robot-eyes-active');
+
+              if (titleEl) titleEl.textContent = 'Engineering';
+              if (subtitleEl) subtitleEl.textContent = 'TAP TO RE-DOWNLOAD';
+              if (versionBadge) {
+                versionBadge.textContent = 'APK';
+                versionBadge.className = 'text-[7.5px] sm:text-[8px] font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-gradient-to-r from-purple-500 to-sky-400 text-white uppercase shadow-xs shrink-0 leading-none';
+              }
+
+              if (arrowIcon) arrowIcon.classList.remove('hidden');
+              if (checkIcon) checkIcon.classList.add('hidden');
+
+              if (progressBar) {
+                progressBar.style.width = '0%';
+                progressBar.style.background = '';
+              }
+              if (progressBg) {
+                progressBg.style.transform = 'scaleX(0)';
+              }
+
+              isDownloading = false;
+            }, 4500);
+          }
+
+          downloadTimer = requestAnimationFrame(updateLoader);
+        });
+
+        // Register with global interactive button nod system
+        if (typeof registerButtonNod === 'function') {
+          registerButtonNod(btn);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initApkDownload);
+      } else {
+        setTimeout(initApkDownload, 10);
+      }
+
       // Start Loop with Live PC Cursor Tracking enabled by default
       setWidgetSlide(0);
       updateEyeBarColors('default');
@@ -2079,7 +2356,85 @@
       requestAnimationFrame(animate);
     })();
   </script>
-  <!-- Responsive Bottom Action Dock (Down side for Mobile & Tablet screens < md) -->
+  <!-- ========================================================================= -->
+  <!-- DOWNSIDE BOTTOM BAR (Identical Max-Width & Padding Alignment with Navbar Header) -->
+  <!-- ========================================================================= -->
+  <div class="fixed bottom-[96px] sm:bottom-28 md:bottom-6 lg:bottom-8 inset-x-0 z-30 pointer-events-none">
+    <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12 flex items-end justify-center md:justify-between">
+
+      <!-- LEFT: APK Download Button Pill Capsule (Centered on mobile, Left on desktop) -->
+      <div class="pointer-events-auto flex justify-center md:justify-start">
+        <button
+          id="apkDownloadBtn"
+          type="button"
+          class="brand-glass-pill brand-download-btn group focus:outline-none relative overflow-hidden text-left cursor-pointer"
+          title="Download Official Engineering Department Android APK"
+          aria-label="Download Android App APK"
+        >
+          <!-- Background Progress Fill Layer (Smooth scaleX 0 -> 1 during download) -->
+          <div id="apkDownloadProgressBg" class="absolute inset-0 bg-gradient-to-r from-purple-600/35 via-indigo-600/30 to-emerald-500/35 origin-left transform scale-x-0 transition-transform duration-150 ease-out pointer-events-none rounded-full"></div>
+
+          <!-- Bottom Accent Progress Bar Track -->
+          <div class="absolute bottom-0 left-3 right-3 h-[2px] bg-white/10 rounded-full overflow-hidden pointer-events-none">
+            <div id="apkProgressBar" class="h-full w-0 rounded-full transition-all duration-150 apk-progress-shimmer"></div>
+          </div>
+
+          <!-- Left: General Android App Logo (Official Bugdroid) -->
+          <div class="brand-logo-floating focus:outline-none shrink-0 flex items-center justify-center" title="Android App (APK)">
+            <div class="relative w-5 h-4 sm:w-6 sm:h-4.5 flex items-center justify-center shrink-0">
+              <svg id="apkAppLogoSvg" viewBox="0 0 24 20" class="w-5 h-4 sm:w-6 sm:h-4.5 overflow-visible drop-shadow-[0_0_6px_rgba(61,220,132,0.65)]" fill="none">
+                <!-- Left antenna -->
+                <path d="M6.8 2.2L8.8 6.2" stroke="#3DDC84" stroke-width="1.8" stroke-linecap="round"/>
+                <!-- Right antenna -->
+                <path d="M17.2 2.2L15.2 6.2" stroke="#3DDC84" stroke-width="1.8" stroke-linecap="round"/>
+                <!-- Android Head Dome -->
+                <path d="M4.5 14.5A7.5 7.5 0 0 1 19.5 14.5Z" fill="#3DDC84"/>
+                <!-- Eyes -->
+                <circle id="apkAndroidEyeL" cx="8.8" cy="11.2" r="1.1" fill="#ffffff"/>
+                <circle id="apkAndroidEyeR" cx="15.2" cy="11.2" r="1.1" fill="#ffffff"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Vertical Divider separating Logo from Text -->
+          <div class="brand-divider shrink-0"></div>
+
+          <!-- Center: Typography & Live Real-Time Progress -->
+          <div class="flex flex-col text-left pr-0.5 sm:pr-1 min-w-0 z-10">
+            <div class="flex items-center gap-1.5">
+              <span id="apkTitleText" class="text-[12.5px] sm:text-[14px] md:text-[14.5px] font-bold tracking-tight leading-none pt-serif-bold brand-title">Engineering</span>
+              <span id="apkVersionBadge" class="text-[7px] sm:text-[7.5px] font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-gradient-to-r from-purple-500 to-sky-400 text-white uppercase shadow-xs shrink-0 leading-none">APK</span>
+            </div>
+            <div class="flex items-center gap-1 mt-0.5">
+              <span id="apkStatusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.9)] animate-pulse inline-block shrink-0"></span>
+              <span id="apkSubtitleText" class="text-[7.5px] sm:text-[8px] md:text-[8.5px] font-bold tracking-wider uppercase pt-serif-regular brand-subtitle truncate">Tap To Download</span>
+            </div>
+          </div>
+
+          <!-- Right: Sleek Download Action Icon -->
+          <div id="apkActionBadge" class="w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-full bg-purple-500/15 border border-purple-400/30 flex items-center justify-center text-purple-400 group-hover:bg-gradient-to-tr group-hover:from-purple-600 group-hover:to-sky-500 group-hover:text-white transition-all duration-300 shrink-0 ml-0.5 z-10 shadow-xs">
+            <!-- Download Arrow Icon -->
+            <svg id="apkDownloadArrowIcon" class="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M7.5 10.5l4.5 4.5m0 0l4.5-4.5m-4.5 4.5V3" />
+            </svg>
+            <!-- Checkmark Icon -->
+            <svg id="apkCheckIcon" class="w-3 h-3 sm:w-3.5 sm:h-3.5 hidden text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+          </div>
+        </button>
+      </div>
+
+      <!-- RIGHT: Desktop Signature Badge (Aligned on same row as Download Button on Desktop) -->
+      <div id="credit-badge-el" class="credit-badge-el hidden md:flex pointer-events-auto items-center gap-2 font-medium rounded-full">
+        <span class="rounded-full" style="width:7px;height:7px;background:#7c3dff;box-shadow:0 0 10px rgba(124,61,255,0.95);display:inline-block"></span>
+        <span>Made by <strong style="color:#a070ff;font-weight:700">DK Dholakiya</strong></span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Responsive Mobile Bottom Action Dock (Down side for Mobile & Tablet screens < md) -->
   <div class="md:hidden fixed bottom-3 sm:bottom-4 inset-x-0 z-30 flex flex-col items-center gap-2 px-4 pointer-events-none">
     <!-- Floating Action Dock -->
     <div class="mobile-dock pointer-events-auto flex items-center justify-between gap-2.5 w-full max-w-[340px] p-1.5 rounded-full">
@@ -2108,12 +2463,6 @@
       <span class="rounded-full" style="width:6px;height:6px;background:#7c3dff;box-shadow:0 0 8px rgba(124,61,255,0.95);display:inline-block"></span>
       <span>Made by <strong style="color:#a070ff;font-weight:700">DK Dholakiya</strong></span>
     </div>
-  </div>
-
-  <!-- Desktop Signature Badge (Fixed bottom-right on screens md+) -->
-  <div id="credit-badge-el" class="credit-badge-el hidden md:flex fixed bottom-4 right-6 z-30 items-center gap-2 font-medium rounded-full">
-    <span class="rounded-full" style="width:7px;height:7px;background:#7c3dff;box-shadow:0 0 10px rgba(124,61,255,0.95);display:inline-block"></span>
-    <span>Made by <strong style="color:#a070ff;font-weight:700">DK Dholakiya</strong></span>
   </div>
 
 </body>
