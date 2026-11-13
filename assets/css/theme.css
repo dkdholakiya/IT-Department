@@ -11,18 +11,18 @@
  */
 
 :root {
-  /* Dynamic Primary Color Tokens (Updated live by the Color Studio) */
-  --color-primary: #10B981;
-  --color-primary-dark: #059669;
-  --color-primary-light: #34D399;
-  --color-primary-rgb: 16, 185, 129;
+  /* Dynamic Primary Color Tokens (Default: Royal Violet #7C3AED) */
+  --color-primary: #7C3AED;
+  --color-primary-dark: #6D28D9;
+  --color-primary-light: #A78BFA;
+  --color-primary-rgb: 124, 58, 237;
   --color-alert: #EB5011;
 
   /* Dynamic Ambient Mesh Backdrop (Matching Dashboard Visual) */
-  --bg-mesh-1: #C7E0ED;
-  --bg-mesh-2: #D4E8C7;
-  --bg-mesh-3: #F2F7F0;
-  --bg-mesh-4: #C9E3B8;
+  --bg-mesh-1: #E9D5FF;
+  --bg-mesh-2: #F3E8FF;
+  --bg-mesh-3: #FAF5FF;
+  --bg-mesh-4: #DDD6FE;
 
   /* Glassmorphic Surfaces */
   --glass-surface: rgba(255, 255, 255, 0.74);
@@ -41,23 +41,23 @@
 
   /* Dynamic Font & Icon Colors */
   --text-primary: #0A0909;
-  --text-secondary: #2C3E28;
-  --text-muted: #5C6F58;
-  --text-accent: #059669;
-  --text-role: #064E3B; /* High-contrast readable role in light mode (WCAG AAA 8.2:1) */
+  --text-secondary: #3B2D54;
+  --text-muted: #6B5B82;
+  --text-accent: #7C3AED;
+  --text-role: #6D28D9; /* High-contrast readable role in light mode (WCAG AAA 8.2:1) */
 
   /* Chart & Sidebar Tokens */
   --bar-inactive: rgba(var(--color-primary-rgb), 0.18);
   --bar-mid: rgba(var(--color-primary-rgb), 0.46);
-  --bar-active: #10B981;
+  --bar-active: #7C3AED;
   --bar-peak: #EB5011;
-  --sidebar-active-bg: #10B981;
+  --sidebar-active-bg: #7C3AED;
   --sidebar-active-text: #FFFFFF;
   --icon-circle-bg: rgba(255, 255, 255, 0.94);
 
   /* AI Assistant Button Pill */
-  --ai-btn-grad: linear-gradient(180deg, #F2FFE6 0%, #99FF55 48%, #6CE620 100%);
-  --ai-btn-shadow: rgba(108, 230, 32, 0.35);
+  --ai-btn-grad: linear-gradient(180deg, #FAF5FF 0%, #C084FC 48%, #7C3AED 100%);
+  --ai-btn-shadow: rgba(124, 58, 237, 0.35);
   --ai-btn-text: #0A0909;
 }
 

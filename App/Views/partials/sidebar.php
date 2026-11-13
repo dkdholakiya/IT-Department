@@ -85,7 +85,7 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
             </linearGradient>
           </defs>
           <!-- Outer white/pearl capsule shell -->
-          <rect x="1" y="1" width="44" height="30" rx="15" fill="#ffffff" stroke="var(--glass-border-strong, rgba(16, 185, 129, 0.45))" stroke-width="1.2" />
+          <rect x="1" y="1" width="44" height="30" rx="15" fill="#ffffff" stroke="var(--glass-border-strong, rgba(124, 58, 237, 0.45))" stroke-width="1.2" />
           <!-- Dynamic colored rim matching theme primary -->
           <rect x="3.8" y="3.8" width="38.4" height="24.4" rx="12.2" fill="url(#sidebarAiLogoRimGrad)" />
           <!-- Deep black glossy visor -->

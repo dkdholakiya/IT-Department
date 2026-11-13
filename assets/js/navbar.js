@@ -17,7 +17,7 @@
   // --- STATE ---
   const navbarState = {
     theme: localStorage.getItem('portal_theme') || 'light',
-    primaryHex: localStorage.getItem('portal_theme_color') || '#10B981',
+    primaryHex: localStorage.getItem('portal_theme_color') || '#7C3AED',
     mobileUserTrayOpen: false
   };
 
@@ -120,24 +120,16 @@
       : `0 10px 28px -6px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.16), 0 2px 8px -1px rgba(10, 9, 9, 0.04)`);
 
     // Dynamic Ambient Mesh Wallpaper Colors
-    const isDefaultGreen = hex.toUpperCase() === '#10B981';
     if (navbarState.theme === 'dark') {
       root.style.setProperty('--bg-mesh-1', hslToHex((hsl.h + 30) % 360, 45, 10));
       root.style.setProperty('--bg-mesh-2', hslToHex(hsl.h, 50, 12));
       root.style.setProperty('--bg-mesh-3', hslToHex(hsl.h, 35, 5));
       root.style.setProperty('--bg-mesh-4', hslToHex(hsl.h, 55, 14));
     } else {
-      if (isDefaultGreen) {
-        root.style.setProperty('--bg-mesh-1', '#C7E0ED');
-        root.style.setProperty('--bg-mesh-2', '#D4E8C7');
-        root.style.setProperty('--bg-mesh-3', '#F2F7F0');
-        root.style.setProperty('--bg-mesh-4', '#C9E3B8');
-      } else {
-        root.style.setProperty('--bg-mesh-1', hslToHex((hsl.h + 45) % 360, 52, 86));
-        root.style.setProperty('--bg-mesh-2', hslToHex(hsl.h, 48, 85));
-        root.style.setProperty('--bg-mesh-3', hslToHex(hsl.h, 38, 95));
-        root.style.setProperty('--bg-mesh-4', hslToHex(hsl.h, 55, 82));
-      }
+      root.style.setProperty('--bg-mesh-1', hslToHex((hsl.h + 45) % 360, 52, 86));
+      root.style.setProperty('--bg-mesh-2', hslToHex(hsl.h, 48, 85));
+      root.style.setProperty('--bg-mesh-3', hslToHex(hsl.h, 38, 95));
+      root.style.setProperty('--bg-mesh-4', hslToHex(hsl.h, 55, 82));
     }
 
     // AI Assistant shiny gradient

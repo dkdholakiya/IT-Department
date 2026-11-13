@@ -40,7 +40,7 @@ if (!empty($page_css)) {
           document.documentElement.classList.remove('dark');
         }
 
-        var hex = localStorage.getItem('portal_theme_color') || '#10B981';
+        var hex = localStorage.getItem('portal_theme_color') || '#7C3AED';
         if (hex) {
           var clean = hex.replace('#', '');
           if (clean.length === 3) clean = clean.split('').map(function(c) { return c + c; }).join('');

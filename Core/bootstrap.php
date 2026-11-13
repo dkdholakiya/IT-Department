@@ -84,11 +84,18 @@ if (ob_get_level() === 0) {
     ob_start();
 }
 
-// 6. Security Headers
+// 6. Security & Cache-Busting Headers
 if (!headers_sent()) {
     header("X-Frame-Options: SAMEORIGIN");
     header("X-Content-Type-Options: nosniff");
     header("X-XSS-Protection: 1; mode=block");
+
+    // Auto Cache-Bust: Force full revalidation if cache-bust query param is present
+    if (!empty($_GET['_nocache']) || !empty($_GET['_v']) || !empty($_GET['_t'])) {
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
+        header("Pragma: no-cache");
+        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+    }
 }
 
 // 7. Load Global Helpers

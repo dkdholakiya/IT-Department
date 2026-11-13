@@ -144,7 +144,7 @@
    * 2. Theme Studio (Live Palette & Custom Color)
    */
   function initThemeStudio() {
-    const currentThemeColor = (localStorage.getItem('portal_theme_color') || '#10B981').toUpperCase();
+    const currentThemeColor = (localStorage.getItem('portal_theme_color') || '#7C3AED').toUpperCase();
 
     // Palette Swatch Buttons
     document.querySelectorAll('[data-apply-color]').forEach((btn) => {

@@ -79,7 +79,7 @@ $sessionExpiresAt = $isLoggedIn && method_exists('Core\Auth', 'sessionExpiresAt'
               </linearGradient>
             </defs>
             <!-- Outer white/pearl capsule shell -->
-            <rect x="1" y="1" width="44" height="30" rx="15" fill="#ffffff" stroke="var(--glass-border-strong, rgba(16, 185, 129, 0.45))" stroke-width="1.2" />
+            <rect x="1" y="1" width="44" height="30" rx="15" fill="#ffffff" stroke="var(--glass-border-strong, rgba(124, 58, 237, 0.45))" stroke-width="1.2" />
             <!-- Dynamic colored rim matching theme primary -->
             <rect x="3.8" y="3.8" width="38.4" height="24.4" rx="12.2" fill="url(#navbarAiLogoRimGrad)" />
             <!-- Deep black glossy visor -->
@@ -289,17 +289,17 @@ $sessionExpiresAt = $isLoggedIn && method_exists('Core\Auth', 'sessionExpiresAt'
           <span class="font-bold text-xs text-[var(--text-primary)] block">Theme & Font Color Studio</span>
           <span class="text-[10px] text-[var(--text-muted)]">Transforms UI, charts & typography</span>
         </div>
-        <input id="desktopCustomColorInput" type="color" value="#10B981" class="w-8 h-8 rounded-lg cursor-pointer border border-black/10 bg-transparent p-0.5" title="Pick Custom Color" />
+        <input id="desktopCustomColorInput" type="color" value="#7C3AED" class="w-8 h-8 rounded-lg cursor-pointer border border-black/10 bg-transparent p-0.5" title="Pick Custom Color" />
       </div>
       <div class="grid grid-cols-6 gap-2 mb-2">
-        <button type="button" data-theme-color="#10B981" class="color-Preset-btn color-preset-btn w-8 h-8 rounded-full bg-[#10B981] ring-2 ring-offset-1 ring-[#10B981] cursor-pointer" title="Emerald Default (#10B981)" aria-label="Emerald"></button>
+        <button type="button" data-theme-color="#7C3AED" class="color-Preset-btn color-preset-btn w-8 h-8 rounded-full bg-[#7C3AED] ring-2 ring-offset-1 ring-[#7C3AED] cursor-pointer" title="Royal Violet (#7C3AED)" aria-label="Royal Violet"></button>
+        <button type="button" data-theme-color="#10B981" class="color-Preset-btn color-preset-btn w-8 h-8 rounded-full bg-[#10B981] cursor-pointer" title="Emerald (#10B981)" aria-label="Emerald"></button>
         <button type="button" data-theme-color="#729C51" class="color-Preset-btn color-preset-btn w-8 h-8 rounded-full bg-[#729C51] cursor-pointer" title="Leaf Green (#729C51)" aria-label="Leaf Green"></button>
         <button type="button" data-theme-color="#0284C7" class="color-Preset-btn color-preset-btn w-8 h-8 rounded-full bg-[#0284C7] cursor-pointer" title="Ocean Blue (#0284C7)" aria-label="Ocean Blue"></button>
-        <button type="button" data-theme-color="#7C3AED" class="color-Preset-btn color-preset-btn w-8 h-8 rounded-full bg-[#7C3AED] cursor-pointer" title="Royal Violet (#7C3AED)" aria-label="Royal Violet"></button>
         <button type="button" data-theme-color="#E11D48" class="color-Preset-btn color-preset-btn w-8 h-8 rounded-full bg-[#E11D48] cursor-pointer" title="Sunset Rose (#E11D48)" aria-label="Sunset Rose"></button>
         <button type="button" data-theme-color="#D97706" class="color-Preset-btn color-preset-btn w-8 h-8 rounded-full bg-[#D97706] cursor-pointer" title="Amber Gold (#D97706)" aria-label="Amber Gold"></button>
       </div>
-      <p id="activeHexReadout" class="text-[11px] font-semibold text-[var(--text-secondary)] text-center mt-2">Active Palette: #10B981</p>
+      <p id="activeHexReadout" class="text-[11px] font-semibold text-[var(--text-secondary)] text-center mt-2">Active Palette: #7C3AED</p>
     </div>
 
     <!-- Notifications Dropdown Popover -->
@@ -380,13 +380,13 @@ $sessionExpiresAt = $isLoggedIn && method_exists('Core\Auth', 'sessionExpiresAt'
         <label for="mobileCustomColorInput" class="text-xs font-bold text-[var(--text-primary)] cursor-pointer flex items-center gap-1.5">
           <span>🎨 Theme Color:</span>
         </label>
-        <input id="mobileCustomColorInput" type="color" value="#10B981" class="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent p-0" title="Pick any custom theme & font color" />
+        <input id="mobileCustomColorInput" type="color" value="#7C3AED" class="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent p-0" title="Pick any custom theme & font color" />
       </div>
       <div class="flex items-center gap-1.5">
-        <button type="button" data-theme-color="#10B981" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#10B981] ring-2 ring-offset-1 ring-[#10B981] cursor-pointer" title="Emerald Default (#10B981)" aria-label="Emerald Default Theme"></button>
+        <button type="button" data-theme-color="#7C3AED" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#7C3AED] ring-2 ring-offset-1 ring-[#7C3AED] cursor-pointer" title="Royal Violet Default (#7C3AED)" aria-label="Royal Violet Default Theme"></button>
+        <button type="button" data-theme-color="#10B981" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#10B981] cursor-pointer" title="Emerald (#10B981)" aria-label="Emerald Theme"></button>
         <button type="button" data-theme-color="#729C51" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#729C51] cursor-pointer" title="Nature Green (#729C51)" aria-label="Nature Green Theme"></button>
         <button type="button" data-theme-color="#0284C7" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#0284C7] cursor-pointer" title="Ocean Blue (#0284C7)" aria-label="Ocean Blue Theme"></button>
-        <button type="button" data-theme-color="#7C3AED" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#7C3AED] cursor-pointer" title="Royal Purple (#7C3AED)" aria-label="Royal Purple Theme"></button>
         <button type="button" data-theme-color="#E11D48" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#E11D48] cursor-pointer" title="Crimson Rose (#E11D48)" aria-label="Crimson Rose Theme"></button>
         <button type="button" data-theme-color="#0D9488" class="color-preset-btn color-Preset-btn w-6 h-6 rounded-full bg-[#0D9488] cursor-pointer" title="Teal Lagoon (#0D9488)" aria-label="Teal Lagoon Theme"></button>
       </div>
@@ -425,5 +425,8 @@ $sessionExpiresAt = $isLoggedIn && method_exists('Core\Auth', 'sessionExpiresAt'
 </header>
 
 <!-- Shared Top-Right Bootstrap 5 Toast Container -->
-<?php include __DIR__ . '/toast.php'; ?>
+<?php if (file_exists(__DIR__ . '/toast.php')) include __DIR__ . '/toast.php'; ?>
+
+<!-- Responsive Left-Bottom Hard Refresh & Cache Bust Button -->
+<?php if (file_exists(__DIR__ . '/refresh-button.php')) include __DIR__ . '/refresh-button.php'; ?>
 

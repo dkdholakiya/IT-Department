@@ -604,7 +604,7 @@
               <p class="font-bold text-sm text-[var(--text-primary)]">Custom Palette Picker</p>
               <p class="text-[11px] text-[var(--text-muted)]">Live accent updates across all cards</p>
             </div>
-            <input id="modalCustomColorPicker" type="color" value="${localStorage.getItem('portal_theme_color') || '#10B981'}" class="w-10 h-10 rounded-xl cursor-pointer border-0 bg-transparent" />
+            <input id="modalCustomColorPicker" type="color" value="${localStorage.getItem('portal_theme_color') || '#7C3AED'}" class="w-10 h-10 rounded-xl cursor-pointer border-0 bg-transparent" />
           </div>
           <div>
             <p class="font-bold mb-2">Appearance Mode</p>

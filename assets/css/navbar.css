@@ -60,10 +60,10 @@ body.theme-dark #topNavbar .side-menu-glass {
 
 @keyframes sidebarAiGlow {
   0%, 100% {
-    filter: drop-shadow(0 0 2px rgba(var(--color-primary-rgb, 16, 185, 129), 0.5));
+    filter: drop-shadow(0 0 2px rgba(var(--color-primary-rgb, 124, 58, 237), 0.5));
   }
   50% {
-    filter: drop-shadow(0 0 4.5px rgba(var(--color-primary-rgb, 16, 185, 129), 0.9));
+    filter: drop-shadow(0 0 4.5px rgba(var(--color-primary-rgb, 124, 58, 237), 0.9));
   }
 }
 
@@ -95,12 +95,12 @@ body.theme-dark #topNavbar .side-menu-glass {
 
 #mobileNavBrandLogo:hover {
   transform: translateY(-1.5px) scale(1.06);
-  border-color: rgba(var(--color-primary-rgb, 16, 185, 129), 0.55) !important;
+  border-color: rgba(var(--color-primary-rgb, 124, 58, 237), 0.55) !important;
 }
 
 #mobileNavBrandLogo:hover .sidebar-ai-robot {
   transform: scale(1.15);
-  filter: drop-shadow(0 0 6px rgba(var(--color-primary-rgb, 16, 185, 129), 0.95));
+  filter: drop-shadow(0 0 6px rgba(var(--color-primary-rgb, 124, 58, 237), 0.95));
 }
 
 #mobileNavBrandLogo:hover .sidebar-ai-eye {
