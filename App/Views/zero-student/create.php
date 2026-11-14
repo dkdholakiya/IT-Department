@@ -296,6 +296,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                 <th>Time</th>
                 <th>Students</th>
                 <th>Remarks</th>
+                <th>Faculty Claim</th>
                 <th style="text-align: center;">Dept</th>
                 <th style="text-align: center;">TT Match</th>
               </tr>

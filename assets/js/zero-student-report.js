@@ -417,6 +417,8 @@ function handleAddEntry() {
         facultyEmail: facultyEmail,
         students: studentsVal,
         remarks: remarksVal,
+        facultyClaim: "",
+        claimStatus: "Pending",
         cc: ccEmails.join(", "),
         createdAt: new Date().toISOString(),
         status: "Logged"
@@ -675,7 +677,7 @@ function renderPreviewRows() {
     tbody.innerHTML = "";
 
     if (pdfParsedData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="13" style="text-align: center; color: var(--text-muted); padding: 24px;">No records with remarks found in this Excel file.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="14" style="text-align: center; color: var(--text-muted); padding: 24px;">No records with remarks found in this Excel file.</td></tr>`;
         importConfirmBtn.innerText = `Import Selected (0)`;
         importConfirmBtn.disabled = true;
         return;
@@ -703,6 +705,9 @@ function renderPreviewRows() {
         const ttMatch = checkCombinedTimetableMatch(row);
         const ttBadgeHtml = `<span class="zs-tt-badge ${ttMatch.badgeClass}" title="${ttMatch.tooltip}">${ttMatch.label}</span>`;
 
+        const cleanClaim = (row.facultyClaim || "").replace(/"/g, "&quot;");
+        const claimDisplay = row.facultyClaim ? `<span title="${cleanClaim}">${cleanClaim}</span>` : `<span style="color: var(--text-muted); font-style: italic;">None</span>`;
+
         tr.innerHTML = `
             <td style="text-align: center;"><input type="checkbox" class="pdf-row-checkbox" data-index="${index}" ${isCheckedStr}></td>
             <td style="text-align: center; color: var(--text-muted); font-size: 11px;">${index + 1}</td>
@@ -715,6 +720,7 @@ function renderPreviewRows() {
             <td>${row.timeInStr} - ${row.timeOutStr}</td>
             <td style="text-align: center;">${row.noOfStudents}</td>
             <td style="font-size: 11px;">${row.remarks || "NO STUDENT"}</td>
+            <td style="font-size: 11px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${claimDisplay}</td>
             <td style="text-align: center;">${deptSelectHtml}</td>
             <td style="text-align: center;">${ttBadgeHtml}</td>
         `;
@@ -1234,7 +1240,8 @@ async function parseExcelFile(file) {
                 const headerRow = rows[headerIdx];
                 let colMapping = {
                     date: -1, srNo: -1, room: -1, subject: -1, faculty: -1, alteration: -1, pt: -1,
-                    branch: -1, semester: -1, timeIn: -1, timeOut: -1, remarks: -1, students: -1
+                    branch: -1, semester: -1, timeIn: -1, timeOut: -1, remarks: -1, students: -1,
+                    facultyClaim: -1
                 };
 
                 headerRow.forEach((cell, idx) => {
@@ -1244,6 +1251,7 @@ async function parseExcelFile(file) {
                     else if (hText === "SR" || hText === "SR NO" || hText === "SR.NO" || hText === "SR. NO." || hText === "NO." || hText === "S.NO" || hText === "S.N.") colMapping.srNo = idx;
                     else if (hText.includes("CLASS") || hText.includes("LAB") || hText.includes("ROOM")) colMapping.room = idx;
                     else if (hText.includes("SUBJECT")) colMapping.subject = idx;
+                    else if (hText.includes("FACULTY CLAIM") || hText.includes("CLAIM") || hText.includes("WHY ZERO") || hText.includes("FACULTY REASON") || hText.includes("JUSTIFICATION") || hText.includes("FACULTY REMARK")) colMapping.facultyClaim = idx;
                     else if (hText.includes("FACULTY")) colMapping.faculty = idx;
                     else if (hText.includes("ALTERATION")) colMapping.alteration = idx;
                     else if (hText.includes("P/T")) colMapping.pt = idx;
@@ -1290,6 +1298,7 @@ async function parseExcelFile(file) {
                     const remarksVal = colMapping.remarks !== -1 ? cleanStr(row[colMapping.remarks]) : cleanStr(row[11]);
                     const studentsVal = colMapping.students !== -1 ? cleanStr(row[colMapping.students]) : cleanStr(row[12]);
                     const convenerVal = colMapping.convenerRemarks !== -1 ? cleanStr(row[colMapping.convenerRemarks]) : cleanStr(row[13]);
+                    const facultyClaimVal = colMapping.facultyClaim !== -1 ? cleanStr(row[colMapping.facultyClaim]) : "";
 
                     let finalRemarks = remarksVal;
                     if (!finalRemarks && convenerVal) {
@@ -1332,6 +1341,7 @@ async function parseExcelFile(file) {
                         timeInStr: timeInVal,
                         timeOutStr: timeOutVal,
                         remarks: finalRemarks,
+                        facultyClaim: facultyClaimVal,
                         noOfStudents: studentsVal || "---"
                     });
                 }
@@ -1846,6 +1856,10 @@ async function handleBatchImport() {
                 facultyEmail: row.facultyEmail,
                 students: row.noOfStudents || "0",
                 remarks: row.remarks,
+                facultyClaim: row.facultyClaim || "",
+                claimStatus: (row.facultyClaim && row.facultyClaim.trim() !== "") ? "Claimed" : "Pending",
+                claimedAt: (row.facultyClaim && row.facultyClaim.trim() !== "") ? new Date().toISOString() : null,
+                claimedBy: (row.facultyClaim && row.facultyClaim.trim() !== "") ? (row.facultyName || row.resolvedFaculty) : null,
                 cc: rowCcEmails.join(", "),
                 createdAt: new Date().toISOString(),
                 status: "Logged"

@@ -351,6 +351,18 @@
                     "name": "Export Incidents Excel",
                     "description": "Download zero-student incidents spreadsheet report",
                     "type": "export"
+                },
+                {
+                    "id": "zero_student.claim",
+                    "name": "Add Faculty Claim",
+                    "description": "Submit initial faculty claim and justification for zero attendance (one-time submission per entry)",
+                    "type": "create"
+                },
+                {
+                    "id": "zero_student.edit",
+                    "name": "Edit Incident & Faculty Claim",
+                    "description": "Modify incident details and edit/override faculty claims (Super Admin and HOD only)",
+                    "type": "edit"
                 }
             ]
         },
@@ -541,6 +553,8 @@
                 "zero_student.create",
                 "zero_student.import",
                 "zero_student.export",
+                "zero_student.claim",
+                "zero_student.edit",
                 "ctlactivity.view",
                 "ctlactivity.replace",
                 "ctlactivity.send_email",
@@ -621,6 +635,7 @@
                 "report.print",
                 "syllabus.view",
                 "zero_student.view",
+                "zero_student.claim",
                 "timetable.alteration"
             ]
         },

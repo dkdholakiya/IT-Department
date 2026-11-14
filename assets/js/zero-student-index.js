@@ -52,6 +52,20 @@
   const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
   const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
+  // Faculty Claim Modal elements
+  const facultyClaimModal = document.getElementById('facultyClaimModal');
+  const facultyClaimForm = document.getElementById('facultyClaimForm');
+  const facultyClaimInput = document.getElementById('facultyClaimInput');
+  const claimRecordId = document.getElementById('claimRecordId');
+  const claimMode = document.getElementById('claimMode');
+  const claimModalContext = document.getElementById('claimModalContext');
+  const facultyClaimModalTitle = document.getElementById('facultyClaimModalTitle');
+  const facultyClaimModalSubtitle = document.getElementById('facultyClaimModalSubtitle');
+  const saveClaimBtnText = document.getElementById('saveClaimBtnText');
+  const closeClaimModalBtn = document.getElementById('closeClaimModalBtn');
+  const cancelClaimBtn = document.getElementById('cancelClaimBtn');
+  const saveClaimBtn = document.getElementById('saveClaimBtn');
+
   // --- INITIALIZATION ---
   document.addEventListener('DOMContentLoaded', () => {
     if (!window.canViewAllFaculty && window.loggedInUser && window.loggedInUser.initials) {
@@ -311,11 +325,22 @@
       });
     }
 
+    // Faculty Claim modal listeners
+    if (closeClaimModalBtn) closeClaimModalBtn.addEventListener('click', closeClaimModal);
+    if (cancelClaimBtn) cancelClaimBtn.addEventListener('click', closeClaimModal);
+    if (facultyClaimForm) facultyClaimForm.addEventListener('submit', handleClaimSubmit);
+    if (facultyClaimModal) {
+      facultyClaimModal.addEventListener('click', (e) => {
+        if (e.target === facultyClaimModal) closeClaimModal();
+      });
+    }
+
     // Escape key closes modals
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeViewModal();
         closeDeleteModal();
+        closeClaimModal();
       }
     });
   }
@@ -557,7 +582,7 @@
     if (filteredRecords.length === 0) {
       tableBody.innerHTML = `
         <tr>
-          <td colspan="10" class="py-12 text-center">
+          <td colspan="11" class="py-12 text-center">
             <div class="flex flex-col items-center justify-center gap-2.5 max-w-sm mx-auto text-[var(--text-muted)]">
               <div class="w-12 h-12 rounded-2xl bg-black/5 dark:bg-white/10 flex items-center justify-center text-xl">
                 📋
@@ -670,6 +695,10 @@
             </span>
           </td>
 
+          <td>
+            ${renderFacultyClaimCell(r, recordId)}
+          </td>
+
           <td class="text-right pr-4">
             <div class="inline-flex items-center gap-1">
               <!-- View Detail Button -->
@@ -713,6 +742,14 @@
 
     tableBody.querySelectorAll('.delete-record-btn').forEach(btn => {
       btn.addEventListener('click', () => openDeleteModal(btn.getAttribute('data-id')));
+    });
+
+    tableBody.querySelectorAll('.add-claim-btn').forEach(btn => {
+      btn.addEventListener('click', () => openClaimModal(btn.getAttribute('data-id'), false));
+    });
+
+    tableBody.querySelectorAll('.edit-claim-btn').forEach(btn => {
+      btn.addEventListener('click', () => openClaimModal(btn.getAttribute('data-id'), true));
     });
 
     // Update bottom info text
@@ -789,8 +826,182 @@
   window.goToZeroPage = (page) => {
     currentPage = page;
     renderTable();
-  };;
+  };
   window.resetZeroFilters = resetAllFilters;
+
+  // --- RENDER FACULTY CLAIM COLUMN CELL ---
+  function renderFacultyClaimCell(r, recordId) {
+    const claim = (r.facultyClaim || '').trim();
+    const isClaimed = claim !== '';
+    const canClaim = window.canClaimZeroStudent !== false;
+    const canEdit = window.canEditZeroStudent === true; // Super Admin & HOD
+
+    if (isClaimed) {
+      return `
+        <div class="flex items-center gap-1.5 max-w-[210px]">
+          <div class="flex flex-col min-w-0 flex-1">
+            <span class="text-xs font-semibold text-[var(--text-primary)] truncate block" title="${escapeHtml(claim)}">
+              ${escapeHtml(claim)}
+            </span>
+            <span class="inline-flex items-center gap-1 text-[9.5px] font-bold text-emerald-600 dark:text-emerald-400">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span>Claimed</span>
+            </span>
+          </div>
+          ${canEdit ? `
+            <button
+              type="button"
+              class="edit-claim-btn shrink-0 w-6 h-6 rounded-lg glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-amber-600 hover:bg-amber-500/10 transition cursor-pointer"
+              data-id="${escapeHtml(recordId)}"
+              title="Edit Faculty Claim (Super Admin / HOD Override)"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>
+              </svg>
+            </button>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // Not claimed yet
+    if (canClaim) {
+      return `
+        <button
+          type="button"
+          class="add-claim-btn px-2.5 py-1 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-400 border border-amber-500/30 text-[10.5px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer active:scale-95"
+          data-id="${escapeHtml(recordId)}"
+          title="Add Faculty Claim explaining why students were zero"
+        >
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+          <span>Add Claim</span>
+        </button>
+      `;
+    }
+
+    return `<span class="text-[10px] font-bold text-[var(--text-muted)] bg-black/5 dark:bg-white/5 px-2 py-0.5 rounded-full">Pending</span>`;
+  }
+
+  // --- MODAL: FACULTY CLAIM (ADD / EDIT) ---
+  function openClaimModal(id, isEdit) {
+    const record = records.find(r => String(r.id) === String(id));
+    if (!record || !facultyClaimModal) return;
+
+    if (claimRecordId) claimRecordId.value = id;
+    if (claimMode) claimMode.value = isEdit ? 'edit' : 'add';
+
+    const isCe = (record.department || '').toLowerCase().includes('computer');
+    const deptBadgeClass = isCe ? 'zs-badge-dept-ce' : 'zs-badge-dept-it';
+    const deptLabel = isCe ? 'CE' : 'IT';
+
+    if (claimModalContext) {
+      claimModalContext.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-xs text-[var(--text-primary)]">${escapeHtml(record.subject || '---')}</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${deptBadgeClass}">${deptLabel}</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5 text-[11px] text-[var(--text-muted)] pt-1">
+          <div><span class="font-semibold text-[var(--text-primary)]">Date:</span> ${escapeHtml(record.dateFormatted || record.date || '---')}</div>
+          <div><span class="font-semibold text-[var(--text-primary)]">Timing:</span> ${escapeHtml(record.timeInFormatted || record.timeIn || '')} – ${escapeHtml(record.timeOutFormatted || record.timeOut || '')}</div>
+          <div><span class="font-semibold text-[var(--text-primary)]">Room:</span> <span class="font-mono text-[var(--text-primary)] font-bold">${escapeHtml(record.room || '---')}</span></div>
+          <div><span class="font-semibold text-[var(--text-primary)]">Class:</span> Sem ${escapeHtml(record.semester || '-')} (${escapeHtml(record.branch || '---')})</div>
+          <div class="col-span-2"><span class="font-semibold text-[var(--text-primary)]">Faculty:</span> ${escapeHtml(record.facultyName || record.facultyInitials)} (${escapeHtml(record.facultyInitials || '')})</div>
+        </div>
+      `;
+    }
+
+    if (isEdit) {
+      if (facultyClaimModalTitle) facultyClaimModalTitle.textContent = 'Edit Faculty Claim';
+      if (facultyClaimModalSubtitle) facultyClaimModalSubtitle.textContent = 'Administrator override mode (Super Admin / HOD)';
+      if (saveClaimBtnText) saveClaimBtnText.textContent = 'Save Changes';
+      if (facultyClaimInput) facultyClaimInput.value = record.facultyClaim || '';
+    } else {
+      if (facultyClaimModalTitle) facultyClaimModalTitle.textContent = 'Add Faculty Claim';
+      if (facultyClaimModalSubtitle) facultyClaimModalSubtitle.textContent = 'Explain why zero students attended this session';
+      if (saveClaimBtnText) saveClaimBtnText.textContent = 'Submit Claim';
+      if (facultyClaimInput) facultyClaimInput.value = '';
+    }
+
+    facultyClaimModal.classList.remove('hidden');
+    facultyClaimModal.classList.add('flex');
+    if (facultyClaimInput) setTimeout(() => facultyClaimInput.focus(), 60);
+  }
+
+  function closeClaimModal() {
+    if (!facultyClaimModal) return;
+    facultyClaimModal.classList.add('hidden');
+    facultyClaimModal.classList.remove('flex');
+    if (facultyClaimInput) facultyClaimInput.value = '';
+  }
+
+  async function handleClaimSubmit(e) {
+    if (e) e.preventDefault();
+    const id = claimRecordId ? claimRecordId.value : null;
+    const mode = claimMode ? claimMode.value : 'add';
+    const claim = facultyClaimInput ? facultyClaimInput.value.trim() : '';
+
+    if (!id || !claim) {
+      showToast('Please provide an explanation for the faculty claim.', 'error');
+      return;
+    }
+
+    if (saveClaimBtn) {
+      saveClaimBtn.disabled = true;
+      if (saveClaimBtnText) saveClaimBtnText.textContent = 'Saving to JSON...';
+    }
+
+    const action = (mode === 'edit') ? 'edit_claim' : 'add_claim';
+
+    try {
+      let res = await fetch('api/zero-student-records.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action, id: id, facultyClaim: claim })
+      });
+
+      if (!res.ok) {
+        // Fallback endpoint
+        res = await fetch('./api/zero-student-records', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: action, id: id, facultyClaim: claim })
+        });
+      }
+
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to save faculty claim');
+      }
+
+      // Update local record state
+      const rec = records.find(r => String(r.id) === String(id));
+      if (rec) {
+        rec.facultyClaim = claim;
+        rec.claimStatus = 'Claimed';
+        if (mode === 'edit') {
+          rec.claimEditedAt = new Date().toISOString();
+          rec.claimEditedBy = (window.loggedInUser ? window.loggedInUser.name : 'Administrator') + ' (' + (window.userRole || 'admin') + ')';
+        } else {
+          rec.claimedAt = new Date().toISOString();
+          rec.claimedBy = (window.loggedInUser ? window.loggedInUser.name : 'Faculty') + ' (' + ((window.loggedInUser && window.loggedInUser.initials) ? window.loggedInUser.initials : '') + ')';
+        }
+      }
+
+      applyFilters();
+      closeClaimModal();
+      showToast(data.message || (mode === 'edit' ? 'Faculty claim updated successfully by Administrator.' : 'Faculty claim submitted successfully.'));
+    } catch (err) {
+      console.error('Claim submit error:', err);
+      showToast(err.message || 'Error submitting faculty claim. Please retry.', 'error');
+    } finally {
+      if (saveClaimBtn) {
+        saveClaimBtn.disabled = false;
+        if (saveClaimBtnText) saveClaimBtnText.textContent = (mode === 'edit') ? 'Save Changes' : 'Submit Claim';
+      }
+    }
+  }
 
   // --- MODAL: VIEW DETAILS ---
   function openViewModal(id) {
@@ -854,6 +1065,38 @@
       <div class="p-2.5 rounded-xl border border-black/5 dark:border-white/10">
         <div class="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">Remarks / Justification</div>
         <div class="font-semibold text-xs text-[var(--text-primary)] mt-0.5">${escapeHtml(record.remarks || 'NO STUDENTS REPORTED')}</div>
+      </div>
+
+      <!-- Faculty Claim Section -->
+      <div class="p-3 rounded-2xl border ${record.facultyClaim ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5'}">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">Faculty Claim</div>
+          ${record.facultyClaim ? `
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Claim Submitted</span>
+            </span>
+          ` : `
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+              <span>Pending Claim</span>
+            </span>
+          `}
+        </div>
+        <div class="font-medium text-xs text-[var(--text-primary)] whitespace-pre-wrap leading-relaxed">
+          ${escapeHtml(record.facultyClaim || 'No faculty claim has been submitted for this session yet.')}
+        </div>
+        ${record.claimedAt ? `
+          <div class="text-[10px] text-[var(--text-muted)] mt-2 pt-2 border-t border-black/5 dark:border-white/10 flex items-center justify-between flex-wrap gap-1">
+            <span>Claimed By: <strong>${escapeHtml(record.claimedBy || 'Faculty')}</strong></span>
+            <span>${new Date(record.claimedAt).toLocaleString()}</span>
+          </div>
+        ` : ''}
+        ${record.claimEditedAt ? `
+          <div class="text-[10px] text-amber-600 dark:text-amber-400 mt-1 flex items-center justify-between flex-wrap gap-1">
+            <span>Edited By: <strong>${escapeHtml(record.claimEditedBy || 'Administrator')}</strong></span>
+            <span>${new Date(record.claimEditedAt).toLocaleString()}</span>
+          </div>
+        ` : ''}
       </div>
 
       <!-- CC Email Recipient List -->
@@ -969,6 +1212,12 @@
       'Faculty Email': r.facultyEmail || '',
       'No. of Students': r.students || '0',
       'Remarks': r.remarks || '',
+      'Faculty Claim': r.facultyClaim || '',
+      'Claim Status': r.claimStatus || (r.facultyClaim ? 'Claimed' : 'Pending'),
+      'Claimed At': r.claimedAt ? new Date(r.claimedAt).toLocaleString() : '',
+      'Claimed By': r.claimedBy || '',
+      'Claim Edited At': r.claimEditedAt ? new Date(r.claimEditedAt).toLocaleString() : '',
+      'Claim Edited By': r.claimEditedBy || '',
       'CC Emails': r.cc || '',
       'Created At': r.createdAt || ''
     }));
@@ -993,6 +1242,12 @@
       { wch: 24 }, // Faculty Email
       { wch: 14 }, // No. of Students
       { wch: 30 }, // Remarks
+      { wch: 36 }, // Faculty Claim
+      { wch: 14 }, // Claim Status
+      { wch: 22 }, // Claimed At
+      { wch: 22 }, // Claimed By
+      { wch: 22 }, // Claim Edited At
+      { wch: 22 }, // Claim Edited By
       { wch: 40 }, // CC Emails
       { wch: 24 }  // Created At
     ];

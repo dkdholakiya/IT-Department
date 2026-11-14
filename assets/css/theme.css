@@ -190,3 +190,342 @@ body.theme-dark .glass-pill {
   -webkit-overflow-scrolling: touch;
 }
 
+/* ==========================================================================
+   UNIVERSAL GLASSMORPHIC SCROLLBAR SYSTEM (All Tables — Vertical & Horizontal)
+   ========================================================================== */
+.zs-dir-table-wrapper,
+.zs-table-container,
+.fac-table-wrapper,
+.ctl-table-scroll,
+.ctl-custom-scroll,
+.rp-custom-scroll,
+.syl-table-scroll,
+.syl-custom-scroll,
+.wl-table-wrapper,
+.wl-custom-scroll,
+.table-responsive,
+.desktop-timetable-view,
+.tt-custom-scroll,
+.glass-table-scroll,
+.glass-table-container,
+div[class*="table-scroll"],
+div[class*="table-wrapper"],
+div:has(> table),
+div:has(> .table),
+table {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--color-primary-rgb), 0.40) rgba(var(--color-primary-rgb), 0.04);
+}
+
+.zs-dir-table-wrapper::-webkit-scrollbar,
+.zs-table-container::-webkit-scrollbar,
+.fac-table-wrapper::-webkit-scrollbar,
+.ctl-table-scroll::-webkit-scrollbar,
+.ctl-custom-scroll::-webkit-scrollbar,
+.rp-custom-scroll::-webkit-scrollbar,
+.syl-table-scroll::-webkit-scrollbar,
+.syl-custom-scroll::-webkit-scrollbar,
+.wl-table-wrapper::-webkit-scrollbar,
+.wl-custom-scroll::-webkit-scrollbar,
+.table-responsive::-webkit-scrollbar,
+.desktop-timetable-view::-webkit-scrollbar,
+.tt-custom-scroll::-webkit-scrollbar,
+.glass-table-scroll::-webkit-scrollbar,
+.glass-table-container::-webkit-scrollbar,
+div[class*="table-scroll"]::-webkit-scrollbar,
+div[class*="table-wrapper"]::-webkit-scrollbar,
+div:has(> table)::-webkit-scrollbar,
+div:has(> .table)::-webkit-scrollbar,
+table::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.zs-dir-table-wrapper::-webkit-scrollbar-track,
+.zs-table-container::-webkit-scrollbar-track,
+.fac-table-wrapper::-webkit-scrollbar-track,
+.ctl-table-scroll::-webkit-scrollbar-track,
+.ctl-custom-scroll::-webkit-scrollbar-track,
+.rp-custom-scroll::-webkit-scrollbar-track,
+.syl-table-scroll::-webkit-scrollbar-track,
+.syl-custom-scroll::-webkit-scrollbar-track,
+.wl-table-wrapper::-webkit-scrollbar-track,
+.wl-custom-scroll::-webkit-scrollbar-track,
+.table-responsive::-webkit-scrollbar-track,
+.desktop-timetable-view::-webkit-scrollbar-track,
+.tt-custom-scroll::-webkit-scrollbar-track,
+.glass-table-scroll::-webkit-scrollbar-track,
+.glass-table-container::-webkit-scrollbar-track,
+div[class*="table-scroll"]::-webkit-scrollbar-track,
+div[class*="table-wrapper"]::-webkit-scrollbar-track,
+div:has(> table)::-webkit-scrollbar-track,
+div:has(> .table)::-webkit-scrollbar-track,
+table::-webkit-scrollbar-track {
+  background: rgba(var(--color-primary-rgb), 0.04);
+  border-radius: 9999px;
+  margin: 3px;
+}
+
+.zs-dir-table-wrapper::-webkit-scrollbar-thumb,
+.zs-table-container::-webkit-scrollbar-thumb,
+.fac-table-wrapper::-webkit-scrollbar-thumb,
+.ctl-table-scroll::-webkit-scrollbar-thumb,
+.ctl-custom-scroll::-webkit-scrollbar-thumb,
+.rp-custom-scroll::-webkit-scrollbar-thumb,
+.syl-table-scroll::-webkit-scrollbar-thumb,
+.syl-custom-scroll::-webkit-scrollbar-thumb,
+.wl-table-wrapper::-webkit-scrollbar-thumb,
+.wl-custom-scroll::-webkit-scrollbar-thumb,
+.table-responsive::-webkit-scrollbar-thumb,
+.desktop-timetable-view::-webkit-scrollbar-thumb,
+.tt-custom-scroll::-webkit-scrollbar-thumb,
+.glass-table-scroll::-webkit-scrollbar-thumb,
+.glass-table-container::-webkit-scrollbar-thumb,
+div[class*="table-scroll"]::-webkit-scrollbar-thumb,
+div[class*="table-wrapper"]::-webkit-scrollbar-thumb,
+div:has(> table)::-webkit-scrollbar-thumb,
+div:has(> .table)::-webkit-scrollbar-thumb,
+table::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.38) 0%, rgba(var(--color-primary-rgb), 0.20) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.70);
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(var(--color-primary-rgb), 0.16), inset 0 1px 1.5px rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.zs-dir-table-wrapper::-webkit-scrollbar-thumb:hover,
+.zs-table-container::-webkit-scrollbar-thumb:hover,
+.fac-table-wrapper::-webkit-scrollbar-thumb:hover,
+.ctl-table-scroll::-webkit-scrollbar-thumb:hover,
+.ctl-custom-scroll::-webkit-scrollbar-thumb:hover,
+.rp-custom-scroll::-webkit-scrollbar-thumb:hover,
+.syl-table-scroll::-webkit-scrollbar-thumb:hover,
+.syl-custom-scroll::-webkit-scrollbar-thumb:hover,
+.wl-table-wrapper::-webkit-scrollbar-thumb:hover,
+.wl-custom-scroll::-webkit-scrollbar-thumb:hover,
+.table-responsive::-webkit-scrollbar-thumb:hover,
+.desktop-timetable-view::-webkit-scrollbar-thumb:hover,
+.tt-custom-scroll::-webkit-scrollbar-thumb:hover,
+.glass-table-scroll::-webkit-scrollbar-thumb:hover,
+.glass-table-container::-webkit-scrollbar-thumb:hover,
+div[class*="table-scroll"]::-webkit-scrollbar-thumb:hover,
+div[class*="table-wrapper"]::-webkit-scrollbar-thumb:hover,
+div:has(> table)::-webkit-scrollbar-thumb:hover,
+div:has(> .table)::-webkit-scrollbar-thumb:hover,
+table::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.75) 0%, rgba(var(--color-primary-rgb), 0.48) 100%);
+  border-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+
+.zs-dir-table-wrapper::-webkit-scrollbar-thumb:active,
+.zs-table-container::-webkit-scrollbar-thumb:active,
+.fac-table-wrapper::-webkit-scrollbar-thumb:active,
+.ctl-table-scroll::-webkit-scrollbar-thumb:active,
+.ctl-custom-scroll::-webkit-scrollbar-thumb:active,
+.rp-custom-scroll::-webkit-scrollbar-thumb:active,
+.syl-table-scroll::-webkit-scrollbar-thumb:active,
+.syl-custom-scroll::-webkit-scrollbar-thumb:active,
+.wl-table-wrapper::-webkit-scrollbar-thumb:active,
+.wl-custom-scroll::-webkit-scrollbar-thumb:active,
+.table-responsive::-webkit-scrollbar-thumb:active,
+.desktop-timetable-view::-webkit-scrollbar-thumb:active,
+.tt-custom-scroll::-webkit-scrollbar-thumb:active,
+.glass-table-scroll::-webkit-scrollbar-thumb:active,
+.glass-table-container::-webkit-scrollbar-thumb:active,
+div[class*="table-scroll"]::-webkit-scrollbar-thumb:active,
+div[class*="table-wrapper"]::-webkit-scrollbar-thumb:active,
+div:has(> table)::-webkit-scrollbar-thumb:active,
+div:has(> .table)::-webkit-scrollbar-thumb:active,
+table::-webkit-scrollbar-thumb:active {
+  background: var(--color-primary);
+  border-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(var(--color-primary-rgb), 0.5);
+}
+
+/* ==========================================================================
+   DARK GLASS MODE SCROLLBARS (Obsidian OLED)
+   ========================================================================== */
+body.theme-dark .zs-dir-table-wrapper,
+html.dark .zs-dir-table-wrapper,
+body.theme-dark .zs-table-container,
+html.dark .zs-table-container,
+body.theme-dark .fac-table-wrapper,
+html.dark .fac-table-wrapper,
+body.theme-dark .ctl-table-scroll,
+html.dark .ctl-table-scroll,
+body.theme-dark .ctl-custom-scroll,
+html.dark .ctl-custom-scroll,
+body.theme-dark .rp-custom-scroll,
+html.dark .rp-custom-scroll,
+body.theme-dark .syl-table-scroll,
+html.dark .syl-table-scroll,
+body.theme-dark .syl-custom-scroll,
+html.dark .syl-custom-scroll,
+body.theme-dark .wl-table-wrapper,
+html.dark .wl-table-wrapper,
+body.theme-dark .wl-custom-scroll,
+html.dark .wl-custom-scroll,
+body.theme-dark .table-responsive,
+html.dark .table-responsive,
+body.theme-dark .desktop-timetable-view,
+html.dark .desktop-timetable-view,
+body.theme-dark .tt-custom-scroll,
+html.dark .tt-custom-scroll,
+body.theme-dark .glass-table-scroll,
+html.dark .glass-table-scroll,
+body.theme-dark .glass-table-container,
+html.dark .glass-table-container,
+body.theme-dark div[class*="table-scroll"],
+html.dark div[class*="table-scroll"],
+body.theme-dark div[class*="table-wrapper"],
+html.dark div[class*="table-wrapper"],
+body.theme-dark div:has(> table),
+html.dark div:has(> table),
+body.theme-dark div:has(> .table),
+html.dark div:has(> .table),
+body.theme-dark table,
+html.dark table {
+  scrollbar-color: rgba(var(--color-primary-rgb), 0.60) rgba(255, 255, 255, 0.02);
+}
+
+body.theme-dark .zs-dir-table-wrapper::-webkit-scrollbar-track,
+html.dark .zs-dir-table-wrapper::-webkit-scrollbar-track,
+body.theme-dark .zs-table-container::-webkit-scrollbar-track,
+html.dark .zs-table-container::-webkit-scrollbar-track,
+body.theme-dark .fac-table-wrapper::-webkit-scrollbar-track,
+html.dark .fac-table-wrapper::-webkit-scrollbar-track,
+body.theme-dark .ctl-table-scroll::-webkit-scrollbar-track,
+html.dark .ctl-table-scroll::-webkit-scrollbar-track,
+body.theme-dark .ctl-custom-scroll::-webkit-scrollbar-track,
+html.dark .ctl-custom-scroll::-webkit-scrollbar-track,
+body.theme-dark .rp-custom-scroll::-webkit-scrollbar-track,
+html.dark .rp-custom-scroll::-webkit-scrollbar-track,
+body.theme-dark .syl-table-scroll::-webkit-scrollbar-track,
+html.dark .syl-table-scroll::-webkit-scrollbar-track,
+body.theme-dark .syl-custom-scroll::-webkit-scrollbar-track,
+html.dark .syl-custom-scroll::-webkit-scrollbar-track,
+body.theme-dark .wl-table-wrapper::-webkit-scrollbar-track,
+html.dark .wl-table-wrapper::-webkit-scrollbar-track,
+body.theme-dark .wl-custom-scroll::-webkit-scrollbar-track,
+html.dark .wl-custom-scroll::-webkit-scrollbar-track,
+body.theme-dark .table-responsive::-webkit-scrollbar-track,
+html.dark .table-responsive::-webkit-scrollbar-track,
+body.theme-dark .desktop-timetable-view::-webkit-scrollbar-track,
+html.dark .desktop-timetable-view::-webkit-scrollbar-track,
+body.theme-dark .tt-custom-scroll::-webkit-scrollbar-track,
+html.dark .tt-custom-scroll::-webkit-scrollbar-track,
+body.theme-dark .glass-table-scroll::-webkit-scrollbar-track,
+html.dark .glass-table-scroll::-webkit-scrollbar-track,
+body.theme-dark .glass-table-container::-webkit-scrollbar-track,
+html.dark .glass-table-container::-webkit-scrollbar-track,
+body.theme-dark div[class*="table-scroll"]::-webkit-scrollbar-track,
+html.dark div[class*="table-scroll"]::-webkit-scrollbar-track,
+body.theme-dark div[class*="table-wrapper"]::-webkit-scrollbar-track,
+html.dark div[class*="table-wrapper"]::-webkit-scrollbar-track,
+body.theme-dark div:has(> table)::-webkit-scrollbar-track,
+html.dark div:has(> table)::-webkit-scrollbar-track,
+body.theme-dark div:has(> .table)::-webkit-scrollbar-track,
+html.dark div:has(> .table)::-webkit-scrollbar-track,
+body.theme-dark table::-webkit-scrollbar-track,
+html.dark table::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+body.theme-dark .zs-dir-table-wrapper::-webkit-scrollbar-thumb,
+html.dark .zs-dir-table-wrapper::-webkit-scrollbar-thumb,
+body.theme-dark .zs-table-container::-webkit-scrollbar-thumb,
+html.dark .zs-table-container::-webkit-scrollbar-thumb,
+body.theme-dark .fac-table-wrapper::-webkit-scrollbar-thumb,
+html.dark .fac-table-wrapper::-webkit-scrollbar-thumb,
+body.theme-dark .ctl-table-scroll::-webkit-scrollbar-thumb,
+html.dark .ctl-table-scroll::-webkit-scrollbar-thumb,
+body.theme-dark .ctl-custom-scroll::-webkit-scrollbar-thumb,
+html.dark .ctl-custom-scroll::-webkit-scrollbar-thumb,
+body.theme-dark .rp-custom-scroll::-webkit-scrollbar-thumb,
+html.dark .rp-custom-scroll::-webkit-scrollbar-thumb,
+body.theme-dark .syl-table-scroll::-webkit-scrollbar-thumb,
+html.dark .syl-table-scroll::-webkit-scrollbar-thumb,
+body.theme-dark .syl-custom-scroll::-webkit-scrollbar-thumb,
+html.dark .syl-custom-scroll::-webkit-scrollbar-thumb,
+body.theme-dark .wl-table-wrapper::-webkit-scrollbar-thumb,
+html.dark .wl-table-wrapper::-webkit-scrollbar-thumb,
+body.theme-dark .wl-custom-scroll::-webkit-scrollbar-thumb,
+html.dark .wl-custom-scroll::-webkit-scrollbar-thumb,
+body.theme-dark .table-responsive::-webkit-scrollbar-thumb,
+html.dark .table-responsive::-webkit-scrollbar-thumb,
+body.theme-dark .desktop-timetable-view::-webkit-scrollbar-thumb,
+html.dark .desktop-timetable-view::-webkit-scrollbar-thumb,
+body.theme-dark .tt-custom-scroll::-webkit-scrollbar-thumb,
+html.dark .tt-custom-scroll::-webkit-scrollbar-thumb,
+body.theme-dark .glass-table-scroll::-webkit-scrollbar-thumb,
+html.dark .glass-table-scroll::-webkit-scrollbar-thumb,
+body.theme-dark .glass-table-container::-webkit-scrollbar-thumb,
+html.dark .glass-table-container::-webkit-scrollbar-thumb,
+body.theme-dark div[class*="table-scroll"]::-webkit-scrollbar-thumb,
+html.dark div[class*="table-scroll"]::-webkit-scrollbar-thumb,
+body.theme-dark div[class*="table-wrapper"]::-webkit-scrollbar-thumb,
+html.dark div[class*="table-wrapper"]::-webkit-scrollbar-thumb,
+body.theme-dark div:has(> table)::-webkit-scrollbar-thumb,
+html.dark div:has(> table)::-webkit-scrollbar-thumb,
+body.theme-dark div:has(> .table)::-webkit-scrollbar-thumb,
+html.dark div:has(> .table)::-webkit-scrollbar-thumb,
+body.theme-dark table::-webkit-scrollbar-thumb,
+html.dark table::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.55) 0%, rgba(var(--color-primary-rgb), 0.30) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+}
+
+body.theme-dark .zs-dir-table-wrapper::-webkit-scrollbar-thumb:hover,
+html.dark .zs-dir-table-wrapper::-webkit-scrollbar-thumb:hover,
+body.theme-dark .zs-table-container::-webkit-scrollbar-thumb:hover,
+html.dark .zs-table-container::-webkit-scrollbar-thumb:hover,
+body.theme-dark .fac-table-wrapper::-webkit-scrollbar-thumb:hover,
+html.dark .fac-table-wrapper::-webkit-scrollbar-thumb:hover,
+body.theme-dark .ctl-table-scroll::-webkit-scrollbar-thumb:hover,
+html.dark .ctl-table-scroll::-webkit-scrollbar-thumb:hover,
+body.theme-dark .ctl-custom-scroll::-webkit-scrollbar-thumb:hover,
+html.dark .ctl-custom-scroll::-webkit-scrollbar-thumb:hover,
+body.theme-dark .rp-custom-scroll::-webkit-scrollbar-thumb:hover,
+html.dark .rp-custom-scroll::-webkit-scrollbar-thumb:hover,
+body.theme-dark .syl-table-scroll::-webkit-scrollbar-thumb:hover,
+html.dark .syl-table-scroll::-webkit-scrollbar-thumb:hover,
+body.theme-dark .syl-custom-scroll::-webkit-scrollbar-thumb:hover,
+html.dark .syl-custom-scroll::-webkit-scrollbar-thumb:hover,
+body.theme-dark .wl-table-wrapper::-webkit-scrollbar-thumb:hover,
+html.dark .wl-table-wrapper::-webkit-scrollbar-thumb:hover,
+body.theme-dark .wl-custom-scroll::-webkit-scrollbar-thumb:hover,
+html.dark .wl-custom-scroll::-webkit-scrollbar-thumb:hover,
+body.theme-dark .table-responsive::-webkit-scrollbar-thumb:hover,
+html.dark .table-responsive::-webkit-scrollbar-thumb:hover,
+body.theme-dark .desktop-timetable-view::-webkit-scrollbar-thumb:hover,
+html.dark .desktop-timetable-view::-webkit-scrollbar-thumb:hover,
+body.theme-dark .tt-custom-scroll::-webkit-scrollbar-thumb:hover,
+html.dark .tt-custom-scroll::-webkit-scrollbar-thumb:hover,
+body.theme-dark .glass-table-scroll::-webkit-scrollbar-thumb:hover,
+html.dark .glass-table-scroll::-webkit-scrollbar-thumb:hover,
+body.theme-dark .glass-table-container::-webkit-scrollbar-thumb:hover,
+html.dark .glass-table-container::-webkit-scrollbar-thumb:hover,
+body.theme-dark div[class*="table-scroll"]::-webkit-scrollbar-thumb:hover,
+html.dark div[class*="table-scroll"]::-webkit-scrollbar-thumb:hover,
+body.theme-dark div[class*="table-wrapper"]::-webkit-scrollbar-thumb:hover,
+html.dark div[class*="table-wrapper"]::-webkit-scrollbar-thumb:hover,
+body.theme-dark div:has(> table)::-webkit-scrollbar-thumb:hover,
+html.dark div:has(> table)::-webkit-scrollbar-thumb:hover,
+body.theme-dark div:has(> .table)::-webkit-scrollbar-thumb:hover,
+html.dark div:has(> .table)::-webkit-scrollbar-thumb:hover,
+body.theme-dark table::-webkit-scrollbar-thumb:hover,
+html.dark table::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.85) 0%, rgba(var(--color-primary-rgb), 0.60) 100%);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 16px rgba(var(--color-primary-rgb), 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+

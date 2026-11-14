@@ -195,7 +195,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         </div>
 
         <!-- 4. MAIN SCROLLABLE INCIDENTS TABLE -->
-        <div class="zs-dir-table-wrapper flex-1 min-h-0">
+        <div class="zs-dir-table-wrapper zs-custom-scroll flex-1 min-h-0">
           <table class="zs-dir-table">
             <thead>
               <tr>
@@ -208,6 +208,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
                 <th>Faculty</th>
                 <th class="text-center">Students</th>
                 <th>Remarks</th>
+                <th>Faculty Claim</th>
                 <th class="text-right pr-4">Action</th>
               </tr>
             </thead>
@@ -275,6 +276,63 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
           Close
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- ================= POPUP MODAL: FACULTY CLAIM (ADD / EDIT) ================= -->
+  <div id="facultyClaimModal" class="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card bg-[var(--glass-surface-strong)] w-full max-w-lg p-5 sm:p-6 rounded-3xl relative shadow-2xl border border-white/80 dark:border-white/10">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-black/10 dark:border-white/10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-[var(--text-primary)]" id="facultyClaimModalTitle">Faculty Claim</h3>
+            <p class="text-xs text-[var(--text-muted)]" id="facultyClaimModalSubtitle">Explain why zero students attended this session</p>
+          </div>
+        </div>
+        <button type="button" id="closeClaimModalBtn" class="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Session Context Card -->
+      <div class="p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 space-y-1.5 mb-3 text-xs" id="claimModalContext">
+        <!-- Injected dynamically via JS -->
+      </div>
+
+      <!-- Claim Input Form -->
+      <form id="facultyClaimForm" class="space-y-3">
+        <input type="hidden" id="claimRecordId" value="">
+        <input type="hidden" id="claimMode" value="add">
+
+        <div>
+          <label for="facultyClaimInput" class="text-[10.5px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] block mb-1.5">
+            Faculty Claim / Reason for Zero Students <span class="text-rose-500">*</span>
+          </label>
+          <textarea
+            id="facultyClaimInput"
+            rows="4"
+            required
+            class="w-full px-3.5 py-2.5 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs font-medium text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition resize-none"
+            placeholder="Specify why students were zero (e.g., mass bunk, festival holiday, internal exams, sports week, weather issue)..."
+          ></textarea>
+        </div>
+
+        <div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-end gap-2">
+          <button type="button" id="cancelClaimBtn" class="h-8 px-4 rounded-xl glass-pill font-bold text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" id="saveClaimBtn" class="h-8 px-5 rounded-xl bg-[var(--color-primary)] text-white font-bold text-xs hover:brightness-105 active:scale-95 transition shadow-sm cursor-pointer flex items-center gap-1.5">
+            <span id="saveClaimBtnText">Submit Claim</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -510,13 +568,17 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
     window.initialZeroRecords = <?php echo json_encode($records ?? [], JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
     window.canDeleteZeroStudent = <?php echo (class_exists('Core\Auth') && \Core\Auth::can('zero_student.delete')) ? 'true' : 'false'; ?>;
     window.canExportZeroStudent = <?php echo (class_exists('Core\Auth') && \Core\Auth::can('zero_student.export')) ? 'true' : 'false'; ?>;
-    window.canViewAllFaculty = <?php echo $canViewAll ? 'true' : 'false'; ?>;
+    window.canClaimZeroStudent  = <?php echo (class_exists('Core\Auth') && \Core\Auth::can('zero_student.claim')) ? 'true' : 'false'; ?>;
+    window.canEditZeroStudent   = <?php echo (class_exists('Core\Auth') && \Core\Auth::can('zero_student.edit')) ? 'true' : 'false'; ?>;
+    window.userRole             = '<?php echo class_exists('Core\Auth') ? \Core\Auth::userRole() : 'faculty'; ?>';
+    window.canViewAllFaculty    = <?php echo $canViewAll ? 'true' : 'false'; ?>;
     window.loggedInUser = <?php echo json_encode([
         'name'        => $user['name'] ?? '',
         'initials'    => $userInitials,
         'email'       => $user['email'] ?? '',
         'department'  => $userDept,
-        'designation' => $user['designation'] ?? 'Faculty Member'
+        'designation' => $user['designation'] ?? 'Faculty Member',
+        'role'        => class_exists('Core\Auth') ? \Core\Auth::userRole() : 'faculty'
     ], JSON_UNESCAPED_UNICODE); ?>;
     window.facultyData = <?php echo json_encode($facultyDataOutput, JSON_UNESCAPED_UNICODE); ?>;
     const facultyData = window.facultyData;

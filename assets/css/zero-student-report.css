@@ -32,44 +32,100 @@ body.theme-dark .zs-main-workspace {
   box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.65);
 }
 
-/* Custom Sleek Scrollbar */
+/* Custom Sleek Glassmorphic Scrollbar (Vertical & Horizontal) */
+.zs-custom-scroll,
+.zs-dir-table-wrapper,
+.zs-table-container,
+.search-dropdown-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--color-primary-rgb), 0.40) rgba(var(--color-primary-rgb), 0.04);
+}
+
 .zs-custom-scroll::-webkit-scrollbar,
+.zs-dir-table-wrapper::-webkit-scrollbar,
 .zs-table-container::-webkit-scrollbar,
 .search-dropdown-list::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 .zs-custom-scroll::-webkit-scrollbar-track,
+.zs-dir-table-wrapper::-webkit-scrollbar-track,
 .zs-table-container::-webkit-scrollbar-track,
 .search-dropdown-list::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(var(--color-primary-rgb), 0.04);
+  border-radius: 9999px;
+  margin: 3px;
 }
 
 .zs-custom-scroll::-webkit-scrollbar-thumb,
+.zs-dir-table-wrapper::-webkit-scrollbar-thumb,
 .zs-table-container::-webkit-scrollbar-thumb,
 .search-dropdown-list::-webkit-scrollbar-thumb {
-  background: rgba(var(--color-primary-rgb), 0.22);
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.38) 0%, rgba(var(--color-primary-rgb), 0.20) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.70);
   border-radius: 9999px;
-  transition: background 0.2s ease;
+  box-shadow: 0 2px 6px rgba(var(--color-primary-rgb), 0.16), inset 0 1px 1.5px rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .zs-custom-scroll::-webkit-scrollbar-thumb:hover,
+.zs-dir-table-wrapper::-webkit-scrollbar-thumb:hover,
 .zs-table-container::-webkit-scrollbar-thumb:hover,
 .search-dropdown-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(var(--color-primary-rgb), 0.45);
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.65) 0%, rgba(var(--color-primary-rgb), 0.40) 100%);
+  border-color: rgba(255, 255, 255, 0.90);
+  box-shadow: 0 3px 10px rgba(var(--color-primary-rgb), 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+
+body.theme-dark .zs-custom-scroll,
+html.dark .zs-custom-scroll,
+body.theme-dark .zs-dir-table-wrapper,
+html.dark .zs-dir-table-wrapper,
+body.theme-dark .zs-table-container,
+html.dark .zs-table-container,
+body.theme-dark .search-dropdown-list,
+html.dark .search-dropdown-list {
+  scrollbar-color: rgba(var(--color-primary-rgb), 0.65) rgba(var(--color-primary-rgb), 0.08);
+}
+
+body.theme-dark .zs-custom-scroll::-webkit-scrollbar-track,
+html.dark .zs-custom-scroll::-webkit-scrollbar-track,
+body.theme-dark .zs-dir-table-wrapper::-webkit-scrollbar-track,
+html.dark .zs-dir-table-wrapper::-webkit-scrollbar-track,
+body.theme-dark .zs-table-container::-webkit-scrollbar-track,
+html.dark .zs-table-container::-webkit-scrollbar-track,
+body.theme-dark .search-dropdown-list::-webkit-scrollbar-track,
+html.dark .search-dropdown-list::-webkit-scrollbar-track {
+  background: rgba(var(--color-primary-rgb), 0.08);
 }
 
 body.theme-dark .zs-custom-scroll::-webkit-scrollbar-thumb,
+html.dark .zs-custom-scroll::-webkit-scrollbar-thumb,
+body.theme-dark .zs-dir-table-wrapper::-webkit-scrollbar-thumb,
+html.dark .zs-dir-table-wrapper::-webkit-scrollbar-thumb,
 body.theme-dark .zs-table-container::-webkit-scrollbar-thumb,
-body.theme-dark .search-dropdown-list::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
+html.dark .zs-table-container::-webkit-scrollbar-thumb,
+body.theme-dark .search-dropdown-list::-webkit-scrollbar-thumb,
+html.dark .search-dropdown-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.55) 0%, rgba(var(--color-primary-rgb), 0.30) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.22);
 }
 
 body.theme-dark .zs-custom-scroll::-webkit-scrollbar-thumb:hover,
+html.dark .zs-custom-scroll::-webkit-scrollbar-thumb:hover,
+body.theme-dark .zs-dir-table-wrapper::-webkit-scrollbar-thumb:hover,
+html.dark .zs-dir-table-wrapper::-webkit-scrollbar-thumb:hover,
 body.theme-dark .zs-table-container::-webkit-scrollbar-thumb:hover,
-body.theme-dark .search-dropdown-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.35);
+html.dark .zs-table-container::-webkit-scrollbar-thumb:hover,
+body.theme-dark .search-dropdown-list::-webkit-scrollbar-thumb:hover,
+html.dark .search-dropdown-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.85) 0%, rgba(var(--color-primary-rgb), 0.60) 100%);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 16px rgba(var(--color-primary-rgb), 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.35);
 }
 
 /* ==========================================================================
@@ -1584,4 +1640,84 @@ body.theme-dark .wl-drawer-card.active {
   opacity: 1;
   transform: scale(1);
 }
+
+/* ==========================================================================
+   FACULTY CLAIM MODULE STYLES (Zero Student Directory)
+   ========================================================================== */
+.add-claim-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  box-shadow: 0 1px 2px rgba(245, 158, 11, 0.08);
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+body.theme-dark .add-claim-btn {
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.add-claim-btn:hover {
+  background: rgba(245, 158, 11, 0.22);
+  transform: translateY(-0.5px);
+  box-shadow: 0 3px 8px rgba(245, 158, 11, 0.16);
+}
+
+.add-claim-btn:active {
+  transform: scale(0.96);
+}
+
+.edit-claim-btn {
+  transition: all 0.18s ease;
+}
+
+.edit-claim-btn:hover {
+  transform: scale(1.08);
+}
+
+.zs-badge-claim-done {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #059669;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+body.theme-dark .zs-badge-claim-done {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.zs-badge-claim-pending {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.theme-dark .zs-badge-claim-pending {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
 

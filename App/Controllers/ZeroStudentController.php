@@ -64,6 +64,134 @@ class ZeroStudentController extends Controller
                 $input = $_POST;
             }
 
+            $action = $input['action'] ?? '';
+
+            // 1. Action: Add Faculty Claim (One-time submission for Faculty, or Admin)
+            if ($action === 'add_claim' || $action === 'claim') {
+                Auth::requirePermission('zero_student.claim', 'Add Faculty Claim');
+                $id = $input['id'] ?? null;
+                $claim = trim($input['facultyClaim'] ?? '');
+
+                if (!$id || $claim === '') {
+                    $this->json(['success' => false, 'error' => 'Record ID and Faculty Claim explanation are required.'], 400);
+                    return;
+                }
+
+                $records = $this->getRecordsData();
+                $user = Auth::user();
+                $userRole = Auth::userRole();
+                $found = false;
+                $updatedRecord = null;
+
+                foreach ($records as &$r) {
+                    if (($r['id'] ?? '') === $id) {
+                        // Strict check for faculty: must own the record & cannot edit if claim already exists
+                        if ($userRole === 'faculty') {
+                            $uInit  = strtoupper(trim($user['initials'] ?? ''));
+                            $uEmail = strtolower(trim($user['email'] ?? ''));
+                            $uName  = strtolower(trim($user['name'] ?? ''));
+                            $rInit  = strtoupper(trim($r['facultyInitials'] ?? ''));
+                            $rEmail = strtolower(trim($r['facultyEmail'] ?? ''));
+                            $rName  = strtolower(trim($r['facultyName'] ?? ''));
+
+                            $isOwner = ($uInit !== '' && $uInit === $rInit) ||
+                                       ($uEmail !== '' && $uEmail === $rEmail) ||
+                                       ($uName !== '' && $uName === $rName);
+
+                            if (!$isOwner) {
+                                $this->json(['success' => false, 'error' => 'Access Denied: You can only submit claims for your own sessions.'], 403);
+                                return;
+                            }
+
+                            if (!empty(trim($r['facultyClaim'] ?? ''))) {
+                                $this->json(['success' => false, 'error' => 'A faculty claim has already been submitted for this session and cannot be altered.'], 403);
+                                return;
+                            }
+                        }
+
+                        $r['facultyClaim'] = $claim;
+                        $r['claimedAt']    = date('c');
+                        $r['claimedBy']   = ($user['name'] ?? 'Faculty') . ' (' . ($user['initials'] ?? '') . ')';
+                        $r['claimStatus'] = 'Claimed';
+                        $found = true;
+                        $updatedRecord = $r;
+                        break;
+                    }
+                }
+                unset($r);
+
+                if (!$found) {
+                    $this->json(['success' => false, 'error' => 'Incident record not found.'], 404);
+                    return;
+                }
+
+                file_put_contents($this->jsonFile, json_encode($records, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                $this->json([
+                    'success' => true,
+                    'message' => 'Faculty claim submitted successfully.',
+                    'record'  => $updatedRecord
+                ]);
+                return;
+            }
+
+            // 2. Action: Edit Faculty Claim (Super Admin & HOD Only)
+            if ($action === 'edit_claim' || $action === 'edit') {
+                Auth::requirePermission('zero_student.edit', 'Edit Zero Student Record');
+                $id = $input['id'] ?? null;
+                $claim = trim($input['facultyClaim'] ?? '');
+
+                if (!$id || $claim === '') {
+                    $this->json(['success' => false, 'error' => 'Record ID and Faculty Claim explanation are required.'], 400);
+                    return;
+                }
+
+                $records = $this->getRecordsData();
+                $user = Auth::user();
+                $found = false;
+                $updatedRecord = null;
+
+                foreach ($records as &$r) {
+                    if (($r['id'] ?? '') === $id) {
+                        $r['facultyClaim']  = $claim;
+                        $r['claimEditedAt'] = date('c');
+                        $r['claimEditedBy'] = ($user['name'] ?? 'Administrator') . ' (' . Auth::userRole() . ')';
+                        $r['claimStatus']   = 'Claimed';
+                        $found = true;
+                        $updatedRecord = $r;
+                        break;
+                    }
+                }
+                unset($r);
+
+                if (!$found) {
+                    $this->json(['success' => false, 'error' => 'Incident record not found.'], 404);
+                    return;
+                }
+
+                file_put_contents($this->jsonFile, json_encode($records, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                $this->json([
+                    'success' => true,
+                    'message' => 'Faculty claim updated successfully by Administrator.',
+                    'record'  => $updatedRecord
+                ]);
+                return;
+            }
+
+            // 3. Action: Delete Record via POST
+            if ($action === 'delete') {
+                Auth::requirePermission('zero_student.delete', 'Delete Zero Student Record');
+                $id = $input['id'] ?? null;
+                if ($id) {
+                    $records = array_values(array_filter($this->getRecordsData(), fn($r) => ($r['id'] ?? '') !== $id));
+                    file_put_contents($this->jsonFile, json_encode($records, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                    $this->json(['success' => true, 'remaining' => count($records)]);
+                    return;
+                }
+                $this->json(['success' => false, 'error' => 'Missing record ID for deletion'], 400);
+                return;
+            }
+
+            // 4. Batch Import or Create New Record
             if (isset($input['batch']) && is_array($input['batch'])) {
                 Auth::requirePermission('zero_student.import', 'Batch Import Zero Student Records');
             } else {
@@ -77,15 +205,19 @@ class ZeroStudentController extends Controller
                 foreach ($input['batch'] as $item) {
                     $item['id'] = $item['id'] ?? ('zs_' . time() . '_' . bin2hex(random_bytes(3)));
                     $item['createdAt'] = $item['createdAt'] ?? date('c');
+                    $item['facultyClaim'] = $item['facultyClaim'] ?? '';
+                    $item['claimStatus'] = !empty(trim($item['facultyClaim'])) ? 'Claimed' : 'Pending';
                     array_unshift($records, $item);
                 }
             } elseif (!empty($input)) {
                 $input['id'] = $input['id'] ?? ('zs_' . time() . '_' . bin2hex(random_bytes(3)));
                 $input['createdAt'] = $input['createdAt'] ?? date('c');
+                $input['facultyClaim'] = $input['facultyClaim'] ?? '';
+                $input['claimStatus'] = !empty(trim($input['facultyClaim'])) ? 'Claimed' : 'Pending';
                 array_unshift($records, $input);
             }
 
-            file_put_contents($this->jsonFile, json_encode($records, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            file_put_contents($this->jsonFile, json_encode($records, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
             $this->json([
                 'success' => true,
                 'total' => count($records),

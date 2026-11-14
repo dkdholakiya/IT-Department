@@ -61,7 +61,7 @@ class Auth
                 'faculty' => [
                     'key' => 'faculty',
                     'name' => 'Faculty Member',
-                    'permissions' => ['dashboard.view', 'calendar.view', 'timetable.view', 'student_timetable.view', 'report.view', 'syllabus.view']
+                    'permissions' => ['dashboard.view', 'calendar.view', 'timetable.view', 'student_timetable.view', 'report.view', 'syllabus.view', 'zero_student.view', 'zero_student.claim']
                 ]
             ]
         ];
