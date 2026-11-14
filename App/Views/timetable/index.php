@@ -341,12 +341,41 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
   <!-- ================= APPLICATION SCRIPTS ================= -->
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/navbar.js') : 'assets/js/navbar.js'; ?>"></script>
-  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/facultyData.js') : 'assets/js/facultyData.js'; ?>"></script>
-  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/timetableData.js') : 'assets/js/timetableData.js'; ?>"></script>
   <?php 
   $appConfig = function_exists('app_config') ? app_config() : [];
+  $user = class_exists('Core\Auth') ? \Core\Auth::user() : null;
+  $canViewAll = class_exists('Core\Auth') ? \Core\Auth::canViewAllFaculty() : true;
+  $allTimetableData = function_exists('getMasterTimetableData') ? getMasterTimetableData() : [];
+
+  $userInitials = strtoupper(trim($user['initials'] ?? ''));
+  $userDept = $user['department'] ?? 'Information Technology';
+
+  // Both admin and faculty need master timetable data so the Alteration module
+  // can find available proxy faculty candidates when a faculty member marks an alteration
+  $timetableDataOutput = $allTimetableData;
+
+  $usersFile = defined('BASE_PATH') ? BASE_PATH . '/config/users.json' : dirname(__DIR__, 3) . '/config/users.json';
+  $rawUsers = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), true) : [];
+  $facultyDataOutput = [];
+  if (is_array($rawUsers)) {
+      foreach ($rawUsers as $u) {
+          $facultyDataOutput[] = [
+              'name'        => $u['name'] ?? '',
+              'initials'    => $u['initials'] ?? '',
+              'department'  => $u['department'] ?? '',
+              'designation' => $u['designation'] ?? ''
+          ];
+      }
+  }
   ?>
   <script>
+    const facultyData = <?php echo json_encode($facultyDataOutput, JSON_UNESCAPED_UNICODE); ?>;
+    const timetableData = <?php echo json_encode($timetableDataOutput, JSON_UNESCAPED_UNICODE); ?>;
+    window.canViewAllFaculty = <?php echo $canViewAll ? 'true' : 'false'; ?>;
+    window.loggedInUserInitials = <?php echo json_encode($userInitials); ?>;
+    window.loggedInUserDept = <?php echo json_encode($userDept); ?>;
+    window.loggedInUserName = <?php echo json_encode($user['name'] ?? ''); ?>;
+
     window.AUTO_SYNC_ENABLED = <?php echo json_encode(($appConfig['auto_sync_enabled'] ?? 1) == 1); ?>;
     window.AUTO_SYNC_INTERVAL = <?php echo json_encode(((int)($appConfig['auto_sync_interval'] ?? 300)) * 1000); ?>;
   </script>
@@ -372,8 +401,12 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
       const facDeptBadge = document.getElementById("facDeptBadge");
       const timetableBody = document.getElementById("timetableBody");
 
-      let currentActiveDept = "Information Technology";
-      let selectedInitials = "DRC";
+      let currentActiveDept = (!window.canViewAllFaculty && typeof window.loggedInUserDept === 'string' && window.loggedInUserDept.toLowerCase().includes('computer'))
+        ? "Computer Engineering"
+        : "Information Technology";
+      let selectedInitials = (!window.canViewAllFaculty && window.loggedInUserInitials)
+        ? window.loggedInUserInitials
+        : "DRC";
       let currentTab = "timetable"; // "timetable" or "leave"
 
       // Map Excel timetableData with official facultyData.js file to filter, name-match, and group by department
@@ -650,10 +683,14 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         // Select first faculty in selected department
         const faculty = mappedTimetable[selectedInitials];
         if (!faculty || !isDeptMatch(faculty.department, dept)) {
-          const keys = Object.keys(mappedTimetable);
-          const match = keys.find(k => isDeptMatch(mappedTimetable[k].department, dept));
-          if (match) {
-            loadTimetable(match);
+          if (window.canViewAllFaculty) {
+            const keys = Object.keys(mappedTimetable);
+            const match = keys.find(k => isDeptMatch(mappedTimetable[k].department, dept));
+            if (match) {
+              loadTimetable(match);
+            }
+          } else {
+            loadTimetable(selectedInitials);
           }
         } else {
           loadTimetable(selectedInitials);
@@ -741,7 +778,29 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
       function populateDropdown(searchQuery = "") {
         optionsListContainer.innerHTML = "";
         
-        // Collect faculty initials in official facultyData.js order
+        // Non-admin faculty: Strictly populate ONLY the logged-in user
+        if (!window.canViewAllFaculty && window.loggedInUserInitials) {
+          const initials = window.loggedInUserInitials;
+          const data = mappedTimetable[initials] || {
+            name: window.loggedInUserName || 'Faculty Member',
+            initials: initials,
+            department: currentActiveDept
+          };
+          const option = document.createElement("div");
+          option.className = "select-option selected";
+          option.setAttribute("data-initials", initials);
+          option.innerHTML = `
+            <span>1. ${data.name} (${initials})</span>
+            <span class="option-initials">${initials}</span>
+          `;
+          option.addEventListener("click", () => {
+            loadTimetable(initials);
+          });
+          optionsListContainer.appendChild(option);
+          return;
+        }
+
+        // Privileged roles (super_admin, hod, sub_admin): Collect all faculty initials
         let facultyKeys = [];
         if (typeof facultyData !== 'undefined') {
           facultyData.forEach(m => {
@@ -813,9 +872,20 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
 
       // Load and render timetable
       function loadTimetable(initials) {
+        if (!window.canViewAllFaculty && window.loggedInUserInitials && initials !== window.loggedInUserInitials) {
+          initials = window.loggedInUserInitials;
+        }
         selectedInitials = initials;
         const faculty = mappedTimetable[initials];
-        if (!faculty) return;
+        if (!faculty) {
+          if (!window.canViewAllFaculty) {
+            selectedFacultyText.innerText = (window.loggedInUserName || 'Faculty Member') + ` (${initials})`;
+            facAvatar.innerText = initials;
+            if (facName) facName.innerText = window.loggedInUserName || 'Faculty Member';
+            timetableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-xs text-[var(--text-muted)] font-semibold">No timetable schedule loaded for initials [${initials}]. Please contact your department coordinator.</td></tr>`;
+          }
+          return;
+        }
 
         // Auto-switch department tab if selected faculty belongs to the other department
         if (currentTab !== "leave" && !isDeptMatch(faculty.department, currentActiveDept)) {
@@ -1348,29 +1418,42 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         leaveToggleBtn.addEventListener("click", () => toggleLeaveMode());
       }
 
-      // Check URL parameters for direct faculty initials navigation
-      const urlParams = new URLSearchParams(window.location.search);
-      const paramInitials = urlParams.get("initials") || urlParams.get("faculty");
-      
-      if (paramInitials && mappedTimetable[paramInitials.toUpperCase()]) {
-        selectedInitials = paramInitials.toUpperCase();
-        const matchedDept = mappedTimetable[selectedInitials].department || "Information Technology";
-        setDepartmentTheme(matchedDept === "Both" ? "Information Technology" : matchedDept);
-        loadTimetable(selectedInitials);
-      } else {
-        // By default, show Information Technology department on initial load
-        const startingDept = "Information Technology";
-        const keys = Object.keys(mappedTimetable);
-        const defaultKey = keys.find(k => 
-          isDeptMatch(mappedTimetable[k].department, startingDept)
-        ) || keys[0];
-
-        if (defaultKey) {
-          selectedInitials = defaultKey;
+      if (!window.canViewAllFaculty && window.loggedInUserInitials) {
+        selectedInitials = window.loggedInUserInitials;
+        const matchedFaculty = mappedTimetable[selectedInitials];
+        let startingDept = (matchedFaculty && matchedFaculty.department) ? matchedFaculty.department : (window.loggedInUserDept || "Information Technology");
+        if (startingDept.toLowerCase().includes('computer') || startingDept.toLowerCase() === 'ce') {
+          startingDept = "Computer Engineering";
         } else {
-          selectedInitials = "DRC";
+          startingDept = "Information Technology";
         }
         setDepartmentTheme(startingDept);
+        loadTimetable(selectedInitials);
+      } else {
+        // Check URL parameters for direct faculty initials navigation (Privileged Admin Mode)
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramInitials = urlParams.get("initials") || urlParams.get("faculty");
+        
+        if (paramInitials && mappedTimetable[paramInitials.toUpperCase()]) {
+          selectedInitials = paramInitials.toUpperCase();
+          const matchedDept = mappedTimetable[selectedInitials].department || "Information Technology";
+          setDepartmentTheme(matchedDept === "Both" ? "Information Technology" : matchedDept);
+          loadTimetable(selectedInitials);
+        } else {
+          // By default, show Information Technology department on initial load
+          const startingDept = "Information Technology";
+          const keys = Object.keys(mappedTimetable);
+          const defaultKey = keys.find(k => 
+            isDeptMatch(mappedTimetable[k].department, startingDept)
+          ) || keys[0];
+
+          if (defaultKey) {
+            selectedInitials = defaultKey;
+          } else {
+            selectedInitials = "DRC";
+          }
+          setDepartmentTheme(startingDept);
+        }
       }
     });
   </script>

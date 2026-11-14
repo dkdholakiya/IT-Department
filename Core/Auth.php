@@ -473,6 +473,16 @@ class Auth
     }
 
     /**
+     * Check if active user has departmental oversight privileges
+     * (Super Admin, HOD, or Sub Admin) to view all faculty records & schedules.
+     */
+    public static function canViewAllFaculty(): bool
+    {
+        $role = self::userRole();
+        return in_array($role, ['super_admin', 'hod', 'sub_admin'], true);
+    }
+
+    /**
      * Authenticate and bind user profile into active session.
      *
      * @param array $user User data array

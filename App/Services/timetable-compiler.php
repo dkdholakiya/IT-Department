@@ -392,8 +392,19 @@ function compileTimetableData() {
     }
 
     if ($written) {
+        // Also persist clean JSON file for fast, secure server-side reading
+        $jsonTargetFile = $baseDir . '/uploads/timetable/timetable_data.json';
+        $jsonTargetDir  = dirname($jsonTargetFile);
+        if (!is_dir($jsonTargetDir)) {
+            @mkdir($jsonTargetDir, 0777, true);
+        }
+        @file_put_contents($jsonTargetFile, json_encode($timetableDataset, JSON_UNESCAPED_UNICODE), LOCK_EX);
+
         $futureTime = max(time(), (file_exists($excelFile) ? filemtime($excelFile) + 2 : time()));
         @touch($jsTargetFile, $futureTime);
+        if (file_exists($jsonTargetFile)) {
+            @touch($jsonTargetFile, $futureTime);
+        }
         $count = count($timetableDataset);
         return [
             'success' => true,
@@ -403,4 +414,50 @@ function compileTimetableData() {
     }
 
     return ['success' => false, 'message' => 'Failed to write compiled timetable data to assets/js/timetableData.js.'];
+}
+
+/**
+ * Retrieve master timetable data array securely on the server
+ *
+ * @return array
+ */
+function getMasterTimetableData(): array {
+    $baseDir = defined('BASE_PATH') ? BASE_PATH : dirname(__DIR__, 2);
+    $jsonFile = $baseDir . '/uploads/timetable/timetable_data.json';
+    if (file_exists($jsonFile)) {
+        $content = @file_get_contents($jsonFile);
+        $data = json_decode($content, true);
+        if (is_array($data) && !empty($data)) {
+            return $data;
+        }
+    }
+
+    $jsFile = $baseDir . '/assets/js/timetableData.js';
+    if (file_exists($jsFile)) {
+        $content = @file_get_contents($jsFile);
+        if (preg_match('/timetableData\s*=\s*(\{.*\});/s', $content, $matches)) {
+            $data = json_decode($matches[1], true);
+            if (is_array($data)) {
+                $targetDir = dirname($jsonFile);
+                if (!is_dir($targetDir)) {
+                    @mkdir($targetDir, 0777, true);
+                }
+                @file_put_contents($jsonFile, $matches[1], LOCK_EX);
+                return $data;
+            }
+        }
+    }
+
+    // Fallback: compile if needed
+    if (function_exists('compileTimetableData')) {
+        $res = compileTimetableData();
+        if (($res['success'] ?? false) && file_exists($jsonFile)) {
+            $data = json_decode(@file_get_contents($jsonFile), true);
+            if (is_array($data)) {
+                return $data;
+            }
+        }
+    }
+
+    return [];
 }

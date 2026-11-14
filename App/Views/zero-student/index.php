@@ -473,18 +473,59 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
     </div>
   </div>
 
+  <?php
+  $user = class_exists('Core\Auth') ? \Core\Auth::user() : null;
+  $canViewAll = class_exists('Core\Auth') ? \Core\Auth::canViewAllFaculty() : true;
+  $userInitials = strtoupper(trim($user['initials'] ?? ''));
+  $userDept = $user['department'] ?? 'Information Technology';
+
+  if ($canViewAll) {
+      $usersFile = defined('BASE_PATH') ? BASE_PATH . '/config/users.json' : dirname(__DIR__, 3) . '/config/users.json';
+      $rawUsers = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), true) : [];
+      $facultyDataOutput = [];
+      if (is_array($rawUsers)) {
+          foreach ($rawUsers as $u) {
+              $facultyDataOutput[] = [
+                  'name'        => $u['name'] ?? '',
+                  'initials'    => $u['initials'] ?? '',
+                  'department'  => $u['department'] ?? '',
+                  'designation' => $u['designation'] ?? ''
+              ];
+          }
+      }
+  } else {
+      $facultyDataOutput = [
+          [
+              'name'        => $user['name'] ?? '',
+              'initials'    => $userInitials,
+              'department'  => $userDept,
+              'designation' => $user['designation'] ?? 'Faculty Member'
+          ]
+      ];
+  }
+  ?>
+
   <!-- Injected JSON Records Data from PHP Backend -->
   <script>
     window.initialZeroRecords = <?php echo json_encode($records ?? [], JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
     window.canDeleteZeroStudent = <?php echo (class_exists('Core\Auth') && \Core\Auth::can('zero_student.delete')) ? 'true' : 'false'; ?>;
     window.canExportZeroStudent = <?php echo (class_exists('Core\Auth') && \Core\Auth::can('zero_student.export')) ? 'true' : 'false'; ?>;
+    window.canViewAllFaculty = <?php echo $canViewAll ? 'true' : 'false'; ?>;
+    window.loggedInUser = <?php echo json_encode([
+        'name'        => $user['name'] ?? '',
+        'initials'    => $userInitials,
+        'email'       => $user['email'] ?? '',
+        'department'  => $userDept,
+        'designation' => $user['designation'] ?? 'Faculty Member'
+    ], JSON_UNESCAPED_UNICODE); ?>;
+    window.facultyData = <?php echo json_encode($facultyDataOutput, JSON_UNESCAPED_UNICODE); ?>;
+    const facultyData = window.facultyData;
   </script>
 
   <!-- ================= APPLICATION JAVASCRIPT: Modular Architecture ================= -->
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') : 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/sidebar.js') : 'assets/js/sidebar.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/navbar.js') : 'assets/js/navbar.js'; ?>"></script>
-  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/facultyData.js') : 'assets/js/facultyData.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/zero-student-index.js') : 'assets/js/zero-student-index.js'; ?>"></script>
 </body>
 </html>

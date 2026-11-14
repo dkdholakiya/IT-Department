@@ -54,6 +54,9 @@
 
   // --- INITIALIZATION ---
   document.addEventListener('DOMContentLoaded', () => {
+    if (!window.canViewAllFaculty && window.loggedInUser && window.loggedInUser.initials) {
+      selectedFaculty = window.loggedInUser.initials.toUpperCase().trim();
+    }
     initFlatpickrDateFilter();
     populateFacultyFilter();
     setupEventListeners();
@@ -85,8 +88,23 @@
   // --- POPULATE FACULTY FILTER DROPDOWN ---
   function populateFacultyFilter() {
     if (!facultyFilterSelect) return;
+    facultyFilterSelect.innerHTML = '';
 
-    // Build faculty map from facultyData if available, plus unique records
+    // Non-admin faculty: Strictly populate ONLY the logged-in user and lock dropdown
+    if (!window.canViewAllFaculty && window.loggedInUser) {
+      const u = window.loggedInUser;
+      const init = (u.initials || '').toUpperCase().trim();
+      const opt = document.createElement('option');
+      opt.value = init;
+      opt.textContent = `${u.name || 'Faculty Member'} (${init})`;
+      opt.selected = true;
+      facultyFilterSelect.appendChild(opt);
+      facultyFilterSelect.disabled = true;
+      selectedFaculty = init;
+      return;
+    }
+
+    // Build faculty map from facultyData if available, plus unique records (Admin Oversight Mode)
     const facultyMap = new Map();
 
     if (Array.isArray(window.facultyData)) {
@@ -324,7 +342,13 @@
   // --- RESET ALL FILTERS ---
   function resetAllFilters() {
     activeDept = 'all';
-    selectedFaculty = '';
+    if (!window.canViewAllFaculty && window.loggedInUser && window.loggedInUser.initials) {
+      selectedFaculty = window.loggedInUser.initials.toUpperCase().trim();
+      if (facultyFilterSelect) facultyFilterSelect.value = selectedFaculty;
+    } else {
+      selectedFaculty = '';
+      if (facultyFilterSelect) facultyFilterSelect.value = '';
+    }
     selectedSem = '';
     selectedDate = '';
     searchQuery = '';

@@ -20,7 +20,7 @@ return [
     // Login OTP Authentication Toggle
     // 1 = Enabled: Requires 6-digit email OTP verification before dashboard access
     // 0 = Disabled: Direct login with email & password, no OTP sent, redirects directly to dashboard
-    'loginn_otp' => 1,
+    'loginn_otp' => 0,
 
     'mail_enabled' => 1, // Toggle: 1 to enable email system, 0 to disable
     'zero_mail_enabled' => 1, // Toggle: 1 to enable email for zero student report, 0 to disable

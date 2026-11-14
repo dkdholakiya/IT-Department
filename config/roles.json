@@ -586,7 +586,8 @@
                 "student_timetable.view",
                 "report.view",
                 "syllabus.view",
-                "zero_student.view"
+                "zero_student.view",
+                "timetable.alteration"
             ]
         }
     }

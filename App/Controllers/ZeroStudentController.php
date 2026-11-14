@@ -27,6 +27,10 @@ class ZeroStudentController extends Controller
     {
         Auth::requirePermission('zero_student.view', 'Zero Student Directory');
         $records = $this->getRecordsData();
+        $user = Auth::user();
+        if (!Auth::canViewAllFaculty()) {
+            $records = $this->filterRecordsForUser($records, $user);
+        }
         $this->view('zero-student.index', ['records' => $records]);
     }
 
@@ -107,13 +111,48 @@ class ZeroStudentController extends Controller
             return;
         }
 
-        // Default GET: Return all records
+        // Default GET: Return records (filtered for non-admin)
         Auth::requirePermission('zero_student.view', 'Zero Student Directory');
+        $records = $this->getRecordsData();
+        $user = Auth::user();
+        if (!Auth::canViewAllFaculty()) {
+            $records = $this->filterRecordsForUser($records, $user);
+        }
         $this->json([
             'success' => true,
-            'count' => count($this->getRecordsData()),
-            'records' => $this->getRecordsData()
+            'count' => count($records),
+            'records' => $records
         ]);
+    }
+
+    /**
+     * Filter incident records strictly to the authenticated faculty user
+     */
+    private function filterRecordsForUser(array $records, ?array $user): array
+    {
+        if (!$user) {
+            return [];
+        }
+        $userInitials = strtoupper(trim($user['initials'] ?? ''));
+        $userEmail    = strtolower(trim($user['email'] ?? ''));
+        $userName     = strtolower(trim($user['name'] ?? ''));
+
+        return array_values(array_filter($records, function ($r) use ($userInitials, $userEmail, $userName) {
+            $rInitials = strtoupper(trim($r['facultyInitials'] ?? ''));
+            $rEmail    = strtolower(trim($r['facultyEmail'] ?? ''));
+            $rName     = strtolower(trim($r['facultyName'] ?? ''));
+
+            if ($userInitials !== '' && $rInitials === $userInitials) {
+                return true;
+            }
+            if ($userEmail !== '' && $rEmail === $userEmail) {
+                return true;
+            }
+            if ($userName !== '' && $rName === $userName) {
+                return true;
+            }
+            return false;
+        }));
     }
 
     /**
