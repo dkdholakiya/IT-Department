@@ -1031,24 +1031,55 @@ body.theme-dark .clock-preset-btn {
 /* ==========================================================================
    8. INTERACTIVE VISUAL DATE PICKER MODAL
    ========================================================================== */
+.date-picker-modal,
+.date-modal-content {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
 .date-modal-header {
   background: rgba(var(--color-primary-rgb), 0.08);
-  padding: 18px 20px 12px;
+  padding: 16px 20px 14px;
   border-bottom: 1px solid var(--glass-border-light);
 }
 
 .date-year-badge {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 12px;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   color: var(--color-primary);
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.2s ease;
+  user-select: none;
+}
+
+.date-year-badge:hover {
+  opacity: 0.8;
+}
+
+.date-today-chip {
+  background: rgba(var(--color-primary-rgb), 0.1) !important;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.25) !important;
+  color: var(--color-primary) !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 2px 10px !important;
+  border-radius: 9999px !important;
+  transition: all 0.2s ease;
+}
+
+.date-today-chip:hover {
+  background: var(--color-primary) !important;
+  color: #ffffff !important;
 }
 
 .date-selected-title {
   font-family: 'PT Serif', serif;
-  font-size: 1.6rem;
+  font-size: 1.65rem;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.2;
@@ -1061,7 +1092,23 @@ body.theme-dark .clock-preset-btn {
   padding: 12px 16px 6px;
 }
 
+.date-month-title-btn {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  padding: 4px 10px !important;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.date-month-title-btn:hover {
+  background: rgba(var(--color-primary-rgb), 0.08);
+  color: var(--color-primary) !important;
+}
+
 .date-month-title {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
@@ -1084,6 +1131,7 @@ body.theme-dark .clock-preset-btn {
 body.theme-dark .date-nav-btn {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
 }
 
 .date-nav-btn:hover {
@@ -1093,89 +1141,229 @@ body.theme-dark .date-nav-btn {
 }
 
 .date-modal-body {
-  padding: 8px 16px 16px !important;
+  padding: 10px 18px 16px !important;
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 5px;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .calendar-weekday {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 11px;
   font-weight: 700;
   color: var(--color-primary);
   padding: 4px 0;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  user-select: none;
 }
 
 .calendar-day-cell {
   aspect-ratio: 1;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--text-primary);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.16s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
-  border: 1px solid transparent;
+  border: 1.5px solid transparent;
 }
 
 .calendar-day-cell.other-month {
-  opacity: 0.25;
+  opacity: 0.28;
+  color: var(--text-muted);
 }
 
 .calendar-day-cell:hover:not(.empty) {
-  background: rgba(var(--color-primary-rgb), 0.15);
-  scale: 1.1;
+  background: rgba(var(--color-primary-rgb), 0.12);
+  color: var(--color-primary);
+  transform: scale(1.08);
 }
 
 .calendar-day-cell.today {
   border-color: var(--color-primary);
   color: var(--color-primary);
   font-weight: 700;
+  background: rgba(var(--color-primary-rgb), 0.05);
 }
 
 .calendar-day-cell.active {
-  background: var(--color-primary) !important;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%) !important;
   color: #ffffff !important;
   font-weight: 700;
-  box-shadow: 0 0 12px rgba(var(--color-primary-rgb), 0.5);
-  scale: 1.08;
+  border-color: transparent !important;
+  box-shadow: 0 4px 14px rgba(var(--color-primary-rgb), 0.45);
+  transform: scale(1.08);
 }
 
 .date-presets-bar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--glass-border-light);
+}
+
+.date-presets-label {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
 }
 
 .date-preset-btn {
-  background: rgba(0, 0, 0, 0.04) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  color: var(--text-muted) !important;
+  background: rgba(var(--color-primary-rgb), 0.06) !important;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.2) !important;
+  color: var(--text-secondary) !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 11px !important;
-  padding: 3px 10px !important;
+  font-weight: 600 !important;
+  padding: 3px 12px !important;
   border-radius: 9999px !important;
   transition: all 0.2s ease;
 }
 
 body.theme-dark .date-preset-btn {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #e2e8f0 !important;
 }
 
 .date-preset-btn:hover {
   background: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
   color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+/* Fast Month/Year Picker Overlay */
+.date-month-picker-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--glass-surface-strong);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 16px;
+  border-radius: 1rem;
+  z-index: 10;
+}
+
+.fast-months-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.fast-month-btn {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 4px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+body.theme-dark .fast-month-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.fast-month-btn:hover {
+  background: rgba(var(--color-primary-rgb), 0.15);
+  color: var(--color-primary);
+}
+
+.fast-month-btn.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Footer Actions (Date & Clock Modals) */
+.date-modal-footer,
+.clock-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(var(--color-primary-rgb), 0.04);
+  border-top: 1px solid var(--glass-border-light);
+}
+
+.date-modal-cancel-btn,
+.clock-modal-cancel-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: var(--text-secondary);
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 18px;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+body.theme-dark .date-modal-cancel-btn,
+body.theme-dark .clock-modal-cancel-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+}
+
+.date-modal-cancel-btn:hover,
+.clock-modal-cancel-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+}
+
+.date-modal-set-btn,
+.clock-modal-set-btn {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 7px 22px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px rgba(var(--color-primary-rgb), 0.35);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.date-modal-set-btn:hover,
+.clock-modal-set-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(var(--color-primary-rgb), 0.45);
+  color: #ffffff !important;
+}
+
+.date-modal-set-btn:active,
+.clock-modal-set-btn:active {
+  transform: translateY(0);
 }
 
 /* ==========================================================================

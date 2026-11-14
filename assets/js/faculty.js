@@ -307,9 +307,8 @@
                 ${member.initials || 'FC'}
               </div>
               <div class="min-w-0 flex-1">
-                <div class="font-bold text-xs sm:text-sm text-[var(--text-primary)] leading-tight truncate flex items-center gap-1.5">
+                <div class="font-bold text-xs sm:text-sm text-[var(--text-primary)] leading-tight truncate">
                   <span class="truncate">${member.name}</span>
-                  ${member.role === 'super_admin' ? `<span class="px-1.5 py-0.2 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-purple-500/15 text-purple-600 dark:text-purple-400 border border-purple-500/20 shrink-0">Admin</span>` : ''}
                 </div>
                 <div class="flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-xs text-[var(--text-muted)] flex-wrap">
                   <span class="font-mono font-semibold text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded bg-black/5 dark:bg-white/10 text-[var(--text-secondary)]">

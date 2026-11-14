@@ -224,9 +224,33 @@
             "permissions": [
                 {
                     "id": "report.view",
-                    "name": "View Workload Report Form",
-                    "description": "Access the 4-step daily workload and lecture reporting wizard",
+                    "name": "View Workload Reports Directory",
+                    "description": "Access workload and activity reports list and inspect details",
                     "type": "view"
+                },
+                {
+                    "id": "report.create",
+                    "name": "Create Workload Report",
+                    "description": "Create and submit a new academic activity or workload report",
+                    "type": "create"
+                },
+                {
+                    "id": "report.edit",
+                    "name": "Edit Workload Report",
+                    "description": "Modify existing activity or workload report details and records",
+                    "type": "edit"
+                },
+                {
+                    "id": "report.delete",
+                    "name": "Delete Workload Report",
+                    "description": "Permanently remove a report record from the master directory",
+                    "type": "delete"
+                },
+                {
+                    "id": "report.export",
+                    "name": "Export Reports Excel",
+                    "description": "Download workload report directory spreadsheet report",
+                    "type": "export"
                 },
                 {
                     "id": "report.submit",
@@ -501,6 +525,9 @@
                 "workload.view",
                 "workload.export",
                 "report.view",
+                "report.create",
+                "report.edit",
+                "report.export",
                 "report.submit",
                 "report.draft",
                 "report.preview",
@@ -556,6 +583,7 @@
                 "report.view",
                 "report.preview",
                 "report.print",
+                "report.export",
                 "syllabus.view",
                 "syllabus.export_all",
                 "syllabus.export_subject",
@@ -585,9 +613,48 @@
                 "timetable.view",
                 "student_timetable.view",
                 "report.view",
+                "report.create",
+                "report.edit",
+                "report.submit",
+                "report.draft",
+                "report.preview",
+                "report.print",
                 "syllabus.view",
                 "zero_student.view",
                 "timetable.alteration"
+            ]
+        },
+        "tpa_team": {
+            "key": "tpa_team",
+            "name": "TPA TEAM",
+            "badge": "TPA TEAM",
+            "badge_color": "teal",
+            "description": "Custom security role for TPA TEAM.",
+            "is_system": false,
+            "allow_delete": true,
+            "permissions": [
+                "dashboard.view",
+                "dashboard.co2_enrich",
+                "dashboard.cameras",
+                "dashboard.edit_setpoints",
+                "dashboard.water_flow",
+                "dashboard.copilot",
+                "calendar.view",
+                "calendar.print",
+                "calendar.copy",
+                "timetable.view",
+                "timetable.alteration",
+                "student_timetable.view",
+                "student_timetable.print",
+                "report.view",
+                "report.create",
+                "report.export",
+                "report.submit",
+                "report.preview",
+                "report.print",
+                "report.reset",
+                "syllabus.view",
+                "zero_student.view"
             ]
         }
     }

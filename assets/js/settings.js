@@ -282,20 +282,12 @@
       faculty: 'Faculty'
     };
 
-    const conciseBadges = {
-      super_admin: 'Master',
-      hod: 'No Delete',
-      sub_admin: 'View Only',
-      faculty: 'Academic'
-    };
-
     let html = '';
     roleKeys.forEach((key) => {
       const roleDef = roles[key] || {};
       const isActive = key === activeRoleKey;
       const icon = iconMap[key] || '⭐';
       const name = conciseNames[key] || roleDef.name || key;
-      const badge = conciseBadges[key] || roleDef.badge || (roleDef.is_system ? 'Core' : 'Custom');
       const isCustom = !roleDef.is_system;
       const canDelete = isCustom && (window.canDeleteRole !== false);
 
@@ -317,7 +309,6 @@
           class="role-pill-btn ${isActive ? 'active bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'} px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0"
         >
           <span>${icon} ${escapeHtml(name)}</span>
-          <span class="px-1.5 py-0.5 rounded-full text-[9px] ${isActive ? 'bg-white/20 text-white' : (isCustom ? 'bg-purple-500/20 text-purple-600 dark:text-purple-400 font-bold' : 'bg-black/10 dark:bg-white/10 text-[var(--text-muted)]')}">${escapeHtml(badge)}</span>
           ${deleteIconHtml}
         </button>
       `;
@@ -486,7 +477,7 @@
             <!-- Quick Toggle All for this module -->
             ${
               isSuperAdmin
-                ? `<span class="text-[11px] font-bold text-purple-600 dark:text-purple-400">Master Locked (*)</span>`
+                ? `<span class="text-[11px] font-bold text-purple-600 dark:text-purple-400">Full Access (*)</span>`
                 : `<button
                     type="button"
                     class="toggle-all-module-btn px-2.5 py-1 rounded-lg glass-pill text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] transition"
@@ -503,7 +494,6 @@
       `;
 
       perms.forEach((p) => {
-        const isChecked = workingPermissions.has(p.id) || isSuperAdmin;
         const isDeleteAction = p.type === 'delete';
         const isWriteAction = ['create', 'edit', 'delete', 'toggle', 'send', 'upload', 'sync'].includes(p.type);
 
@@ -515,8 +505,9 @@
         const lockedBySuperAdmin = isSuperAdmin;
 
         const isLocked = lockedBySuperAdmin || lockedByHod || lockedBySubAdmin;
+        const isChecked = isSuperAdmin || (!lockedByHod && !lockedBySubAdmin && workingPermissions.has(p.id));
         const lockReason = lockedBySuperAdmin
-          ? 'Master Super Admin Wildcard'
+          ? 'Super Admin Wildcard (Full Access)'
           : lockedByHod
           ? 'HOD Role Strictly Forbidden from Delete'
           : lockedBySubAdmin

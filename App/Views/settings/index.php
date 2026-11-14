@@ -35,58 +35,60 @@ $baseUrl = function_exists('base_url') ? base_url('') : './';
       <main class="flex-1 min-h-0 min-w-0 glass-card p-3 sm:p-5 flex flex-col justify-between overflow-hidden relative transition-all duration-300">
 
         <!-- 1. TOP HEADER & NAVIGATION TABS BAR -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-black/5 dark:border-white/10 shrink-0">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 pb-3 border-b border-black/5 dark:border-white/10 shrink-0">
           
-          <!-- Left: Tab Navigation Buttons -->
-          <div class="inline-flex items-center p-1 rounded-2xl glass-pill border border-white/80 dark:border-white/10 shrink-0 self-start md:self-auto gap-1">
-            <button
-              type="button"
-              id="tabOverviewBtn"
-              data-tab="overview"
-              class="settings-tab-btn active px-3 sm:px-4 py-1.5 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer bg-[var(--color-primary)] text-white shadow-sm"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
-                <rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>
-              </svg>
-              <span>Settings Hub</span>
-            </button>
+          <!-- Left: Tab Navigation Buttons (Fully Responsive, Smooth Horizontal Scroll on Mobile, No Text Wrapping) -->
+          <div class="w-full sm:w-auto max-w-full overflow-x-auto no-scrollbar py-0.5">
+            <div class="inline-flex items-center p-1 rounded-2xl glass-pill border border-white/80 dark:border-white/10 shrink-0 gap-1 font-sans">
+              <button
+                type="button"
+                id="tabOverviewBtn"
+                data-tab="overview"
+                class="settings-tab-btn active px-3 sm:px-4 py-1.5 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer bg-[var(--color-primary)] text-white shadow-sm whitespace-nowrap shrink-0"
+              >
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                  <rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                </svg>
+                <span>Settings Hub</span>
+              </button>
 
-            <button
-              type="button"
-              id="tabRolesBtn"
-              data-tab="roles"
-              class="settings-tab-btn px-3 sm:px-4 py-1.5 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-              <span>Roles & Permissions</span>
-              <span class="px-1.5 py-0.2 rounded-full text-[9px] bg-white/20 dark:bg-white/10 text-current ml-0.5">4 Roles</span>
-            </button>
+              <button
+                type="button"
+                id="tabRolesBtn"
+                data-tab="roles"
+                class="settings-tab-btn px-3 sm:px-4 py-1.5 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap shrink-0"
+              >
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                <span>Roles & Permissions</span>
+                <span class="px-1.5 py-0.2 rounded-full text-[9px] bg-white/20 dark:bg-white/10 text-current ml-0.5">4 Roles</span>
+              </button>
 
-            <button
-              type="button"
-              id="tabUsersBtn"
-              data-tab="users"
-              class="settings-tab-btn px-3 sm:px-4 py-1.5 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
-              <span>Staff Roles</span>
-              <span class="px-1.5 py-0.2 rounded-full text-[9px] bg-white/20 dark:bg-white/10 text-current ml-0.5"><?php echo count($users); ?></span>
-            </button>
+              <button
+                type="button"
+                id="tabUsersBtn"
+                data-tab="users"
+                class="settings-tab-btn px-3 sm:px-4 py-1.5 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap shrink-0"
+              >
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>Staff Roles</span>
+                <span class="px-1.5 py-0.2 rounded-full text-[9px] bg-white/20 dark:bg-white/10 text-current ml-0.5"><?php echo count($users); ?></span>
+              </button>
+            </div>
           </div>
 
           <!-- Right: Active Role Status Pill & Sync Status -->
-          <div class="flex items-center gap-2 self-end md:self-auto">
+          <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
             <span class="text-[11px] text-[var(--text-muted)] hidden sm:inline">Active Session:</span>
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-pill border border-white/80 dark:border-white/10 text-xs font-bold text-[var(--text-primary)]">
-              <span class="w-2 h-2 rounded-full bg-[var(--color-primary)] animate-pulse"></span>
-              <span><?php echo htmlspecialchars($currentUser['name'] ?? 'User'); ?></span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider bg-[var(--color-primary)]/15 text-[var(--color-primary)]">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-pill border border-white/80 dark:border-white/10 text-xs font-bold text-[var(--text-primary)] whitespace-nowrap">
+              <span class="w-2 h-2 rounded-full bg-[var(--color-primary)] animate-pulse shrink-0"></span>
+              <span class="truncate max-w-[130px] sm:max-w-none"><?php echo htmlspecialchars($currentUser['name'] ?? 'User'); ?></span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider bg-[var(--color-primary)]/15 text-[var(--color-primary)] shrink-0">
                 <?php
                   $currRole = \Core\Auth::userRole();
                   if ($currRole === 'super_admin') echo 'Super Admin (Dev)';
@@ -133,13 +135,13 @@ $baseUrl = function_exists('base_url') ? base_url('') : './';
                   <div class="p-2.5 rounded-2xl glass-pill border border-purple-500/30 flex flex-col">
                     <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-600 dark:text-purple-400">👑 Super Admin</span>
                     <strong class="text-xs text-[var(--text-primary)] mt-0.5">Developer Role</strong>
-                    <span class="text-[10px] text-[var(--text-muted)] mt-0.5">Full Master Access (*)</span>
+                    <span class="text-[10px] text-[var(--text-muted)] mt-0.5">Full System Access (*)</span>
                   </div>
 
                   <div class="p-2.5 rounded-2xl glass-pill border border-blue-500/30 flex flex-col">
                     <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">🏛️ HOD</span>
                     <strong class="text-xs text-[var(--text-primary)] mt-0.5">Dept Head</strong>
-                    <span class="text-[10px] text-amber-600 dark:text-amber-400 font-bold mt-0.5">Strictly No Delete</span>
+                    <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold mt-0.5">Administrative</span>
                   </div>
 
                   <div class="p-2.5 rounded-2xl glass-pill border border-amber-500/30 flex flex-col">
@@ -289,13 +291,13 @@ $baseUrl = function_exists('base_url') ? base_url('') : './';
                   <div class="p-3 rounded-2xl glass-pill border border-purple-500/20">
                     <span class="block text-2xl font-black text-purple-600 dark:text-purple-400"><?php echo $roleUserCounts['super_admin']; ?></span>
                     <span class="text-[11px] font-bold text-[var(--text-primary)]">Super Admin</span>
-                    <span class="block text-[10px] text-[var(--text-muted)]">Dev Master</span>
+                    <span class="block text-[10px] text-[var(--text-muted)]">Full Access</span>
                   </div>
 
                   <div class="p-3 rounded-2xl glass-pill border border-blue-500/20">
                     <span class="block text-2xl font-black text-blue-600 dark:text-blue-400"><?php echo $roleUserCounts['hod']; ?></span>
                     <span class="text-[11px] font-bold text-[var(--text-primary)]">HOD</span>
-                    <span class="block text-[10px] text-amber-500 font-bold">No-Delete</span>
+                    <span class="block text-[10px] text-blue-600 dark:text-blue-400 font-bold">Dept Head</span>
                   </div>
 
                   <div class="p-3 rounded-2xl glass-pill border border-amber-500/20">
@@ -334,41 +336,37 @@ $baseUrl = function_exists('base_url') ? base_url('') : './';
               <!-- Role Tabs Capsule: Continuous horizontal scrollable pill bar -->
               <div class="flex items-center gap-1.5 min-w-0 max-w-full overflow-x-auto no-scrollbar py-0.5">
                 <div id="roleSelectorPills" class="inline-flex items-center p-1 rounded-2xl glass-pill border border-white/80 dark:border-white/10 shrink-0 gap-1 font-sans">
-                  <!-- Dynamically rendered by settings.js with concise labels & compact badges -->
+                  <!-- Dynamically rendered by settings.js with clean role names -->
                   <button
                     type="button"
                     data-role="super_admin"
-                    class="role-pill-btn active px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer bg-[var(--color-primary)] text-white shadow-sm"
+                    class="role-pill-btn active px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer bg-[var(--color-primary)] text-white shadow-sm whitespace-nowrap shrink-0"
                   >
                     <span>👑 Super Admin</span>
-                    <span class="px-1.5 py-0.5 rounded-full text-[9px] bg-white/20">Master</span>
                   </button>
 
                   <button
                     type="button"
                     data-role="hod"
-                    class="role-pill-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                    class="role-pill-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap shrink-0"
                   >
                     <span>🏛️ HOD</span>
-                    <span class="px-1.5 py-0.5 rounded-full text-[9px] bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold">No Delete</span>
                   </button>
 
                   <button
                     type="button"
                     data-role="sub_admin"
-                    class="role-pill-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                    class="role-pill-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap shrink-0"
                   >
                     <span>🛡️ Sub Admin</span>
-                    <span class="px-1.5 py-0.5 rounded-full text-[9px] bg-black/10 dark:bg-white/10">View Only</span>
                   </button>
 
                   <button
                     type="button"
                     data-role="faculty"
-                    class="role-pill-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                    class="role-pill-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] whitespace-nowrap shrink-0"
                   >
                     <span>👨‍🏫 Faculty</span>
-                    <span class="px-1.5 py-0.5 rounded-full text-[9px] bg-black/10 dark:bg-white/10">Academic</span>
                   </button>
                 </div>
 
@@ -388,9 +386,9 @@ $baseUrl = function_exists('base_url') ? base_url('') : './';
               </div>
 
               <!-- Action Toolbar: Search + Reset + Save Buttons (Strictly single line, perfectly aligned) -->
-              <div class="flex items-center gap-2 self-end lg:self-auto shrink-0 flex-nowrap font-sans">
+              <div class="flex items-center gap-2 w-full lg:w-auto justify-between lg:justify-end shrink-0 flex-nowrap font-sans">
                 <!-- Search Filter Input -->
-                <div class="relative w-40 sm:w-48">
+                <div class="relative flex-1 sm:w-44 lg:w-48 min-w-[120px]">
                   <input
                     type="text"
                     id="permSearchInput"
@@ -407,7 +405,7 @@ $baseUrl = function_exists('base_url') ? base_url('') : './';
                 <button
                   type="button"
                   id="resetRoleDefaultsBtn"
-                  class="h-8 px-3 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 cursor-pointer shrink-0"
+                  class="h-8 px-2.5 sm:px-3 rounded-xl glass-pill border border-white/80 dark:border-white/10 text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center gap-1.5 cursor-pointer shrink-0"
                   title="Reset role back to recommended system defaults"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -422,7 +420,7 @@ $baseUrl = function_exists('base_url') ? base_url('') : './';
                 <button
                   type="button"
                   id="saveRolePermissionsBtn"
-                  class="h-8 px-3.5 rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-dark,var(--color-primary))] hover:brightness-110 active:scale-95 text-white text-xs font-bold shadow-md shadow-[var(--color-primary)]/20 flex items-center gap-1.5 transition cursor-pointer shrink-0 whitespace-nowrap"
+                  class="h-8 px-3 sm:px-3.5 rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-dark,var(--color-primary))] hover:brightness-110 active:scale-95 text-white text-xs font-bold shadow-md shadow-[var(--color-primary)]/20 flex items-center gap-1.5 transition cursor-pointer shrink-0 whitespace-nowrap"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>

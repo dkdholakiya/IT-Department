@@ -27,8 +27,17 @@ $r->addRoute(['POST', 'OPTIONS'], '/api/faculty/send-credentials.php', 'FacultyC
 $r->addRoute('GET', '/calendar', 'CalendarController@index');
 $r->addRoute('GET', '/calendar.php', 'CalendarController@index');
 
+// ── Report Module ──
 $r->addRoute('GET', '/report', 'ReportController@index');
 $r->addRoute('GET', '/report.php', 'ReportController@index');
+$r->addRoute(['GET', 'POST'], '/report-create', 'ReportController@create');
+$r->addRoute(['GET', 'POST'], '/report-create.php', 'ReportController@create');
+$r->addRoute(['GET', 'POST'], '/report/create', 'ReportController@create');
+$r->addRoute(['GET', 'POST'], '/report-edit', 'ReportController@create');
+$r->addRoute(['GET', 'POST'], '/report-edit.php', 'ReportController@create');
+$r->addRoute(['GET', 'POST'], '/report/edit', 'ReportController@create');
+$r->addRoute(['GET', 'POST', 'DELETE', 'OPTIONS'], '/api/report-records', 'ReportController@records');
+$r->addRoute(['GET', 'POST', 'DELETE', 'OPTIONS'], '/api/report-records.php', 'ReportController@records');
 
 $r->addRoute('GET', '/syllabus-papers', 'SyllabusController@index');
 $r->addRoute('GET', '/syllabus-papers.php', 'SyllabusController@index');

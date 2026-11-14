@@ -175,3 +175,18 @@ body.theme-dark .glass-pill {
   pointer-events: none;
 }
 
+/* ==========================================================================
+   UNIVERSAL NO-SCROLLBAR UTILITY (Cross-Browser: Chrome, Safari, Edge, Firefox)
+   ========================================================================== */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+  -webkit-overflow-scrolling: touch;
+}
+

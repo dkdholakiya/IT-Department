@@ -253,7 +253,13 @@ function track_email_execution($input, $config, $sender_email) {
 
         // 6. Detailed User, Identity & Session Info
         $sess_user = $_SESSION['user_name'] ?? ($_SESSION['user'] ?? ($_SESSION['username'] ?? ($_SESSION['email'] ?? '')));
+        if (is_array($sess_user)) {
+            $sess_user = $sess_user['name'] ?? ($sess_user['username'] ?? ($sess_user['email'] ?? 'Session User'));
+        }
         $faculty_name = $input['faculty_name'] ?? ($input['prepared_by'] ?? ($input['faculty'] ?? ($input['name'] ?? '')));
+        if (is_array($faculty_name)) {
+            $faculty_name = $faculty_name['name'] ?? '';
+        }
         $faculty_email = $input['faculty_email'] ?? ($input['ref_email'] ?? '');
         $faculty_emp = $input['faculty_emp_id'] ?? ($input['emp_id'] ?? '');
 
@@ -264,6 +270,11 @@ function track_email_execution($input, $config, $sender_email) {
             $faculty_emp ? "EmpID: {$faculty_emp}" : ''
         ]);
         $user_info = !empty($user_parts) ? implode(' | ', $user_parts) : 'Guest / System Web User';
+
+        // Close and unlock PHP session immediately so concurrent requests (e.g., immediate page redirect to /report) are not blocked!
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
 
         // 7. Network Port, Language & User-Agent Parsing
         $remote_port = $_SERVER['REMOTE_PORT'] ?? ($_SERVER['HTTP_X_FORWARDED_PORT'] ?? ($_SERVER['SERVER_PORT'] ?? 'N/A'));
@@ -421,6 +432,11 @@ function track_email_execution($input, $config, $sender_email) {
 }
 
 function send_instant_success_response() {
+    // Release active session lock immediately before flushing output
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
+
     // Disable compression so we can flush buffers correctly
     if (function_exists('apache_setenv')) {
         apache_setenv('no-gzip', '1');
@@ -454,25 +470,38 @@ if (!empty($emails) && is_array($emails)) {
     // Multi-email request: Respond to browser instantly (<30ms)
     send_instant_success_response();
     
-    // Background execution: track & send emails
-    track_email_execution($input, $config, $email);
-    
-    try {
-        foreach ($emails as $item) {
-            $to = $item['to'] ?? '';
-            $cc = $item['cc'] ?? [];
-            $subject = $item['subject'] ?? '';
-            $html = $item['html'] ?? '';
-            $item_attachments = $item['attachments'] ?? $attachments;
-            $item_attachment = $item['attachment'] ?? $attachment;
-            $item_filename = $item['filename'] ?? $filename;
-            if (!empty($to)) {
+    // Background execution: Send SMTP emails first
+    foreach ($emails as $idx => $item) {
+        $to = $item['to'] ?? '';
+        if (empty($to)) continue;
+        $cc = $item['cc'] ?? [];
+        $subject = $item['subject'] ?? '';
+        $html = $item['html'] ?? '';
+        $item_attachments = $item['attachments'] ?? $attachments;
+        $item_attachment = $item['attachment'] ?? $attachment;
+        $item_filename = $item['filename'] ?? $filename;
+
+        if ($idx > 0) {
+            usleep(400000); // 400ms pause between rapid SMTP dispatches to prevent rate-limiting or socket handshake lock
+        }
+
+        $sent = false;
+        for ($attempt = 1; $attempt <= 2; $attempt++) {
+            try {
                 send_smtp_email($to, $cc, $subject, $html, $email, $appPassword, $item_attachment, $item_filename, $from_name, $item_attachments);
+                $sent = true;
+                break;
+            } catch (Exception $e) {
+                error_log("Multi-SMTP Error for recipient {$to} (Attempt {$attempt}): " . $e->getMessage());
+                if ($attempt < 2) {
+                    sleep(1);
+                }
             }
         }
-    } catch (Exception $e) {
-        error_log("Multi-SMTP Error: " . $e->getMessage());
     }
+
+    // After emails are dispatched, log execution tracking
+    track_email_execution($input, $config, $email);
     exit;
 } else {
     // Single email request (backward compatible)
@@ -511,11 +540,24 @@ function send_smtp_email($to, $cc, $subject, $html, $username, $password, $attac
     if (function_exists('apply_portal_font_to_html')) {
         $html = apply_portal_font_to_html($html);
     }
-    $timeout = 15;
-    $smtp = fsockopen("ssl://smtp.gmail.com", 465, $errno, $errstr, $timeout);
+    $timeout = 20;
+    $context = stream_context_create([
+        'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true,
+            'crypto_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT | STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT
+        ]
+    ]);
+    $smtp = @stream_socket_client("ssl://smtp.gmail.com:465", $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, $context);
     if (!$smtp) {
-        throw new Exception("Could not connect to SMTP server: $errstr ($errno)");
+        // Fallback to fsockopen
+        $smtp = @fsockopen("ssl://smtp.gmail.com", 465, $errno, $errstr, $timeout);
+        if (!$smtp) {
+            throw new Exception("Could not connect to SMTP server: $errstr ($errno)");
+        }
     }
+    stream_set_timeout($smtp, 20);
 
     // Read SMTP responses helper
     $get_response = function($smtp) {

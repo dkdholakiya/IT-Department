@@ -82,8 +82,8 @@ ServerSignature Off
     RewriteRule ^(uploads|assets)/.*\.php[0-9]?$ - [F,L]
     RewriteRule ^(uploads|assets)/.*\.(phtml|phar|inc|cgi|pl|py|sh|exe|bat|cmd)$ - [F,L]
 
-    # 4.4 Block Dangerous HTTP Methods (Allow only standard web methods)
-    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|DEBUG|DELETE|CONNECT) [NC]
+    # 4.4 Block Dangerous HTTP Methods (Allow only standard web methods: GET, POST, PUT, DELETE, OPTIONS, HEAD)
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|DEBUG|CONNECT) [NC]
     RewriteRule ^ - [F,L]
 
     # 4.5 Block Path Traversal (Directory Traversal / LFI)
