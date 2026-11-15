@@ -33,6 +33,15 @@ if (!empty($page_css)) {
   <script>
     (function() {
       try {
+        var u = new URL(window.location.href);
+        if (u.searchParams.has('i')) {
+          u.searchParams.delete('i');
+          var clean = u.pathname + (u.search ? u.search : '') + u.hash;
+          window.history.replaceState({}, document.title, clean);
+        }
+      } catch (e) {}
+
+      try {
         var theme = localStorage.getItem('portal_theme') || 'dark';
         if (theme === 'light') {
           document.documentElement.classList.remove('dark');

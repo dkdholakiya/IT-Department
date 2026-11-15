@@ -25,6 +25,19 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
   <link rel="icon" type="image/png" sizes="16x16" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-16x16.png') : $baseUrl . 'assets/images/favicon-16x16.png'; ?>">
   <link rel="icon" type="image/svg+xml" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.svg') : $baseUrl . 'assets/images/favicon.svg'; ?>">
   <link rel="apple-touch-icon" sizes="180x180" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/apple-touch-icon.png') : $baseUrl . 'assets/images/apple-touch-icon.png'; ?>">
+  <!-- Clean Hosting Query Strings (?i=1 from InfinityFree Security Challenge) -->
+  <script>
+    (function() {
+      try {
+        var u = new URL(window.location.href);
+        if (u.searchParams.has('i')) {
+          u.searchParams.delete('i');
+          var clean = u.pathname + (u.search ? u.search : '') + u.hash;
+          window.history.replaceState({}, document.title, clean);
+        }
+      } catch (e) {}
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
     tailwind.config = {
