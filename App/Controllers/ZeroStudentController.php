@@ -85,8 +85,8 @@ class ZeroStudentController extends Controller
 
                 foreach ($records as &$r) {
                     if (($r['id'] ?? '') === $id) {
-                        // Strict check for faculty: must own the record & cannot edit if claim already exists
-                        if ($userRole === 'faculty') {
+                        // Strict check for faculty/staff: must own the record & cannot edit if claim already exists
+                        if ($userRole === 'staff' || $userRole === 'faculty') {
                             $uInit  = strtoupper(trim($user['initials'] ?? ''));
                             $uEmail = strtolower(trim($user['email'] ?? ''));
                             $uName  = strtolower(trim($user['name'] ?? ''));

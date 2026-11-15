@@ -307,7 +307,7 @@ $baseUrl = function_exists('base_url') ? base_url('') : './';
                   </div>
 
                   <div class="p-3 rounded-2xl glass-pill border border-emerald-500/20">
-                    <span class="block text-2xl font-black text-emerald-600 dark:text-emerald-400"><?php echo $roleUserCounts['faculty']; ?></span>
+                    <span class="block text-2xl font-black text-emerald-600 dark:text-emerald-400"><?php echo $roleUserCounts['staff'] ?? ($roleUserCounts['faculty'] ?? 0); ?></span>
                     <span class="text-[11px] font-bold text-[var(--text-primary)]">Faculty Staff</span>
                     <span class="block text-[10px] text-[var(--text-muted)]">Academic Access</span>
                   </div>
@@ -754,7 +754,7 @@ $baseUrl = function_exists('base_url') ? base_url('') : './';
             id="deleteRoleReassignSelect"
             class="w-full px-3.5 py-2.5 rounded-xl bg-white/70 dark:bg-white/[0.05] border border-black/10 dark:border-white/10 text-xs font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition cursor-pointer"
           >
-            <option value="faculty" selected>Faculty Member (Standard Academic Staff)</option>
+            <option value="staff" selected>Faculty / Staff Member (Standard Academic Staff)</option>
             <option value="sub_admin">Sub Admin (Observer)</option>
           </select>
         </div>

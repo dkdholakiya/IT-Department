@@ -105,8 +105,7 @@ class SettingController extends Controller
             'super_admin' => 0,
             'hod'         => 0,
             'sub_admin'   => 0,
-            'staff'       => 0,
-            'faculty'     => 0
+            'staff'       => 0
         ];
 
         foreach ($users as $u) {
@@ -383,8 +382,8 @@ class SettingController extends Controller
         }
         $rolesConfig['roles']['sub_admin']['permissions'] = array_values($viewPerms);
 
-        // 4. Faculty: default academic pages
-        $rolesConfig['roles']['faculty']['permissions'] = [
+        // 4. Staff (Faculty): default academic pages
+        $rolesConfig['roles']['staff']['permissions'] = [
             'dashboard.view',
             'dashboard.cameras',
             'calendar.view',
@@ -549,7 +548,7 @@ class SettingController extends Controller
         }
 
         // System-protected roles cannot be deleted
-        $systemRoles = ['super_admin', 'hod', 'sub_admin', 'faculty', 'staff'];
+        $systemRoles = ['super_admin', 'hod', 'sub_admin', 'staff'];
         if (in_array($roleKey, $systemRoles, true) || !empty($rolesConfig['roles'][$roleKey]['is_system'])) {
             $this->json([
                 'success' => false,
@@ -561,9 +560,9 @@ class SettingController extends Controller
         $roleName = $rolesConfig['roles'][$roleKey]['name'] ?? $roleKey;
 
         // Reassign any users currently assigned to this role
-        $reassignTo = Auth::normalizeRole($input['reassignTo'] ?? 'faculty');
+        $reassignTo = Auth::normalizeRole($input['reassignTo'] ?? 'staff');
         if (!isset($rolesConfig['roles'][$reassignTo])) {
-            $reassignTo = 'faculty';
+            $reassignTo = 'staff';
         }
 
         $users = $this->loadUsers();

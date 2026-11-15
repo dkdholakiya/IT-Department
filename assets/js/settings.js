@@ -272,6 +272,7 @@
       super_admin: '👑',
       hod: '🏛️',
       sub_admin: '🛡️',
+      staff: '👨‍🏫',
       faculty: '👨‍🏫'
     };
 
@@ -279,6 +280,7 @@
       super_admin: 'Super Admin',
       hod: 'HOD',
       sub_admin: 'Sub Admin',
+      staff: 'Staff',
       faculty: 'Faculty'
     };
 
@@ -395,7 +397,7 @@
 
     // Show Delete button ONLY for non-system custom roles, if user has delete permission
     if (deleteBtn) {
-      const isSystem = (roleDef.is_system === true || ['super_admin', 'hod', 'sub_admin', 'faculty'].includes(roleKey));
+      const isSystem = (roleDef.is_system === true || ['super_admin', 'hod', 'sub_admin', 'staff', 'faculty'].includes(roleKey));
       const canDelete = window.canDeleteRole && !isSystem;
       deleteBtn.classList.toggle('hidden', !canDelete);
       deleteBtn.classList.toggle('inline-flex', canDelete);
@@ -682,7 +684,7 @@
         });
       });
       workingPermissions = new Set(viewPerms);
-    } else if (roleKey === 'faculty') {
+    } else if (roleKey === 'staff' || roleKey === 'faculty') {
       workingPermissions = new Set([
         'dashboard.view',
         'dashboard.cameras',
@@ -837,7 +839,7 @@
       keyManuallyChanged = false;
       if (form) form.reset();
       if (colorInput) colorInput.value = 'teal';
-      if (cloneFromInput) cloneFromInput.value = 'faculty';
+      if (cloneFromInput) cloneFromInput.value = 'staff';
       if (previewName) previewName.textContent = 'New Role';
 
       // Reset swatch buttons
@@ -1029,7 +1031,7 @@
           Object.keys(rolesConfig.roles).forEach((k) => {
             if (k !== activeRoleKey) {
               const r = rolesConfig.roles[k];
-              opts += `<option value="${k}" ${k === 'faculty' ? 'selected' : ''}>${escapeHtml(r.name || k)}</option>`;
+              opts += `<option value="${k}" ${k === 'staff' ? 'selected' : ''}>${escapeHtml(r.name || k)}</option>`;
             }
           });
           reassignSelect.innerHTML = opts;
@@ -1049,7 +1051,7 @@
         `;
 
         try {
-          const reassignTo = reassignSelect ? reassignSelect.value : 'faculty';
+          const reassignTo = reassignSelect ? reassignSelect.value : 'staff';
           const targetKey = activeRoleKey;
           const url = getApiUrl('api/settings/roles/delete');
 
@@ -1086,10 +1088,10 @@
 
           closeModal();
 
-          // Switch active role back to faculty
-          activeRoleKey = 'faculty';
+          // Switch active role back to staff
+          activeRoleKey = 'staff';
           renderRoleSelectorPills();
-          selectRole('faculty');
+          selectRole('staff');
 
           if (currentActiveTab === 'users') {
             renderStaffRolesTable();
@@ -1130,7 +1132,7 @@
     let html = '';
 
     departmentUsers.forEach((u) => {
-      const userRole = (u.role || 'faculty').toLowerCase();
+      const userRole = (u.role || 'staff').toLowerCase();
       const isSuperAdminPrimary = (u.id === 'adminit' || u.id === 'admince');
 
       html += `
@@ -1373,7 +1375,7 @@
         const key = (keyInput ? keyInput.value : '').trim();
         const color = (colorInput ? colorInput.value : 'teal').trim();
         const desc = (document.getElementById('newRoleDesc') ? document.getElementById('newRoleDesc').value : '').trim();
-        const cloneFrom = (cloneFromInput ? cloneFromInput.value : 'faculty').trim();
+        const cloneFrom = (cloneFromInput ? cloneFromInput.value : 'staff').trim();
 
         if (!name || !key) {
           showToast('Role Name and Slug Key are required.', 'error');
@@ -1450,7 +1452,7 @@
       Object.keys(roles).forEach((k) => {
         if (k !== roleKey) {
           const r = roles[k] || {};
-          const sel = (k === 'faculty') ? 'selected' : '';
+          const sel = (k === 'staff') ? 'selected' : '';
           optHtml += `<option value="${k}" ${sel}>${escapeHtml(r.name || k)}</option>`;
         }
       });
@@ -1484,7 +1486,7 @@
         if (!pendingDeleteRoleKey) return;
 
         const reassignSelect = document.getElementById('deleteRoleReassignSelect');
-        const reassignTo = reassignSelect ? reassignSelect.value : 'faculty';
+        const reassignTo = reassignSelect ? reassignSelect.value : 'staff';
 
         confirmBtn.disabled = true;
         confirmBtn.innerHTML = `<span>Deleting...</span>`;
