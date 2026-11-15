@@ -27,6 +27,12 @@ jobs:
         with:
           fetch-depth: 2 # Optimizes git diff calculation for incremental FTP transfers
 
+      - name: 📦 Ensure Composer Dependencies
+        run: |
+          if [ ! -f "vendor/autoload.php" ]; then
+            composer install --no-dev --prefer-dist --optimize-autoloader --no-progress
+          fi
+
       - name: 📡 Synchronize Files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
