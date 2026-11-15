@@ -8,6 +8,20 @@
   <meta http-equiv="Expires" content="0" />
   <title>CE & IT Department — Interactive 3D Portal | Made by DK Dholakiya</title>
 
+  <!-- Clean Hosting Query Strings (?i=1 from InfinityFree Security Challenge) -->
+  <script>
+    (function() {
+      try {
+        var u = new URL(window.location.href);
+        if (u.searchParams.has('i')) {
+          u.searchParams.delete('i');
+          var clean = u.pathname + (u.search ? u.search : '') + u.hash;
+          window.history.replaceState({}, document.title, clean);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- High-Definition Dynamic Favicons (Crisp & Big in All Browser Tabs) -->
   <link rel="icon" type="image/png" sizes="64x64" href="<?= base_url('assets/images/favicon-64x64.png') ?>">
   <link rel="shortcut icon" type="image/png" href="<?= base_url('assets/images/favicon-64x64.png') ?>">
