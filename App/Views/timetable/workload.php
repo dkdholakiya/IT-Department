@@ -554,6 +554,32 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/facultyData.js') : 'assets/js/facultyData.js'; ?>"></script>
   <script src="<?php echo function_exists('v_asset') ? v_asset('assets/js/timetableData.js') : 'assets/js/timetableData.js'; ?>"></script>
 
+  <?php
+  $usersFile = defined('BASE_PATH') ? BASE_PATH . '/config/users.json' : dirname(__DIR__, 3) . '/config/users.json';
+  $rawUsers = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), true) : [];
+  $serverFacultyData = [];
+  if (is_array($rawUsers)) {
+      foreach ($rawUsers as $u) {
+          $serverFacultyData[] = [
+              'name'        => $u['name'] ?? '',
+              'initials'    => $u['initials'] ?? '',
+              'department'  => $u['department'] ?? '',
+              'designation' => $u['designation'] ?? '',
+              'avatarClass' => $u['avatarClass'] ?? ('av-' . strtolower($u['initials'] ?? ''))
+          ];
+      }
+  }
+  $serverTimetableData = function_exists('getMasterTimetableData') ? getMasterTimetableData() : [];
+  ?>
+  <script>
+    if (typeof facultyData === 'undefined' || !facultyData.length) {
+      window.facultyData = <?php echo json_encode($serverFacultyData, JSON_UNESCAPED_UNICODE); ?>;
+    }
+    if (typeof timetableData === 'undefined' || !Object.keys(timetableData).length) {
+      window.timetableData = <?php echo json_encode($serverTimetableData, JSON_UNESCAPED_UNICODE); ?>;
+    }
+  </script>
+
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       if (typeof timetableData === "undefined" || typeof facultyData === "undefined") {
