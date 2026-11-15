@@ -105,15 +105,16 @@ class SettingController extends Controller
             'super_admin' => 0,
             'hod'         => 0,
             'sub_admin'   => 0,
+            'staff'       => 0,
             'faculty'     => 0
         ];
 
         foreach ($users as $u) {
-            $r = Auth::normalizeRole($u['role'] ?? 'faculty');
+            $r = Auth::normalizeRole($u['role'] ?? 'staff');
             if (isset($roleUserCounts[$r])) {
                 $roleUserCounts[$r]++;
             } else {
-                $roleUserCounts['faculty']++;
+                $roleUserCounts['staff'] = ($roleUserCounts['staff'] ?? 0) + 1;
             }
         }
 
@@ -548,7 +549,7 @@ class SettingController extends Controller
         }
 
         // System-protected roles cannot be deleted
-        $systemRoles = ['super_admin', 'hod', 'sub_admin', 'faculty'];
+        $systemRoles = ['super_admin', 'hod', 'sub_admin', 'faculty', 'staff'];
         if (in_array($roleKey, $systemRoles, true) || !empty($rolesConfig['roles'][$roleKey]['is_system'])) {
             $this->json([
                 'success' => false,

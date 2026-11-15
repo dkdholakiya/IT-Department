@@ -75,9 +75,9 @@ class Auth
      */
     public static function normalizeRole(?string $role): string
     {
-        $role = strtolower(trim($role ?? 'faculty'));
-        if ($role === 'staff' || empty($role)) {
-            return 'faculty';
+        $role = strtolower(trim($role ?? 'staff'));
+        if (empty($role)) {
+            return 'staff';
         }
         return $role;
     }

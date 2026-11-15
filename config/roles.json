@@ -613,6 +613,32 @@
                 "settings.roles"
             ]
         },
+        "staff": {
+            "key": "staff",
+            "name": "Faculty / Staff Member",
+            "badge": "Academic Defaults",
+            "badge_color": "emerald",
+            "description": "Academic faculty teaching staff. By default has access strictly to Dashboard, Calendar, Syllabus & Papers, Student Timetable, Workload Report, and Timetable. Other permissions can be added manually.",
+            "is_system": true,
+            "allow_delete": false,
+            "permissions": [
+                "dashboard.view",
+                "calendar.view",
+                "timetable.view",
+                "student_timetable.view",
+                "report.view",
+                "report.create",
+                "report.edit",
+                "report.submit",
+                "report.draft",
+                "report.preview",
+                "report.print",
+                "syllabus.view",
+                "zero_student.view",
+                "zero_student.claim",
+                "timetable.alteration"
+            ]
+        },
         "faculty": {
             "key": "faculty",
             "name": "Faculty Member (Staff)",

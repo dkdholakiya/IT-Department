@@ -1210,10 +1210,13 @@
   function renderRoleOptions(currentRole, roles) {
     let html = '';
     const keys = Object.keys(roles);
+    const norm = (currentRole === 'faculty' && !roles['faculty'] && roles['staff'])
+      ? 'staff'
+      : ((currentRole === 'staff' && !roles['staff'] && roles['faculty']) ? 'faculty' : currentRole);
 
     keys.forEach((key) => {
       const r = roles[key] || {};
-      const selected = key === currentRole ? 'selected' : '';
+      const selected = (key === currentRole || key === norm) ? 'selected' : '';
       const name = r.name || key;
       html += `<option value="${key}" ${selected}>${escapeHtml(name)}</option>`;
     });
