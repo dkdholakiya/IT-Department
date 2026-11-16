@@ -1,9 +1,9 @@
 /**
  * GMIU Portal — Smart Dashboard Specific Stylesheet
- * Contains dashboard-only telemetry, charts, camera zones, and hero widgets.
+ * Contains dashboard-only telemetry, charts, camera zones, drag-and-drop cards, and role widgets.
  */
 
-/* Floating Harvest AI Glass Widget inside Hero */
+/* Floating Glass Widgets */
 .harvest-glass-modal {
   background: var(--glass-surface);
   backdrop-filter: blur(18px) saturate(180%);
@@ -43,4 +43,212 @@
 .chart-bar:hover {
   transform: scaleY(1.06);
   filter: brightness(1.08);
+}
+
+/* =========================================================================
+   DRAG-AND-DROP REORDERABLE DASHBOARD CARDS
+   ========================================================================= */
+
+/* Card base styling */
+.dashboard-card {
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.25s ease, border-color 0.2s ease;
+  position: relative;
+  touch-action: pan-y;
+}
+
+/* Subtle drag handle in card header */
+.card-drag-handle {
+  cursor: grab;
+  color: var(--text-muted);
+  transition: color 0.2s ease, transform 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-drag-handle:hover {
+  color: var(--color-primary);
+  transform: scale(1.12);
+}
+
+.card-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Sortable Ghost (Placeholder where dropped card will land) */
+.sortable-ghost {
+  opacity: 0.35 !important;
+  transform: scale(0.98) !important;
+  background: var(--glass-surface-strong) !important;
+  border: 2px dashed var(--color-primary) !important;
+  box-shadow: 0 0 24px -4px var(--color-primary) !important;
+}
+
+/* Sortable Chosen (Element picked up) */
+.sortable-chosen {
+  cursor: grabbing !important;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.35), 0 0 0 2px var(--color-primary) !important;
+  transform: scale(1.015) !important;
+  z-index: 40 !important;
+}
+
+/* Sortable Drag (Active floating clone) */
+.sortable-drag {
+  opacity: 0.95 !important;
+  cursor: grabbing !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+  z-index: 50 !important;
+}
+
+/* Locked First Card (Hero camera feed - cannot be dragged or displaced) */
+.locked-card {
+  cursor: default !important;
+  user-select: auto;
+}
+
+.locked-card .card-drag-handle {
+  display: none !important;
+}
+
+.locked-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Modern Glass Select Pill for Role Switcher */
+.glass-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(148,163,184,0.8)' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.65rem center;
+  background-size: 0.85rem;
+  padding-right: 1.85rem;
+}
+
+/* Right Column Workspace Smooth Scrolling */
+.custom-scroll {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--color-primary-rgb), 0.35) transparent;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-primary-rgb), 0.35);
+  border-radius: 9999px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* =========================================================================
+   ADDITIONAL MODULE VISUAL CHARTS & SUMMARIES
+   ========================================================================= */
+
+/* Mini Horizontal Progress Bars */
+.mini-h-bar-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--icon-circle-bg);
+  overflow: hidden;
+  position: relative;
+}
+
+.mini-h-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Timeline Progress Track */
+.timeline-track-bg {
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--icon-circle-bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.timeline-track-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--color-primary-light, #A78BFA), var(--color-primary, #7C3AED));
+  transition: width 0.7s ease;
+}
+
+/* Cabin Room Badges */
+.cabin-pill {
+  padding: 4px 8px;
+  border-radius: 10px;
+  background: var(--icon-circle-bg);
+  border: 1px solid var(--glass-border);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.cabin-pill:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+/* SVG Radial Arc Gauges */
+.radial-donut-bg {
+  fill: none !important;
+  stroke: var(--glass-border);
+}
+
+.radial-donut-val {
+  fill: none !important;
+  stroke: var(--color-primary);
+  transition: stroke 0.4s ease, stroke-dashoffset 0.8s ease;
+}
+
+/* Dynamic Theme Tag & Status Pills */
+.theme-tag-pill {
+  background: rgba(var(--color-primary-rgb), 0.14);
+  color: var(--color-primary);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.25);
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+}
+
+/* Micro-tile with dynamic theme hover */
+.micro-kpi-tile {
+  background: var(--icon-circle-bg);
+  border: 1px solid var(--glass-border);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.micro-kpi-tile:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px -2px rgba(var(--color-primary-rgb), 0.2);
 }

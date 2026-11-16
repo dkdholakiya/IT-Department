@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use Core\Controller;
+use Core\Auth;
 
 class ApiController extends Controller
 {
@@ -50,7 +51,16 @@ class ApiController extends Controller
     public function syncTimetables(): void
     {
         $action = $_REQUEST['action'] ?? 'sync_all';
-        $requiredPerm = ($action === 'sync_student') ? 'student_timetable.sync' : 'timetable.sync';
+        $target = $_REQUEST['target'] ?? '';
+
+        if ($action === 'sync_student' || $target === 'student') {
+            $requiredPerm = 'student_timetable.sync';
+        } elseif ($action === 'sync_faculty' || $target === 'faculty') {
+            $requiredPerm = 'timetable.sync';
+        } else {
+            $requiredPerm = Auth::can('student_timetable.sync') ? 'student_timetable.sync' : 'timetable.sync';
+        }
+
         Auth::requirePermission($requiredPerm, 'Sync Timetable Sheet');
 
         $serviceFile = APP_PATH . '/Services/sync-timetables.php';

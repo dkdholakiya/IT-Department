@@ -45,6 +45,8 @@ $r->addRoute('GET', '/syllabus-papers.php', 'SyllabusController@index');
 // ── Smart Management Dashboard ──
 $r->addRoute('GET', '/dashboard', 'DashboardController@index');
 $r->addRoute('GET', '/dashboard.php', 'DashboardController@index');
+$r->addRoute(['GET', 'OPTIONS'], '/api/dashboard/metrics', 'DashboardController@apiMetrics');
+$r->addRoute(['GET', 'OPTIONS'], '/api/dashboard/metrics.php', 'DashboardController@apiMetrics');
 
 // ── Settings & Roles Management ──
 $r->addRoute('GET', '/settings', 'SettingController@index');
