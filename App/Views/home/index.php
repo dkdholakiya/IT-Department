@@ -2194,7 +2194,7 @@
         const arrowIcon = document.getElementById('apkDownloadArrowIcon');
         const checkIcon = document.getElementById('apkCheckIcon');
 
-        const APK_DIRECT_URL = 'https://web2apkpro.com/direct_download.php?code=4C823BE';
+        const APK_DIRECT_URL = 'https://web2apkpro.com/download/4C823BE/Engineering';
         const APK_FALLBACK_URL = 'https://web2apkpro.com/download/4C823BE/Engineering';
 
         let isDownloading = false;
