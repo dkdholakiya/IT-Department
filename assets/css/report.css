@@ -477,9 +477,22 @@ body.theme-dark .report-accordion .accordion-button::after {
 
 body.theme-dark .form-control,
 body.theme-dark .form-select {
+  color-scheme: dark !important;
   background-color: rgba(255, 255, 255, 0.05) !important;
   color: #f1f5f9 !important;
   border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body.theme-dark .form-select option,
+body.theme-dark .form-select optgroup {
+  background-color: #14141e !important;
+  color: #f8fafc !important;
+}
+
+body.theme-dark .form-select option:checked,
+body.theme-dark .form-select option:hover {
+  background-color: var(--color-primary, #7c3aed) !important;
+  color: #ffffff !important;
 }
 
 .form-control:focus,

@@ -82,9 +82,11 @@ if (!headers_sent()) {
       if (savedTheme === 'light') {
         document.documentElement.classList.remove('dark');
         document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.style.colorScheme = 'light';
       } else {
         document.documentElement.classList.add('dark');
         document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.style.colorScheme = 'dark';
       }
     })();
   </script>

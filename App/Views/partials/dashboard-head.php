@@ -45,8 +45,10 @@ if (!empty($page_css)) {
         var theme = localStorage.getItem('portal_theme') || 'dark';
         if (theme === 'light') {
           document.documentElement.classList.remove('dark');
+          document.documentElement.style.colorScheme = 'light';
         } else {
           document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
         }
 
         var hex = localStorage.getItem('portal_theme_color') || '#7C3AED';

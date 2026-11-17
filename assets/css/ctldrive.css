@@ -287,6 +287,22 @@ body.theme-dark .preset-chip-card {
   display: block;
 }
 
+body.theme-dark .search-dropdown-list {
+  background: rgba(15, 23, 42, 0.98) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 18px 40px -6px rgba(0, 0, 0, 0.7) !important;
+}
+
+body.theme-dark .search-dropdown-list .dropdown-item {
+  color: #f8fafc !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+body.theme-dark .search-dropdown-list .dropdown-item:hover {
+  background: rgba(var(--color-primary-rgb, 124, 58, 237), 0.18) !important;
+  color: #ffffff !important;
+}
+
 .cc-tags-container {
   display: flex;
   flex-wrap: wrap;

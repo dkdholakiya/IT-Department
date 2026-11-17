@@ -95,6 +95,24 @@ body.theme-dark {
   --bg-mesh-4: #0a1122;
 }
 
+/* Global Color Scheme Signaling for Auth Pages */
+html.dark,
+body.theme-dark {
+  color-scheme: dark !important;
+}
+
+html.dark select,
+body.theme-dark select {
+  color-scheme: dark !important;
+  color: var(--text-primary, #ffffff) !important;
+}
+
+html.dark select option,
+body.theme-dark select option {
+  background-color: #14141e !important;
+  color: #f8fafc !important;
+}
+
 
 * {
   box-sizing: border-box;

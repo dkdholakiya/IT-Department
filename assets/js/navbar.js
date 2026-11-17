@@ -182,6 +182,7 @@
 
     document.body.classList.toggle('theme-dark', navbarState.theme === 'dark');
     document.documentElement.classList.toggle('dark', navbarState.theme === 'dark');
+    document.documentElement.style.colorScheme = navbarState.theme;
 
     const isDark = navbarState.theme === 'dark';
 

@@ -2143,4 +2143,39 @@ body.theme-dark .zs-badge-claim-pending {
   color: #94a3b8;
 }
 
+/* ==========================================================================
+   OFFCANVAS FILTER DRAWER SELECTS & OPTIONS (Zero Student Directory)
+   ========================================================================== */
+#offcanvasRight select,
+.offcanvas select {
+  color-scheme: inherit;
+}
+
+body.theme-dark #offcanvasRight select,
+html.dark #offcanvasRight select,
+body.theme-dark .offcanvas select,
+html.dark .offcanvas select {
+  color-scheme: dark !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+body.theme-dark #offcanvasRight select option,
+html.dark #offcanvasRight select option,
+body.theme-dark .offcanvas select option,
+html.dark .offcanvas select option {
+  background-color: #14141e !important;
+  color: #f8fafc !important;
+}
+
+body.theme-dark #offcanvasRight select option:checked,
+html.dark #offcanvasRight select option:checked,
+body.theme-dark #offcanvasRight select option:hover,
+html.dark #offcanvasRight select option:hover {
+  background-color: var(--color-primary, #7c3aed) !important;
+  color: #ffffff !important;
+}
+
+
 
