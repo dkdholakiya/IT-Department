@@ -6,11 +6,11 @@ assets/video/original/
 scratch/
 
 # Uploaded Excel schedules and generated cache files
-# uploads/**/*.xlsx
-# uploads/**/*.xls
-# uploads/**/*.json
-# uploads/student_timetable/*
-# uploads/timetable/*
+uploads/**/*.xlsx
+uploads/**/*.xls
+uploads/**/*.json
+uploads/student_timetable/*
+uploads/timetable/*
 !uploads/student_timetable/.gitkeep
 !uploads/timetable/.gitkeep
 
