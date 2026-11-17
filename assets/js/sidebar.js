@@ -12,12 +12,54 @@
 (function () {
   'use strict';
 
+  // --- MOBILE EXPANDED STATE RESOLVER ---
+  function getInitialMobileExpanded() {
+    try {
+      const mode = localStorage.getItem('portal_sidebar_mobile_mode');
+      if (mode !== null) {
+        return mode === 'expanded';
+      }
+      const legacy = localStorage.getItem('portal_sidebar_mobile_expanded');
+      if (legacy !== null) {
+        return legacy === 'true';
+      }
+    } catch (e) { }
+    // First-time user / default -> show full sidemenu with names open
+    return true;
+  }
+
   // --- STATE ---
   const sidebarState = {
     isOpenMobile: false,
-    mobileExpandedNames: true, // In responsive, always show full side menu with names
+    mobileExpandedNames: getInitialMobileExpanded(),
     desktopSidebarMode: localStorage.getItem('portal_sidebar_desktop_mode') || 'compact'
   };
+
+  // --- RESPONSIVE SIDEBAR MODE SYNCHRONIZER ---
+  function syncMobileSidebarMode() {
+    const sidebar = document.getElementById('mainSidebar');
+    const icon = document.getElementById('expandSidebarNamesIcon');
+    const btn = document.getElementById('expandSidebarNamesBtn');
+    if (!sidebar) return;
+
+    if (sidebarState.mobileExpandedNames) {
+      sidebar.classList.remove('samsung-icon-only');
+      sidebar.classList.add('samsung-expanded-names');
+      if (icon) icon.classList.add('rotate-180');
+      if (btn) {
+        btn.title = 'Click to Show Only Icons';
+        btn.setAttribute('aria-label', 'Collapse to Icons');
+      }
+    } else {
+      sidebar.classList.remove('samsung-expanded-names');
+      sidebar.classList.add('samsung-icon-only');
+      if (icon) icon.classList.remove('rotate-180');
+      if (btn) {
+        btn.title = 'Open Side Menu with Text';
+        btn.setAttribute('aria-label', 'Expand Full Menu');
+      }
+    }
+  }
 
   // --- HAMBURGER ICON ANIMATION (Hamburger <-> Cross) ---
   function updateHamburgerIcon(isOpen) {
@@ -58,10 +100,9 @@
     document.getElementById('notificationsPopover')?.classList.add('hidden');
 
     if (sidebar) {
-      sidebar.classList.remove('samsung-menu-closed', 'samsung-icon-only');
-      sidebar.classList.add('samsung-menu-open', 'samsung-expanded-names');
-      const expandIcon = document.getElementById('expandSidebarNamesIcon');
-      if (expandIcon) expandIcon.classList.add('rotate-180');
+      sidebar.classList.remove('samsung-menu-closed');
+      sidebar.classList.add('samsung-menu-open');
+      syncMobileSidebarMode();
     }
     if (backdrop) {
       backdrop.classList.remove('hidden');
@@ -109,19 +150,16 @@
     if (!sidebar) return;
 
     sidebarState.mobileExpandedNames = !sidebarState.mobileExpandedNames;
-    localStorage.setItem('portal_sidebar_mobile_expanded', sidebarState.mobileExpandedNames);
+    const mode = sidebarState.mobileExpandedNames ? 'expanded' : 'compact';
+    try {
+      localStorage.setItem('portal_sidebar_mobile_mode', mode);
+      localStorage.setItem('portal_sidebar_mobile_expanded', String(sidebarState.mobileExpandedNames));
+    } catch (e) { }
 
-    const icon = document.getElementById('expandSidebarNamesIcon');
-    if (sidebarState.mobileExpandedNames) {
-      sidebar.classList.remove('samsung-icon-only');
-      sidebar.classList.add('samsung-expanded-names');
-      if (icon) icon.classList.add('rotate-180');
-      if (window.showPortalToast) window.showPortalToast('Full Sidebar with Menu Names');
-    } else {
-      sidebar.classList.remove('samsung-expanded-names');
-      sidebar.classList.add('samsung-icon-only');
-      if (icon) icon.classList.remove('rotate-180');
-      if (window.showPortalToast) window.showPortalToast('Icon-Only Shortcut Capsule');
+    syncMobileSidebarMode();
+
+    if (window.showPortalToast) {
+      window.showPortalToast(sidebarState.mobileExpandedNames ? 'Sidebar: Expanded' : 'Sidebar: Compact Icons');
     }
   }
 
@@ -185,12 +223,9 @@
     const sidebar = document.getElementById('mainSidebar');
     if (!sidebar) return;
 
-    // In responsive, always show full side menu with names (never icon-only)
-    if (window.innerWidth < 1024 || sidebarState.mobileExpandedNames) {
-      sidebar.classList.remove('samsung-icon-only');
-      sidebar.classList.add('samsung-expanded-names');
-      const icon = document.getElementById('expandSidebarNamesIcon');
-      if (icon) icon.classList.add('rotate-180');
+    // In responsive view, sync persisted mobile sidebar mode (expanded names vs compact icons)
+    if (window.innerWidth < 1024) {
+      syncMobileSidebarMode();
     }
 
     // Apply persisted desktop mode

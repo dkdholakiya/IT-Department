@@ -50,7 +50,7 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
 <aside
   id="mainSidebar"
   aria-label="Side Menu"
-  class="samsung-menu-closed samsung-expanded-names fixed lg:static inset-y-0 my-auto lg:my-0 h-fit max-h-[calc(100dvh-20px)] lg:max-h-none lg:h-full left-[10px] z-50 w-[284px] lg:w-[56px] p-2.5 lg:py-0 lg:px-0 flex flex-col justify-between items-center gap-2.5 lg:gap-3 shrink-0 overflow-y-auto overflow-x-hidden select-none"
+  class="samsung-menu-closed fixed lg:static inset-y-0 my-auto lg:my-0 h-fit max-h-[calc(100dvh-20px)] lg:max-h-none lg:h-full left-[10px] z-50 w-[284px] lg:w-[56px] p-2.5 lg:py-0 lg:px-0 flex flex-col justify-between items-center gap-2.5 lg:gap-3 shrink-0 overflow-y-auto overflow-x-hidden select-none"
 >
   <!-- Instant Desktop & Mobile Sidebar Mode Evaluator (Synchronous DOM setup before child rendering) -->
   <script>
@@ -66,9 +66,16 @@ $activeLabel = $sidebar_active_label ?? ($pageLabels[$activePage] ?? 'Portal Nav
             sidebar.classList.add('lg:hidden');
           }
         } else {
-          // Responsive always shows full menu names (never icon-only)
-          sidebar.classList.remove('samsung-icon-only');
-          sidebar.classList.add('samsung-expanded-names');
+          var mobileMode = localStorage.getItem('portal_sidebar_mobile_mode');
+          var mobileLegacy = localStorage.getItem('portal_sidebar_mobile_expanded');
+          var isCompact = (mobileMode === 'compact') || (mobileLegacy === 'false');
+          if (isCompact) {
+            sidebar.classList.remove('samsung-expanded-names');
+            sidebar.classList.add('samsung-icon-only');
+          } else {
+            sidebar.classList.remove('samsung-icon-only');
+            sidebar.classList.add('samsung-expanded-names');
+          }
         }
       } catch (e) {}
     })();

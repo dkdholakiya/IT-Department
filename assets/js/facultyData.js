@@ -1,6 +1,26 @@
 // Shared Faculty Members Data Array for CE & IT Department
 const facultyData = [
     {
+        "id": "fac_1794891619_2f36",
+        "username": "ppadhvaryu",
+        "name": "Prof. Pratik P Adhvaryu",
+        "email": "ppadhvaryu@gmiu.edu.in",
+        "phone": "6355466428",
+        "clean_phone": "6355466428",
+        "password": "6355466428",
+        "role": "faculty",
+        "designation": "Ad-hoc Assistant Professor",
+        "department": "Computer Engineering",
+        "empId": "10760",
+        "avatarClass": "av-dept-ce",
+        "initials": "PPA",
+        "setting": "FF-38",
+        "link": "",
+        "semClass": "",
+        "driveLink": "",
+        "status": "active"
+    },
+    {
         "id": "adminit",
         "username": "adminit",
         "name": "Admin IT Department",

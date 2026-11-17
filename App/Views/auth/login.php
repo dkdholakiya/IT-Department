@@ -1362,6 +1362,13 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
               }
             }
 
+            if (!data.has_pending_otp) {
+              try {
+                localStorage.setItem('portal_sidebar_mobile_mode', 'expanded');
+                localStorage.setItem('portal_sidebar_mobile_expanded', 'true');
+              } catch (e) {}
+            }
+
             setTimeout(() => {
               window.location.href = data.redirect || (state.baseUrl + (data.has_pending_otp ? ('/otp?email=' + encodeURIComponent(data.email || loginVal)) : '/dashboard'));
             }, 120);
@@ -1498,6 +1505,11 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
             signUpSuccessBanner.classList.add('flex');
             signUpSuccessText.textContent = data.message || 'Operator profile registered successfully! Entering Dashboard...';
             showToast('✓ Registration complete! Welcome aboard.');
+
+            try {
+              localStorage.setItem('portal_sidebar_mobile_mode', 'expanded');
+              localStorage.setItem('portal_sidebar_mobile_expanded', 'true');
+            } catch (e) {}
 
             setTimeout(() => {
               window.location.href = state.targetUrl;
@@ -1764,5 +1776,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       applyCustomColorPalette(state.primaryHex);
     })();
   </script>
+  <!-- Responsive Left-Bottom Hard Refresh & Cache Bust Button -->
+  <?php if (file_exists(dirname(__DIR__) . '/partials/refresh-button.php')) include dirname(__DIR__) . '/partials/refresh-button.php'; ?>
 </body>
 </html>

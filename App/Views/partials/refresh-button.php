@@ -19,10 +19,25 @@
       <svg id="refreshBtnIcon" class="w-4 h-4 transition-transform duration-500" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
       </svg>
-</span>
-    
+    </span>
   </button>
 </div>
+
+<style>
+  #responsiveRefreshContainer .side-menu-glass {
+    background: var(--side-menu-pill-glass, rgba(255, 255, 255, 0.45));
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border: 1.5px solid var(--side-menu-border, rgba(255, 255, 255, 0.70));
+    box-shadow: var(--side-menu-shadow, 0 10px 30px -4px rgba(var(--color-primary-rgb, 124, 58, 237), 0.22));
+  }
+  .dark #responsiveRefreshContainer .side-menu-glass,
+  body.theme-dark #responsiveRefreshContainer .side-menu-glass {
+    background: var(--side-menu-pill-glass, rgba(16, 16, 22, 0.78));
+    border-color: var(--side-menu-border, rgba(255, 255, 255, 0.14));
+    box-shadow: var(--side-menu-shadow, 0 14px 34px -4px rgba(0, 0, 0, 0.80));
+  }
+</style>
 
 <script>
   (function () {
@@ -53,6 +68,8 @@
         window.showPortalToast('⚡ Hard refreshing & busting cache...', 'info');
       } else if (typeof window.showToast === 'function') {
         window.showToast('⚡ Hard refreshing & busting cache...', 'info');
+      } else if (window.PortalToast && typeof window.PortalToast.show === 'function') {
+        window.PortalToast.show('⚡ Hard refreshing & busting cache...', 'info');
       }
 
       // 1. Clear CacheStorage API entries (Service Worker / PWA caches)
@@ -86,4 +103,3 @@
     });
   })();
 </script>
-

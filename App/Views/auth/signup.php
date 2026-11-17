@@ -1470,5 +1470,7 @@ if (!headers_sent()) {
       applyCustomColorPalette(state.primaryHex);
     })();
   </script>
+  <!-- Responsive Left-Bottom Hard Refresh & Cache Bust Button -->
+  <?php if (file_exists(dirname(__DIR__) . '/partials/refresh-button.php')) include dirname(__DIR__) . '/partials/refresh-button.php'; ?>
 </body>
 </html>

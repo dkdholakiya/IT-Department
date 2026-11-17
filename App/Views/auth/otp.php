@@ -801,6 +801,10 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
 
           if (data && data.success) {
             showToast('✓ Identity verified! Entering Dashboard...', 'success');
+            try {
+              localStorage.setItem('portal_sidebar_mobile_mode', 'expanded');
+              localStorage.setItem('portal_sidebar_mobile_expanded', 'true');
+            } catch (e) {}
             setTimeout(() => {
               window.location.href = data.redirect || state.targetUrl;
             }, 180);
@@ -958,6 +962,8 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
 
     })();
   </script>
+  <!-- Responsive Left-Bottom Hard Refresh & Cache Bust Button -->
+  <?php if (file_exists(dirname(__DIR__) . '/partials/refresh-button.php')) include dirname(__DIR__) . '/partials/refresh-button.php'; ?>
 </body>
 </html>
 
