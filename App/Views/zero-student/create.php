@@ -270,13 +270,30 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
         <!-- Validation Summary Dashboard (KPI Row & Status Box) -->
         <div id="validationSummaryContainer" class="validation-summary-container" style="display: none;">
           <div class="val-kpi-row">
-            <div>Total rows: <span id="val-total" class="val-num">0</span></div>
-            <div>Eligible rows: <span id="val-eligible" class="val-num">0</span></div>
-            <div>Imported rows: <span id="val-imported" class="val-num val-success-num">0</span></div>
-            <div>Missing rows: <span id="val-missing" class="val-num val-danger-num">0</span></div>
-            <div>Duplicates: <span id="val-duplicate" class="val-num val-warning-num">0</span></div>
+            <div class="val-kpi-card">
+              <span class="val-kpi-label">Total Rows</span>
+              <span id="val-total" class="val-num">0</span>
+            </div>
+            <div class="val-kpi-card">
+              <span class="val-kpi-label">Eligible</span>
+              <span id="val-eligible" class="val-num">0</span>
+            </div>
+            <div class="val-kpi-card val-kpi-success">
+              <span class="val-kpi-label">Imported</span>
+              <span id="val-imported" class="val-num val-success-num">0</span>
+            </div>
+            <div class="val-kpi-card val-kpi-danger">
+              <span class="val-kpi-label">Missing</span>
+              <span id="val-missing" class="val-num val-danger-num">0</span>
+            </div>
+            <div class="val-kpi-card val-kpi-warning">
+              <span class="val-kpi-label">Duplicates</span>
+              <span id="val-duplicate" class="val-num val-warning-num">0</span>
+            </div>
           </div>
-          <div id="val-status-box" class="val-status-box"></div>
+          <div class="flex items-center justify-between gap-3 flex-wrap">
+            <div id="val-status-box" class="val-status-box"></div>
+          </div>
           <div id="val-mismatch-details" class="val-mismatch-details" style="display: none;"></div>
         </div>
 

@@ -694,7 +694,7 @@ function renderPreviewRows() {
 
         // Build interactive dropdown select for Department
         const deptSelectHtml = `
-            <select class="zs-row-dept-select" data-index="${index}" style="background: #0f172a; color: #f8fafc; border: 1px solid #334155; border-radius: 4px; padding: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">
+            <select class="zs-row-dept-select" data-index="${index}">
                 <option value="Information Technology" ${row.selectedDept === "Information Technology" ? "selected" : ""}>IT</option>
                 <option value="Computer Engineering" ${row.selectedDept === "Computer Engineering" ? "selected" : ""}>CE</option>
                 <option value="" ${!row.selectedDept ? "selected" : ""}>Skip</option>
