@@ -56,25 +56,35 @@
   touch-action: pan-y;
 }
 
-/* Subtle drag handle in card header */
+/* Dedicated 6-Dots Drag Handle in card header */
 .card-drag-handle {
   cursor: grab;
   color: var(--text-muted);
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
   user-select: none;
   -webkit-user-select: none;
+  touch-action: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .card-drag-handle:hover {
   color: var(--color-primary);
-  transform: scale(1.12);
+  background: rgba(147, 51, 234, 0.08);
+  transform: scale(1.08);
 }
 
-.card-drag-handle:active {
-  cursor: grabbing;
+.card-drag-handle:active,
+.sortable-chosen .card-drag-handle {
+  cursor: grabbing !important;
+  color: var(--color-primary);
+  background: rgba(147, 51, 234, 0.16);
+  transform: scale(0.96);
 }
 
 /* Sortable Ghost (Placeholder where dropped card will land) */

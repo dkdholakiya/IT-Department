@@ -65,7 +65,10 @@
     // B. Initialize SortableJS
     new Sortable(gridEl, {
       animation: 250,
-      handle: '.card-drag-handle, .glass-card',
+      handle: '.card-drag-handle',
+      delay: 150,
+      delayOnTouchOnly: true,
+      touchStartThreshold: 5,
       filter: '.locked-card, button, input, select, a, [data-modal-open]',
       preventOnFilter: false,
       ghostClass: 'sortable-ghost',

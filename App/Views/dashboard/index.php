@@ -133,11 +133,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="harvest" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Full Workload Analytics">
@@ -220,11 +220,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="water" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Time Slots">
@@ -283,11 +283,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="power" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Hourly Load Breakdown">
@@ -353,11 +353,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="setpoints" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Academic Thresholds">
@@ -447,11 +447,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="harvest" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Weekly Trend">
@@ -510,11 +510,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="co2" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Room Schedule">
@@ -576,11 +576,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <a href="<?php echo htmlspecialchars($baseUrl); ?>timetable" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Go to Timetable Module">
@@ -642,11 +642,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="calendar" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Academic Calendar">
@@ -728,11 +728,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="divisions" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Student Divisions">
@@ -816,11 +816,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="ctlactivity" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect CTL Activity">
@@ -898,11 +898,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="ctldrive" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Drive Scanner">
@@ -974,11 +974,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="zero_student" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Zero Student Incidents">
@@ -1049,11 +1049,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="reports" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Reports Analytics">
@@ -1122,11 +1122,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="syllabus" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Syllabus & Papers">
@@ -1197,11 +1197,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <button type="button" data-modal-open="faculty_matrix" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Inspect Faculty Matrix">
@@ -1273,11 +1273,11 @@ $userCan = function(string $perm) use ($currentUser, $canCheck): bool {
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="card-drag-handle p-1 rounded-lg" title="Drag to move card">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
-                  <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                  <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+              <span class="card-drag-handle" title="Click &amp; hold 6 dots to move card" aria-label="Reorder card">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>
+                  <circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/>
+                  <circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>
                 </svg>
               </span>
               <a href="<?php echo htmlspecialchars($baseUrl); ?>faculty" class="w-7 h-7 rounded-full action-arrow-btn flex items-center justify-center" title="Open Faculty Directory">
