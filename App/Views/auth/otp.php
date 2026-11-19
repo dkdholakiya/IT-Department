@@ -38,7 +38,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       } catch (e) {}
     })();
   </script>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/vendor/tailwindcss/tailwind.min.js') : $baseUrl . 'assets/vendor/tailwindcss/tailwind.min.js'; ?>"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -54,9 +54,8 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
       }
     };
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Share+Tech&display=swap" rel="stylesheet">
+  <!-- Offline Unified Fonts Engine -->
+  <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/local-fonts.css') : $baseUrl . 'assets/css/local-fonts.css'; ?>">
   <!-- Authentication Portal Stylesheet -->
   <link rel="stylesheet" href="<?php echo v_asset('assets/css/auth.css'); ?>">
   <!-- Global Typography (PT Serif) -->
@@ -240,7 +239,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
               <div class="flex items-center justify-between gap-1.5">
                 <div class="flex items-center gap-1.5 min-w-0">
                   <div class="w-6 h-6 rounded-full bg-[var(--color-primary)]/30 ring-1 ring-white/50 flex items-center justify-center text-white text-[10px] font-bold overflow-hidden shrink-0 shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="David S." class="w-full h-full object-cover" />
+                    <img src="<?php echo function_exists('v_asset') ? v_asset('assets/images/avatars/avatar-1.webp') : $baseUrl . 'assets/images/avatars/avatar-1.webp'; ?>" alt="David S." class="w-full h-full object-cover" />
                   </div>
                   <div class="min-w-0">
                     <p class="text-[11px] font-bold text-[#0F172A] dark:text-white truncate leading-tight font-serif">David S.</p>
@@ -255,7 +254,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
               <div class="flex items-center justify-between gap-1.5">
                 <div class="flex items-center gap-1.5 min-w-0">
                   <div class="w-6 h-6 rounded-full bg-[var(--color-primary-dark)]/40 ring-1 ring-white/50 flex items-center justify-center text-white text-[10px] font-bold overflow-hidden shrink-0 shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=faces" alt="Mira K." class="w-full h-full object-cover" />
+                    <img src="<?php echo function_exists('v_asset') ? v_asset('assets/images/avatars/avatar-2.webp') : $baseUrl . 'assets/images/avatars/avatar-2.webp'; ?>" alt="Mira K." class="w-full h-full object-cover" />
                   </div>
                   <div class="min-w-0">
                     <p class="text-[11px] font-bold text-[#0F172A] dark:text-white truncate leading-tight font-serif">Mira K.</p>
@@ -270,7 +269,7 @@ $baseUrl = function_exists('base_url') ? base_url('/') : './';
               <div class="flex items-center justify-between gap-1.5">
                 <div class="flex items-center gap-1.5 min-w-0">
                   <div class="w-6 h-6 rounded-full bg-[var(--color-primary)]/40 ring-1 ring-white/50 flex items-center justify-center text-white text-[10px] font-bold overflow-hidden shrink-0 shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces" alt="Imran J." class="w-full h-full object-cover" />
+                    <img src="<?php echo function_exists('v_asset') ? v_asset('assets/images/avatars/avatar-3.webp') : $baseUrl . 'assets/images/avatars/avatar-3.webp'; ?>" alt="Imran J." class="w-full h-full object-cover" />
                   </div>
                   <div class="min-w-0">
                     <p class="text-[11px] font-bold text-[#0F172A] dark:text-white truncate leading-tight font-serif">Imran Jakir</p>

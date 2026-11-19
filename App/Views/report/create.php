@@ -7,7 +7,7 @@ $page_css = [
     'assets/vendor/bootstrap-icons/bootstrap-icons.min.css',
     'assets/css/report.css',
 ];
-$extra_head = '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>' .
+$extra_head = '<script src="' . (function_exists('v_asset') ? v_asset('assets/vendor/html2pdf/html2pdf.bundle.min.js') : 'assets/vendor/html2pdf/html2pdf.bundle.min.js') . '"></script>' .
               '<script src="' . (function_exists('v_asset') ? v_asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') : 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js') . '"></script>';
 
 $canChangeFaculty = isset($canChangeFaculty) ? (bool)$canChangeFaculty : (class_exists('Core\Auth') ? \Core\Auth::canViewAllFaculty() : false);

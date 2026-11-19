@@ -165,18 +165,16 @@ if (!empty($page_css)) {
   <link rel="icon" type="image/svg+xml" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon.svg') : 'assets/images/favicon.svg'; ?>">
   <link rel="icon" type="image/png" sizes="32x32" href="<?php echo function_exists('v_asset') ? v_asset('assets/images/favicon-32x32.png') : 'assets/images/favicon-32x32.png'; ?>">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <!-- Tailwind CSS Offline Standalone Engine -->
+  <script src="<?php echo function_exists('v_asset') ? v_asset('assets/vendor/tailwindcss/tailwind.min.js') : 'assets/vendor/tailwindcss/tailwind.min.js'; ?>"></script>
   <script>
     tailwind.config = {
       darkMode: 'class'
     };
   </script>
 
-  <!-- Google Fonts Preconnect & Unified Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Offline Unified Fonts (Single Source of Truth) -->
+  <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/local-fonts.css') : 'assets/css/local-fonts.css'; ?>">
 
   <!-- Core Modular Layout & Theme Stylesheets (Shared Across All Portal Pages) -->
   <link rel="stylesheet" href="<?php echo function_exists('v_asset') ? v_asset('assets/css/theme.css') : 'assets/css/theme.css'; ?>">

@@ -81,7 +81,7 @@ if (!function_exists('get_portal_font_config')) {
         $baseDir = defined('BASE_PATH') ? BASE_PATH : dirname(__DIR__);
         $cssPath = $baseDir . '/assets/css/font.css';
 
-        $importUrl = 'https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap';
+        $importUrl = 'local-fonts.css';
         $fontFamily = "'PT Serif', Georgia, 'Times New Roman', serif";
         $fontName = 'PT Serif';
 
@@ -131,21 +131,29 @@ if (!function_exists('apply_portal_font_to_html')) {
         }
 
         $font = get_portal_font_config();
-        $importUrl = htmlspecialchars($font['import_url'], ENT_QUOTES, 'UTF-8');
+        $importUrl = $font['import_url'];
         $fontFamily = $font['font_family'];
 
         // Normalize any hardcoded inline or style block font-family declarations to the active portal font
         $html = preg_replace('/font-family\s*:\s*[^;!}]+?(?=[;!}"]|$)/i', 'font-family: ' . $fontFamily, $html);
 
-        $headTag = "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n" .
-                   "<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n" .
-                   "<link href=\"{$importUrl}\" rel=\"stylesheet\">\n" .
-                   "<style id=\"portal-mail-font\">\n" .
-                   "  @import url('{$importUrl}');\n" .
-                   "  body, table, td, th, div, span, p, a, h1, h2, h3, h4, h5, h6, strong, b, em, label, input, button {\n" .
-                   "    font-family: {$fontFamily} !important;\n" .
-                   "  }\n" .
-                   "</style>\n";
+        if (preg_match('#^https?://#i', $importUrl)) {
+            $safeUrl = htmlspecialchars($importUrl, ENT_QUOTES, 'UTF-8');
+            $headTag = "<link href=\"{$safeUrl}\" rel=\"stylesheet\">\n" .
+                       "<style id=\"portal-mail-font\">\n" .
+                       "  @import url('{$safeUrl}');\n" .
+                       "  body, table, td, th, div, span, p, a, h1, h2, h3, h4, h5, h6, strong, b, em, label, input, button {\n" .
+                       "    font-family: {$fontFamily} !important;\n" .
+                       "  }\n" .
+                       "</style>\n";
+        } else {
+            // 100% Offline typography stack - no remote CDN calls
+            $headTag = "<style id=\"portal-mail-font\">\n" .
+                       "  body, table, td, th, div, span, p, a, h1, h2, h3, h4, h5, h6, strong, b, em, label, input, button {\n" .
+                       "    font-family: {$fontFamily} !important;\n" .
+                       "  }\n" .
+                       "</style>\n";
+        }
 
         // If <head> exists, insert right after <head>
         if (stripos($html, '<head>') !== false) {

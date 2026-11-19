@@ -373,7 +373,7 @@ include dirname(__DIR__) . '/partials/dashboard-head.php';
       } else {
         // Dynamic fallback if preloaded data is missing
         const script = document.createElement('script');
-        script.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+        script.src = "<?= function_exists('v_asset') ? v_asset('assets/vendor/xlsx/xlsx.full.min.js') : 'assets/vendor/xlsx/xlsx.full.min.js' ?>";
         script.onload = () => {
           fetch(excelPath)
             .then(res => res.arrayBuffer())

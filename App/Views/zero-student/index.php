@@ -2,11 +2,11 @@
 $page_title = 'Zero Student Log Directory — CE & IT Department';
 $page_description = 'Incident directory of timetable sessions where zero students were present as per academic timetable.';
 $page_css = [
-    'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
+    'assets/vendor/flatpickr/flatpickr.min.css',
     'assets/css/zero-student-report.css',
 ];
-$extra_head = '<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>' .
-              '<script src="' . (function_exists('v_asset') ? v_asset('assets/vendor/xlsx/xlsx.full.min.js') : 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js') . '"></script>';
+$extra_head = '<script src="' . (function_exists('v_asset') ? v_asset('assets/vendor/flatpickr/flatpickr.min.js') : 'assets/vendor/flatpickr/flatpickr.min.js') . '"></script>' .
+              '<script src="' . (function_exists('v_asset') ? v_asset('assets/vendor/xlsx/xlsx.full.min.js') : 'assets/vendor/xlsx/xlsx.full.min.js') . '"></script>';
 include dirname(__DIR__) . '/partials/dashboard-head.php';
 ?>
 

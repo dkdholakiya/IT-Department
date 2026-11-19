@@ -30,10 +30,9 @@
   <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('assets/images/favicon-16x16.png') ?>">
   <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('assets/images/apple-touch-icon.png') ?>">
 
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="<?= function_exists('v_asset') ? v_asset('assets/vendor/tailwindcss/tailwind.min.js') : base_url('assets/vendor/tailwindcss/tailwind.min.js') ?>"></script>
+  <script src="<?= function_exists('v_asset') ? v_asset('assets/vendor/threejs/three.min.js') : base_url('assets/vendor/threejs/three.min.js') ?>"></script>
+  <link rel="stylesheet" href="<?= function_exists('v_asset') ? v_asset('assets/css/local-fonts.css') : base_url('assets/css/local-fonts.css') ?>">
   <link rel="stylesheet" href="<?= base_url('assets/css/font.css') ?>">
   <style>
     :root {
